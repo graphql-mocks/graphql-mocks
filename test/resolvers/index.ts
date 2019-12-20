@@ -1,5 +1,7 @@
-import Query from './query';
+import Query from './Query';
+import types from './types';
 
 export default {
-  Query
+  Query,
+  ...types
 }

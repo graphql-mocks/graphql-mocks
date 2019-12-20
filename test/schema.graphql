@@ -3,5 +3,12 @@ schema {
 }
 
 type Query {
-  hello: String
+  hello: String,
+  person(name: String!): Person
+}
+
+type Person {
+  name: String!
+  age: Int!
+  friends: [Person!]!
 }

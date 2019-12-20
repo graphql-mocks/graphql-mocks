@@ -1,17 +1,61 @@
 import {expect} from 'chai';
 import {graphQLHandler} from './executable-schema';
 
-it('works', async function() {
+it('handles a root query (scalar)', async function() {
   const query = `query {
     hello
   }`;
 
-  const variables = {};
-  const result = await graphQLHandler(query, variables);
-
+  const result = await graphQLHandler(query);
   expect(result).to.deep.equal({
     data:  {
       hello: 'hi'
     }
-  })
+  });
+});
+
+it('handles a root query (custom type)', async function() {
+  const query = `query {
+    person(name: "Fred Flinstone") {
+      name
+      age
+    }
+  }`;
+
+  const result = await graphQLHandler(query);
+  expect(result).to.deep.equal({
+    data:  {
+      person: {
+        name: 'Fred Flinstone',
+        age: 43
+      }
+    }
+  });
+});
+
+it('handles nested objects', async function() {
+  const query = `query {
+    person(name: "Fred Flinstone") {
+      name
+      age
+      friends {
+        name
+        age
+      }
+    }
+  }`;
+
+  const result = await graphQLHandler(query);
+  expect(result).to.deep.equal({
+    data: {
+      person: {
+        name: 'Fred Flinstone',
+        age: 43,
+        friends: [{
+          name: 'Barney Rubble',
+          age: 40
+        }]
+      }
+    }
+  });
 });

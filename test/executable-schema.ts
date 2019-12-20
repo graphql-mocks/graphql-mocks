@@ -12,4 +12,6 @@ const schema = makeExecutableSchema({
   resolvers
 });
 
-export const graphQLHandler = (query: any, variables: any) => graphql(schema, query, null, null, variables);
+export const graphQLHandler = (query: any, variables: any = {}) => graphql(
+  schema, query, null, null, variables
+);
