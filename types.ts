@@ -10,6 +10,7 @@ export type Scalars = {
 };
 
 export type Person = {
+  id: Scalars['ID'],
   name: Scalars['String'],
   age: Scalars['Int'],
   friends: Array<Person>,
@@ -18,11 +19,12 @@ export type Person = {
 export type Query = {
   hello?: Maybe<Scalars['String']>,
   person?: Maybe<Person>,
+  allPersons?: Maybe<Array<Maybe<Person>>>,
 };
 
 
 export type QueryPersonArgs = {
-  name: Scalars['String']
+  id: Scalars['ID']
 };
 
 
@@ -100,6 +102,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
   String: ResolverTypeWrapper<Partial<Scalars['String']>>,
+  ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
   Person: ResolverTypeWrapper<Partial<Person>>,
   Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
@@ -109,12 +112,14 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Query: {},
   String: Partial<Scalars['String']>,
+  ID: Partial<Scalars['ID']>,
   Person: Partial<Person>,
   Int: Partial<Scalars['Int']>,
   Boolean: Partial<Scalars['Boolean']>,
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   friends?: Resolver<Array<ResolversTypes['Person']>, ParentType, ContextType>,
@@ -122,7 +127,8 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  person?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryPersonArgs, 'name'>>,
+  person?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryPersonArgs, 'id'>>,
+  allPersons?: Resolver<Maybe<Array<Maybe<ResolversTypes['Person']>>>, ParentType, ContextType>,
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{

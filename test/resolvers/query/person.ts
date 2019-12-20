@@ -1,10 +1,8 @@
 import {QueryResolvers, Person} from '../../../types'
-import {persons} from '../../fixtures/Person';
+import {server} from '../../mirage';
 
 const resolver: QueryResolvers["person"] = function(parent, args, context, info) {
-  return persons.find(
-    person => person.name === args.name
-  ) as Person;
+  return server.schema.people.find(args.id);
 }
 
 export default resolver;

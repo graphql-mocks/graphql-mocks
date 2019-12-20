@@ -16,7 +16,7 @@ it('handles a root query (scalar)', async function() {
 
 it('handles a root query (custom type)', async function() {
   const query = `query {
-    person(name: "Fred Flinstone") {
+    person(id: 1) {
       name
       age
     }
@@ -35,7 +35,7 @@ it('handles a root query (custom type)', async function() {
 
 it('handles nested objects', async function() {
   const query = `query {
-    person(name: "Fred Flinstone") {
+    person(id: 1) {
       name
       age
       friends {
