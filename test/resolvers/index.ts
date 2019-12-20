@@ -1,7 +1,7 @@
 import Query from './Query';
-import types from './types';
+import Person from './Person';
 
 export default {
   Query,
-  ...types
+  Person
 }
