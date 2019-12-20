@@ -22,10 +22,11 @@
     "typescript": "^3.7.3"
   },
   "devDependencies": {
+    "@graphql-codegen/typescript": "1.0.0",
+    "@graphql-codegen/typescript-operations": "1.0.0",
     "@types/node": "^12.12.21",
     "graphql": "^14.5.8",
     "graphql-import": "^0.7.1",
-    "@graphql-codegen/typescript": "1.0.0",
-    "@graphql-codegen/typescript-operations": "1.0.0"
+    "miragejs": "^0.1.32"
   }
 }
