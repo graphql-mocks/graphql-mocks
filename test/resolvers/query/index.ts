@@ -1,7 +1,10 @@
+import {QueryResolvers} from '../../../types'
 import hello from './hello';
 import person from './person';
 
-export default {
+const Query: QueryResolvers = {
   hello,
   person
 };
+
+export default Query;

@@ -1,0 +1,13 @@
+overwrite: true
+schema: "test/schema.graphql"
+generates:
+  types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-resolvers"
+    config:
+      # this allows for partial resolution of fields
+      # in resolvers
+      defaultMapper: Partial<{T}>
+      useIndexSignature: true

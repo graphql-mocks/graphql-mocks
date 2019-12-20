@@ -1,6 +1,8 @@
-export default function(/*parent, args, context, info*/) {
+const resolver = function(/*parent, args, context, info*/) {
   return [{
     name: 'Barney Rubble',
-    age: '40'
+    age: 40
   }]
 }
+
+export default resolver;

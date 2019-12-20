@@ -1,5 +1,8 @@
 import friends from './friends'
+import {PersonResolvers} from '../../../types'
 
-export default {
+const Person: PersonResolvers = {
   friends
-}
+};
+
+export default Person;
