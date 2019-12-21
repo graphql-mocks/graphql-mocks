@@ -1,9 +1,8 @@
-import {PersonResolvers, Person} from '../../../types';
-import {schema} from '../../mirage';
+import {PersonResolvers} from '../../../types';
+import {schema, serialize} from '../../mirage';
 
 const resolver: PersonResolvers["friends"] = function(parent, args, context, info) {
-  const {models: friends} = schema.people.find(parent.id).friends;
-  return friends;
+  return serialize(schema.people.find(parent.id).friends);
 }
 
 export default resolver;
