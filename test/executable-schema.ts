@@ -11,10 +11,7 @@ const typeDefs = importSchema(schemaPath);
 
 const tempSchema = buildSchema(typeDefs);
 const typeMap = tempSchema.getTypeMap();
-const mirageGraphQLMap = [{
-  mirage: ['Post', 'comments'],
-  graphql: ['Post', 'comments']
-}]
+const mirageGraphQLMap: any = [];
 
 const resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
 

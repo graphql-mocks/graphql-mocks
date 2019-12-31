@@ -1,6 +1,6 @@
-import {mirageModel as personModel} from "../resolvers/Person"
-import {mirageModel as postModel} from "../resolvers/Post"
-import {mirageModel as commentModel} from "../resolvers/Comment"
+import personModel from "../resolvers/Person/_model";
+import postModel from "../resolvers/Post/_model";
+import commentModel from "../resolvers/Comment/_model";
 
 const {
   Serializer,
