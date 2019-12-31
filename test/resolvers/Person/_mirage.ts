@@ -3,7 +3,7 @@ const {
   hasMany
 } = require('miragejs');
 
-export default Model.extend({
+export const model = Model.extend({
   friends: hasMany('person'),
   posts: hasMany('posts')
 });

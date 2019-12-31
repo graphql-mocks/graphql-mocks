@@ -4,7 +4,7 @@ const {
   belongsTo
 } = require('miragejs');
 
-export default Model.extend({
+export const model = Model.extend({
   author: belongsTo('person'),
   comments: hasMany(),
 });
