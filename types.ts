@@ -9,17 +9,32 @@ export type Scalars = {
   Float: number,
 };
 
+export type Comment = {
+  id: Scalars['ID'],
+  body: Scalars['String'],
+  author: Person,
+};
+
 export type Person = {
   id: Scalars['ID'],
   name: Scalars['String'],
   age: Scalars['Int'],
   friends: Array<Person>,
+  posts: Array<Post>,
+};
+
+export type Post = {
+  id: Scalars['ID'],
+  title: Scalars['String'],
+  body: Scalars['String'],
+  author: Person,
+  comments: Array<Comment>,
 };
 
 export type Query = {
   hello?: Maybe<Scalars['String']>,
   person?: Maybe<Person>,
-  allPersons?: Maybe<Array<Maybe<Person>>>,
+  allPersons: Array<Person>,
 };
 
 
@@ -105,6 +120,8 @@ export type ResolversTypes = ResolversObject<{
   ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
   Person: ResolverTypeWrapper<Partial<Person>>,
   Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
+  Post: ResolverTypeWrapper<Partial<Post>>,
+  Comment: ResolverTypeWrapper<Partial<Comment>>,
   Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
 }>;
 
@@ -115,7 +132,15 @@ export type ResolversParentTypes = ResolversObject<{
   ID: Partial<Scalars['ID']>,
   Person: Partial<Person>,
   Int: Partial<Scalars['Int']>,
+  Post: Partial<Post>,
+  Comment: Partial<Comment>,
   Boolean: Partial<Scalars['Boolean']>,
+}>;
+
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  author?: Resolver<ResolversTypes['Person'], ParentType, ContextType>,
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
@@ -123,16 +148,27 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   friends?: Resolver<Array<ResolversTypes['Person']>, ParentType, ContextType>,
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>,
+}>;
+
+export type PostResolvers<ContextType = any, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  body?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  author?: Resolver<ResolversTypes['Person'], ParentType, ContextType>,
+  comments?: Resolver<Array<ResolversTypes['Comment']>, ParentType, ContextType>,
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   person?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryPersonArgs, 'id'>>,
-  allPersons?: Resolver<Maybe<Array<Maybe<ResolversTypes['Person']>>>, ParentType, ContextType>,
+  allPersons?: Resolver<Array<ResolversTypes['Person']>, ParentType, ContextType>,
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Comment?: CommentResolvers<ContextType>,
   Person?: PersonResolvers<ContextType>,
+  Post?: PostResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
 }>;
 

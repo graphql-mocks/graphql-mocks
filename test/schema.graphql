@@ -13,4 +13,19 @@ type Person {
   name: String!
   age: Int!
   friends: [Person!]!
+  posts: [Post!]!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  author: Person!
+  comments: [Comment!]!
+}
+
+type Comment {
+  id: ID!
+  body: String!
+  author: Person!
 }
