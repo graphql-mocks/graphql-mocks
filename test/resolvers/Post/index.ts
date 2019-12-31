@@ -10,7 +10,7 @@ const {
 
 const Post: PostResolvers = {
   author,
-  comments,
+  // comments,
 };
 
 export default Post;
