@@ -7,19 +7,17 @@ import {server as mirageServer} from './mirage'
 import path from 'path';
 
 const schemaPath = path.resolve(__dirname, 'schema.graphql');
-const typeDefs = importSchema(schemaPath);
+export const typeDefs = importSchema(schemaPath);
 
-const tempSchema = buildSchema(typeDefs);
-const typeMap = tempSchema.getTypeMap();
-const mirageGraphQLMap: any = [];
+export function buildHandler(resolvers: any) {
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers
+  });
 
-const resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
+  const graphQLHandler = (query: any, variables: any = {}) => graphql(
+    schema, query, null, null, variables
+  );
 
-const schema = makeExecutableSchema({
-  typeDefs,
-  resolvers
-});
-
-export const graphQLHandler = (query: any, variables: any = {}) => graphql(
-  schema, query, null, null, variables
-);
+  return graphQLHandler;
+};

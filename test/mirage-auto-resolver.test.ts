@@ -1,66 +1,48 @@
 import {expect} from 'chai';
-import {graphQLHandler} from './executable-schema';
+import {buildSchema} from 'graphql';
+import defaultResolvers from './resolvers';
+import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers';
+import {server as mirageServer} from './mirage'
+import {buildHandler, typeDefs} from './executable-schema';
 
-it('handles a root query (scalar)', async function() {
-  const query = `query {
-    hello
-  }`;
+const tempSchema = buildSchema(typeDefs);
+const mirageGraphQLMap: any = [];
+const resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
+const graphQLHandler = buildHandler(resolvers);
 
-  const result = await graphQLHandler(query);
-  expect(result).to.deep.equal({
-    data:  {
-      hello: 'hi'
-    }
+describe('auto resolving from mirage', function() {
+  it('has missing resolvers that are filled by #fillInMissingResolvers', function() {
+    expect(defaultResolvers.Post).to.equal(undefined);
+    expect(resolvers.Post).to.not.equal(undefined);
+    expect(defaultResolvers.Comment).to.equal(undefined);
+    expect(resolvers.Comment).to.not.equal(undefined);
   });
-});
 
-it('handles a root query (custom type)', async function() {
-  const query = `query {
-    person(id: 1) {
-      name
-      age
-    }
-  }`;
-
-  const result = await graphQLHandler(query);
-  expect(result).to.deep.equal({
-    data:  {
-      person: {
-        name: 'Fred Flinstone',
-        age: 43
-      }
-    }
-  });
-});
-
-it('handles nested objects', async function() {
-  const query = `query {
-    person(id: 1) {
-      name
-      age
-      friends {
+  it('can handle a simple auto look up', async function() {
+    const query = `query {
+      person(id: 1) {
+        id
         name
-        age
+        posts {
+          body
+        }
       }
-    }
-  }`;
+    }`;
 
-  const result = await graphQLHandler(query);
-  expect(result).to.deep.equal({
-    data: {
-      person: {
-        name: 'Fred Flinstone',
-        age: 43,
-        friends: [{
-          name: 'Barney Rubble',
-          age: 40
-        }]
+    const result = await graphQLHandler(query);
+    expect(result).to.deep.equal({
+      data: {
+        person: {
+          id: "1",
+          name: 'Fred Flinstone',
+          posts: [{
+            body: "They're the modern stone age family. From the town of Bedrock. They're a page right out of history"
+          }]
+        }
       }
-    }
+    });
   });
-});
 
-describe('when a type has multiple parents', function() {
   // Person
   //   has Posts
   //     (author should match the Person)
@@ -83,7 +65,6 @@ describe('when a type has multiple parents', function() {
         }
       }
     }`;
-
 
     const result = await graphQLHandler(query);
 
