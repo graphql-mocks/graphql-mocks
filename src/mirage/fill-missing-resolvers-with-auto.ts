@@ -1,6 +1,9 @@
 import {GraphQLObjectType} from 'graphql';
 import mirageFieldResolver from './auto-field-resolver';
 
+// iterate over all types and fields as given by the schema
+// then if any resolvers are missing, patch them with an
+// auto mirage field resolver.
 export default (mirageServer: any, mirageGraphQLMap: any, schema: any) => (resolvers: any) => {
   const typeMap = schema.getTypeMap();
 

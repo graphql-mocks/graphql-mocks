@@ -5,32 +5,16 @@ import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers-with-au
 import {server as mirageServer} from './mirage';
 import defaultScenario from './mirage/scenarios/default';
 import {buildHandler, typeDefs} from './executable-schema';
-import applyAddMirageResolverContextExport from '../src/mirage/add-mirage-resolver-context';
+import {addMirageResolverContext} from '../src/mirage/add-mirage-resolver-context';
+import resolversReduce from '../src/resolvers/reduce';
+import resolverIterator from '../src/resolvers/reduce-iterator';
 
 const mirageGraphQLMap: any = [];
-
-const resolversReduce = (resolvers: any, resolverModifiers: any) => {
-  return resolverModifiers.reduce(
-    (resolvers: any, resolverModifier: any) => {
-      resolvers = {
-        ...resolvers
-      };
-
-      resolvers = resolverModifier(resolvers);
-      if (typeof resolvers !== 'object') {
-        throw new Error(`resolverModifier ${resolverModifier.toString()} should return a resolvers object, got ${typeof resolvers}`);
-      }
-
-      return resolvers;
-    },
-    resolvers
-  );
-};
 
 const tempSchema = buildSchema(typeDefs);
 const resolverModifiers = [
   fillInMissingResolvers(mirageServer, mirageGraphQLMap, tempSchema),
-  applyAddMirageResolverContextExport(mirageServer, mirageGraphQLMap)
+  resolverIterator(addMirageResolverContext, mirageServer)
 ]
 
 const resolvers = resolversReduce(defaultResolvers, resolverModifiers);

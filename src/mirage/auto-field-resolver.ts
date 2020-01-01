@@ -2,7 +2,6 @@ const Inflector = require('inflected');
 
 export default (mirageServer: any, mirageType: string, mirageField: string) => (parent: any) => {
   mirageType = Inflector.pluralize(mirageType).toLowerCase();
-  mirageField = mirageField.toLowerCase();
 
   const resolvedModel = mirageServer.schema[mirageType].find(parent.id);
 
