@@ -1,20 +1,20 @@
 import {expect} from 'chai';
 import {buildSchema} from 'graphql';
 import defaultResolvers from './resolvers';
-import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers-with-auto';
+import fillInMissingResolvers from '../src/mirage/resolvers-modifiers/fill-missing-resolvers-with-auto';
 import {server as mirageServer} from './mirage';
 import defaultScenario from './mirage/scenarios/default';
 import {buildHandler, typeDefs} from './executable-schema';
-import {addMirageResolverContext} from '../src/mirage/add-mirage-resolver-context';
+import {addMirageResolverContext} from '../src/mirage/resolvers-modifiers/add-mirage-resolver-context';
 import resolversReduce from '../src/resolvers/reduce';
 import resolverIterator from '../src/resolvers/reduce-iterator';
 
 const mirageGraphQLMap: any = [];
-
 const tempSchema = buildSchema(typeDefs);
+
 const resolverModifiers = [
+  resolverIterator(addMirageResolverContext, mirageServer),
   fillInMissingResolvers(mirageServer, mirageGraphQLMap, tempSchema),
-  resolverIterator(addMirageResolverContext, mirageServer)
 ]
 
 const resolvers = resolversReduce(defaultResolvers, resolverModifiers);

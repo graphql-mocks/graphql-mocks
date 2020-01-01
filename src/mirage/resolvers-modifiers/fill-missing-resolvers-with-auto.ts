@@ -1,5 +1,23 @@
 import {GraphQLObjectType} from 'graphql';
-import mirageFieldResolver from './auto-field-resolver';
+const Inflector = require('inflected');
+
+export const mirageFieldResolver = (mirageServer: any, mirageType: string, mirageField: string) => (parent: any) => {
+  mirageType = Inflector.pluralize(mirageType).toLowerCase();
+
+  const resolvedModel = mirageServer.schema[mirageType].find(parent.id);
+
+  if (!resolvedModel) {
+    throw new Error(`Could not resolve for mirage type: ${mirageType} with id: ${parent.id}`);
+  }
+
+  if (!resolvedModel[mirageField]) {
+    throw new Error(`${mirageField} does not exist on mirage type: ${mirageType} with id: ${parent.id}`);
+  }
+
+  const resolvedField = resolvedModel[mirageField];
+  return mirageServer.serializerOrRegistry.serialize(resolvedField);
+}
+
 
 // iterate over all types and fields as given by the schema
 // then if any resolvers are missing, patch them with an
@@ -13,7 +31,11 @@ export default (mirageServer: any, mirageGraphQLMap: any, schema: any) => (resol
 
       for (const field of Object.keys(fields)) {
         resolvers[type] = resolvers[type] || {};
-        if (type === 'Query' || type === 'Mutation' || type.indexOf('__') === 0) {
+
+        // don't want to fill in mirage resolvers fill for internal types like __Type
+        const isGraphQLInternalType = type.indexOf('__') === 0;
+
+        if (type === 'Query' || type === 'Mutation' || isGraphQLInternalType) {
           continue;
         }
 
