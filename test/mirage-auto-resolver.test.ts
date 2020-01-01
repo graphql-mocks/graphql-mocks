@@ -7,11 +7,34 @@ import defaultScenario from './mirage/scenarios/default';
 import {buildHandler, typeDefs} from './executable-schema';
 import applyAddMirageResolverContextExport from '../src/mirage/add-mirage-resolver-context';
 
-const tempSchema = buildSchema(typeDefs);
 const mirageGraphQLMap: any = [];
 
-let resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
-resolvers = applyAddMirageResolverContextExport(mirageServer, mirageGraphQLMap)(resolvers);
+const resolversReduce = (resolvers: any, resolverModifiers: any) => {
+  return resolverModifiers.reduce(
+    (resolvers: any, resolverModifier: any) => {
+      resolvers = {
+        ...resolvers
+      };
+
+      resolvers = resolverModifier(resolvers);
+      if (typeof resolvers !== 'object') {
+        throw new Error(`resolverModifier ${resolverModifier.toString()} should return a resolvers object, got ${typeof resolvers}`);
+      }
+
+      return resolvers;
+    },
+    resolvers
+  );
+};
+
+const tempSchema = buildSchema(typeDefs);
+const resolverModifiers = [
+  fillInMissingResolvers(mirageServer, mirageGraphQLMap, tempSchema),
+  applyAddMirageResolverContextExport(mirageServer, mirageGraphQLMap)
+]
+
+const resolvers = resolversReduce(defaultResolvers, resolverModifiers);
+
 let graphQLHandler = buildHandler(resolvers);
 
 describe('auto resolving from mirage', function() {
