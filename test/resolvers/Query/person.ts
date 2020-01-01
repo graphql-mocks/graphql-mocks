@@ -1,7 +1,9 @@
 import {QueryResolvers, Person} from '../../../types'
-import {server, serialize} from '../../mirage';
 
 const resolver: QueryResolvers["person"] = function(parent, args, context, info) {
+  const serialize = context.mirageSerialize;
+  const server = context.mirageServer;
+
   return serialize(server.schema.people.find(args.id));
 }
 

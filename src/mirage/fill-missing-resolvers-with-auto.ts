@@ -1,5 +1,5 @@
 import {GraphQLObjectType} from 'graphql';
-import mirageFieldResolver from './field-resolver';
+import mirageFieldResolver from './auto-field-resolver';
 
 export default (mirageServer: any, mirageGraphQLMap: any) => (schema: any, resolvers: any) => {
   resolvers = {

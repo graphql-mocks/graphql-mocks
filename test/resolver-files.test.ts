@@ -1,10 +1,23 @@
 import {expect} from 'chai';
 import {buildHandler} from './executable-schema';
 import defaultResolvers from './resolvers';
+import {server as mirageServer} from './mirage'
+import applyAddMirageResolverContextexport from '../src/mirage/add-mirage-resolver-context';
+import defaultScenario from './mirage/scenarios/default';
 
-const graphQLHandler = buildHandler(defaultResolvers);
+const resolvers = applyAddMirageResolverContextexport(mirageServer, [])(defaultResolvers);
+const graphQLHandler = buildHandler(resolvers);
 
 describe('it can resolve from resolver files', function() {
+  beforeEach(() => {
+    mirageServer.db.loadData(defaultScenario);
+  });
+
+  afterEach(() => {
+    mirageServer.db.emptyData();
+  });
+
+
   it('handles a root query (scalar)', async function() {
     const query = `query {
       hello

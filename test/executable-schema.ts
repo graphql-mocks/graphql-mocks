@@ -1,9 +1,6 @@
 import {graphql, buildSchema} from 'graphql'
 import {makeExecutableSchema} from 'graphql-tools';
 import {importSchema} from 'graphql-import';
-import defaultResolvers from './resolvers';
-import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers';
-import {server as mirageServer} from './mirage'
 import path from 'path';
 
 const schemaPath = path.resolve(__dirname, 'schema.graphql');

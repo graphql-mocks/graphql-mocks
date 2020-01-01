@@ -1,16 +1,28 @@
 import {expect} from 'chai';
 import {buildSchema} from 'graphql';
 import defaultResolvers from './resolvers';
-import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers';
-import {server as mirageServer} from './mirage'
+import fillInMissingResolvers from '../src/mirage/fill-missing-resolvers-with-auto';
+import {server as mirageServer} from './mirage';
+import defaultScenario from './mirage/scenarios/default';
 import {buildHandler, typeDefs} from './executable-schema';
+import applyAddMirageResolverContextExport from '../src/mirage/add-mirage-resolver-context';
 
 const tempSchema = buildSchema(typeDefs);
 const mirageGraphQLMap: any = [];
-const resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
-const graphQLHandler = buildHandler(resolvers);
+
+let resolvers = fillInMissingResolvers(mirageServer, mirageGraphQLMap)(tempSchema, defaultResolvers);
+resolvers = applyAddMirageResolverContextExport(mirageServer, mirageGraphQLMap)(resolvers);
+let graphQLHandler = buildHandler(resolvers);
 
 describe('auto resolving from mirage', function() {
+  this.beforeEach(() => {
+    mirageServer.db.loadData(defaultScenario);
+  });
+
+  this.afterEach(() => {
+    mirageServer.db.emptyData();
+  });
+
   it('has missing resolvers that are filled by #fillInMissingResolvers', function() {
     expect(defaultResolvers.Post).to.equal(undefined);
     expect(resolvers.Post).to.not.equal(undefined);
@@ -19,6 +31,8 @@ describe('auto resolving from mirage', function() {
   });
 
   it('can handle a simple auto look up', async function() {
+    let server = mirageServer;
+
     const query = `query {
       person(id: 1) {
         id
