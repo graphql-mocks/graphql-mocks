@@ -2,14 +2,14 @@ import {expect} from 'chai';
 import {buildHandler} from './executable-schema';
 import defaultResolvers from './resolvers';
 import {server as mirageServer} from './mirage'
-import {addMirageResolverContext} from '../src/mirage/resolvers-modifiers/add-mirage-resolver-context';
+import addMirageResolverContext from '../src/mirage/resolvers-modifiers/add-mirage-resolver-context';
 import defaultScenario from './mirage/scenarios/default';
 import resolversReduce from '../src/resolvers/reduce';
 import resolverIterator from '../src/resolvers/reduce-iterator';
 
 const resolvers = resolversReduce(
   defaultResolvers,
-  [resolverIterator(addMirageResolverContext, mirageServer)]
+  [addMirageResolverContext(mirageServer)]
 );
 
 const graphQLHandler = buildHandler(resolvers);

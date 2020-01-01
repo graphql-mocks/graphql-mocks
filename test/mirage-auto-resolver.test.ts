@@ -5,7 +5,7 @@ import fillInMissingResolvers from '../src/mirage/resolvers-modifiers/fill-missi
 import {server as mirageServer} from './mirage';
 import defaultScenario from './mirage/scenarios/default';
 import {buildHandler, typeDefs} from './executable-schema';
-import {addMirageResolverContext} from '../src/mirage/resolvers-modifiers/add-mirage-resolver-context';
+import addMirageResolverContext from '../src/mirage/resolvers-modifiers/add-mirage-resolver-context';
 import resolversReduce from '../src/resolvers/reduce';
 import resolverIterator from '../src/resolvers/reduce-iterator';
 
@@ -13,7 +13,7 @@ const mirageGraphQLMap: any = [];
 const tempSchema = buildSchema(typeDefs);
 
 const resolverModifiers = [
-  resolverIterator(addMirageResolverContext, mirageServer),
+  addMirageResolverContext(mirageServer),
   fillInMissingResolvers(mirageServer, mirageGraphQLMap, tempSchema),
 ]
 
