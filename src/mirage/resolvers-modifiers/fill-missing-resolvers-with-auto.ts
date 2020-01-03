@@ -1,23 +1,19 @@
 import {GraphQLObjectType} from 'graphql';
-const Inflector = require('inflected');
 
 export const mirageFieldResolver = (mirageServer: any, mirageType: string, mirageField: string) => (parent: any) => {
-  mirageType = Inflector.pluralize(mirageType).toLowerCase();
-
-  const resolvedModel = mirageServer.schema[mirageType].find(parent.id);
+  const resolvedModel = parent;
 
   if (!resolvedModel) {
-    throw new Error(`Could not resolve for mirage type: ${mirageType} with id: ${parent.id}`);
+    throw new Error(`Could not resolve model from parent, got ${typeof parent}`);
   }
 
   if (!resolvedModel[mirageField]) {
     throw new Error(`${mirageField} does not exist on mirage type: ${mirageType} with id: ${parent.id}`);
   }
 
-  const resolvedField = resolvedModel[mirageField];
-  return mirageServer.serializerOrRegistry.serialize(resolvedField);
+  const resolvedField = resolvedModel[mirageField].models ? resolvedModel[mirageField].models : resolvedModel[mirageField];
+  return resolvedField;
 }
-
 
 // iterate over all types and fields as given by the schema
 // then if any resolvers are missing, patch them with an
