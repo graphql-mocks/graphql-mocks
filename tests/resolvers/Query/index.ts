@@ -1,4 +1,4 @@
-import {QueryResolvers} from '../../../types'
+import {QueryResolvers} from '../../types'
 import hello from './hello';
 import person from './person';
 

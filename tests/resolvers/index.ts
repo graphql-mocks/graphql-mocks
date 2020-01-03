@@ -1,6 +1,6 @@
 import Query from './Query';
 import Person from './Person';
-import { ResolversTypes } from '../../types';
+import { ResolversTypes } from '../types';
 
 const resolvers: Partial<ResolversTypes> = {
   Query,
