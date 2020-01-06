@@ -1,4 +1,4 @@
-import { Resolver } from "../../../src/types";
+import { Resolver } from "../../../../src/types";
 
 const resolver: Resolver = function(parent/*, args, context, info*/) {
   return parent.friends.models;

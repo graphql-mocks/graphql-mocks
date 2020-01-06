@@ -2,9 +2,9 @@ import {expect} from 'chai';
 import {buildHandler} from './executable-schema';
 import defaultResolvers from './resolvers';
 import {server as mirageServer} from './mirage'
-import {addContextToResolvers} from '../src/mirage/resolver-reducers/add-context';
+import {addContextToResolvers} from '../../src/mirage/resolver-reducers/add-context';
 import defaultScenario from './mirage/scenarios/default';
-import resolversReduce from '../src/resolvers/reduce';
+import resolversReduce from '../../src/resolvers/reduce';
 
 const resolvers = resolversReduce({
   resolvers: defaultResolvers,
