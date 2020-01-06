@@ -1,6 +1,6 @@
-import {model as personModel} from '../resolvers/Person/_mirage';
-import {model as postModel} from '../resolvers/Post/_mirage';
-import {model as commentModel} from '../resolvers/Comment/_mirage';
+import {model as personModel} from './models/person';
+import {model as postModel} from './models/post';
+import {model as commentModel} from './models/comment';
 
 const { Server } = require('miragejs');
 
