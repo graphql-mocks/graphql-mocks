@@ -1,19 +1,24 @@
 import { FieldResolvers, ResolverReducer } from "../types";
 
+// will return a copy of `resolvers` with the each of `reducers` applied
 export default ({resolvers, reducers}: {resolvers: FieldResolvers, reducers: ResolverReducer[]}) => {
-  return reducers.reduce(
-    (resolvers: FieldResolvers, reducer: ResolverReducer) => {
-      resolvers = {
-        ...resolvers
-      };
+  // make an intial copy
+  let reducedResolvers = {
+    ...resolvers
+  };
 
-      resolvers = reducer(resolvers);
-      if (typeof resolvers !== 'object') {
-        throw new Error(`resolverModifier ${reducer.toString()} should return a resolvers object, got ${typeof resolvers}`);
-      }
+  reducers.forEach((reducer) => {
+    // copy on each loop
+    reducedResolvers = {
+      ...resolvers
+    };
 
-      return resolvers;
-    },
-    resolvers
-  );
+    reducedResolvers = reducer(reducedResolvers);
+
+    if (typeof reducedResolvers !== 'object') {
+      throw new Error(`reducer ${reducer.toString()} should return a resolvers object, got ${typeof resolvers}`);
+    }
+  });
+
+  return reducedResolvers;
 };

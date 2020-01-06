@@ -31,9 +31,10 @@ describe('auto resolving from mirage', function() {
     mirageServer.db.emptyData();
   });
 
-  it('has missing resolvers that are filled by #fillInMissingResolvers', function() {
+  it('has missing resolvers that are filled by #patchWithAutoResolvers', function() {
     expect(defaultResolvers.Post).to.equal(undefined);
     expect(resolvers.Post).to.not.equal(undefined);
+
     expect(defaultResolvers.Comment).to.equal(undefined);
     expect(resolvers.Comment).to.not.equal(undefined);
   });
