@@ -2,6 +2,10 @@ import { ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
 
 export const wrap = (wrapper: ResolverMapWrapper): ResolverMapWrapper => {
   return (map: ResolverMap, packOptions: PackOptions): ResolverMap => {
+    map = {
+      ...map,
+    };
+
     const wrappedMap = wrapper(map, packOptions);
 
     if (typeof wrappedMap !== 'object') {
