@@ -1,4 +1,4 @@
-import { graphql } from 'graphql'
+import { graphql } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import { importSchema } from 'graphql-import';
 import path from 'path';
@@ -9,12 +9,10 @@ export const typeDefs = importSchema(schemaPath);
 export function buildHandler(resolvers: any) {
   const schema = makeExecutableSchema({
     typeDefs,
-    resolvers
+    resolvers,
   });
 
-  const graphQLHandler = (query: any, variables: any = {}) => graphql(
-    schema, query, null, null, variables
-  );
+  const graphQLHandler = (query: any, variables: any = {}) => graphql(schema, query, null, null, variables);
 
   return graphQLHandler;
-};
+}

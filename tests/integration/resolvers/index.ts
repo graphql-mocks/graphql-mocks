@@ -4,7 +4,7 @@ import { ResolversTypes } from '../types';
 
 const resolvers: Partial<ResolversTypes> = {
   Query,
-  Person
+  Person,
 };
 
 export default resolvers;

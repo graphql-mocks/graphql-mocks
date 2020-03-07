@@ -1,13 +1,13 @@
-import {expect} from 'chai';
-import {buildHandler} from './executable-schema';
+import { expect } from 'chai';
+import { buildHandler } from './executable-schema';
 import defaultResolvers from './resolvers';
-import {server as mirageServer} from './mirage'
-import {addMirageToContext} from '../../src/mirage/wrappers/add-context';
+import { server as mirageServer } from './mirage';
+import { addMirageToContext } from '../../src/mirage/wrappers/add-context';
 import defaultScenario from './mirage/scenarios/default';
-import {pack} from '../../src/resolver-map/pack';
+import { pack } from '../../src/resolver-map/pack';
 
 const wrappers = [addMirageToContext(mirageServer)];
-const {resolvers} = pack(defaultResolvers, wrappers);
+const { resolvers } = pack(defaultResolvers, wrappers);
 
 const graphQLHandler = buildHandler(resolvers);
 
@@ -20,7 +20,6 @@ describe('it can resolve from resolver files', function() {
     mirageServer.db.emptyData();
   });
 
-
   it('handles a root query (scalar)', async function() {
     const query = `query {
       hello
@@ -28,9 +27,9 @@ describe('it can resolve from resolver files', function() {
 
     const result = await graphQLHandler(query);
     expect(result).to.deep.equal({
-      data:  {
-        hello: 'hi'
-      }
+      data: {
+        hello: 'hi',
+      },
     });
   });
 
@@ -44,12 +43,12 @@ describe('it can resolve from resolver files', function() {
 
     const result = await graphQLHandler(query);
     expect(result).to.deep.equal({
-      data:  {
+      data: {
         person: {
           name: 'Fred Flinstone',
-          age: 43
-        }
-      }
+          age: 43,
+        },
+      },
     });
   });
 
@@ -71,12 +70,14 @@ describe('it can resolve from resolver files', function() {
         person: {
           name: 'Fred Flinstone',
           age: 43,
-          friends: [{
-            name: 'Barney Rubble',
-            age: 40
-          }]
-        }
-      }
+          friends: [
+            {
+              name: 'Barney Rubble',
+              age: 40,
+            },
+          ],
+        },
+      },
     });
   });
 });

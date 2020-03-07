@@ -1,4 +1,4 @@
-import { wrapEach, WrapEachDetails } from "../../resolver-map/wrap-each";
+import { wrapEach, WrapEachDetails } from '../../resolver-map/wrap-each';
 import { Resolver, ResolverMapWrapper } from '../../types';
 
 // wraps an existing resolver with patching the context object
@@ -14,4 +14,4 @@ export const addMirageToContext = (mirageServer: any): ResolverMapWrapper => {
       return originalResolver(parent, args, context, info);
     };
   });
-}
+};

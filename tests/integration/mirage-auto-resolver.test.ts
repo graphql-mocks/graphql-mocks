@@ -1,23 +1,20 @@
-import {expect} from 'chai';
-import {buildSchema} from 'graphql';
+import { expect } from 'chai';
+import { buildSchema } from 'graphql';
 import defaultResolvers from './resolvers';
-import {patchWithAutoResolvers} from '../../src/mirage/wrappers/patch-with-auto';
-import {server as mirageServer} from './mirage';
+import { patchWithAutoResolvers } from '../../src/mirage/wrappers/patch-with-auto';
+import { server as mirageServer } from './mirage';
 import defaultScenario from './mirage/scenarios/default';
-import {buildHandler, typeDefs} from './executable-schema';
-import { addMirageToContext } from "../../src/mirage/wrappers/add-context";
-import {pack} from '../../src/resolver-map/pack';
+import { buildHandler, typeDefs } from './executable-schema';
+import { addMirageToContext } from '../../src/mirage/wrappers/add-context';
+import { pack } from '../../src/resolver-map/pack';
 
 const schema = buildSchema(typeDefs);
 
-const wrappers = [
-  addMirageToContext(mirageServer),
-  patchWithAutoResolvers(schema)
-];
+const wrappers = [addMirageToContext(mirageServer), patchWithAutoResolvers(schema)];
 
-const {resolvers} = pack(defaultResolvers, wrappers);
+const { resolvers } = pack(defaultResolvers, wrappers);
 
-let graphQLHandler = buildHandler(resolvers);
+const graphQLHandler = buildHandler(resolvers);
 
 describe('auto resolving from mirage', function() {
   this.beforeEach(() => {
@@ -37,7 +34,7 @@ describe('auto resolving from mirage', function() {
   });
 
   it('can handle a simple auto look up', async function() {
-    let server = mirageServer;
+    const server = mirageServer;
 
     const query = `query {
       person(id: 1) {
@@ -53,13 +50,16 @@ describe('auto resolving from mirage', function() {
     expect(result).to.deep.equal({
       data: {
         person: {
-          id: "1",
+          id: '1',
           name: 'Fred Flinstone',
-          posts: [{
-            body: "They're the modern stone age family. From the town of Bedrock. They're a page right out of history"
-          }]
-        }
-      }
+          posts: [
+            {
+              body:
+                "They're the modern stone age family. From the town of Bedrock. They're a page right out of history",
+            },
+          ],
+        },
+      },
     });
   });
 

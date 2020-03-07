@@ -1,8 +1,8 @@
-import friends from './friends'
-import {PersonResolvers} from '../../types'
+import friends from './friends';
+import { PersonResolvers } from '../../types';
 
 const Person: PersonResolvers = {
-  friends
+  friends,
 };
 
 export default Person;

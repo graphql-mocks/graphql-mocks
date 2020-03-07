@@ -30,4 +30,4 @@ export const patchWithAutoResolvers = (schema: any): ResolverMapWrapper => (reso
   }
 
   return resolvers;
-}
+};

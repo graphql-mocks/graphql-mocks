@@ -5,20 +5,20 @@ const defaultPackOptions = { packState: {} };
 export const pack: Packager = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
   // make an intial copy
   let wrappedMap = {
-    ...initialResolversMap
+    ...initialResolversMap,
   };
 
   packOptions = {
     ...packOptions,
 
     packState: {
-      ...packOptions.packState
-    }
+      ...packOptions.packState,
+    },
   };
 
-  wrappers.forEach((wrapper) => {
+  wrappers.forEach(wrapper => {
     wrappedMap = wrapper(wrappedMap, packOptions);
   });
 
   return { resolvers: wrappedMap, packState: packOptions.packState };
-}
+};

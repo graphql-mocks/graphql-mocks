@@ -1,7 +1,7 @@
-import { ResolverMap, ResolverMapWrapper, PackOptions } from "../types";
+import { ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
 
 export const wrap = (wrapper: ResolverMapWrapper): ResolverMapWrapper => {
-  return (map: ResolverMap, packOptions: PackOptions) => {
+  return (map: ResolverMap, packOptions: PackOptions): ResolverMap => {
     const wrappedMap = wrapper(map, packOptions);
 
     if (typeof wrappedMap !== 'object') {
