@@ -7,7 +7,7 @@ import defaultScenario from './mirage/scenarios/default';
 import {pack} from '../../src/resolver-map/pack';
 
 const wrappers = [addMirageToContext(mirageServer)];
-const resolvers = pack(defaultResolvers, wrappers);
+const {resolvers} = pack(defaultResolvers, wrappers);
 
 const graphQLHandler = buildHandler(resolvers);
 

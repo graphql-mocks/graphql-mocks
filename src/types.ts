@@ -1,17 +1,16 @@
-type Resolver = (parent: any, args: any, context: any, info: any) => any;
+export type Resolver = (parent: any, args: any, context: any, info: any) => any;
 
-type ResolverMap = {
-    [type: string]: {
-      [field: string] : Resolver
-    }
+export type ResolverMap = {
+  [type: string]: {
+    [field: string] : Resolver
   }
-
-type ResolverMapWrapper = (map: ResolverMap) => ResolverMap;
-
-export type Packager = (initialMap: ResolverMap, wrappers: ResolverMapWrapper[]) => ResolverMap;
-
-export {
-  Resolver,
-  ResolverMap,
-  ResolverMapWrapper
 }
+
+export type PackState = Record<any, any>;
+export type PackOptions = {
+  packState: PackState
+};
+export type ResolverMapWrapper = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
+
+export type Packed = { resolvers: ResolverMap, packState: PackState }
+export type Packager = (initialMap: ResolverMap, wrappers: ResolverMapWrapper[]) => Packed;

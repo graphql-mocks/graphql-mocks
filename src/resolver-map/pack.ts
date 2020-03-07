@@ -1,20 +1,20 @@
-import { Packager } from '../types';
+import { Packager, PackState, PackOptions } from '../types';
 
-export const pack: Packager = (initialMap, wrappers) => {
-    // make an intial copy
-    let wrappedMap = {
-      ...initialMap
-    };
+export const pack: Packager = (initialResolversMap, wrappers, initialPackState: PackState = {}) => {
+  // make an intial copy
+  let wrappedMap = {
+    ...initialResolversMap
+  };
 
-    wrappers.forEach((wrapper) => {
-      // copy on each loop
-      wrappedMap = {
-        ...wrappedMap
-      };
+  const packOptions: PackOptions = {
+    packState: {
+      ...initialPackState
+    }
+  };
 
-      wrappedMap = wrapper(wrappedMap);
-    });
+  wrappers.forEach((wrapper) => {
+    wrappedMap = wrapper(wrappedMap, packOptions);
+  });
 
-  return wrappedMap;
-
+  return { resolvers: wrappedMap, packState: packOptions.packState };
 }

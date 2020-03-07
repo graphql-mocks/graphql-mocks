@@ -15,7 +15,7 @@ const wrappers = [
   patchWithAutoResolvers(schema)
 ];
 
-const resolvers = pack(defaultResolvers, wrappers);
+const {resolvers} = pack(defaultResolvers, wrappers);
 
 let graphQLHandler = buildHandler(resolvers);
 
