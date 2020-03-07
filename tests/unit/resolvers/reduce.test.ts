@@ -1,11 +1,11 @@
 import {expect} from 'chai';
-import reduce from '../../../src/resolvers/reduce';
-import { ResolverReducer } from '../../../src/types';
+import reduce from '../../../src/resolver-map/wrap';
+import { ResolverMapWrapper } from '../../../src/types';
 
 describe('reduece', function() {
   it('reduces a set of resolvers', function() {
     const resolvers = {};
-    const reducers: ResolverReducer[] = [
+    const reducers: ResolverMapWrapper[] = [
       function(resolvers)  {
         resolvers.Type = {};
         resolvers.Type.field = () => {}
@@ -14,7 +14,7 @@ describe('reduece', function() {
       }
     ];
 
-    const reducedResolvers = reduce({resolvers, reducers});
+    const reducedResolvers = reduce({map: resolvers, wrapper: reducers});
 
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(reducedResolvers).to.have.property('Type');
@@ -29,6 +29,6 @@ describe('reduece', function() {
       }
     ];
 
-    expect(() => reduce({resolvers, reducers})).to.throw();
+    expect(() => reduce({map: resolvers, wrapper: reducers})).to.throw();
   });
 });

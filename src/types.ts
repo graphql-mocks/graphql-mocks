@@ -1,15 +1,17 @@
 type Resolver = (parent: any, args: any, context: any, info: any) => any;
 
-type FieldResolvers = {
+type ResolverMap = {
     [type: string]: {
       [field: string] : Resolver
     }
   }
 
-type ResolverReducer = (resolvers: FieldResolvers) => FieldResolvers;
+type ResolverMapWrapper = (map: ResolverMap) => ResolverMap;
+
+export type Packager = (initialMap: ResolverMap, wrappers: ResolverMapWrapper[]) => ResolverMap;
 
 export {
   Resolver,
-  FieldResolvers,
-  ResolverReducer
+  ResolverMap,
+  ResolverMapWrapper
 }

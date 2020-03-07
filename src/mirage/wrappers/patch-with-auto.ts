@@ -1,11 +1,11 @@
 import { GraphQLObjectType } from 'graphql';
 import { mirageAutoResolver } from '../resolvers/auto';
-import { FieldResolvers } from '../../types';
+import { ResolverMap, ResolverMapWrapper } from '../../types';
 
 // iterate over all types and fields as given by the schema
 // then if any resolvers are missing, patch them with an
 // auto mirage field resolver.
-export const patchWithAutoResolvers = (schema: any) => (resolvers: FieldResolvers) => {
+export const patchWithAutoResolvers = (schema: any): ResolverMapWrapper => (resolvers: ResolverMap) => {
   const typeMap = schema.getTypeMap();
 
   for (const type of Object.keys(typeMap)) {
@@ -15,7 +15,7 @@ export const patchWithAutoResolvers = (schema: any) => (resolvers: FieldResolver
       for (const field of Object.keys(fields)) {
         resolvers[type] = resolvers[type] || {};
 
-        // don't want to fill in mirage resolvers fill for internal types like __Type
+        // don't want to fill in mirage resolvers for internal types like __Type
         const isGraphQLInternalType = type.indexOf('__') === 0;
 
         if (type === 'Query' || type === 'Mutation' || isGraphQLInternalType) {
