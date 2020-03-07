@@ -1,14 +1,18 @@
 import { Packager, PackState, PackOptions } from '../types';
 
-export const pack: Packager = (initialResolversMap, wrappers, initialPackState: PackState = {}) => {
+const defaultPackOptions = { packState: {} };
+
+export const pack: Packager = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
   // make an intial copy
   let wrappedMap = {
     ...initialResolversMap
   };
 
-  const packOptions: PackOptions = {
+  packOptions = {
+    ...packOptions,
+
     packState: {
-      ...initialPackState
+      ...packOptions.packState
     }
   };
 

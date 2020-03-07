@@ -13,4 +13,8 @@ export type PackOptions = {
 export type ResolverMapWrapper = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
 
 export type Packed = { resolvers: ResolverMap, packState: PackState }
-export type Packager = (initialMap: ResolverMap, wrappers: ResolverMapWrapper[]) => Packed;
+export type Packager = (
+  initialMap: ResolverMap,
+  wrappers: ResolverMapWrapper[],
+  packOptions?: PackOptions
+) => Packed;
