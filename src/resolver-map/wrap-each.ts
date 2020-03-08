@@ -1,4 +1,5 @@
 import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
+import cloneDeep from 'lodash.clonedeep';
 
 export type WrapEachDetails = {
   resolvers: ResolverMap;
@@ -12,9 +13,12 @@ export const wrapEach = (eachWrapper: EachWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ) => {
+  resolvers = cloneDeep(resolvers);
+
   for (const type in resolvers) {
     for (const field in resolvers[type]) {
       const resolver = resolvers[type][field];
+
       const newResolver = eachWrapper(resolver, {
         resolvers,
         path: [type, field],
