@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { buildHandler } from './executable-schema';
-import defaultResolvers from './resolvers';
-import { server as mirageServer } from './mirage';
+import defaultResolvers from './mirage-static-resolvers';
+import { server as mirageServer } from './mirage-sample';
 import { addMirageToContext } from '../../src/mirage/wrappers/add-context';
-import defaultScenario from './mirage/scenarios/default';
+import defaultScenario from './mirage-sample/scenarios/default';
 import { pack } from '../../src/resolver-map/pack';
 
 const wrappers = [addMirageToContext(mirageServer)];

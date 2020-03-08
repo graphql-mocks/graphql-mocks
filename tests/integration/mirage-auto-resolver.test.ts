@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
-import defaultResolvers from './resolvers';
+import defaultResolvers from './mirage-static-resolvers';
 import { patchWithAutoResolvers } from '../../src/mirage/wrappers/patch-with-auto';
-import { server as mirageServer } from './mirage';
-import defaultScenario from './mirage/scenarios/default';
+import { server as mirageServer } from './mirage-sample';
+import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
 import { addMirageToContext } from '../../src/mirage/wrappers/add-context';
 import { pack } from '../../src/resolver-map/pack';
@@ -34,8 +34,6 @@ describe('auto resolving from mirage', function() {
   });
 
   it('can handle a simple auto look up', async function() {
-    const server = mirageServer;
-
     const query = `query {
       person(id: 1) {
         id
