@@ -4,7 +4,7 @@ import { Resolver, ResolverMapWrapper } from '../../types';
 // wraps an existing resolver with patching the context object
 // with a `mirage` key for access to the mirage server
 export const addMirageToContext = (mirageServer: any): ResolverMapWrapper => {
-  return wrapEach((originalResolver: Resolver, wrapperDetails: WrapEachDetails) => {
+  return wrapEach((originalResolver: Resolver, _wrapperDetails: WrapEachDetails) => {
     return function wrapperRolverWithContext(parent, args, context, info) {
       context = context || {};
       context.mirage = context.mirage || {};
