@@ -1,4 +1,4 @@
-export type Resolver = (parent: any, args: any, context: any, info: any) => any;
+export type Resolver = (parent: any, args: any, context: any, info: any) => any | Promise<any>;
 
 export type ResolverMap = {
   [type: string]: {

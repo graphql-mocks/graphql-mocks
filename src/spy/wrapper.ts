@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { wrapEach, WrapEachDetails } from '../resolver-map/wrap-each';
+import { wrapEach } from '../resolver-map/wrap-each';
 import { ResolverMapWrapper } from '../types';
 
 export const spyWrapper: ResolverMapWrapper = wrapEach((originalResolver, wrapperDetails) => {

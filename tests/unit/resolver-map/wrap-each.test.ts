@@ -18,7 +18,6 @@ describe('wrapEach', function() {
     };
 
     const resolverWrapper = sinon.spy((resolver, _details) => {
-      console.log('called resolver wrapper');
       // returns a new function that wraps the existing resolver
       return sinon.spy(resolver);
     });
