@@ -2,20 +2,20 @@ import { logWrapper } from '../../../src/log/wrapper';
 import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
-import { spy, SinonSpy } from 'sinon';
+import { stub, SinonStub } from 'sinon';
 
 describe('log/wrapper', function() {
-  let logSpy: SinonSpy;
+  let logStub: SinonStub;
 
   beforeEach(() => {
-    logSpy = spy<Console, any>(console, 'log');
+    logStub = stub<Console, any>(console, 'log');
   });
 
   afterEach(() => {
-    logSpy.restore();
+    logStub.restore();
   });
 
-  it('logs details around calling resolvers', async function() {
+  it('logs details around calling resoslvers', async function() {
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -27,7 +27,7 @@ describe('log/wrapper', function() {
 
     const { resolvers: wrappedResolvers } = pack(resolverMap, [logWrapper]);
     wrappedResolvers.Query.rootQueryField('parent', 'args', 'context', 'info');
-    const logCalls = logSpy.getCalls().map(call => call.args[0]);
+    const logCalls = logStub.getCalls().map(call => call.args[0]);
     expect(logCalls).to.deep.equal([
       'Resolver for type: "Query" field: "rootQueryField"',
       'parent: "parent"',

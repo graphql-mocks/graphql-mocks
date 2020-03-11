@@ -23,10 +23,13 @@ describe('performance/wrapper', function() {
 
     await wrappedResolvers.Query.rootQueryField({}, {}, {}, {});
     expect(rootQueryFieldPerformance.length).to.equal(1);
-    expect(rootQueryFieldPerformance[0]).to.be.above(
+
+    const [timeElapsed] = rootQueryFieldPerformance;
+
+    expect(timeElapsed).to.be.above(
       RESOLVER_RUN_TIME_DELAY,
-      'the resolver takes at least as long as the timeout',
+      `the resolver takes at least as long as the timeout, took ${timeElapsed}`,
     );
-    expect(rootQueryFieldPerformance[0]).to.be.below(RESOLVER_RUN_TIME_DELAY + 20, 'the resolver runs within 20ms');
+    expect(timeElapsed).to.be.below(RESOLVER_RUN_TIME_DELAY + 50, `the resolver runs within 50ms, took ${timeElapsed}`);
   });
 });
