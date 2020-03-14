@@ -110,4 +110,41 @@ describe('auto resolving from mirage', function() {
     expect(result.data!.person.posts[0].comments[0].body).to.equal('I love the town of Bedrock!');
     expect(result.data!.person.posts[0].comments[0].author.name).to.equal('Barney Rubble');
   });
+
+  it('can resolve a union type', async function() {
+    const query = `query {
+      allPersons {
+        id
+        name
+
+        transportation {
+          __typename
+
+          ... on Bike {
+            brand
+          }
+
+          ... on Car {
+            make
+            model
+          }
+
+          ... on PublicTransit {
+            primary
+          }
+        }
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [firstPerson, secondPerson] = result.data!.allPersons;
+
+    expect(firstPerson.name).to.equal('Fred Flinstone');
+    expect(firstPerson.transportation.__typename).to.equal('Bike');
+    expect(firstPerson.transportation.brand).to.equal('Bianchi');
+
+    expect(secondPerson.name).to.equal('Barney Rubble');
+    expect(secondPerson.transportation.__typename).to.equal('PublicTransit');
+    expect(secondPerson.transportation.primary).to.equal('Subway');
+  });
 });

@@ -22,12 +22,55 @@ export default {
       age: 43,
       friendIds: ['2'],
       postIds: ['1'],
+      transportationId: { type: 'bike', id: '1' },
     },
     {
       id: '2',
       name: 'Barney Rubble',
       age: 40,
       friendIds: ['1'],
+      transportationId: { type: 'publicTransit', id: '3' },
+    },
+  ],
+  bikes: [
+    {
+      id: '1',
+      brand: 'Bianchi',
+    },
+    {
+      id: '2',
+      brand: 'Cannondale',
+    },
+  ],
+  publicTransits: [
+    {
+      id: '1',
+      primary: 'Bus',
+    },
+    {
+      id: '2',
+      primary: 'Tram',
+    },
+    {
+      id: '3',
+      primary: 'Subway',
+    },
+  ],
+  cars: [
+    {
+      id: '1',
+      make: 'Tesla',
+      model: 'Model 3',
+    },
+    {
+      id: '2',
+      make: 'Honda',
+      model: 'Civic',
+    },
+    {
+      id: '3',
+      make: 'Volkwagen',
+      model: 'Golf',
     },
   ],
 };

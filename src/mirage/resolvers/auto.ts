@@ -1,6 +1,11 @@
 import { Resolver } from '../../types';
+import { classify } from 'inflected';
 
-export const mirageAutoResolver: Resolver = function(parent, _args, _context, info) {
+export const mirageAutoUnionResolver: Resolver = function(parent, _args, _context, _info) {
+  return classify(parent.modelName.replace('-', '_')) as string;
+};
+
+export const mirageAutoObjectResolver: Resolver = function(parent, _args, _context, info) {
   const resolvedModel = parent;
   const { fieldName } = info;
 
@@ -13,5 +18,10 @@ export const mirageAutoResolver: Resolver = function(parent, _args, _context, in
   }
 
   const resolvedField = resolvedModel[fieldName].models ? resolvedModel[fieldName].models : resolvedModel[fieldName];
+
+  if (!resolvedField) {
+    throw new Error(`Failed to resolve an error from ${resolvedModel.toString()} ${fieldName}`);
+  }
+
   return resolvedField;
 };

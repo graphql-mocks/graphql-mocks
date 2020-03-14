@@ -1,5 +1,5 @@
-import { GraphQLObjectType } from 'graphql';
-import { mirageAutoResolver } from '../resolvers/auto';
+import { GraphQLObjectType, GraphQLUnionType } from 'graphql';
+import { mirageAutoObjectResolver, mirageAutoUnionResolver } from '../resolvers/auto';
 import { ResolverMap, ResolverMapWrapper } from '../../types';
 
 // iterate over all types and fields as given by the schema
@@ -8,22 +8,29 @@ import { ResolverMap, ResolverMapWrapper } from '../../types';
 export const patchWithAutoResolvers = (schema: any): ResolverMapWrapper => (resolvers: ResolverMap) => {
   const typeMap = schema.getTypeMap();
 
-  for (const type of Object.keys(typeMap)) {
-    if (typeMap[type] instanceof GraphQLObjectType) {
-      const fields = (typeMap[type] as GraphQLObjectType).getFields();
+  for (const typeKey of Object.keys(typeMap)) {
+    const type = typeMap[typeKey];
+
+    if (type instanceof GraphQLUnionType) {
+      resolvers[typeKey] = resolvers[typeKey] || {};
+      resolvers[typeKey]['__resolveType'] = mirageAutoUnionResolver;
+    }
+
+    if (type instanceof GraphQLObjectType) {
+      const fields = (typeMap[typeKey] as GraphQLObjectType).getFields();
 
       for (const field of Object.keys(fields)) {
-        resolvers[type] = resolvers[type] || {};
+        resolvers[typeKey] = resolvers[typeKey] || {};
 
         // don't want to fill in mirage resolvers for internal types like __Type
-        const isGraphQLInternalType = type.indexOf('__') === 0;
+        const isGraphQLInternalType = typeKey.indexOf('__') === 0;
 
-        if (type === 'Query' || type === 'Mutation' || isGraphQLInternalType) {
+        if (typeKey === 'Query' || typeKey === 'Mutation' || isGraphQLInternalType) {
           continue;
         }
 
-        if (!resolvers[type][field]) {
-          resolvers[type][field] = mirageAutoResolver;
+        if (!resolvers[typeKey][field]) {
+          resolvers[typeKey][field] = mirageAutoObjectResolver;
         }
       }
     }

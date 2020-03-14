@@ -14,6 +14,7 @@ type Person {
   age: Int!
   friends: [Person!]!
   posts: [Post!]!
+  transportation: Transportation!
 }
 
 type Post {
@@ -28,4 +29,25 @@ type Comment {
   id: ID!
   body: String!
   author: Person!
+}
+
+union Transportation = Bike | PublicTransit | Car
+
+type Bike {
+  brand: String!
+}
+
+type PublicTransit {
+  primary: PublicTransitOptions!
+}
+
+enum PublicTransitOptions {
+  Bus
+  Tram
+  Subway
+}
+
+type Car {
+  make: String!
+  model: String!
 }

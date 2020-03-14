@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@graphql-codegen/cli": "^1.9.1",
+    "inflected": "^2.0.4",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
@@ -20,6 +21,7 @@
     "@graphql-codegen/typescript-operations": "1.0.0",
     "@graphql-codegen/typescript-resolvers": "^1.9.1",
     "@types/chai": "^4.2.7",
+    "@types/inflected": "^1.1.29",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.21",
