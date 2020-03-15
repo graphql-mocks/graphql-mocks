@@ -28,6 +28,7 @@ export default {
         { type: 'culinaryHobby', id: '2' },
         { type: 'sportsHobby', id: '1' },
       ],
+      favoriteColor: 'Yellow',
     },
     {
       id: '2',
@@ -39,6 +40,7 @@ export default {
         { type: 'makerHobby', id: '1' },
         { type: 'sportsHobby', id: '2' },
       ],
+      favoriteColor: 'Green',
     },
   ],
   bikes: [

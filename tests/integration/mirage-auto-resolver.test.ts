@@ -12,17 +12,21 @@ const schema = buildSchema(typeDefs);
 
 const wrappers = [addMirageToContext(mirageServer), patchWithAutoResolvers(schema)];
 
-const { resolvers } = pack(defaultResolvers, wrappers);
-
-const graphQLHandler = buildHandler(resolvers);
-
 describe('auto resolving from mirage', function() {
+  let resolvers: any;
+  let graphQLHandler: any;
+
   this.beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
+    const packed = pack(defaultResolvers, wrappers);
+    resolvers = packed.resolvers;
+    graphQLHandler = buildHandler(resolvers);
   });
 
   this.afterEach(() => {
     mirageServer.db.emptyData();
+    resolvers = undefined;
+    graphQLHandler = undefined;
   });
 
   it('has missing resolvers that are filled by #patchWithAutoResolvers', function() {
@@ -218,5 +222,24 @@ describe('auto resolving from mirage', function() {
         requiresEquipment: true,
       },
     ]);
+  });
+
+  it('can resolve an enum type', async function() {
+    const query = `query {
+      allPersons {
+        id
+        name
+        favoriteColor
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [firstPerson, secondPerson] = result.data!.allPersons;
+
+    expect(firstPerson.name).to.equal('Fred Flinstone');
+    expect(firstPerson.favoriteColor).to.equal('Yellow');
+
+    expect(secondPerson.name).to.equal('Barney Rubble');
+    expect(secondPerson.favoriteColor).to.equal('Green');
   });
 });

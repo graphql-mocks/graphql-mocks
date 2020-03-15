@@ -16,6 +16,7 @@ type Person {
   posts: [Post!]!
   transportation: Transportation!
   hobbies: [Hobby!]!
+  favoriteColor: FavoriteColor!
 }
 
 type Post {
@@ -81,4 +82,13 @@ enum MakerHobbyTypes {
   Textile
   Electronic
   Woodwork
+}
+
+enum FavoriteColor {
+  Red
+  Orange
+  Yellow
+  Green
+  Blue
+  Purple
 }
