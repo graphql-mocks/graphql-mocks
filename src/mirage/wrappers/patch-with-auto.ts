@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLUnionType } from 'graphql';
+import { GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType } from 'graphql';
 import { mirageAutoObjectResolver, mirageAutoUnionResolver } from '../resolvers/auto';
 import { ResolverMap, ResolverMapWrapper } from '../../types';
 
@@ -11,7 +11,7 @@ export const patchWithAutoResolvers = (schema: any): ResolverMapWrapper => (reso
   for (const typeKey of Object.keys(typeMap)) {
     const type = typeMap[typeKey];
 
-    if (type instanceof GraphQLUnionType) {
+    if (type instanceof GraphQLUnionType || type instanceof GraphQLInterfaceType) {
       resolvers[typeKey] = resolvers[typeKey] || {};
       resolvers[typeKey]['__resolveType'] = mirageAutoUnionResolver;
     }

@@ -5,4 +5,5 @@ export const model = Model.extend({
   friends: hasMany('person'),
   posts: hasMany(),
   transportation: belongsTo({ polymorphic: true }),
+  hobbies: hasMany({ polymorphic: true }),
 });

@@ -147,4 +147,76 @@ describe('auto resolving from mirage', function() {
     expect(secondPerson.transportation.__typename).to.equal('PublicTransit');
     expect(secondPerson.transportation.primary).to.equal('Subway');
   });
+
+  it('can resolve an interface type', async function() {
+    const query = `query {
+      allPersons {
+        id
+        name
+
+        hobbies {
+          __typename
+
+          name
+          requiresEquipment
+
+          ... on SportsHobby {
+            hasMultiplePlayers
+          }
+
+          ... on CulinaryHobby {
+            requiresOven
+            requiresStove
+          }
+
+          ... on MakerHobby {
+            makerType
+          }
+        }
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [firstPerson, secondPerson] = result.data!.allPersons;
+
+    expect(firstPerson.name).to.equal('Fred Flinstone');
+    expect(firstPerson.hobbies).to.deep.equal([
+      {
+        __typename: 'CulinaryHobby',
+        name: 'Cooking',
+        requiresEquipment: true,
+        requiresOven: false,
+        requiresStove: true,
+      },
+      {
+        __typename: 'CulinaryHobby',
+        name: 'Baking',
+        requiresEquipment: true,
+        requiresOven: true,
+        requiresStove: false,
+      },
+      {
+        __typename: 'SportsHobby',
+        hasMultiplePlayers: false,
+        name: 'Running',
+        requiresEquipment: false,
+      },
+    ]);
+
+    expect(secondPerson.name).to.equal('Barney Rubble');
+    expect(secondPerson.hobbies).to.deep.equal([
+      {
+        __typename: 'MakerHobby',
+        makerType: 'Textile',
+        name: 'Knitting',
+        requiresEquipment: true,
+      },
+      {
+        __typename: 'SportsHobby',
+        hasMultiplePlayers: true,
+        name: 'Soccer',
+        requiresEquipment: true,
+      },
+    ]);
+  });
 });

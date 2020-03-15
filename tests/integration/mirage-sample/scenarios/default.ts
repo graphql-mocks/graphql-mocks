@@ -23,6 +23,11 @@ export default {
       friendIds: ['2'],
       postIds: ['1'],
       transportationId: { type: 'bike', id: '1' },
+      hobbyIds: [
+        { type: 'culinaryHobby', id: '1' },
+        { type: 'culinaryHobby', id: '2' },
+        { type: 'sportsHobby', id: '1' },
+      ],
     },
     {
       id: '2',
@@ -30,6 +35,10 @@ export default {
       age: 40,
       friendIds: ['1'],
       transportationId: { type: 'publicTransit', id: '3' },
+      hobbyIds: [
+        { type: 'makerHobby', id: '1' },
+        { type: 'sportsHobby', id: '2' },
+      ],
     },
   ],
   bikes: [
@@ -71,6 +80,50 @@ export default {
       id: '3',
       make: 'Volkwagen',
       model: 'Golf',
+    },
+  ],
+  culinaryHobbies: [
+    {
+      id: '1',
+      name: 'Cooking',
+      requiresEquipment: true,
+      requiresOven: false,
+      requiresStove: true,
+    },
+    {
+      id: '2',
+      name: 'Baking',
+      requiresEquipment: true,
+      requiresOven: true,
+      requiresStove: false,
+    },
+  ],
+  sportsHobbies: [
+    {
+      id: '1',
+      name: 'Running',
+      requiresEquipment: false,
+      hasMultiplePlayers: false,
+    },
+    {
+      id: '2',
+      name: 'Soccer',
+      requiresEquipment: true,
+      hasMultiplePlayers: true,
+    },
+  ],
+  makerHobbies: [
+    {
+      id: '1',
+      name: 'Knitting',
+      requiresEquipment: true,
+      makerType: 'Textile',
+    },
+    {
+      id: '2',
+      name: 'Arduino',
+      requiresEquipment: true,
+      makerType: 'Electronic',
     },
   ],
 };

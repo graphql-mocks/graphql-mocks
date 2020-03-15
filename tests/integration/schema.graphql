@@ -15,6 +15,7 @@ type Person {
   friends: [Person!]!
   posts: [Post!]!
   transportation: Transportation!
+  hobbies: [Hobby!]!
 }
 
 type Post {
@@ -50,4 +51,34 @@ enum PublicTransitOptions {
 type Car {
   make: String!
   model: String!
+}
+
+interface Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+}
+
+type SportsHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  hasMultiplePlayers: Boolean!
+}
+
+type CulinaryHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  requiresOven: Boolean!
+  requiresStove: Boolean!
+}
+
+type MakerHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  makerType: MakerHobbyTypes!
+}
+
+enum MakerHobbyTypes {
+  Textile
+  Electronic
+  Woodwork
 }
