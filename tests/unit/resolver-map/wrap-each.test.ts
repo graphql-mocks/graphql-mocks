@@ -4,8 +4,13 @@ import { generateEmptyPackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 
 describe('wrapEach', function() {
-  it('wrapsfor each individual resolver fn in resolver map', function() {
-    const originalResolverMap = {
+  let originalResolverMap: any;
+  let resolverWrapper: any;
+  let resolverMapWrapper: any;
+  let wrappedResolverMap: any;
+
+  beforeEach(() => {
+    originalResolverMap = {
       Query: {
         // eslint-disable-next-line
         field: sinon.spy(),
@@ -17,13 +22,15 @@ describe('wrapEach', function() {
       },
     };
 
-    const resolverWrapper = sinon.spy((resolver, _details) => {
+    resolverWrapper = sinon.spy(resolver => {
       // returns a new function that wraps the existing resolver
       return sinon.spy(resolver);
     });
+  });
 
-    const resolverMapWrapper = wrapEach(resolverWrapper);
-    const wrappedResolverMap: any = resolverMapWrapper(originalResolverMap, generateEmptyPackOptions());
+  it('wraps each individual resolver fn in resolver map', function() {
+    resolverMapWrapper = wrapEach(resolverWrapper);
+    wrappedResolverMap = resolverMapWrapper(originalResolverMap, generateEmptyPackOptions());
 
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
