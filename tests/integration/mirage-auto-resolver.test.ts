@@ -5,12 +5,12 @@ import { patchWithAutoResolvers } from '../../src/mirage/wrappers/patch-with-aut
 import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
-import { addMirageToContext } from '../../src/mirage/wrappers/add-context';
+import { addMirageToContextWrapper } from '../../src/mirage/wrappers/add-context';
 import { pack } from '../../src/resolver-map/pack';
 
 const schema = buildSchema(typeDefs);
 
-const wrappers = [addMirageToContext(mirageServer), patchWithAutoResolvers(schema)];
+const wrappers = [addMirageToContextWrapper(mirageServer), patchWithAutoResolvers(schema)];
 
 describe('auto resolving from mirage', function() {
   let resolvers: any;
