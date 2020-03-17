@@ -5,7 +5,7 @@ import { ResolverMap, ResolverMapWrapper } from '../../types';
 // iterate over all types and fields as given by the schema
 // then if any resolvers are missing, patch them with an
 // auto mirage field resolver.
-export const patchWithAutoResolvers = (schema: any): ResolverMapWrapper => (resolvers: ResolverMap) => {
+export const patchWithAutoWrapper = (schema: any): ResolverMapWrapper => (resolvers: ResolverMap) => {
   const typeMap = schema.getTypeMap();
 
   for (const typeKey of Object.keys(typeMap)) {

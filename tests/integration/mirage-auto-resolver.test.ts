@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
 import defaultResolvers from './mirage-static-resolvers';
-import { patchWithAutoResolvers } from '../../src/mirage/wrappers/patch-with-auto';
+import { patchWithAutoWrapper } from '../../src/mirage/wrappers/patch-with-auto';
 import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
@@ -10,7 +10,7 @@ import { pack } from '../../src/resolver-map/pack';
 
 const schema = buildSchema(typeDefs);
 
-const wrappers = [addMirageToContextWrapper(mirageServer), patchWithAutoResolvers(schema)];
+const wrappers = [addMirageToContextWrapper(mirageServer), patchWithAutoWrapper(schema)];
 
 describe('auto resolving from mirage', function() {
   let resolvers: any;
