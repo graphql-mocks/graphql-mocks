@@ -3,36 +3,33 @@ import { ResolverMap, ResolverMapWrapper } from '../types';
 import { Resolver } from '../types';
 
 export type PatchOptions = {
-  shouldSkip: (shouldSkipOptions: {
+  patchWith: (context: {
     resolvers: ResolverMap;
     type: GraphQLObjectType;
     field: GraphQLField<any, any, any>;
-  }) => boolean;
+  }) => Resolver | undefined;
 };
 
-export const patch = (schema: GraphQLSchema, patchResolver: Resolver, options?: PatchOptions): ResolverMapWrapper => (
-  resolvers: ResolverMap,
-) => {
+export const patch = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (resolvers: ResolverMap) => {
   const typeMap = schema.getTypeMap();
 
   for (const typeKey of Object.keys(typeMap)) {
     const type = typeMap[typeKey];
     const isObjectType = type instanceof GraphQLObjectType;
 
-    if (isObjectType && type) {
+    if (isObjectType) {
       const fields = (type as GraphQLObjectType).getFields();
 
       for (const fieldKey of Object.keys(fields)) {
         const field = fields[fieldKey];
 
-        if (options?.shouldSkip({ resolvers, type: type as GraphQLObjectType, field })) {
-          continue;
-        }
+        if (!resolvers[typeKey] || (resolvers[typeKey] && !resolvers[typeKey][fieldKey])) {
+          const patchResolver = options.patchWith({ resolvers, type: type as GraphQLObjectType, field });
 
-        resolvers[typeKey] = resolvers[typeKey] || {};
-
-        if (!resolvers[typeKey][fieldKey]) {
-          resolvers[typeKey][fieldKey] = patchResolver;
+          if (typeof patchResolver === 'function') {
+            resolvers[typeKey] = resolvers[typeKey] || {};
+            resolvers[typeKey][fieldKey] = patchResolver;
+          }
         }
       }
     }

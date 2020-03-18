@@ -1,6 +1,5 @@
-import { patchWithAutoWrapper } from '../../../src/mirage/wrappers/patch-with-auto';
+import { patchWithAutoTypesWrapper } from '../../../src/mirage/wrappers/patch-auto-types';
 import { ResolverMap } from '../../../src/types';
-import { spy, SinonSpy } from 'sinon';
 import { expect } from 'chai';
 import { generateEmptyPackOptions } from '../../mocks';
 import { GraphQLSchema } from 'graphql';
@@ -56,12 +55,12 @@ describe('mirage/patch-with-auto', function() {
     schema = undefined;
   });
 
-  it('patched missing type field resolvers', async function() {
+  it('patches missing type field resolvers', async function() {
     expect(resolverMap?.Spell?.incantation).to.not.exist;
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrapper = patchWithAutoWrapper(schema);
+    const wrapper = patchWithAutoTypesWrapper(schema!);
     const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
 
     expect(wrappedResolvers?.Spell.incantation).to.exist;
@@ -74,7 +73,7 @@ describe('mirage/patch-with-auto', function() {
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
-    const wrapper = patchWithAutoWrapper(schema);
+    const wrapper = patchWithAutoTypesWrapper(schema!);
     const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;

@@ -1,6 +1,4 @@
-import { patch } from '../../../src/resolver-map/patch';
-import { ResolverMap } from '../../../src/types';
-import { spy, SinonSpy } from 'sinon';
+import { patch } from '../../../src/resolver-map/patch-each';
 import { expect } from 'chai';
 import { generateEmptyPackOptions } from '../../mocks';
 import { GraphQLSchema } from 'graphql';
@@ -55,7 +53,7 @@ describe('resolver-map/patch', function() {
     const patchResolver = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patch(schema!, patchResolver);
+    const wrapper = patch(schema!, { patchWith: () => patchResolver as any });
     const patchedResolvers = wrapper(resolverMap, generateEmptyPackOptions());
 
     expect(patchedResolvers.Query.hello).to.equal(helloSpy, 'original hello resolver is untouched');
@@ -66,7 +64,7 @@ describe('resolver-map/patch', function() {
     expect(patchedResolvers.Spell.incantation).to.equal(patchResolver, 'incantation is patched');
   });
 
-  it('skips patching with shouldSkip option', async function() {
+  it('skips patching when a resolver is not returned', async function() {
     const helloSpy = sinon.spy();
     const isEvilSpy = sinon.spy();
 
@@ -82,19 +80,18 @@ describe('resolver-map/patch', function() {
     const patchResolver = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patch(schema!, patchResolver, {
-      shouldSkip: ({ type, field }) => {
+    const wrapper = patch(schema!, {
+      patchWith: ({ type, field }) => {
         // only skip patching Query.spells
         if (type.name === 'Query' && field.name === 'spells') {
-          return true;
+          return;
+        } else {
+          return patchResolver;
         }
-
-        return false;
       },
     });
 
     expect((resolverMap as any).Query.spells!).to.not.exist;
-
     const patchedResolvers = wrapper(resolverMap, generateEmptyPackOptions());
     expect(patchedResolvers.Query.spells).to.not.exist;
     expect(patchedResolvers.Mutation.addSpell).to.exist;
