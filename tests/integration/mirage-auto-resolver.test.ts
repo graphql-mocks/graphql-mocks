@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { buildSchema } from 'graphql';
 import defaultResolvers from './mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
+import { patchAutoUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
 import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
@@ -10,7 +11,11 @@ import { pack } from '../../src/resolver-map/pack';
 
 const schema = buildSchema(typeDefs);
 
-const wrappers = [addMirageToContextWrapper(mirageServer), patchWithAutoTypesWrapper(schema)];
+const wrappers = [
+  addMirageToContextWrapper(mirageServer),
+  patchWithAutoTypesWrapper(schema),
+  patchAutoUnionsInterfaces(schema),
+];
 
 describe('auto resolving from mirage', function() {
   let resolvers: any;
