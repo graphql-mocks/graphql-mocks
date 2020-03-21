@@ -10,7 +10,9 @@ export type PatchOptions = {
   }) => Resolver | undefined;
 };
 
-export const patch = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (resolvers: ResolverMap) => {
+export const patchEach = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (
+  resolvers: ResolverMap,
+) => {
   const typeMap = schema.getTypeMap();
 
   for (const typeKey of Object.keys(typeMap)) {

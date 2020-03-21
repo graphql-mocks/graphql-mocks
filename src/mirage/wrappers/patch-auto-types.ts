@@ -1,10 +1,10 @@
 import { GraphQLSchema } from 'graphql';
 import { mirageAutoObjectResolver } from '../resolvers/auto';
 import { ResolverMapWrapper } from '../../types';
-import { patch } from '../../resolver-map/patch-each';
+import { patchEach } from '../../resolver-map/patch-each';
 
 export const patchWithAutoTypesWrapper = function(schema: GraphQLSchema): ResolverMapWrapper {
-  return patch(schema, {
+  return patchEach(schema, {
     patchWith({ type }) {
       const isRootQueryType = type.name === 'Query';
       const isRootMutationType = type.name === 'Mutation';
