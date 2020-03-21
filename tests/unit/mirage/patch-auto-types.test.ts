@@ -6,7 +6,7 @@ import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import sinon from 'sinon';
 
-describe('mirage/patch-with-auto', function() {
+describe('mirage/patch-auto-types', function() {
   let resolverMap: ResolverMap | undefined;
   let schema: GraphQLSchema | undefined;
 
