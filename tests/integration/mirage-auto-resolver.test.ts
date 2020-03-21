@@ -247,4 +247,41 @@ describe('auto resolving from mirage', function() {
     expect(secondPerson.name).to.equal('Barney Rubble');
     expect(secondPerson.favoriteColor).to.equal('Green');
   });
+
+  it('can resolve a list type', async function() {
+    const query = `query {
+      allPersons {
+        name
+        hobbies {
+          name
+        }
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [firstPerson, secondPerson] = result.data!.allPersons;
+
+    expect(firstPerson.name).to.equal('Fred Flinstone');
+    expect(firstPerson.hobbies).to.deep.equal([
+      {
+        name: 'Cooking',
+      },
+      {
+        name: 'Baking',
+      },
+      {
+        name: 'Running',
+      },
+    ]);
+
+    expect(secondPerson.name).to.equal('Barney Rubble');
+    expect(secondPerson.hobbies).to.deep.equal([
+      {
+        name: 'Knitting',
+      },
+      {
+        name: 'Soccer',
+      },
+    ]);
+  });
 });
