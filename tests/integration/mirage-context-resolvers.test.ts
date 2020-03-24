@@ -75,6 +75,10 @@ describe('it can resolve from resolver files', function() {
               name: 'Barney Rubble',
               age: 40,
             },
+            {
+              name: 'Wilma Flinstone',
+              age: 40,
+            },
           ],
         },
       },

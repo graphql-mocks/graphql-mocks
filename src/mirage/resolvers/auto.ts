@@ -17,6 +17,7 @@ export const mirageAutoObjectResolver: Resolver = function(parent, _args, _conte
     throw new Error(`${fieldName} does not exist on type}`);
   }
 
+  // TODO: Resolve mapping here and fallback to fieldName
   const resolvedField = resolvedModel[fieldName].models ? resolvedModel[fieldName].models : resolvedModel[fieldName];
 
   if (resolvedField === undefined) {

@@ -20,7 +20,7 @@ export default {
       id: '1',
       name: 'Fred Flinstone',
       age: 43,
-      friendIds: ['2'],
+      friendIds: ['2', '3'],
       postIds: ['1'],
       transportationId: { type: 'bike', id: '1' },
       hobbyIds: [
@@ -41,6 +41,15 @@ export default {
         { type: 'sportsHobby', id: '2' },
       ],
       favoriteColor: 'Green',
+    },
+    {
+      id: '3',
+      name: 'Wilma Flinstone',
+      age: 40,
+      friendIds: ['1'],
+      transportationId: { type: 'publicTransit', id: '3' },
+      hobbyIds: [{ type: 'makerHobby', id: '1' }],
+      favoriteColor: 'Red',
     },
   ],
   bikes: [

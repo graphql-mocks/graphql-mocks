@@ -31,6 +31,7 @@ describe('mirage/patch-auto-types', function() {
           hello: String
           spells: [Spell!]!
           potions: [Potion!]!
+          sourcerers: [Sourcerer!]!
         }
 
         type Mutation {
@@ -45,6 +46,27 @@ describe('mirage/patch-auto-types', function() {
         type Potion {
           name: String!
           ingredients: [String!]!
+        }
+
+        type SpellConnection {
+          edges: SpellConnectionEdge
+          pageInfo: SpellConnectionPageInfo!
+        }
+
+        type SpellConnectionEdge {
+          node: Spell!
+          cursor: String!
+        }
+
+        type SpellConnectionPageInfo {
+          startCursor: String!
+          endCursor: String!
+          hasPreviousPage: Boolean!
+          hasNextPage: Boolean!
+        }
+
+        type Sourcerer {
+          spellConnections: [SpellConnection!]!
         }
       `,
     });
@@ -66,6 +88,19 @@ describe('mirage/patch-auto-types', function() {
     expect(wrappedResolvers?.Spell.incantation).to.exist;
     expect(wrappedResolvers?.Potion.name).to.exist;
     expect(wrappedResolvers?.Potion.ingredients).to.exist;
+  });
+
+  it('skips missing root query and mutation field resolvers', async function() {
+    expect(resolverMap?.Query.spells).to.not.exist;
+    expect(resolverMap?.Query.potions).to.not.exist;
+    expect(resolverMap?.Mutation?.addSpell).to.not.exist;
+
+    const wrapper = patchWithAutoTypesWrapper(schema!);
+    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+
+    expect(wrappedResolvers?.Query.spells).to.not.exist;
+    expect(wrappedResolvers?.Query.potions).to.not.exist;
+    expect(wrappedResolvers?.Mutation?.addSpell).to.not.exist;
   });
 
   it('skips missing root query and mutation field resolvers', async function() {

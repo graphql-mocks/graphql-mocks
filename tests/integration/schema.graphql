@@ -6,6 +6,7 @@ type Query {
   hello: String,
   person(id: ID!): Person
   allPersons: [Person!]!
+  allPersonsPaginated(first: Int, last: Int, before: String, after: String): PersonConnection!
 }
 
 type Person {
@@ -17,6 +18,24 @@ type Person {
   transportation: Transportation!
   hobbies: [Hobby!]!
   favoriteColor: FavoriteColor!
+  paginatedFriends(first: Int, last: Int, before: String, after: String): PersonConnection!
+}
+
+type PersonConnection {
+  edges: [PersonEdge!]!
+  pageInfo: PersonConnectionPageInfo!
+}
+
+type PersonEdge {
+  node: Person!
+  cursor: String!
+}
+
+type PersonConnectionPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
 }
 
 type Post {

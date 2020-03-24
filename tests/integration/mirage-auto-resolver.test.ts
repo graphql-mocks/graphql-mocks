@@ -12,9 +12,9 @@ import { pack } from '../../src/resolver-map/pack';
 const schema = buildSchema(typeDefs);
 
 const wrappers = [
-  addMirageToContextWrapper(mirageServer),
   patchWithAutoTypesWrapper(schema),
   patchAutoUnionsInterfaces(schema),
+  addMirageToContextWrapper(mirageServer),
 ];
 
 describe('auto resolving from mirage', function() {
@@ -283,5 +283,87 @@ describe('auto resolving from mirage', function() {
         name: 'Soccer',
       },
     ]);
+  });
+
+  describe('Relay Connections', () => {
+    it('can resolve a root-level relay connection', async () => {
+      const query = `query {
+        allPersonsPaginated(first: 2) {
+          edges {
+            cursor
+            node {
+              id
+              name
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+            hasPreviousPage
+            startCursor
+          }
+        }
+      }`;
+
+      const result = await graphQLHandler(query);
+      debugger;
+      const edges = result.data.allPersonsPaginated.edges;
+      const pageInfo = result.data.allPersonsPaginated.pageInfo;
+      const firstPersonEdge = edges[0];
+      const secondPersonEdge = edges[1];
+
+      expect(firstPersonEdge.cursor).to.equal('model:person(1)');
+      expect(firstPersonEdge.node.id).to.equal('1');
+      expect(firstPersonEdge.node.name).to.equal('Fred Flinstone');
+
+      expect(secondPersonEdge.cursor).to.equal('model:person(2)');
+      expect(secondPersonEdge.node.id).to.equal('2');
+      expect(secondPersonEdge.node.name).to.equal('Barney Rubble');
+
+      expect(pageInfo).to.deep.equal({
+        endCursor: 'model:person(2)',
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: 'model:person(1)',
+      });
+    });
+
+    it('can resolve a type relay connection', async () => {
+      const query = `query {
+        allPersons {
+          id
+          name
+          paginatedFriends(first: 1) {
+            edges {
+              cursor
+              node {
+                name
+              }
+            }
+            pageInfo {
+              startCursor
+              endCursor
+              hasPreviousPage
+              hasNextPage
+            }
+          }
+        }
+      }`;
+
+      const result = await graphQLHandler(query);
+      const firstPerson = result.data.allPersons[0];
+
+      expect(firstPerson.name).to.equal('Fred Flinstone');
+      expect(firstPerson.id).to.equal('1');
+      expect(firstPerson.paginatedFriends.edges.length).to.equal(1);
+      expect(firstPerson.paginatedFriends.edges[0].cursor).to.equal('model:person(2)');
+      expect(firstPerson.paginatedFriends.edges[0].node.name).to.equal('Barney Rubble');
+      expect(firstPerson.paginatedFriends.pageInfo).to.deep.equal({
+        endCursor: 'model:person(2)',
+        hasNextPage: true,
+        hasPreviousPage: false,
+        startCursor: 'model:person(2)',
+      });
+    });
   });
 });
