@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql';
-import { ResolverMap, ResolverMapWrapper } from '../types';
-import { Resolver } from '../types';
+import { Resolver, ResolverMap, ResolverMapWrapper } from '../types';
+import { embedPackOptions } from './pack-wrapper';
 
 export type PatchOptions = {
   patchWith: (context: {
@@ -12,6 +12,7 @@ export type PatchOptions = {
 
 export const patchEach = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (
   resolvers: ResolverMap,
+  packOptions,
 ) => {
   const typeMap = schema.getTypeMap();
 
@@ -30,7 +31,7 @@ export const patchEach = (schema: GraphQLSchema, options: PatchOptions): Resolve
 
           if (typeof patchResolver === 'function') {
             resolvers[typeKey] = resolvers[typeKey] || {};
-            resolvers[typeKey][fieldKey] = patchResolver;
+            resolvers[typeKey][fieldKey] = embedPackOptions(patchResolver, packOptions);
           }
         }
       }

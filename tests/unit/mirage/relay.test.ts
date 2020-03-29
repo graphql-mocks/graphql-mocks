@@ -1,42 +1,30 @@
 import { mirageRelayResolver } from '../../../src/mirage/resolvers/relay';
 import { expect } from 'chai';
-import { buildSchema, parse, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema } from 'graphql';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Model, Server, hasMany } = require('miragejs');
 
-// - Test lookup fallbacks based on model name / field name
-// - Unit test the relay pagination parts
 // - Add callback for external sourcing of models
-// - Improve error message around the look up, ie:
-//   * Couldn't find mapping for x, y, used fallback, a, b and did not find a mirage source
-//     Try and add a mapping, or use the import the resolver itself and use the callback to specify
-
-// - Fix up types
-//   This is probably going to be a bigger overhaul
-
 // - Fix sourcing of dependencies:
 //   This is probably going to be a bigger overhaul
-//   * mapping (!)
-//   * mirage
 //   * schema
-//   These should be things that you would want to share across
-//   an entire class of resolvers.
 
-// - Make the high order things all options, these customize the
+// - Make the high order things all { options }, these customize the
 //   resolvers. Consider if a dependency should be specified before
 //   passing into an option.
 
 // - Allow for a generic relay resolver not dependent on mirage
 //   Extract much of the same code from the mirage version
 
-// new GraphQLObjectType({ });
+// - re-use mapping resolution logic in the regular graphql auto resolvers
 
 describe('mirage/relay', () => {
   describe('#mirageRelayResolver', () => {
-    let server: any;
+    let mirageServer: any;
+    let mappings: any[];
     let graphqlSchema: GraphQLSchema;
-    let mirageSchema: any;
+    let graphqlContext: any;
     let undefinedParent: any;
     let abraSpellModel: any;
     let meowSpellModel: any;
@@ -46,7 +34,7 @@ describe('mirage/relay', () => {
     let allSpellModels: any[];
 
     beforeEach(() => {
-      server = new Server({
+      mirageServer = new Server({
         models: {
           sourcerer: Model.extend({
             spells: hasMany('Spell'),
@@ -54,6 +42,17 @@ describe('mirage/relay', () => {
           spell: Model,
         },
       });
+
+      mappings = [
+        {
+          mirage: { modelName: 'Sourcerer', attrName: 'spells' },
+          graphql: { typeName: 'Sourcerer', fieldName: 'paginatedSpells' },
+        },
+        {
+          mirage: { modelName: 'Spell', attrName: '' },
+          graphql: { typeName: 'Query', fieldName: 'allSpells' },
+        },
+      ];
 
       graphqlSchema = buildSchema(`
         schema {
@@ -92,32 +91,31 @@ describe('mirage/relay', () => {
         }
       `);
 
-      mirageSchema = server.schema;
-      meowSpellModel = mirageSchema.spells.create({
+      meowSpellModel = mirageServer.schema.spells.create({
         id: '1',
         incantation: 'meow meow',
         isEvil: false,
       });
 
-      abraSpellModel = mirageSchema.spells.create({
+      abraSpellModel = mirageServer.schema.spells.create({
         id: '2',
         incantation: 'abra cadabra',
         isEvil: false,
       });
 
-      imperioSpellModel = mirageSchema.spells.create({
+      imperioSpellModel = mirageServer.schema.spells.create({
         id: '3',
         incantation: 'imperio',
         isEvil: true,
       });
 
-      abertoSpellModel = mirageSchema.spells.create({
+      abertoSpellModel = mirageServer.schema.spells.create({
         id: '4',
         incantation: 'aberto',
         isEvil: false,
       });
 
-      morsmordreSpellModel = mirageSchema.spells.create({
+      morsmordreSpellModel = mirageServer.schema.spells.create({
         id: '5',
         incantation: 'morsmordre',
         isEvil: true,
@@ -125,9 +123,18 @@ describe('mirage/relay', () => {
 
       allSpellModels = [meowSpellModel, abraSpellModel, imperioSpellModel, abertoSpellModel, morsmordreSpellModel];
 
-      undefinedParent = mirageSchema.sourcerers.create({
+      undefinedParent = mirageServer.schema.sourcerers.create({
         spells: allSpellModels,
       });
+
+      graphqlContext = {
+        pack: {
+          dependencies: {
+            mirageServer,
+            graphqlMirageMappings: mappings,
+          },
+        },
+      };
     });
 
     it('resolves relay connections', () => {
@@ -135,15 +142,10 @@ describe('mirage/relay', () => {
         first: 2,
       };
 
-      const result = mirageRelayResolver(
-        undefinedParent,
-        args,
-        { mirage: { server } },
-        {
-          fieldName: 'paginatedSpells',
-          parentType: graphqlSchema.getType('Sourcerer'),
-        },
-      );
+      const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+        fieldName: 'paginatedSpells',
+        parentType: graphqlSchema.getType('Sourcerer'),
+      });
 
       expect(result.edges[0].node).to.deep.equal(meowSpellModel);
       expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -158,15 +160,10 @@ describe('mirage/relay', () => {
         first: allSpellModels.length,
       };
 
-      const result = mirageRelayResolver(
-        undefinedParent,
-        args,
-        { mirage: { server } },
-        {
-          fieldName: 'paginatedSpells',
-          parentType: graphqlSchema.getType('Sourcerer'),
-        },
-      );
+      const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+        fieldName: 'paginatedSpells',
+        parentType: graphqlSchema.getType('Sourcerer'),
+      });
 
       expect(result.edges[0].node).to.deep.equal(meowSpellModel);
       expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -186,15 +183,10 @@ describe('mirage/relay', () => {
           after: 'model:spell(2)',
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(imperioSpellModel);
         expect(result.edges[1].node).to.deep.equal(abertoSpellModel);
@@ -210,15 +202,10 @@ describe('mirage/relay', () => {
           after: 'model:spell(3)',
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(abertoSpellModel);
         expect(result.edges[1].node).to.deep.equal(morsmordreSpellModel);
@@ -233,15 +220,10 @@ describe('mirage/relay', () => {
           first: 2,
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(meowSpellModel);
         expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -259,15 +241,10 @@ describe('mirage/relay', () => {
           before: 'model:spell(5)',
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(imperioSpellModel);
         expect(result.edges[1].node).to.deep.equal(abertoSpellModel);
@@ -282,15 +259,10 @@ describe('mirage/relay', () => {
           last: 2,
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(abertoSpellModel);
         expect(result.edges[1].node).to.deep.equal(morsmordreSpellModel);
@@ -306,15 +278,10 @@ describe('mirage/relay', () => {
           before: 'model:spell(3)',
         };
 
-        const result = mirageRelayResolver(
-          undefinedParent,
-          args,
-          { mirage: { server } },
-          {
-            fieldName: 'paginatedSpells',
-            parentType: graphqlSchema.getType('Sourcerer'),
-          },
-        );
+        const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+          fieldName: 'paginatedSpells',
+          parentType: graphqlSchema.getType('Sourcerer'),
+        });
 
         expect(result.edges[0].node).to.deep.equal(meowSpellModel);
         expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -328,7 +295,7 @@ describe('mirage/relay', () => {
     describe('mapping from graphql -> mirage', () => {
       describe('with a previously resolved parent provided', () => {
         beforeEach(() => {
-          undefinedParent = mirageSchema.sourcerers.create({
+          undefinedParent = mirageServer.schema.sourcerers.create({
             spells: [abertoSpellModel, abraSpellModel],
           });
         });
@@ -341,15 +308,10 @@ describe('mirage/relay', () => {
             first: 2,
           };
 
-          const result = mirageRelayResolver(
-            undefinedParent,
-            args,
-            { mirage: { server } },
-            {
-              fieldName: mappedGraphQLField,
-              parentType: graphqlSchema.getType('Sourcerer'),
-            },
-          );
+          const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+            fieldName: mappedGraphQLField,
+            parentType: graphqlSchema.getType('Sourcerer'),
+          });
 
           expect(result.edges[0].node).to.deep.equal(abertoSpellModel);
           expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -364,15 +326,10 @@ describe('mirage/relay', () => {
             first: 2,
           };
 
-          const result = mirageRelayResolver(
-            undefinedParent,
-            args,
-            { mirage: { server } },
-            {
-              fieldName: matchingFieldAndAttrName,
-              parentType: graphqlSchema.getType('Sourcerer'),
-            },
-          );
+          const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+            fieldName: matchingFieldAndAttrName,
+            parentType: graphqlSchema.getType('Sourcerer'),
+          });
 
           expect(result.edges[0].node).to.deep.equal(abertoSpellModel);
           expect(result.edges[1].node).to.deep.equal(abraSpellModel);
@@ -386,21 +343,16 @@ describe('mirage/relay', () => {
         });
 
         it('can use mapping to find the correct mirage model', () => {
-          const mappedGraphQLField = 'paginatedSpells';
+          const mappedGraphQLField = 'allSpells';
           const args = {
             first: 5,
           };
 
-          const result = mirageRelayResolver(
-            undefinedParent,
-            args,
-            { mirage: { server } },
-            {
-              fieldName: mappedGraphQLField,
-              parentType: graphqlSchema.getType('Query'), // top-level resolver
-              returnType: graphqlSchema.getType('SpellConnection'),
-            },
-          );
+          const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+            fieldName: mappedGraphQLField,
+            parentType: graphqlSchema.getType('Query'), // top-level resolver
+            returnType: graphqlSchema.getType('SpellConnection'),
+          });
 
           expect(result.edges.length).to.deep.equal(allSpellModels.length);
           expect(result.edges.map(({ node }: any) => node)).to.deep.equal(allSpellModels);
@@ -412,16 +364,11 @@ describe('mirage/relay', () => {
             first: 5,
           };
 
-          const result = mirageRelayResolver(
-            undefinedParent,
-            args,
-            { mirage: { server } },
-            {
-              fieldName: matchingFieldAndAttrName,
-              parentType: graphqlSchema.getType('Query'), // top-level resolver
-              returnType: graphqlSchema.getType('SpellConnection'),
-            },
-          );
+          const result = mirageRelayResolver(undefinedParent, args, graphqlContext, {
+            fieldName: matchingFieldAndAttrName,
+            parentType: graphqlSchema.getType('Query'), // top-level resolver
+            returnType: graphqlSchema.getType('SpellConnection'),
+          });
 
           expect(result.edges.length).to.deep.equal(allSpellModels.length);
           expect(result.edges.map(({ node }: any) => node)).to.deep.equal(allSpellModels);

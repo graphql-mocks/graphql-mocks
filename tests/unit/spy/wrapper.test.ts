@@ -12,9 +12,9 @@ describe('spy/wrapper', function() {
       },
     };
 
-    const { packState, resolvers: wrappedResolvers } = pack(resolverMap, [spyWrapper]);
+    const { state, resolvers: wrappedResolvers } = pack(resolverMap, [spyWrapper]);
 
-    const rootQueryFieldSpy = packState.spies.Query.rootQueryField;
+    const rootQueryFieldSpy = state.spies.Query.rootQueryField;
     expect(rootQueryFieldSpy.called).to.equal(false);
 
     wrappedResolvers.Query.rootQueryField({}, {}, {}, {});

@@ -4,7 +4,7 @@ import { ResolverMapWrapper } from '../types';
 
 export const spyWrapper: ResolverMapWrapper = wrapEach((originalResolver, wrapperDetails) => {
   const [type, field] = wrapperDetails.path;
-  const packState = wrapperDetails.packOptions.packState;
+  const packState = wrapperDetails.packOptions.state;
   const resolverSpy = spy(originalResolver);
 
   packState.spies = packState.spies = {};

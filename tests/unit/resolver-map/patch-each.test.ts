@@ -50,18 +50,22 @@ describe('resolver-map/patch-each', function() {
       },
     };
 
-    const patchResolver = sinon.spy();
+    const patchResolverSpy = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patchEach(schema!, { patchWith: () => patchResolver as any });
+    const wrapper = patchEach(schema!, { patchWith: () => patchResolverSpy as any });
     const patchedResolvers = wrapper(resolverMap, generateEmptyPackOptions());
 
     expect(patchedResolvers.Query.hello).to.equal(helloSpy, 'original hello resolver is untouched');
     expect(patchedResolvers.Spell.isEvil).to.equal(isEvilSpy, 'original isEvil resolver is untouched');
 
-    expect(patchedResolvers.Query.spells).to.equal(patchResolver, 'spells is patched');
-    expect(patchedResolvers.Mutation.addSpell).to.equal(patchResolver, 'addSpell is patched');
-    expect(patchedResolvers.Spell.incantation).to.equal(patchResolver, 'incantation is patched');
+    expect(patchResolverSpy.callCount).to.equal(0);
+
+    patchedResolvers.Query.spells({}, {}, {}, {});
+    patchedResolvers.Mutation.addSpell({}, {}, {}, {});
+    patchedResolvers.Spell.incantation({}, {}, {}, {});
+
+    expect(patchResolverSpy.callCount).to.equal(3);
   });
 
   it('skips patching when a resolver is not returned', async function() {

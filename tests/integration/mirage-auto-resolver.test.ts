@@ -6,16 +6,11 @@ import { patchAutoUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-
 import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
-import { addMirageToContextWrapper } from '../../src/mirage/wrappers/add-context';
 import { pack } from '../../src/resolver-map/pack';
 
 const schema = buildSchema(typeDefs);
 
-const wrappers = [
-  patchWithAutoTypesWrapper(schema),
-  patchAutoUnionsInterfaces(schema),
-  addMirageToContextWrapper(mirageServer),
-];
+const wrappers = [patchWithAutoTypesWrapper(schema), patchAutoUnionsInterfaces(schema)];
 
 describe('auto resolving from mirage', function() {
   let resolvers: any;
@@ -23,7 +18,21 @@ describe('auto resolving from mirage', function() {
 
   this.beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
-    const packed = pack(defaultResolvers, wrappers);
+    const packed = pack(defaultResolvers, wrappers, {
+      dependencies: {
+        mirageServer,
+        graphqlMirageMappings: [
+          {
+            mirage: { modelName: 'Person', attrName: 'friends' },
+            graphql: { typeName: 'Person', fieldName: 'paginatedFriends' },
+          },
+          {
+            mirage: { modelName: 'Person', attrName: 'friends' },
+            graphql: { typeName: 'Query', fieldName: 'allPersonsPaginated' },
+          },
+        ],
+      },
+    });
     resolvers = packed.resolvers;
     graphQLHandler = buildHandler(resolvers);
   });

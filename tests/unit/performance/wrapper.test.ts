@@ -16,9 +16,9 @@ describe('performance/wrapper', function() {
       },
     };
 
-    const { packState, resolvers: wrappedResolvers } = pack(resolverMap, [performanceWrapper]);
+    const { state, resolvers: wrappedResolvers } = pack(resolverMap, [performanceWrapper]);
 
-    const rootQueryFieldPerformance = packState.performance.Query.rootQueryField;
+    const rootQueryFieldPerformance = state.performance.Query.rootQueryField;
     expect(rootQueryFieldPerformance).to.deep.equal([]);
 
     await wrappedResolvers.Query.rootQueryField({}, {}, {}, {});
@@ -30,6 +30,9 @@ describe('performance/wrapper', function() {
       RESOLVER_RUN_TIME_DELAY,
       `the resolver takes at least as long as the timeout, took ${timeElapsed}`,
     );
-    expect(timeElapsed).to.be.below(RESOLVER_RUN_TIME_DELAY + 50, `the resolver runs within 50ms, took ${timeElapsed}`);
+    expect(timeElapsed).to.be.below(
+      RESOLVER_RUN_TIME_DELAY + 100,
+      `Warning: possibly flakey test, depends on how quick the test runs\n\n the resolver runs within 100ms, took ${timeElapsed}`,
+    );
   });
 });

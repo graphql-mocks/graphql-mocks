@@ -36,17 +36,12 @@ describe('wrapEach', function() {
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
 
     // firstCall for wrapping Query.field
-    expect(resolverWrapper.firstCall.args[0]).to.equal(originalResolverMap.Query.field, 'first call first arg matches');
     expect(resolverWrapper.firstCall.args[1].path).to.deep.equal(
       ['Query', 'field'],
       'first call second arg has correct path',
     );
 
     // secondCall for wrapping SomeType.fieldResolverOnSomeType
-    expect(resolverWrapper.secondCall.args[0]).to.equal(
-      originalResolverMap.SomeType.fieldResolverOnSomeType,
-      'second call first arg matches',
-    );
     expect(resolverWrapper.secondCall.args[1].path).to.deep.equal(
       ['SomeType', 'fieldResolverOnSomeType'],
       'second call second arg matches',
@@ -55,12 +50,6 @@ describe('wrapEach', function() {
     // types of wrapped resolvers are both functions
     expect(typeof wrappedResolverMap.Query.field).to.equal('function');
     expect(typeof wrappedResolverMap.SomeType.fieldResolverOnSomeType).to.equal('function');
-
-    // the original resolvers are not the same as the wrapped ones
-    expect(wrappedResolverMap.Query.field).to.not.equal(originalResolverMap.Query.field);
-    expect(wrappedResolverMap.SomeType.fieldResolverOnSomeType).to.not.equal(
-      originalResolverMap.SomeType.fieldResolverOnSomeType,
-    );
 
     // initially none of the resolvers have been called
     expect(originalResolverMap.Query.field.called).to.equal(false, 'original Query.field has not been called');

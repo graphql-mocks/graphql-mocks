@@ -1,3 +1,4 @@
-export default function(_parent: any, _args: any, { mirage }: any /*, info*/) {
-  return mirage.schema.people.all().models;
+export default function(_parent: any, _args: any, { pack }: any /*, info*/) {
+  const { mirageServer } = pack.dependencies;
+  return mirageServer.schema.people.all().models;
 }

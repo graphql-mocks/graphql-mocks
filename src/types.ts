@@ -8,9 +8,14 @@ export type ResolverMap = {
 
 export type PackState = Record<any, any>;
 export type PackOptions = {
-  packState: PackState;
+  state: PackState;
+  dependencies: Record<string, any>;
 };
 export type ResolverMapWrapper = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
 
-export type Packed = { resolvers: ResolverMap; packState: PackState };
-export type Packager = (initialMap: ResolverMap, wrappers: ResolverMapWrapper[], packOptions?: PackOptions) => Packed;
+export type Packed = { resolvers: ResolverMap; state: PackState };
+export type Packager = (
+  initialMap: ResolverMap,
+  wrappers: ResolverMapWrapper[],
+  packOptions?: Partial<PackOptions>,
+) => Packed;

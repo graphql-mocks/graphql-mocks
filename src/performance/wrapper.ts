@@ -3,7 +3,7 @@ import { ResolverMapWrapper } from '../types';
 
 export const performanceWrapper: ResolverMapWrapper = wrapEach((originalResolver, wrapperDetails) => {
   const [type, field] = wrapperDetails.path;
-  const packState = wrapperDetails.packOptions.packState;
+  const packState = wrapperDetails.packOptions.state;
   packState.performance = packState.performance = {};
   packState.performance[type] = packState.performance[type] || {};
   packState.performance[type][field] = packState.performance[type][field] || [];

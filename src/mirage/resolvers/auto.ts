@@ -2,6 +2,10 @@ import { Resolver } from '../../types';
 import { classify } from 'inflected';
 
 export const mirageAutoUnionResolver: Resolver = function(parent, _args, _context, _info) {
+  // TODO Make this more robust:
+  // 1. Try mappings
+  // 2. try parent.modelName
+  // 3. try a property match based on what parent contains between the types it could be
   return classify(parent.modelName.replace('-', '_')) as string;
 };
 

@@ -7,7 +7,8 @@ const wrapInNode = (thing: any) => ({ cursor: thing.toString(), node: thing });
 const unwrap = (type: any): any => (type.ofType ? unwrap(type.ofType) : type);
 
 export const mirageRelayResolver: any = function(parent: any, args: any, context: any, info: any) {
-  const server = context.mirage.server;
+  const { mirageServer, graphqlMirageMappings } = context.pack.dependencies;
+
   const {
     fieldName,
     parentType,
@@ -16,27 +17,8 @@ export const mirageRelayResolver: any = function(parent: any, args: any, context
   const unwrappedParentType = unwrap(parentType);
   const { first, last, before, after } = args;
 
-  const configuredMappings = [
-    {
-      mirage: { modelName: 'Person', attrName: 'friends' },
-      graphql: { typeName: 'Person', fieldName: 'paginatedFriends' },
-    },
-    {
-      mirage: { modelName: 'Person', attrName: 'friends' },
-      graphql: { typeName: 'Query', fieldName: 'allPersonsPaginated' },
-    },
-    {
-      mirage: { modelName: 'Sourcerer', attrName: 'spells' },
-      graphql: { typeName: 'Sourcerer', fieldName: 'paginatedSpells' },
-    },
-    {
-      mirage: { modelName: 'Spell', attrName: '' },
-      graphql: { typeName: 'Query', fieldName: 'paginatedSpells' },
-    },
-  ];
-
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const confirguredMapping = mirageMappingFor(unwrappedParentType.name, fieldName, configuredMappings);
+  const confirguredMapping = mirageMappingFor(unwrappedParentType.name, fieldName, graphqlMirageMappings);
 
   let nodes: any[] = [];
 
@@ -63,7 +45,7 @@ export const mirageRelayResolver: any = function(parent: any, args: any, context
     const matchingModelName = modelNameCandidates
       .map(name => inflected.camelize(inflected.pluralize(name), false))
       .find(name => {
-        const schemaForModel = server.schema[name];
+        const schemaForModel = mirageServer.schema[name];
         return Boolean(schemaForModel);
       });
 
@@ -75,7 +57,7 @@ export const mirageRelayResolver: any = function(parent: any, args: any, context
       );
     }
 
-    nodes = server.schema[matchingModelName].all().models;
+    nodes = mirageServer.schema[matchingModelName].all().models;
   }
 
   const allEdges = nodes.map(wrapInNode);

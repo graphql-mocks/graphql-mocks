@@ -1,8 +1,11 @@
-import { Packager, PackState, PackOptions } from '../types';
+import { Packager, PackOptions, PackState } from '../types';
+import { packWrapper } from './pack-wrapper';
 
-const defaultPackOptions = { packState: {} };
+const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
 export const pack: Packager = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
+  wrappers = [packWrapper, ...wrappers];
+
   // make an intial copy
   let wrappedMap = {
     ...initialResolversMap,
@@ -11,14 +14,18 @@ export const pack: Packager = (initialResolversMap, wrappers, packOptions = defa
   packOptions = {
     ...packOptions,
 
-    packState: {
-      ...packOptions.packState,
+    state: {
+      ...packOptions.state,
+    },
+
+    dependencies: {
+      ...packOptions.dependencies,
     },
   };
 
   wrappers.forEach(wrapper => {
-    wrappedMap = wrapper(wrappedMap, packOptions);
+    wrappedMap = wrapper(wrappedMap, packOptions as PackOptions);
   });
 
-  return { resolvers: wrappedMap, packState: packOptions.packState };
+  return { resolvers: wrappedMap, state: packOptions.state as PackState };
 };

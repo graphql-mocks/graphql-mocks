@@ -2,12 +2,16 @@ import { expect } from 'chai';
 import { buildHandler } from './executable-schema';
 import defaultResolvers from './mirage-static-resolvers';
 import { server as mirageServer } from './mirage-sample';
-import { addMirageToContextWrapper } from '../../src/mirage/wrappers/add-context';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { pack } from '../../src/resolver-map/pack';
 
-const wrappers = [addMirageToContextWrapper(mirageServer)];
-const { resolvers } = pack(defaultResolvers, wrappers);
+const wrappers: any = [];
+const { resolvers } = pack(defaultResolvers, wrappers, {
+  state: {},
+  dependencies: {
+    mirageServer,
+  },
+});
 
 const graphQLHandler = buildHandler(resolvers);
 
