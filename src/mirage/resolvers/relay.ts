@@ -1,10 +1,8 @@
 import { mirageMappingFor } from '../mapping/helpers';
 import { GraphQLObjectType } from 'graphql';
+import { wrapInNode, unwrap } from '../../utils';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const inflected = require('inflected');
-const wrapInNode = (thing: any) => ({ cursor: thing.toString(), node: thing });
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const unwrap = (type: any): any => (type.ofType ? unwrap(type.ofType) : type);
 
 export const mirageRelayResolver: any = function(parent: any, args: any, context: any, info: any) {
   const { mirageServer, graphqlMirageMappings } = context.pack.dependencies;
