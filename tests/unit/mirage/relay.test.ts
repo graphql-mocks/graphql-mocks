@@ -5,20 +5,6 @@ import { buildSchema, GraphQLSchema } from 'graphql';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Model, Server, hasMany } = require('miragejs');
 
-// - Add callback for external sourcing of models
-// - Fix sourcing of dependencies:
-//   This is probably going to be a bigger overhaul
-//   * schema
-
-// - Make the high order things all { options }, these customize the
-//   resolvers. Consider if a dependency should be specified before
-//   passing into an option.
-
-// - Allow for a generic relay resolver not dependent on mirage
-//   Extract much of the same code from the mirage version
-
-// - re-use mapping resolution logic in the regular graphql auto resolvers
-
 describe('mirage/relay', () => {
   describe('#mirageRelayResolver', () => {
     let mirageServer: any;
