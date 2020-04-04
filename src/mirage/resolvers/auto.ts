@@ -1,5 +1,6 @@
 import { Resolver } from '../../types';
 import { classify } from 'inflected';
+import { GraphQLNonNull } from 'graphql';
 
 export const mirageAutoUnionResolver: Resolver = function(parent, _args, _context, _info) {
   // TODO Make this more robust:
@@ -11,14 +12,18 @@ export const mirageAutoUnionResolver: Resolver = function(parent, _args, _contex
 
 export const mirageAutoObjectResolver: Resolver = function(parent, _args, _context, info) {
   const resolvedModel = parent;
-  const { fieldName } = info;
+  const { fieldName, returnType } = info;
 
   if (!resolvedModel) {
     throw new Error(`Could not resolve model from parent, got ${typeof parent}`);
   }
 
-  if (typeof resolvedModel[fieldName] === 'undefined') {
-    throw new Error(`${fieldName} does not exist on type}`);
+  if (resolvedModel[fieldName] == null) {
+    if (returnType instanceof GraphQLNonNull) {
+      throw new Error(`${fieldName} does not exist on type}`);
+    }
+
+    return null;
   }
 
   // TODO: Resolve mapping here and fallback to fieldName

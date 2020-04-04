@@ -294,6 +294,56 @@ describe('auto resolving from mirage', function() {
     ]);
   });
 
+  it('can resolve non-null types', async () => {
+    const query = `query {
+      allPersons {
+        name
+        favoriteColor
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [fred, barney, wilma] = result.data.allPersons;
+
+    expect(fred).to.deep.equal({
+      name: 'Fred Flinstone',
+      favoriteColor: 'Yellow',
+    });
+    expect(barney).to.deep.equal({
+      name: 'Barney Rubble',
+      favoriteColor: 'Green',
+    });
+    expect(wilma).to.deep.equal({
+      name: 'Wilma Flinstone',
+      favoriteColor: 'Red',
+    });
+  });
+
+  it('can resolve null types', async () => {
+    const query = `query {
+      allPersons {
+        name
+        leastFavoriteColor
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    const [fred, barney, wilma] = result.data.allPersons;
+
+    expect(fred).to.deep.equal({
+      name: 'Fred Flinstone',
+      leastFavoriteColor: 'Blue',
+    });
+    expect(barney).to.deep.equal({
+      name: 'Barney Rubble',
+      leastFavoriteColor: null,
+    });
+    expect(wilma).to.deep.equal({
+      name: 'Wilma Flinstone',
+      leastFavoriteColor: null,
+    });
+  });
+
   describe('Relay Connections', () => {
     it('can resolve a root-level relay connection', async () => {
       const query = `query {
@@ -315,7 +365,6 @@ describe('auto resolving from mirage', function() {
       }`;
 
       const result = await graphQLHandler(query);
-      debugger;
       const edges = result.data.allPersonsPaginated.edges;
       const pageInfo = result.data.allPersonsPaginated.pageInfo;
       const firstPersonEdge = edges[0];

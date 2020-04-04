@@ -29,6 +29,7 @@ export default {
         { type: 'sportsHobby', id: '1' },
       ],
       favoriteColor: 'Yellow',
+      leastFavoriteColor: 'Blue',
     },
     {
       id: '2',

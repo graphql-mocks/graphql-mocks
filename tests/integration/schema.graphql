@@ -17,7 +17,8 @@ type Person {
   posts: [Post!]!
   transportation: Transportation!
   hobbies: [Hobby!]!
-  favoriteColor: FavoriteColor!
+  favoriteColor: Color!
+  leastFavoriteColor: Color
   paginatedFriends(first: Int, last: Int, before: String, after: String): PersonConnection!
 }
 
@@ -103,7 +104,7 @@ enum MakerHobbyTypes {
   Woodwork
 }
 
-enum FavoriteColor {
+enum Color {
   Red
   Orange
   Yellow
