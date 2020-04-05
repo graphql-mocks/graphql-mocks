@@ -62,13 +62,16 @@ export function relayPaginateNodes(
     }
   }
 
+  const startNode = edges[0]?.node;
+  const endNode = edges[edges.length - 1]?.node;
+
   return {
     edges: edges,
     pageInfo: {
       hasNextPage,
       hasPreviousPage,
-      startCursor: cursorForNode(edges[0].node),
-      endCursor: cursorForNode(edges[edges.length - 1].node),
+      startCursor: startNode ? cursorForNode(startNode) : null,
+      endCursor: endNode ? cursorForNode(endNode) : null,
     },
   };
 }

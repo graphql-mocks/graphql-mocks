@@ -3,8 +3,9 @@ import { extractDependencies } from '../../utils';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { unwrap } from '../../utils';
 import { mirageMappingFor } from '../mapping/helpers';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const inflected = require('inflected');
+const { _utilsInflectorCamelize: camelize } = require('miragejs');
 
 export function mirageRelayResolver(parent: any, args: any, context: any, info: any): any {
   const { mirageServer, graphqlMirageMappings } = extractDependencies(context);
@@ -55,13 +56,14 @@ export function extractNodesFromMirageCollection({
   mirageServer,
   fieldName,
 }: any) {
+  const pluralize = mirageServer._container.inflector.pluralize;
   const unwrappedParentType = unwrap(parentType);
   const unwrappedReturnType = unwrap(returnType);
   const mapping = mirageMappingFor(unwrappedParentType.name, fieldName, graphqlMirageMappings);
   const modelNameCandidates = [mapping?.modelName, unwrappedReturnType.name.replace('Connection', '')].filter(Boolean);
 
   const matchingModelName = modelNameCandidates
-    .map(name => inflected.camelize(inflected.pluralize(name), false))
+    .map(name => camelize(pluralize(name), false))
     .find(name => {
       const schemaForModel = mirageServer.schema[name];
       return Boolean(schemaForModel);
