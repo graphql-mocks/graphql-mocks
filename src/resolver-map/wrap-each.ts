@@ -1,4 +1,5 @@
 import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
+import { embedPackOptions } from './pack-wrapper';
 
 export type WrapEachDetails = {
   resolvers: ResolverMap;
@@ -26,7 +27,7 @@ export const wrapEach = (eachWrapper: EachWrapper): ResolverMapWrapper => (
         throw new Error(`${wrapEach.toString()} must return a function for resolver type: ${type}, field: ${field}`);
       }
 
-      resolvers[type][field] = newResolver;
+      resolvers[type][field] = embedPackOptions(newResolver, packOptions);
     }
   }
 

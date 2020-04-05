@@ -7,30 +7,26 @@ import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
 import { pack } from '../../src/resolver-map/pack';
+import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 
 const schema = buildSchema(typeDefs);
-
-const wrappers = [patchWithAutoTypesWrapper(schema), patchAutoUnionsInterfaces(schema)];
 
 describe('auto resolving from mirage', function() {
   let resolvers: any;
   let graphQLHandler: any;
+  let mapper: MirageGraphQLMapper;
 
   this.beforeEach(() => {
+    mapper = new MirageGraphQLMapper();
+    mapper.add(['AthleticHobby'], ['SportsHobby']).add(['Person', 'paginatedFriends'], ['Person', 'friends']);
+
     mirageServer.db.loadData(defaultScenario);
+    const wrappers = [patchWithAutoTypesWrapper(schema), patchAutoUnionsInterfaces(schema)];
     const packed = pack(defaultResolvers, wrappers, {
       dependencies: {
+        mapper,
         mirageServer,
-        graphqlMirageMappings: [
-          {
-            mirage: { modelName: 'Person', attrName: 'friends' },
-            graphql: { typeName: 'Person', fieldName: 'paginatedFriends' },
-          },
-          {
-            mirage: { modelName: 'Person', attrName: 'friends' },
-            graphql: { typeName: 'Query', fieldName: 'allPersonsPaginated' },
-          },
-        ],
+        graphqlSchema: schema,
       },
     });
     resolvers = packed.resolvers;
@@ -167,6 +163,45 @@ describe('auto resolving from mirage', function() {
   });
 
   it('can resolve an interface type', async function() {
+    // This test handles a few different auto-resolving cases.
+    // Case #1. parent mirage model name, look up on mapper
+    // Case #2. parent mirage model name, looked up as GraphQL Type
+    // Case #3. Looking at all types that use the interface and finding a type
+
+    // Case #1 pre-checks
+    expect(schema.getType('SportsHobby')).to.equal(undefined, 'SportsHobby does not exist on schema');
+    expect(mirageServer.schema.all('SportsHobby').length).to.be.greaterThan(
+      0,
+      'SportsHobby does exist as model on mirage',
+    );
+    expect(schema.getType('AthleticHobby')).to.not.equal(undefined, 'AthleticHobby does exist on the schema');
+    expect(() => mirageServer.schema.all('AthleticHobby')).to.throw(
+      `Mirage: You're trying to find model(s) of type AthleticHobby but this collection doesn't exist in the database`,
+      'AthleticHobby does exist as a mirage model',
+    );
+    expect(
+      mapper.mappings.some(mapping => {
+        return mapping.graphql[0] === 'AthleticHobby' && mapping.mirage[0] === 'SportsHobby';
+      }),
+    ).to.be.equal(true, 'mapping exists betwene mirage and graphql');
+
+    // Case #3 pre-checks
+    expect(schema.getType('CulinaryHobby')).to.equal(undefined, 'CulinaryHobby does not exist on schema');
+    expect(mirageServer.schema.all('CulinaryHobby').length).to.be.greaterThan(
+      0,
+      'CulinaryHobby does exist as model on mirage',
+    );
+    expect(schema.getType('CookingHobby')).to.not.equal(undefined, 'CookingHobby does exist on the schema');
+    expect(() => mirageServer.schema.all('CookingHobby')).to.throw(
+      `Mirage: You're trying to find model(s) of type CookingHobby but this collection doesn't exist in the database`,
+      'CookingHobby does exist as a mirage model',
+    );
+    expect(
+      mapper.mappings.some(mapping => {
+        return mapping.graphql[0] === 'CookingHobby' && mapping.mirage[0] === 'CulinaryHobby';
+      }),
+    ).to.be.equal(false, 'no mappings exists betwene mirage and graphql');
+
     const query = `query {
       allPersons {
         id
@@ -178,11 +213,11 @@ describe('auto resolving from mirage', function() {
           name
           requiresEquipment
 
-          ... on SportsHobby {
+          ... on AthleticHobby {
             hasMultiplePlayers
           }
 
-          ... on CulinaryHobby {
+          ... on CookingHobby {
             requiresOven
             requiresStove
           }
@@ -200,21 +235,21 @@ describe('auto resolving from mirage', function() {
     expect(firstPerson.name).to.equal('Fred Flinstone');
     expect(firstPerson.hobbies).to.deep.equal([
       {
-        __typename: 'CulinaryHobby',
+        __typename: 'CookingHobby',
         name: 'Cooking',
         requiresEquipment: true,
         requiresOven: false,
         requiresStove: true,
       },
       {
-        __typename: 'CulinaryHobby',
+        __typename: 'CookingHobby',
         name: 'Baking',
         requiresEquipment: true,
         requiresOven: true,
         requiresStove: false,
       },
       {
-        __typename: 'SportsHobby',
+        __typename: 'AthleticHobby',
         hasMultiplePlayers: false,
         name: 'Running',
         requiresEquipment: false,
@@ -230,7 +265,7 @@ describe('auto resolving from mirage', function() {
         requiresEquipment: true,
       },
       {
-        __typename: 'SportsHobby',
+        __typename: 'AthleticHobby',
         hasMultiplePlayers: true,
         name: 'Soccer',
         requiresEquipment: true,

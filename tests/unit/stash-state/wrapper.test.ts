@@ -19,7 +19,7 @@ describe('stash-state/wrapper', function() {
 
     const parent = { parent: 'parent' };
     const args = { args: 'args' };
-    const context = { context: 'context' };
+    const context = { keyOnContext: 'valueOnContext' };
     const info = { info: 'info' };
 
     wrappedResolvers.Query.rootQueryField(parent, args, context, info);
@@ -27,7 +27,8 @@ describe('stash-state/wrapper', function() {
 
     expect(stashed.parent).to.equal(parent);
     expect(stashed.args).to.equal(args);
-    expect(stashed.context).to.equal(context);
+    expect(stashed.context.keyOnContext).to.equal('valueOnContext');
+    expect(stashed.context.pack).to.exist;
     expect(stashed.info).to.equal(info);
     expect(stashed.result).to.equal(resolverReturn);
   });

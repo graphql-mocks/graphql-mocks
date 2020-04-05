@@ -2,40 +2,33 @@ import { GraphQLObjectType } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { unwrap } from '../../utils';
-import { mirageMappingFor } from '../mapping/helpers';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { _utilsInflectorCamelize: camelize } = require('miragejs');
 
 export function mirageRelayResolver(parent: any, args: any, context: any, info: any): any {
-  const { mirageServer, graphqlMirageMappings } = extractDependencies(context);
+  const { mapper } = extractDependencies(context);
   const {
     fieldName,
     parentType,
-    returnType,
   }: { parentType: GraphQLObjectType; returnType: GraphQLObjectType; fieldName: string } = info;
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
-  const nodes: any[] = parent
-    ? extractNodesFromParent({ parent, parentType, graphqlMirageMappings, fieldName })
-    : extractNodesFromMirageCollection({
-        parentType,
-        returnType,
-        graphqlMirageMappings,
-        mirageServer,
-        fieldName,
-      });
+  const nodes: any[] = extractNodesFromParent({
+    parent,
+    parentType,
+    mapper,
+    fieldName,
+  });
 
   const cursorForNode = (node: any) => node.toString();
-
   return relayPaginateNodes(nodes, args, cursorForNode);
 }
 
-export function extractNodesFromParent({ parent, parentType, graphqlMirageMappings, fieldName }: any) {
+export function extractNodesFromParent({ parent, parentType, mapper, fieldName }: any) {
   const unwrappedParentType = unwrap(parentType);
-  const mapping = mirageMappingFor(unwrappedParentType.name, fieldName, graphqlMirageMappings);
-  const parentAttributeCandidates = [mapping?.attrName, fieldName].filter(Boolean);
+  const [, mappedAttrName] = mapper.matchForGraphQL([unwrappedParentType.name, fieldName]);
+  const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchingAttr = parentAttributeCandidates.find(attr => attr && parent[attr]);
+
+  debugger;
 
   if (!matchingAttr) {
     throw new Error(
@@ -46,37 +39,5 @@ export function extractNodesFromParent({ parent, parentType, graphqlMirageMappin
   }
 
   const nodes = parent[matchingAttr].models || parent[matchingAttr];
-  return nodes;
-}
-
-export function extractNodesFromMirageCollection({
-  parentType,
-  returnType,
-  graphqlMirageMappings,
-  mirageServer,
-  fieldName,
-}: any) {
-  const pluralize = mirageServer._container.inflector.pluralize;
-  const unwrappedParentType = unwrap(parentType);
-  const unwrappedReturnType = unwrap(returnType);
-  const mapping = mirageMappingFor(unwrappedParentType.name, fieldName, graphqlMirageMappings);
-  const modelNameCandidates = [mapping?.modelName, unwrappedReturnType.name.replace('Connection', '')].filter(Boolean);
-
-  const matchingModelName = modelNameCandidates
-    .map(name => camelize(pluralize(name), false))
-    .find(name => {
-      const schemaForModel = mirageServer.schema[name];
-      return Boolean(schemaForModel);
-    });
-
-  if (!matchingModelName) {
-    throw new Error(
-      `Unable to find a mirage model for ${unwrappedParentType.name}.${fieldName} from ${modelNameCandidates.join(
-        ', ',
-      )}`,
-    );
-  }
-
-  const nodes = mirageServer.schema[matchingModelName].all().models;
   return nodes;
 }

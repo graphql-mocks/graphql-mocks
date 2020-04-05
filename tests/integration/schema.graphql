@@ -79,13 +79,14 @@ interface Hobby {
   requiresEquipment: Boolean!
 }
 
-type SportsHobby implements Hobby {
+# Matches against the SportsHobby Model defined by mapping
+type AthleticHobby implements Hobby {
   name: String!
   requiresEquipment: Boolean!
   hasMultiplePlayers: Boolean!
 }
 
-type CulinaryHobby implements Hobby {
+type CookingHobby implements Hobby {
   name: String!
   requiresEquipment: Boolean!
   requiresOven: Boolean!

@@ -18,8 +18,10 @@ export const server = new Server({
     bike: Model.extend({}),
     car: Model.extend({}),
     publicTransit: Model.extend({}),
-    sportsHobby: Model.extend({}),
     culinaryHobby: Model.extend({}),
     makerHobby: Model.extend({}),
+
+    // non-matching hobby name with graphql type of AthleticHobby
+    sportsHobby: Model.extend({}),
   },
 });

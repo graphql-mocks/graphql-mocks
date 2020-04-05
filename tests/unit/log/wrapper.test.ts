@@ -3,6 +3,7 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
+import { generateEmptyPackOptions } from '../../mocks';
 
 describe('log/wrapper', function() {
   let logStub: SinonStub;
@@ -15,7 +16,7 @@ describe('log/wrapper', function() {
     logStub.restore();
   });
 
-  it('logs details around calling resoslvers', async function() {
+  it('logs details around calling resolvers', async function() {
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -26,14 +27,21 @@ describe('log/wrapper', function() {
     };
 
     const { resolvers: wrappedResolvers } = pack(resolverMap, [logWrapper]);
-    wrappedResolvers.Query.rootQueryField('parent', 'args', 'context', 'info');
+
+    wrappedResolvers.Query.rootQueryField(
+      { parent: 'parent' },
+      { args: 'args' },
+      { context: 'context' },
+      { info: 'info' },
+    );
+
     const logCalls = logStub.getCalls().map(call => call.args[0]);
     expect(logCalls).to.deep.equal([
       'Resolver for type: "Query" field: "rootQueryField"',
-      'parent: "parent"',
-      'args: "args"',
-      'context: "context"',
-      'info: "info"',
+      'parent: {"parent":"parent"}',
+      'args: {"args":"args"}',
+      `context: {"context":"context","pack":${JSON.stringify(generateEmptyPackOptions())}}`,
+      'info: {"info":"info"}',
     ]);
   });
 });
