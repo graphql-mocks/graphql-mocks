@@ -238,6 +238,54 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasNextPage).to.equal(true);
       expect(result.pageInfo.hasPreviousPage).to.equal(false);
     });
+
+    it('can return an empty edges for an out-of-bounds result set', () => {
+      const args = {
+        first: 1,
+        after: 'model:spell(5)',
+      };
+
+      const result = mirageRelayResolver(nullParent, args, resolverContext, {
+        fieldName: 'paginatedSpells',
+        returnType: graphqlTypes.SpellConnection,
+        parentType: graphqlTypes.Query,
+      });
+
+      expect(result.edges.length).to.equal(0);
+      expect(result.pageInfo.hasNextPage).to.equal(false);
+      expect(result.pageInfo.hasPreviousPage).to.equal(true);
+      expect(result.pageInfo.startCursor).to.equal(null);
+      expect(result.pageInfo.endCursor).to.equal(null);
+    });
+
+    it('throws an error when a specified after cursor does not exist', () => {
+      const args = {
+        first: 1,
+        after: 'ANARCHY',
+      };
+
+      expect(() => {
+        mirageRelayResolver(nullParent, args, resolverContext, {
+          fieldName: 'paginatedSpells',
+          returnType: graphqlTypes.SpellConnection,
+          parentType: graphqlTypes.Query,
+        });
+      }).to.throw("ANARCHY doesn't appear to be a valid edge");
+    });
+
+    it('throws an error when first is less than 0', () => {
+      const args = {
+        first: -1,
+      };
+
+      expect(() => {
+        mirageRelayResolver(nullParent, args, resolverContext, {
+          fieldName: 'paginatedSpells',
+          returnType: graphqlTypes.SpellConnection,
+          parentType: graphqlTypes.Query,
+        });
+      }).to.throw('`first` argument must be greater than or equal to 0');
+    });
   });
 
   describe('last/before', () => {
@@ -298,6 +346,54 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.endCursor).to.equal('model:spell(2)');
       expect(result.pageInfo.hasNextPage).to.equal(true);
       expect(result.pageInfo.hasPreviousPage).to.equal(false);
+    });
+
+    it('can return an empty edges for an out-of-bounds result set', () => {
+      const args = {
+        last: 1,
+        before: 'model:spell(1)',
+      };
+
+      const result = mirageRelayResolver(nullParent, args, resolverContext, {
+        fieldName: 'paginatedSpells',
+        returnType: graphqlTypes.SpellConnection,
+        parentType: graphqlTypes.Query,
+      });
+
+      expect(result.edges.length).to.equal(0);
+      expect(result.pageInfo.hasNextPage).to.equal(true);
+      expect(result.pageInfo.hasPreviousPage).to.equal(false);
+      expect(result.pageInfo.startCursor).to.equal(null);
+      expect(result.pageInfo.endCursor).to.equal(null);
+    });
+
+    it('throws an error when a specified after cursor does not exist', () => {
+      const args = {
+        last: 1,
+        after: 'ANARCHY',
+      };
+
+      expect(() => {
+        mirageRelayResolver(nullParent, args, resolverContext, {
+          fieldName: 'paginatedSpells',
+          returnType: graphqlTypes.SpellConnection,
+          parentType: graphqlTypes.Query,
+        });
+      }).to.throw("ANARCHY doesn't appear to be a valid edge");
+    });
+
+    it('throws an error when last is less than 0', () => {
+      const args = {
+        last: -1,
+      };
+
+      expect(() => {
+        mirageRelayResolver(nullParent, args, resolverContext, {
+          fieldName: 'paginatedSpells',
+          returnType: graphqlTypes.SpellConnection,
+          parentType: graphqlTypes.Query,
+        });
+      }).to.throw('`last` argument must be greater than or equal to 0');
     });
   });
 

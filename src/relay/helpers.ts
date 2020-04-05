@@ -12,6 +12,8 @@ export function applyCursorsToEdges(
 
   if (after) {
     const afterEdge = allEdges.find((edge: any) => cursorForNode(edge.node) === after);
+    if (!afterEdge) throw new Error(`${after} doesn't appear to be a valid edge`);
+
     const afterEdgeIndex = allEdges.indexOf(afterEdge);
     const sliced = edges.slice(afterEdgeIndex + 1, edges.length);
     frontCut = sliced.length !== edges.length;
@@ -20,6 +22,8 @@ export function applyCursorsToEdges(
 
   if (before) {
     const beforeEdge = allEdges.find((edge: any) => cursorForNode(edge.node) === before);
+    if (!beforeEdge) throw new Error(`${before} doesn't appear to be a valid edge`);
+
     const beforeEdgeIndex = allEdges.indexOf(beforeEdge);
     const sliced = edges.slice(0, beforeEdgeIndex);
     backCut = sliced.length !== edges.length;
