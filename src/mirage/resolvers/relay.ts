@@ -28,8 +28,6 @@ export function extractNodesFromParent({ parent, parentType, mapper, fieldName }
   const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchingAttr = parentAttributeCandidates.find(attr => attr && parent[attr]);
 
-  debugger;
-
   if (!matchingAttr) {
     throw new Error(
       `Unable to find an attr in "${parentAttributeCandidates.join(', ')}" on resolved parent ${JSON.stringify(

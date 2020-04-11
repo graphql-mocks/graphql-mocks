@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { buildSchema } from 'graphql';
 import defaultResolvers from './mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
-import { patchAutoUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
+import { patchUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
 import { server as mirageServer } from './mirage-sample';
 import defaultScenario from './mirage-sample/scenarios/default';
 import { buildHandler, typeDefs } from './executable-schema';
@@ -23,7 +23,7 @@ describe('auto resolving from mirage', function() {
       .add(['Person', 'paginatedFriends'], ['Person', 'friends']);
 
     mirageServer.db.loadData(defaultScenario);
-    const wrappers = [patchWithAutoTypesWrapper(schema), patchAutoUnionsInterfaces(schema)];
+    const wrappers = [patchWithAutoTypesWrapper(schema), patchUnionsInterfaces(schema)];
     const packed = pack(defaultResolvers, wrappers, {
       dependencies: {
         mapper,

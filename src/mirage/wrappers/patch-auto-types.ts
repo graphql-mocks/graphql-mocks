@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { mirageAutoObjectResolver } from '../resolvers/auto';
+import { mirageObjectResolver } from '../resolvers/object';
 import { mirageRelayResolver } from '../resolvers/relay';
 import { ResolverMapWrapper } from '../../types';
 import { patchEach } from '../../resolver-map/patch-each';
@@ -23,7 +23,7 @@ export const patchWithAutoTypesWrapper = function(schema: GraphQLSchema): Resolv
         return;
       }
 
-      return mirageAutoObjectResolver;
+      return mirageObjectResolver;
     },
   });
 };
