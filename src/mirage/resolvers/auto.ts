@@ -1,22 +1,38 @@
 import { Resolver } from '../../types';
 import { classify } from 'inflected';
-import { GraphQLNonNull, GraphQLUnionType, GraphQLInterfaceType, GraphQLObjectType } from 'graphql';
+import { GraphQLNonNull, GraphQLUnionType, GraphQLInterfaceType, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { extractDependencies } from '../../utils';
+import intersection from 'lodash.intersection';
+import { MirageGraphQLMapper } from '../mapper';
 
 export const mirageAutoUnionResolver: Resolver = function(parent, _args, context, info) {
-  const { graphqlSchema, mapper } = extractDependencies(context);
-  const { name: unionOrInterfaceName } = info;
+  const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
+    context,
+  );
+  const { name } = info;
 
   let matchingFieldsCandidate: any;
   if (info instanceof GraphQLUnionType) {
+    const unionTypes = info.getTypes();
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    matchingFieldsCandidate = findByMatchingFieldsOnUnion(parent, info.getTypes());
+    matchingFieldsCandidate = findMostInCommon(parent, unionTypes);
   }
 
   if (info instanceof GraphQLInterfaceType) {
+    const interfaceName = name;
+
     const typeMap = graphqlSchema.getTypeMap();
+    const typesUsingInterface = Object.values(typeMap).filter(function filterTypesUsingInterface(type) {
+      if (!('getInterfaces' in type)) {
+        return false;
+      }
+
+      const interfacesForType = type.getInterfaces().map(({ name: interfaceName }: { name: string }) => interfaceName);
+      return interfacesForType.includes(interfaceName);
+    });
+
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    matchingFieldsCandidate = findByMatchingFieldsOnInterface(parent, typeMap, info.name);
+    matchingFieldsCandidate = findMostInCommon(parent, typesUsingInterface as GraphQLObjectType[]);
   }
 
   const parentModelName = parent?.modelName ? classify(parent.modelName.replace('-', '_')) : null;
@@ -29,9 +45,7 @@ export const mirageAutoUnionResolver: Resolver = function(parent, _args, context
     .pop();
 
   if (!match)
-    throw new Error(
-      `Unable to find a matching type for resolving ${unionOrInterfaceName}, checked in ${candidates.join(', ')}`,
-    );
+    throw new Error(`Unable to find a matching type for resolving ${name}, checked in ${candidates.join(', ')}`);
 
   return match;
 };
@@ -62,65 +76,20 @@ export const mirageAutoObjectResolver: Resolver = function(parent, _args, _conte
   return resolvedField;
 };
 
-function findByMatchingFieldsOnUnion(parent: any, unionTypes: GraphQLObjectType[]) {
-  const matched = unionTypes.reduce(
-    ({ typeName, matchingCount }, type: GraphQLObjectType) => {
-      const fields = Object.keys(type.getFields());
+function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]) {
+  let matchedType;
+  let matchedFieldCount = 0;
+  const parentFields = Object.keys(parent.attrs ? parent.attrs : parent);
 
-      // pull fields from parent from attrs in the case of a mirage model
-      // otherwise fallback to just pulling the keys off of parent assuming it's
-      // a pojo
-      const parentFields = Object.keys(parent.attrs ? parent.attrs : parent);
-      const totalMatching = parentFields.reduce<number>(
-        (acc, parentField) => (fields.includes(parentField) ? acc + 1 : acc),
-        0,
-      );
+  for (const type of eligibleTypes) {
+    const typeFields = Object.keys(type.getFields());
+    const { length: currentMatchingCount } = intersection(parentFields, typeFields);
 
-      if (totalMatching > matchingCount) {
-        return { typeName: type.name, matchingCount: totalMatching };
-      }
-
-      return { typeName, matchingCount };
-    },
-    { typeName: '', matchingCount: 0 },
-  );
-
-  return matched.typeName;
-}
-
-function findByMatchingFieldsOnInterface(parent: any, typeMap: any, interfaceName: string) {
-  const typesUsingInterface = Object.keys(typeMap).filter(function filterTypesUsingInterface(typeName) {
-    if (!('getInterfaces' in typeMap[typeName])) {
-      return false;
+    if (currentMatchingCount > matchedFieldCount) {
+      matchedType = type;
+      matchedFieldCount = currentMatchingCount;
     }
+  }
 
-    const type = typeMap[typeName];
-    const interfacesForType = type.getInterfaces().map(({ name: interfaceName }: { name: string }) => interfaceName);
-    return interfacesForType.includes(interfaceName);
-  });
-
-  const matched = typesUsingInterface.reduce(
-    ({ typeName, matchingCount }, currentTypeName) => {
-      const type = typeMap[currentTypeName];
-      const fields = Object.keys(type.getFields());
-
-      // pull fields from parent from attrs in the case of a mirage model
-      // otherwise fallback to just pulling the keys off of parent assuming it's
-      // a pojo
-      const parentFields = Object.keys(parent.attrs ? parent.attrs : parent);
-      const totalMatching = parentFields.reduce<number>(
-        (acc, parentField) => (fields.includes(parentField) ? acc + 1 : acc),
-        0,
-      );
-
-      if (totalMatching > matchingCount) {
-        return { typeName: type.name, matchingCount: totalMatching };
-      }
-
-      return { typeName, matchingCount };
-    },
-    { typeName: '', matchingCount: 0 },
-  );
-
-  return matched.typeName;
+  return matchedType?.name;
 }
