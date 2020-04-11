@@ -17,8 +17,10 @@ describe('auto resolving from mirage', function() {
   let mapper: MirageGraphQLMapper;
 
   this.beforeEach(() => {
-    mapper = new MirageGraphQLMapper();
-    mapper.add(['AthleticHobby'], ['SportsHobby']).add(['Person', 'paginatedFriends'], ['Person', 'friends']);
+    mapper = new MirageGraphQLMapper()
+      .add(['AthleticHobby'], ['SportsHobby'])
+      .add(['Automobile'], ['Car'])
+      .add(['Person', 'paginatedFriends'], ['Person', 'friends']);
 
     mirageServer.db.loadData(defaultScenario);
     const wrappers = [patchWithAutoTypesWrapper(schema), patchAutoUnionsInterfaces(schema)];
@@ -134,11 +136,11 @@ describe('auto resolving from mirage', function() {
         transportation {
           __typename
 
-          ... on Bike {
+          ... on Bicycle {
             brand
           }
 
-          ... on Car {
+          ... on Automobile {
             make
             model
           }
@@ -151,22 +153,28 @@ describe('auto resolving from mirage', function() {
     }`;
 
     const result = await graphQLHandler(query);
-    const [firstPerson, secondPerson] = result.data!.allPersons;
+    const [fred, barnie, wilma] = result.data!.allPersons;
 
-    expect(firstPerson.name).to.equal('Fred Flinstone');
-    expect(firstPerson.transportation.__typename).to.equal('Bike');
-    expect(firstPerson.transportation.brand).to.equal('Bianchi');
+    expect(fred.name).to.equal('Fred Flinstone');
+    expect(fred.transportation.__typename).to.equal('Bicycle');
+    expect(fred.transportation.brand).to.equal('Bianchi');
 
-    expect(secondPerson.name).to.equal('Barney Rubble');
-    expect(secondPerson.transportation.__typename).to.equal('PublicTransit');
-    expect(secondPerson.transportation.primary).to.equal('Subway');
+    expect(barnie.name).to.equal('Barney Rubble');
+    expect(barnie.transportation.__typename).to.equal('PublicTransit');
+    expect(barnie.transportation.primary).to.equal('Subway');
+
+    expect(wilma.name).to.equal('Wilma Flinstone');
+    expect(wilma.transportation.__typename).to.equal('Automobile');
+    expect(wilma.transportation.make).to.equal('Volkwagen');
+    expect(wilma.transportation.model).to.equal('Golf');
   });
 
   it('can resolve an interface type', async function() {
     // This test handles a few different auto-resolving cases.
     // Case #1. parent mirage model name, look up on mapper
     // Case #2. parent mirage model name, looked up as GraphQL Type
-    // Case #3. Looking at all types that use the interface and finding a type
+    // Case #3. Looking at all types that use the interface and find a type
+    // that shares the most common fields
 
     // Case #1 pre-checks
     expect(schema.getType('SportsHobby')).to.equal(undefined, 'SportsHobby does not exist on schema');

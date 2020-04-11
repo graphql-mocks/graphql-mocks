@@ -48,7 +48,7 @@ export default {
       name: 'Wilma Flinstone',
       age: 40,
       friendIds: ['1'],
-      transportationId: { type: 'publicTransit', id: '3' },
+      transportationId: { type: 'car', id: '3' },
       hobbyIds: [{ type: 'makerHobby', id: '1' }],
       favoriteColor: 'Red',
     },

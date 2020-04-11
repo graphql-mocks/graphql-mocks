@@ -53,9 +53,9 @@ type Comment {
   author: Person!
 }
 
-union Transportation = Bike | PublicTransit | Car
+union Transportation = Bicycle | PublicTransit | Automobile
 
-type Bike {
+type Bicycle {
   brand: String!
 }
 
@@ -69,7 +69,7 @@ enum PublicTransitOptions {
   Subway
 }
 
-type Car {
+type Automobile {
   make: String!
   model: String!
 }
