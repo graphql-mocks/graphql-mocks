@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLObjectType, graphql } from 'graphql';
 import defaultResolvers from './mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
 import { patchUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
@@ -20,7 +20,8 @@ describe('auto resolving from mirage', function() {
     mapper = new MirageGraphQLMapper()
       .add(['AthleticHobby'], ['SportsHobby'])
       .add(['Automobile'], ['Car'])
-      .add(['Person', 'paginatedFriends'], ['Person', 'friends']);
+      .add(['Person', 'paginatedFriends'], ['Person', 'friends'])
+      .add(['Person', 'fullName'], ['Person', 'name']);
 
     mirageServer.db.loadData(defaultScenario);
     const wrappers = [patchWithAutoTypesWrapper(schema), patchUnionsInterfaces(schema)];
@@ -49,7 +50,7 @@ describe('auto resolving from mirage', function() {
     expect(resolvers.Comment).to.not.equal(undefined);
   });
 
-  it('can handle a simple auto look up', async function() {
+  it('can handle a type look up', async function() {
     const query = `query {
       person(id: 1) {
         id
@@ -72,6 +73,37 @@ describe('auto resolving from mirage', function() {
                 "They're the modern stone age family. From the town of Bedrock. They're a page right out of history",
             },
           ],
+        },
+      },
+    });
+  });
+
+  it('can handle a type look up using a mapper', async function() {
+    const query = `query {
+      person(id: 1) {
+        id
+        name
+        fullName
+      }
+    }`;
+
+    const modelAttrs = mirageServer.schema.first('person')!.attrs;
+    expect('name' in modelAttrs).to.be.true;
+    expect('fullName' in modelAttrs).to.be.false;
+    expect(
+      mapper.mappings.find(
+        ({ graphql: [type, field], mirage: [model, attr] }) =>
+          type === 'Person' && field === 'fullName' && model === 'Person' && attr === 'name',
+      ),
+    ).to.not.equal(undefined);
+
+    const result = await graphQLHandler(query);
+    expect(result).to.deep.equal({
+      data: {
+        person: {
+          id: '1',
+          name: 'Fred Flinstone',
+          fullName: 'Fred Flinstone',
         },
       },
     });
@@ -388,7 +420,7 @@ describe('auto resolving from mirage', function() {
   });
 
   describe('Relay Connections', () => {
-    it('can resolve a root-level relay connection', async () => {
+    it('can resolve a root-level relay connection (via static resolver with helpers)', async () => {
       const query = `query {
         allPersonsPaginated(first: 2) {
           edges {

@@ -12,6 +12,7 @@ type Query {
 type Person {
   id: ID!
   name: String!
+  fullName: String!
   age: Int!
   friends: [Person!]!
   posts: [Post!]!
