@@ -3,8 +3,10 @@ import { GraphQLObjectType } from 'graphql';
 import { classify } from 'inflected';
 
 export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]) {
-  let matchedType;
+  let matchedTypes: GraphQLObjectType[] = [];
   let matchedFieldCount = 0;
+
+  // use mirage attrs otherwise fallback to keys on parent
   const parentFields = Object.keys(parent.attrs ? parent.attrs : parent);
 
   for (const type of eligibleTypes) {
@@ -12,12 +14,23 @@ export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]
     const { length: currentMatchingCount } = intersection(parentFields, typeFields);
 
     if (currentMatchingCount > matchedFieldCount) {
-      matchedType = type;
+      matchedTypes = [type];
       matchedFieldCount = currentMatchingCount;
+    } else if (currentMatchingCount === matchedFieldCount) {
+      matchedTypes.push(type);
     }
   }
 
-  return matchedType?.name;
+  if (matchedTypes.length > 1) {
+    const matchingTypeNames = matchedTypes.map(type => type.name);
+    throw new Error(
+      `Multiple types matched the fields: ${parentFields.join(', ')}. The matching types were: ${matchingTypeNames.join(
+        ', ',
+      )}`,
+    );
+  }
+
+  return matchedTypes.pop()?.name;
 }
 
 export const modelNameToTypeName = (modelName: any): string | undefined =>
