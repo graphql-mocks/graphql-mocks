@@ -13,7 +13,7 @@ export const mirageUnionResolver: Resolver = function(parent, _args, context, in
 
   const parentModelName = modelNameToTypeName(parent?.modelName);
   const matchingFieldsCandidate = findMostInCommon(parent, unionTypes);
-  const [mappedModelName] = parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
+  const [mappedModelName] = mapper && parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate];
 
   const match = candidates.filter(Boolean).find(candidate => graphqlSchema.getType(candidate as string));

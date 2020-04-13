@@ -22,7 +22,7 @@ export const mirageInterfaceResolver: Resolver = function(parent, _args, context
 
   const parentModelName = modelNameToTypeName(parent?.modelName);
   const matchingFieldsCandidate = findMostInCommon(parent, typesUsingInterface as GraphQLObjectType[]);
-  const [mappedModelName] = parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
+  const [mappedModelName] = mapper && parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate];
 
   const match = candidates.filter(Boolean).find(candidate => graphqlSchema.getType(candidate as string));
