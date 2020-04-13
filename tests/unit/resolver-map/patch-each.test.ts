@@ -1,6 +1,6 @@
 import { patchEach } from '../../../src/resolver-map/patch-each';
 import { expect } from 'chai';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../mocks';
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import sinon from 'sinon';
@@ -54,7 +54,7 @@ describe('resolver-map/patch-each', function() {
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const wrapper = patchEach(schema!, { patchWith: () => patchResolverSpy as any });
-    const patchedResolvers = wrapper(resolverMap, generateEmptyPackOptions());
+    const patchedResolvers = wrapper(resolverMap, generatePackOptions());
 
     expect(patchedResolvers.Query.hello).to.equal(helloSpy, 'original hello resolver is untouched');
     expect(patchedResolvers.Spell.isEvil).to.equal(isEvilSpy, 'original isEvil resolver is untouched');
@@ -96,7 +96,7 @@ describe('resolver-map/patch-each', function() {
     });
 
     expect((resolverMap as any).Query.spells!).to.not.exist;
-    const patchedResolvers = wrapper(resolverMap, generateEmptyPackOptions());
+    const patchedResolvers = wrapper(resolverMap, generatePackOptions());
     expect(patchedResolvers.Query.spells).to.not.exist;
     expect(patchedResolvers.Mutation.addSpell).to.exist;
   });

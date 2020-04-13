@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { wrapEach } from '../../../src/resolver-map/wrap-each';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
 
@@ -36,7 +36,7 @@ describe('wrapEach', function() {
 
   it('wraps each individual resolver fn in resolver map', function() {
     resolverMapWrapper = wrapEach(resolverWrapper);
-    wrappedResolverMap = resolverMapWrapper(clonedResolverMap, generateEmptyPackOptions());
+    wrappedResolverMap = resolverMapWrapper(clonedResolverMap, generatePackOptions());
 
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
@@ -90,14 +90,14 @@ describe('wrapEach', function() {
     expect(originalResolverMap.Query.field.firstCall.args).to.deep.equal([
       { parent: 'query-field' },
       { args: 'query-field' },
-      { context: 'query-field', pack: generateEmptyPackOptions() },
+      { context: 'query-field', pack: generatePackOptions() },
       { info: 'query-field' },
     ]);
 
     expect(originalResolverMap.SomeType.fieldResolverOnSomeType.firstCall.args).to.deep.equal([
       { parent: 'sometype-field-resolver' },
       { args: 'sometype-field-resolver' },
-      { context: 'sometype-field-resolver', pack: generateEmptyPackOptions() },
+      { context: 'sometype-field-resolver', pack: generatePackOptions() },
       { info: 'sometype-field-resolver' },
     ]);
   });

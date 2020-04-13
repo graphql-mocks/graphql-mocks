@@ -3,7 +3,7 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../mocks';
 
 describe('log/wrapper', function() {
   let logStub: SinonStub;
@@ -40,7 +40,7 @@ describe('log/wrapper', function() {
       'Resolver for type: "Query" field: "rootQueryField"',
       'parent: {"parent":"parent"}',
       'args: {"args":"args"}',
-      `context: {"context":"context","pack":${JSON.stringify(generateEmptyPackOptions())}}`,
+      `context: {"context":"context","pack":${JSON.stringify(generatePackOptions())}}`,
       'info: {"info":"info"}',
     ]);
   });

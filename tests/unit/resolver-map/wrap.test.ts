@@ -2,7 +2,7 @@ import { wrap } from '../../../src/resolver-map/wrap';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { ResolverMap } from '../../../src/types';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../mocks';
 
 describe('wrap', function() {
   it('passes arguments through to the wrapper function', function() {
@@ -14,7 +14,7 @@ describe('wrap', function() {
     };
 
     const wrapper: any = sinon.spy((resolverMap: any) => resolverMap);
-    const mockPackOptions = generateEmptyPackOptions();
+    const mockPackOptions = generatePackOptions();
     const wrappedResolvers = wrap(wrapper)(resolverMap, mockPackOptions);
 
     expect(wrapper.called).to.be.true;
@@ -34,7 +34,7 @@ describe('wrap', function() {
     const wrapped = wrap(wrapper);
 
     expect(() => {
-      wrapped(resolvers, generateEmptyPackOptions());
+      wrapped(resolvers, generatePackOptions());
     }).to.throw('wrapper should return a resolver map object, got boolean');
   });
 });

@@ -3,7 +3,7 @@ import { eachType } from '../../../src/resolver-map/each-type';
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import sinon from 'sinon';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../mocks';
 
 describe('resolver-map/each-type', function() {
   let schema: GraphQLSchema;
@@ -39,7 +39,7 @@ describe('resolver-map/each-type', function() {
 
     eachType(schema, {
       withType: withTypeSpy,
-    })(resolverMap, generateEmptyPackOptions());
+    })(resolverMap, generatePackOptions());
 
     const typesCalled = withTypeSpy.getCalls().map(call => call.args[0].type.name);
 
