@@ -1,10 +1,10 @@
-import { patchUnionsInterfaces } from '../../../src/mirage/wrappers/patch-auto-unions-interfaces';
+import { patchUnionsInterfaces } from '../../../../src/mirage/wrappers/patch-auto-unions-interfaces';
 import { expect } from 'chai';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../../mocks';
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 
-describe('mirage/patch-auto-unions-interfaces', function() {
+describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {
@@ -47,7 +47,7 @@ describe('mirage/patch-auto-unions-interfaces', function() {
     expect(resolverMap?.Animal?.__resolveType).to.not.exist;
 
     const wrapper = patchUnionsInterfaces(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
 
     expect(wrappedResolvers?.Salutation?.__resolveType).to.exist;
     expect(wrappedResolvers?.Animal?.__resolveType).to.exist;
@@ -66,7 +66,7 @@ describe('mirage/patch-auto-unions-interfaces', function() {
     };
 
     const wrapper = patchUnionsInterfaces(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
     expect(wrappedResolvers).to.deep.equal(resolverMap);
   });
 });

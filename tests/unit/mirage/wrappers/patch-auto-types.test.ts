@@ -1,12 +1,12 @@
-import { patchWithAutoTypesWrapper } from '../../../src/mirage/wrappers/patch-auto-types';
-import { ResolverMap } from '../../../src/types';
+import { patchWithAutoTypesWrapper } from '../../../../src/mirage/wrappers/patch-auto-types';
+import { ResolverMap } from '../../../../src/types';
 import { expect } from 'chai';
-import { generateEmptyPackOptions } from '../../mocks';
+import { generatePackOptions } from '../../../mocks';
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools';
 import sinon from 'sinon';
 
-describe('mirage/patch-auto-types', function() {
+describe('mirage/wrappers/patch-auto-types', function() {
   let resolverMap: ResolverMap | undefined;
   let schema: GraphQLSchema | undefined;
 
@@ -83,7 +83,7 @@ describe('mirage/patch-auto-types', function() {
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
 
     expect(wrappedResolvers?.Spell.incantation).to.exist;
     expect(wrappedResolvers?.Potion.name).to.exist;
@@ -96,7 +96,7 @@ describe('mirage/patch-auto-types', function() {
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;
@@ -109,7 +109,7 @@ describe('mirage/patch-auto-types', function() {
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generateEmptyPackOptions());
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;
