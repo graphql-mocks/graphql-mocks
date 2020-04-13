@@ -10,7 +10,7 @@ type ResolverStash = {
 };
 
 export const stashKey = Symbol('stash-state');
-export const stashFor = (ref: any): ResolverStash | void => {
+export const stashFor = (ref: any): ResolverStash | undefined => {
   return ref && ref[stashKey];
 };
 
