@@ -7,12 +7,14 @@ export const mirageObjectResolver: Resolver = function(parent, _args, context, i
   const { returnType, fieldName, parentType } = info;
   const { mapper }: { mapper: MirageGraphQLMapper } = extractDependencies(context);
 
-  if (!parent) {
-    throw new Error(`Expected parent to be an object, got ${typeof parent}`);
+  if (typeof parent !== 'object') {
+    throw new Error(
+      `Expected parent to be an object, got ${typeof parent}, when trying to resolve field "${fieldName}" on type "${parentType}"`,
+    );
   }
 
-  const [, matchedAttrName] = mapper ? mapper.matchForGraphQL([parentType.name, fieldName]) : [undefined, undefined];
-  const candidates = [matchedAttrName, fieldName].filter(Boolean);
+  const [, mappedAttrName] = mapper ? mapper.matchForGraphQL([parentType.name, fieldName]) : [undefined, undefined];
+  const candidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchedAttr = candidates.find(candidate => candidate in parent);
   const value = parent[matchedAttr];
 
@@ -23,9 +25,11 @@ export const mirageObjectResolver: Resolver = function(parent, _args, context, i
   if (result == null) {
     if (returnType instanceof GraphQLNonNull) {
       throw new Error(
-        `Failed to resolve a field ${fieldName} on ${
+        `Failed to resolve field "${fieldName}" on type "${
           parentType.name
-        }. Tried to resolve from parent object ${parent.toString()}, with attrs ${candidates.join(', ')}`,
+        }". Tried to resolve the parent object ${parent.toString()}, with the following attrs: ${candidates.join(
+          ', ',
+        )}`,
       );
     }
 
