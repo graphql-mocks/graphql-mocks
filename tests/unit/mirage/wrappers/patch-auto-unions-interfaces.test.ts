@@ -1,40 +1,37 @@
 import { patchUnionsInterfaces } from '../../../../src/mirage/wrappers/patch-auto-unions-interfaces';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema, GraphQLSchema } from 'graphql';
 
 describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {
-    schema = makeExecutableSchema({
-      typeDefs: `
-        union Salutation = Hello | GutenTag
+    schema = buildSchema(`
+      union Salutation = Hello | GutenTag
 
-        type Hello {
-          salutation: String!
-        }
+      type Hello {
+        salutation: String!
+      }
 
-        type GutenTag {
-          salutation: String!
-        }
+      type GutenTag {
+        salutation: String!
+      }
 
-        interface Animal {
-          type: String!
-        }
+      interface Animal {
+        type: String!
+      }
 
-        type Dog implements Animal {
-          type: String!
-          breed: String!
-        }
+      type Dog implements Animal {
+        type: String!
+        breed: String!
+      }
 
-        type Fish implements Animal {
-          type: String!
-          isFreshwater: Boolean!
-        }
-      `,
-    });
+      type Fish implements Animal {
+        type: String!
+        isFreshwater: Boolean!
+      }
+    `);
   });
 
   afterEach(() => {

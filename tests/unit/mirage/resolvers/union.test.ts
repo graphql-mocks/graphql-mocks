@@ -1,7 +1,6 @@
-import { makeExecutableSchema } from 'graphql-tools';
 import { mirageUnionResolver } from '../../../../src/mirage/resolvers/union';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, buildSchema } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
@@ -37,25 +36,23 @@ describe('mirage/resolvers/union', function() {
   });
 
   beforeEach(() => {
-    schema = makeExecutableSchema({
-      typeDefs: `
-        union Animal = Dog | Feline | Fish
+    schema = buildSchema(`
+      union Animal = Dog | Feline | Fish
 
-        type Dog {
-          breed: String!
-          knowsTricks: Boolean!
-        }
+      type Dog {
+        breed: String!
+        knowsTricks: Boolean!
+      }
 
-        type Feline {
-          breed: String!
-          likesNaps: Boolean!
-        }
+      type Feline {
+        breed: String!
+        likesNaps: Boolean!
+      }
 
-        type Fish {
-          isFreshwater: Boolean!
-        }
-      `,
-    });
+      type Fish {
+        isFreshwater: Boolean!
+      }
+    `);
 
     resolverInfo = schema.getType('Animal');
   });

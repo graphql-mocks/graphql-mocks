@@ -2,8 +2,7 @@ import { patchWithAutoTypesWrapper } from '../../../../src/mirage/wrappers/patch
 import { ResolverMap } from '../../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
 describe('mirage/wrappers/patch-auto-types', function() {
@@ -20,56 +19,54 @@ describe('mirage/wrappers/patch-auto-types', function() {
       },
     };
 
-    schema = makeExecutableSchema({
-      typeDefs: `
-        schema {
-          query: Query
-          mutation: Mutation,
-        }
+    schema = buildSchema(`
+      schema {
+        query: Query
+        mutation: Mutation,
+      }
 
-        type Query {
-          hello: String
-          spells: [Spell!]!
-          potions: [Potion!]!
-          sourcerers: [Sourcerer!]!
-        }
+      type Query {
+        hello: String
+        spells: [Spell!]!
+        potions: [Potion!]!
+        sourcerers: [Sourcerer!]!
+      }
 
-        type Mutation {
-          addSpell(spell: Spell!): Spell
-        }
+      type Mutation {
+        addSpell(spell: Spell!): Spell
+      }
 
-        type Spell {
-          incantation: String
-          isEvil: Boolean
-        }
+      type Spell {
+        incantation: String
+        isEvil: Boolean
+      }
 
-        type Potion {
-          name: String!
-          ingredients: [String!]!
-        }
+      type Potion {
+        name: String!
+        ingredients: [String!]!
+      }
 
-        type SpellConnection {
-          edges: SpellConnectionEdge
-          pageInfo: SpellConnectionPageInfo!
-        }
+      type SpellConnection {
+        edges: SpellConnectionEdge
+        pageInfo: SpellConnectionPageInfo!
+      }
 
-        type SpellConnectionEdge {
-          node: Spell!
-          cursor: String!
-        }
+      type SpellConnectionEdge {
+        node: Spell!
+        cursor: String!
+      }
 
-        type SpellConnectionPageInfo {
-          startCursor: String!
-          endCursor: String!
-          hasPreviousPage: Boolean!
-          hasNextPage: Boolean!
-        }
+      type SpellConnectionPageInfo {
+        startCursor: String!
+        endCursor: String!
+        hasPreviousPage: Boolean!
+        hasNextPage: Boolean!
+      }
 
-        type Sourcerer {
-          spellConnections: [SpellConnection!]!
-        }
-      `,
-    });
+      type Sourcerer {
+        spellConnections: [SpellConnection!]!
+      }
+    `);
   });
 
   afterEach(() => {

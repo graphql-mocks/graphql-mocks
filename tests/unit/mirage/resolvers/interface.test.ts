@@ -1,7 +1,6 @@
-import { makeExecutableSchema } from 'graphql-tools';
 import { mirageInterfaceResolver } from '../../../../src/mirage/resolvers/interface';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
@@ -39,29 +38,27 @@ describe('mirage/resolvers/interface', function() {
   });
 
   beforeEach(() => {
-    schema = makeExecutableSchema({
-      typeDefs: `
-        interface Animal {
-          type: String!
-        }
+    schema = buildSchema(`
+      interface Animal {
+        type: String!
+      }
 
-        type Dog implements Animal {
-          type: String!
-          breed: String!
-        }
+      type Dog implements Animal {
+        type: String!
+        breed: String!
+      }
 
-        type Feline implements Animal {
-          type: String!
-          breed: String!
-        }
+      type Feline implements Animal {
+        type: String!
+        breed: String!
+      }
 
-        type Fish implements Animal {
-          name: String!
-          type: String!
-          isFreshwater: Boolean!
-        }
-      `,
-    });
+      type Fish implements Animal {
+        name: String!
+        type: String!
+        isFreshwater: Boolean!
+      }
+    `);
   });
 
   afterEach(() => {

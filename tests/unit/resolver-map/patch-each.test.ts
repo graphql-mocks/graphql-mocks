@@ -1,36 +1,33 @@
 import { patchEach } from '../../../src/resolver-map/patch-each';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../mocks';
-import { GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
 describe('resolver-map/patch-each', function() {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {
-    schema = makeExecutableSchema({
-      typeDefs: `
-        schema {
-          query: Query
-          mutation: Mutation,
-        }
+    schema = buildSchema(`
+      schema {
+        query: Query
+        mutation: Mutation,
+      }
 
-        type Query {
-          hello: String
-          spells: [Spell!]!
-        }
+      type Query {
+        hello: String
+        spells: [Spell!]!
+      }
 
-        type Mutation {
-          addSpell(spell: Spell!): Spell
-        }
+      type Mutation {
+        addSpell(spell: Spell!): Spell
+      }
 
-        type Spell {
-          incantation: String
-          isEvil: Boolean
-        }
-      `,
-    });
+      type Spell {
+        incantation: String
+        isEvil: Boolean
+      }
+    `);
   });
 
   afterEach(() => {

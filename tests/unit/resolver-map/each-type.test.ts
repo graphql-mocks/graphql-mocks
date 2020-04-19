@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { eachType } from '../../../src/resolver-map/each-type';
-import { GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from 'graphql-tools';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 import { generatePackOptions } from '../../mocks';
 
@@ -9,28 +8,26 @@ describe('resolver-map/each-type', function() {
   let schema: GraphQLSchema;
 
   beforeEach(() => {
-    schema = makeExecutableSchema({
-      typeDefs: `
-        schema {
-          query: Query
-          mutation: Mutation,
-        }
+    schema = buildSchema(`
+      schema {
+        query: Query
+        mutation: Mutation,
+      }
 
-        type Query {
-          hello: String
-          spells: [Spell!]!
-        }
+      type Query {
+        hello: String
+        spells: [Spell!]!
+      }
 
-        type Mutation {
-          addSpell(spell: Spell!): Spell
-        }
+      type Mutation {
+        addSpell(spell: Spell!): Spell
+      }
 
-        type Spell {
-          incantation: String
-          isEvil: Boolean
-        }
-      `,
-    });
+      type Spell {
+        incantation: String
+        isEvil: Boolean
+      }
+    `);
   });
 
   it('reduces a set of resolvers', function() {
