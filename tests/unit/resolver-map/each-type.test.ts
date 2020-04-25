@@ -34,9 +34,9 @@ describe('resolver-map/each-type', function() {
     const withTypeSpy = sinon.spy();
     const resolverMap = {};
 
-    eachType(schema, {
+    eachType({
       withType: withTypeSpy,
-    })(resolverMap, generatePackOptions());
+    })(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     const typesCalled = withTypeSpy.getCalls().map(call => call.args[0].type.name);
 
