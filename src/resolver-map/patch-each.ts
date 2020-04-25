@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql';
+import { GraphQLObjectType, GraphQLField } from 'graphql';
 import { Resolver, ResolverMap, ResolverMapWrapper } from '../types';
 import { embedPackOptions } from './pack-wrapper';
 
@@ -10,10 +10,9 @@ export type PatchOptions = {
   }) => Resolver | undefined;
 };
 
-export const patchEach = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (
-  resolvers: ResolverMap,
-  packOptions,
-) => {
+export const patchEach = (options: PatchOptions): ResolverMapWrapper => (resolvers: ResolverMap, packOptions) => {
+  const { graphqlSchema: schema } = packOptions.dependencies;
+
   const typeMap = schema.getTypeMap();
 
   for (const typeKey of Object.keys(typeMap)) {

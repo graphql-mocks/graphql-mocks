@@ -50,8 +50,8 @@ describe('resolver-map/patch-each', function() {
     const patchResolverSpy = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patchEach(schema!, { patchWith: () => patchResolverSpy as any });
-    const patchedResolvers = wrapper(resolverMap, generatePackOptions());
+    const wrapper = patchEach({ patchWith: () => patchResolverSpy as any });
+    const patchedResolvers = wrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(patchedResolvers.Query.hello).to.equal(helloSpy, 'original hello resolver is untouched');
     expect(patchedResolvers.Spell.isEvil).to.equal(isEvilSpy, 'original isEvil resolver is untouched');
@@ -81,7 +81,7 @@ describe('resolver-map/patch-each', function() {
     const patchResolver = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patchEach(schema!, {
+    const wrapper = patchEach({
       patchWith: ({ type, field }) => {
         // only skip patching Query.spells
         if (type.name === 'Query' && field.name === 'spells') {
@@ -93,7 +93,10 @@ describe('resolver-map/patch-each', function() {
     });
 
     expect((resolverMap as any).Query.spells!).to.not.exist;
-    const patchedResolvers = wrapper(resolverMap, generatePackOptions());
+    const patchedResolvers = wrapper(
+      resolverMap,
+      generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema: schema } })),
+    );
     expect(patchedResolvers.Query.spells).to.not.exist;
     expect(patchedResolvers.Mutation.addSpell).to.exist;
   });

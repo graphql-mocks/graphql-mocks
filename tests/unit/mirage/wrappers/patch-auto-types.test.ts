@@ -79,8 +79,8 @@ describe('mirage/wrappers/patch-auto-types', function() {
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
+    const wrapper = patchWithAutoTypesWrapper;
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Spell.incantation).to.exist;
     expect(wrappedResolvers?.Potion.name).to.exist;
@@ -92,8 +92,8 @@ describe('mirage/wrappers/patch-auto-types', function() {
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
-    const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
+    const wrapper = patchWithAutoTypesWrapper;
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;
@@ -105,8 +105,8 @@ describe('mirage/wrappers/patch-auto-types', function() {
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
-    const wrapper = patchWithAutoTypesWrapper(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
+    const wrapper = patchWithAutoTypesWrapper;
+    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;
