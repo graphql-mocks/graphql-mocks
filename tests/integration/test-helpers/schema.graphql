@@ -1,0 +1,116 @@
+schema {
+  query: Query
+}
+
+type Query {
+  hello: String,
+  person(id: ID!): Person
+  allPersons: [Person!]!
+  allPersonsPaginated(first: Int, last: Int, before: String, after: String): PersonConnection!
+}
+
+type Person {
+  id: ID!
+  name: String!
+  fullName: String!
+  age: Int!
+  friends: [Person!]!
+  posts: [Post!]!
+  transportation: Transportation!
+  hobbies: [Hobby!]!
+  favoriteColor: Color!
+  leastFavoriteColor: Color
+  paginatedFriends(first: Int, last: Int, before: String, after: String): PersonConnection!
+}
+
+type PersonConnection {
+  edges: [PersonEdge!]!
+  pageInfo: PersonConnectionPageInfo!
+}
+
+type PersonEdge {
+  node: Person!
+  cursor: String!
+}
+
+type PersonConnectionPageInfo {
+  startCursor: String!
+  endCursor: String!
+  hasPreviousPage: Boolean!
+  hasNextPage: Boolean!
+}
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  author: Person!
+  comments: [Comment!]!
+}
+
+type Comment {
+  id: ID!
+  body: String!
+  author: Person!
+}
+
+union Transportation = Bicycle | PublicTransit | Automobile
+
+type Bicycle {
+  brand: String!
+}
+
+type PublicTransit {
+  primary: PublicTransitOptions!
+}
+
+enum PublicTransitOptions {
+  Bus
+  Tram
+  Subway
+}
+
+type Automobile {
+  make: String!
+  model: String!
+}
+
+interface Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+}
+
+# Matches against the SportsHobby Model defined by mapping
+type AthleticHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  hasMultiplePlayers: Boolean!
+}
+
+type CookingHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  requiresOven: Boolean!
+  requiresStove: Boolean!
+}
+
+type MakerHobby implements Hobby {
+  name: String!
+  requiresEquipment: Boolean!
+  makerType: MakerHobbyTypes!
+}
+
+enum MakerHobbyTypes {
+  Textile
+  Electronic
+  Woodwork
+}
+
+enum Color {
+  Red
+  Orange
+  Yellow
+  Green
+  Blue
+  Purple
+}

@@ -1,32 +1,48 @@
 {
-  "name": "graphql-resolver-testing",
-  "version": "1.0.0",
-  "description": "",
+  "name": "graphql-test-resolvers",
+  "version": "0.0.0",
+  "description": "Tools for setting up graphql test resolvers",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "lint": "eslint \"./src/**/*.ts\" \"./tests/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "mocha -r ts-node/register \"tests/**/*.test.ts\"",
     "codegen": "graphql-code-generator --config codegen.yml"
   },
-  "author": "",
+  "author": "Chad Carbert",
   "license": "ISC",
   "dependencies": {
     "@graphql-codegen/cli": "^1.9.1",
-    "@graphql-codegen/typescript-resolvers": "^1.9.1",
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^5.2.7",
-    "chai": "^4.2.0",
-    "graphql-codegen": "^0.4.0",
-    "graphql-tools": "^4.0.6",
-    "mocha": "^6.2.2",
-    "ts-node": "^8.5.4",
-    "typescript": "^3.7.3"
+    "inflected": "^2.0.4",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.intersection": "^4.4.0"
   },
   "devDependencies": {
     "@graphql-codegen/typescript": "1.0.0",
     "@graphql-codegen/typescript-operations": "1.0.0",
+    "@graphql-codegen/typescript-resolvers": "^1.9.1",
+    "@types/chai": "^4.2.7",
+    "@types/inflected": "^1.1.29",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.21",
+    "@types/sinon": "^7.5.2",
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "@typescript-eslint/parser": "^2.22.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "graphql": "^14.5.8",
+    "graphql-codegen": "^0.4.0",
     "graphql-import": "^0.7.1",
-    "miragejs": "^0.1.32"
+    "graphql-tools": "^4.0.6",
+    "miragejs": "^0.1.32",
+    "mocha": "^6.2.2",
+    "prettier": "^1.19.1",
+    "sinon": "^9.0.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
   }
 }

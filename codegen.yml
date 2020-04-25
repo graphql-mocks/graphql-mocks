@@ -1,7 +1,7 @@
 overwrite: true
-schema: "test/schema.graphql"
+schema: "tests/schema.graphql"
 generates:
-  types.ts:
+  "tests/types.ts":
     plugins:
       - "typescript"
       - "typescript-operations"
