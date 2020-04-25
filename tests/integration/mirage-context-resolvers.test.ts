@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { buildHandler } from './executable-schema';
-import defaultResolvers from './mirage-static-resolvers';
-import { server as mirageServer } from './mirage-sample';
-import defaultScenario from './mirage-sample/scenarios/default';
+import { buildHandler } from './test-helpers/executable-schema';
+import defaultResolvers from './test-helpers/mirage-static-resolvers';
+import { server as mirageServer } from './test-helpers/mirage-sample';
+import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
 import { pack } from '../../src/resolver-map/pack';
 
-const wrappers: any = [];
-const { resolvers } = pack(defaultResolvers, wrappers, {
+const emptyWrappers: any = [];
+const { resolvers } = pack(defaultResolvers, emptyWrappers, {
   state: {},
   dependencies: {
     mirageServer,
@@ -15,7 +15,7 @@ const { resolvers } = pack(defaultResolvers, wrappers, {
 
 const graphQLHandler = buildHandler(resolvers);
 
-describe('it can resolve from resolver files', function() {
+describe('it can resolve from basic resolvers', function() {
   beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
   });

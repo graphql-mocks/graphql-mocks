@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { buildSchema, GraphQLObjectType, graphql } from 'graphql';
-import defaultResolvers from './mirage-static-resolvers';
+import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
 import { patchUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
-import { server as mirageServer } from './mirage-sample';
-import defaultScenario from './mirage-sample/scenarios/default';
-import { buildHandler, typeDefs } from './executable-schema';
+import { server as mirageServer } from './test-helpers/mirage-sample';
+import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
+import { buildHandler, typeDefs } from './test-helpers/executable-schema';
 import { pack } from '../../src/resolver-map/pack';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 
