@@ -43,8 +43,10 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
     expect(resolverMap?.Salutation?.__resolveType).to.not.exist;
     expect(resolverMap?.Animal?.__resolveType).to.not.exist;
 
-    const wrapper = patchUnionsInterfaces(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
+    const wrappedResolvers = patchUnionsInterfaces(
+      resolverMap!,
+      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+    );
 
     expect(wrappedResolvers?.Salutation?.__resolveType).to.exist;
     expect(wrappedResolvers?.Animal?.__resolveType).to.exist;
@@ -62,8 +64,10 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
       },
     };
 
-    const wrapper = patchUnionsInterfaces(schema!);
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions());
+    const wrappedResolvers = patchUnionsInterfaces(
+      resolverMap!,
+      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+    );
     expect(wrappedResolvers).to.deep.equal(resolverMap);
   });
 });

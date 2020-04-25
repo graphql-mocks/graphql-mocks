@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLType } from 'graphql';
+import { GraphQLType, GraphQLSchema } from 'graphql';
 import { ResolverMapWrapper, ResolverMap, PackOptions } from '../types';
 
 type WithType = {
@@ -11,11 +11,12 @@ type PatchOptions = {
   withType({ type, resolvers, packOptions }: WithType): void;
 };
 
-export const eachType = (schema: GraphQLSchema, options: PatchOptions): ResolverMapWrapper => (
+export const eachType = (options: PatchOptions): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ) => {
-  const typeMap = schema.getTypeMap();
+  const { graphqlSchema: schema } = packOptions.dependencies;
+  const typeMap = (schema as GraphQLSchema).getTypeMap();
 
   for (const type of Object.values(typeMap)) {
     options.withType({ type, resolvers, packOptions });
