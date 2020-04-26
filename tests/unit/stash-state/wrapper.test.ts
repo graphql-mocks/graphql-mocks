@@ -4,8 +4,8 @@ import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 
-describe('stash-state/wrapper', function() {
-  it('saves stashes on a result object', function() {
+describe('stash-state/wrapper', function () {
+  it('saves stashes on a result object', function () {
     const resolverReturn = {};
     const resolverSpy = sinon.spy(() => resolverReturn);
 

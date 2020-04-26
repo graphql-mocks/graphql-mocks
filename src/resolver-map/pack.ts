@@ -22,7 +22,7 @@ export const pack: Packager = (initialResolversMap, wrappers, packOptions = defa
     },
   };
 
-  wrappers.forEach(wrapper => {
+  wrappers.forEach((wrapper) => {
     wrappedMap = wrapper(wrappedMap, packOptions as PackOptions);
   });
 

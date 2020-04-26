@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { generatePackOptions } from '../../mocks';
 
-describe('log/wrapper', function() {
+describe('log/wrapper', function () {
   let logStub: SinonStub;
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('log/wrapper', function() {
     logStub.restore();
   });
 
-  it('logs details around calling resolvers', async function() {
+  it('logs details around calling resolvers', async function () {
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -35,7 +35,7 @@ describe('log/wrapper', function() {
       { info: 'info' },
     );
 
-    const logCalls = logStub.getCalls().map(call => call.args[0]);
+    const logCalls = logStub.getCalls().map((call) => call.args[0]);
     expect(logCalls).to.deep.equal([
       'Resolver for type: "Query" field: "rootQueryField"',
       'parent: {"parent":"parent"}',

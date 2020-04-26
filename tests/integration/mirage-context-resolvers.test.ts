@@ -15,7 +15,7 @@ const { resolvers } = pack(defaultResolvers, emptyWrappers, {
 
 const graphQLHandler = buildHandler(resolvers);
 
-describe('it can resolve from basic resolvers', function() {
+describe('it can resolve from basic resolvers', function () {
   beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
   });
@@ -24,7 +24,7 @@ describe('it can resolve from basic resolvers', function() {
     mirageServer.db.emptyData();
   });
 
-  it('handles a root query (scalar)', async function() {
+  it('handles a root query (scalar)', async function () {
     const query = `query {
       hello
     }`;
@@ -37,7 +37,7 @@ describe('it can resolve from basic resolvers', function() {
     });
   });
 
-  it('handles a root query (custom type)', async function() {
+  it('handles a root query (custom type)', async function () {
     const query = `query {
       person(id: 1) {
         name
@@ -56,7 +56,7 @@ describe('it can resolve from basic resolvers', function() {
     });
   });
 
-  it('handles nested objects', async function() {
+  it('handles nested objects', async function () {
     const query = `query {
       person(id: 1) {
         name

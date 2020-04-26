@@ -1,6 +1,6 @@
 import { Resolver } from '../../../../../src/types';
 
-const resolver: Resolver = function(parent /*, args, context, info*/) {
+const resolver: Resolver = function (parent /*, args, context, info*/) {
   return parent.friends.models;
 };
 

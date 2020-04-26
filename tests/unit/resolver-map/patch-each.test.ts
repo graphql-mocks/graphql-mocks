@@ -4,7 +4,7 @@ import { generatePackOptions } from '../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
-describe('resolver-map/patch-each', function() {
+describe('resolver-map/patch-each', function () {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('resolver-map/patch-each', function() {
     schema = undefined;
   });
 
-  it('patches missing holes in a resolver map', async function() {
+  it('patches missing holes in a resolver map', async function () {
     const helloSpy = sinon.spy();
     const isEvilSpy = sinon.spy();
 
@@ -65,7 +65,7 @@ describe('resolver-map/patch-each', function() {
     expect(patchResolverSpy.callCount).to.equal(3);
   });
 
-  it('skips patching when a resolver is not returned', async function() {
+  it('skips patching when a resolver is not returned', async function () {
     const helloSpy = sinon.spy();
     const isEvilSpy = sinon.spy();
 

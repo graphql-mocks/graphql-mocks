@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { Model, Server, belongsTo } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
-describe('mirage/resolvers/object', function() {
+describe('mirage/resolvers/object', function () {
   let schema: GraphQLSchema | undefined;
 
   const mirageServer = new Server({
@@ -35,7 +35,7 @@ describe('mirage/resolvers/object', function() {
     schema = undefined;
   });
 
-  it('resolves a simple scalar field from a parent', async function() {
+  it('resolves a simple scalar field from a parent', async function () {
     const user = mirageServer.create('user', {
       id: '1',
       name: 'George',
@@ -55,7 +55,7 @@ describe('mirage/resolvers/object', function() {
     expect(result).to.equal('George');
   });
 
-  it('resolves a field from a parent using a mapper', async function() {
+  it('resolves a field from a parent using a mapper', async function () {
     const user = mirageServer.create('user', {
       id: '1',
       name: 'George',
@@ -78,7 +78,7 @@ describe('mirage/resolvers/object', function() {
     expect(result).to.equal('Pizza');
   });
 
-  it('resolves a mirage relationship field from a parent', async function() {
+  it('resolves a mirage relationship field from a parent', async function () {
     const starwars = mirageServer.create('movie', { id: '1', name: 'Star Wars: A New Hope' });
     const user = mirageServer.create('user', {
       id: '1',

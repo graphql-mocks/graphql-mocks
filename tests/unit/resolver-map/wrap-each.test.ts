@@ -4,7 +4,7 @@ import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
 
-describe('wrapEach', function() {
+describe('wrapEach', function () {
   let originalResolverMap: any;
   let resolverWrapper: any;
   let resolverMapWrapper: any;
@@ -28,13 +28,13 @@ describe('wrapEach', function() {
     // to ensure that the original isn't modified
     clonedResolverMap = cloneDeep(originalResolverMap);
 
-    resolverWrapper = sinon.spy(resolver => {
+    resolverWrapper = sinon.spy((resolver) => {
       // returns a new function that wraps the existing resolver
       return sinon.spy(resolver);
     });
   });
 
-  it('wraps each individual resolver fn in resolver map', function() {
+  it('wraps each individual resolver fn in resolver map', function () {
     resolverMapWrapper = wrapEach(resolverWrapper);
     wrappedResolverMap = resolverMapWrapper(clonedResolverMap, generatePackOptions());
 

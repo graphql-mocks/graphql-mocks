@@ -14,7 +14,7 @@ export const stashFor = (ref: any): ResolverStash | undefined => {
   return ref && ref[stashKey];
 };
 
-export const stashStateWrapper: ResolverMapWrapper = wrapEach(originalResolver => {
+export const stashStateWrapper: ResolverMapWrapper = wrapEach((originalResolver) => {
   return (parent, args, context, info) => {
     const result = originalResolver(parent, args, context, info);
 

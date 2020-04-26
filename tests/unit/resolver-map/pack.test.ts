@@ -3,11 +3,11 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMapWrapper } from '../../../src/types';
 import sinon from 'sinon';
 
-describe('wrap', function() {
-  it('reduces a set of resolvers', function() {
+describe('wrap', function () {
+  it('reduces a set of resolvers', function () {
     const resolvers = {};
     const wrappers: ResolverMapWrapper[] = [
-      function(resolvers) {
+      function (resolvers) {
         resolvers.Type = {};
         // eslint-disable-next-line
         resolvers.Type.field = () => {};
@@ -23,7 +23,7 @@ describe('wrap', function() {
     expect(wrappedResolvers.Type).to.have.property('field');
   });
 
-  it('includes the packOptions in resolver context by default', function() {
+  it('includes the packOptions in resolver context by default', function () {
     const queryHelloSpy = sinon.spy();
     const wrappers: ResolverMapWrapper[] = [];
 

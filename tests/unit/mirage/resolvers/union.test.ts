@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
-describe('mirage/resolvers/union', function() {
+describe('mirage/resolvers/union', function () {
   let schema: GraphQLSchema | undefined;
   let resolverInfo: any;
 
@@ -61,7 +61,7 @@ describe('mirage/resolvers/union', function() {
     schema = undefined;
   });
 
-  it('resolves an union to a type by model name', async function() {
+  it('resolves an union to a type by model name', async function () {
     const context = {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
@@ -70,7 +70,7 @@ describe('mirage/resolvers/union', function() {
     expect(resolvedType).to.equal('Dog');
   });
 
-  it('resolves an union to a type by mapper', async function() {
+  it('resolves an union to a type by mapper', async function () {
     const mapper = new MirageGraphQLMapper().add(['Feline'], ['Cat']);
     const context = {
       __testUseFindInCommon: false,
@@ -80,7 +80,7 @@ describe('mirage/resolvers/union', function() {
     expect(resolvedType).to.equal('Feline');
   });
 
-  it('resolves an union to a type by most matching fields', async function() {
+  it('resolves an union to a type by most matching fields', async function () {
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     const resolvedType = mirageUnionResolver(fishyModel, {}, context, resolverInfo);
     expect(resolvedType).to.equal('Fish');

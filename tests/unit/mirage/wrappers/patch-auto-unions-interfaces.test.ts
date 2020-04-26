@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 
-describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
+describe('mirage/wrappers/patch-auto-unions-interfaces', function () {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
     schema = undefined;
   });
 
-  it('patches missing union and interface __resolveType resolvers', async function() {
+  it('patches missing union and interface __resolveType resolvers', async function () {
     const resolverMap: any = {};
     expect(resolverMap?.Salutation?.__resolveType).to.not.exist;
     expect(resolverMap?.Animal?.__resolveType).to.not.exist;
@@ -52,7 +52,7 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function() {
     expect(wrappedResolvers?.Animal?.__resolveType).to.exist;
   });
 
-  it('skips patching already filled union and interface __resolveType resolvers', async function() {
+  it('skips patching already filled union and interface __resolveType resolvers', async function () {
     const resolverMap: any = {
       Salutation: {
         // eslint-disable-next-line @typescript-eslint/no-empty-function
