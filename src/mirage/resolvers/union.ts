@@ -4,7 +4,7 @@ import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 
-export const mirageUnionResolver: Resolver = function(parent, _args, context, info) {
+export const mirageUnionResolver: Resolver = function (parent, _args, context, info) {
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
   const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
     context,
@@ -25,7 +25,7 @@ export const mirageUnionResolver: Resolver = function(parent, _args, context, in
   const [mappedModelName] = mapper && parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
 
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
-  const match = candidates.find(candidate => graphqlSchema.getType(candidate as string));
+  const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 
   if (!match) {
     const matchingFieldsError = matchingFieldsCandidateError

@@ -1,17 +1,14 @@
 import { expect } from 'chai';
-import { buildSchema, GraphQLObjectType, graphql } from 'graphql';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
 import { patchUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
-import { buildHandler, typeDefs } from './test-helpers/executable-schema';
+import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
 import { pack } from '../../src/resolver-map/pack';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 
-const schema = buildSchema(typeDefs);
-
-describe('auto resolving from mirage', function() {
+describe('auto resolving from mirage', function () {
   let resolvers: any;
   let graphQLHandler: any;
   let mapper: MirageGraphQLMapper;
@@ -29,7 +26,7 @@ describe('auto resolving from mirage', function() {
       dependencies: {
         mapper,
         mirageServer,
-        graphqlSchema: schema,
+        graphqlSchema: graphqlSchema,
       },
     });
     resolvers = packed.resolvers;
@@ -42,7 +39,7 @@ describe('auto resolving from mirage', function() {
     graphQLHandler = undefined;
   });
 
-  it('has missing resolvers that are filled by #patchWithAutoResolvers', function() {
+  it('has missing resolvers that are filled by #patchWithAutoResolvers', function () {
     expect(defaultResolvers.Post).to.equal(undefined);
     expect(resolvers.Post).to.not.equal(undefined);
 
@@ -50,7 +47,7 @@ describe('auto resolving from mirage', function() {
     expect(resolvers.Comment).to.not.equal(undefined);
   });
 
-  it('can handle a type look up', async function() {
+  it('can handle a type look up', async function () {
     const query = `query {
       person(id: 1) {
         id
@@ -78,7 +75,7 @@ describe('auto resolving from mirage', function() {
     });
   });
 
-  it('can handle a type look up using a mapper', async function() {
+  it('can handle a type look up using a mapper', async function () {
     const query = `query {
       person(id: 1) {
         id
@@ -118,7 +115,7 @@ describe('auto resolving from mirage', function() {
   // the resolver should be able to handle lookups for a Person whether the parent
   // is an author of a post or an author of a nested comment
 
-  it('can handle a first generation parent type (person in posts.author)', async function() {
+  it('can handle a first generation parent type (person in posts.author)', async function () {
     const query = `query {
       person(id: 1) {
         id
@@ -138,7 +135,7 @@ describe('auto resolving from mirage', function() {
     expect(result.data!.person.name).to.equal(result.data!.person.posts[0].author.name);
   });
 
-  it('can handle a second generation parent type (person in posts.comments.author)', async function() {
+  it('can handle a second generation parent type (person in posts.comments.author)', async function () {
     const query = `query {
       person(id: 1) {
         id
@@ -159,7 +156,7 @@ describe('auto resolving from mirage', function() {
     expect(result.data!.person.posts[0].comments[0].author.name).to.equal('Barney Rubble');
   });
 
-  it('can resolve a union type', async function() {
+  it('can resolve a union type', async function () {
     const query = `query {
       allPersons {
         id
@@ -201,7 +198,7 @@ describe('auto resolving from mirage', function() {
     expect(wilma.transportation.model).to.equal('Golf');
   });
 
-  it('can resolve an interface type', async function() {
+  it('can resolve an interface type', async function () {
     // This test handles a few different auto-resolving cases.
     // Case #1. parent mirage model name, look up on mapper
     // Case #2. parent mirage model name, looked up as GraphQL Type
@@ -209,35 +206,35 @@ describe('auto resolving from mirage', function() {
     // that shares the most common fields
 
     // Case #1 pre-checks
-    expect(schema.getType('SportsHobby')).to.equal(undefined, 'SportsHobby does not exist on schema');
+    expect(graphqlSchema.getType('SportsHobby')).to.equal(undefined, 'SportsHobby does not exist on schema');
     expect(mirageServer.schema.all('SportsHobby').length).to.be.greaterThan(
       0,
       'SportsHobby does exist as model on mirage',
     );
-    expect(schema.getType('AthleticHobby')).to.not.equal(undefined, 'AthleticHobby does exist on the schema');
+    expect(graphqlSchema.getType('AthleticHobby')).to.not.equal(undefined, 'AthleticHobby does exist on the schema');
     expect(() => mirageServer.schema.all('AthleticHobby')).to.throw(
       `Mirage: You're trying to find model(s) of type AthleticHobby but this collection doesn't exist in the database`,
       'AthleticHobby does exist as a mirage model',
     );
     expect(
-      mapper.mappings.some(mapping => {
+      mapper.mappings.some((mapping) => {
         return mapping.graphql[0] === 'AthleticHobby' && mapping.mirage[0] === 'SportsHobby';
       }),
     ).to.be.equal(true, 'mapping exists betwene mirage and graphql');
 
     // Case #3 pre-checks
-    expect(schema.getType('CulinaryHobby')).to.equal(undefined, 'CulinaryHobby does not exist on schema');
+    expect(graphqlSchema.getType('CulinaryHobby')).to.equal(undefined, 'CulinaryHobby does not exist on schema');
     expect(mirageServer.schema.all('CulinaryHobby').length).to.be.greaterThan(
       0,
       'CulinaryHobby does exist as model on mirage',
     );
-    expect(schema.getType('CookingHobby')).to.not.equal(undefined, 'CookingHobby does exist on the schema');
+    expect(graphqlSchema.getType('CookingHobby')).to.not.equal(undefined, 'CookingHobby does exist on the schema');
     expect(() => mirageServer.schema.all('CookingHobby')).to.throw(
       `Mirage: You're trying to find model(s) of type CookingHobby but this collection doesn't exist in the database`,
       'CookingHobby does exist as a mirage model',
     );
     expect(
-      mapper.mappings.some(mapping => {
+      mapper.mappings.some((mapping) => {
         return mapping.graphql[0] === 'CookingHobby' && mapping.mirage[0] === 'CulinaryHobby';
       }),
     ).to.be.equal(false, 'no mappings exists betwene mirage and graphql');
@@ -313,7 +310,7 @@ describe('auto resolving from mirage', function() {
     ]);
   });
 
-  it('can resolve an enum type', async function() {
+  it('can resolve an enum type', async function () {
     const query = `query {
       allPersons {
         id
@@ -332,7 +329,7 @@ describe('auto resolving from mirage', function() {
     expect(secondPerson.favoriteColor).to.equal('Green');
   });
 
-  it('can resolve a list type', async function() {
+  it('can resolve a list type', async function () {
     const query = `query {
       allPersons {
         name

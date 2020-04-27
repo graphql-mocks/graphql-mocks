@@ -5,7 +5,7 @@ import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
-describe('mirage/wrappers/patch-auto-types', function() {
+describe('mirage/wrappers/patch-auto-types', function () {
   let resolverMap: ResolverMap | undefined;
   let schema: GraphQLSchema | undefined;
 
@@ -74,7 +74,7 @@ describe('mirage/wrappers/patch-auto-types', function() {
     schema = undefined;
   });
 
-  it('patches missing type field resolvers', async function() {
+  it('patches missing type field resolvers', async function () {
     expect(resolverMap?.Spell?.incantation).to.not.exist;
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
@@ -87,7 +87,7 @@ describe('mirage/wrappers/patch-auto-types', function() {
     expect(wrappedResolvers?.Potion.ingredients).to.exist;
   });
 
-  it('skips missing root query and mutation field resolvers', async function() {
+  it('skips missing root query and mutation field resolvers', async function () {
     expect(resolverMap?.Query.spells).to.not.exist;
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
@@ -100,7 +100,7 @@ describe('mirage/wrappers/patch-auto-types', function() {
     expect(wrappedResolvers?.Mutation?.addSpell).to.not.exist;
   });
 
-  it('skips missing root query and mutation field resolvers', async function() {
+  it('skips missing root query and mutation field resolvers', async function () {
     expect(resolverMap?.Query.spells).to.not.exist;
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;

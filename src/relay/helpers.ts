@@ -41,7 +41,7 @@ export function relayPaginateNodes(
   cursorForNode: cursorForNode,
 ) {
   const { first, last, before, after } = args;
-  const allEdges = nodes.map(node => nodeWrapper(node, cursorForNode(node)));
+  const allEdges = nodes.map((node) => nodeWrapper(node, cursorForNode(node)));
   // eslint-disable-next-line prefer-const
   let { edges, frontCut, backCut } = applyCursorsToEdges(allEdges, before, after, cursorForNode);
 

@@ -4,8 +4,8 @@ import * as sinon from 'sinon';
 import { ResolverMap } from '../../../src/types';
 import { generatePackOptions } from '../../mocks';
 
-describe('wrap', function() {
-  it('passes arguments through to the wrapper function', function() {
+describe('wrap', function () {
+  it('passes arguments through to the wrapper function', function () {
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -24,10 +24,10 @@ describe('wrap', function() {
     expect(wrappedResolvers).deep.equals(resolverMap, 'it does deep equal the original resolver map');
   });
 
-  it('throws if a wrapper does not return an object', function() {
+  it('throws if a wrapper does not return an object', function () {
     const resolvers = {};
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const wrapper: any = function() {
+    const wrapper: any = function () {
       return true;
     };
 

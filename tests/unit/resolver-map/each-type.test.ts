@@ -4,7 +4,7 @@ import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 import { generatePackOptions } from '../../mocks';
 
-describe('resolver-map/each-type', function() {
+describe('resolver-map/each-type', function () {
   let schema: GraphQLSchema;
 
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('resolver-map/each-type', function() {
     `);
   });
 
-  it('reduces a set of resolvers', function() {
+  it('reduces a set of resolvers', function () {
     const withTypeSpy = sinon.spy();
     const resolverMap = {};
 
@@ -38,7 +38,7 @@ describe('resolver-map/each-type', function() {
       withType: withTypeSpy,
     })(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
-    const typesCalled = withTypeSpy.getCalls().map(call => call.args[0].type.name);
+    const typesCalled = withTypeSpy.getCalls().map((call) => call.args[0].type.name);
 
     expect(typesCalled).to.contain('Query');
     expect(typesCalled).to.contain('Mutation');

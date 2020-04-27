@@ -4,20 +4,22 @@ on: [push, pull_request]
 
 jobs:
   build:
-
+    name: node ${{ matrix.node-version }}, graphql ${{ matrix.graphql-version }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [10.x, 12.x]
+        graphql-version: [14, 15]
 
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{ matrix.node-version }} with graphq.js ${{ matrix.graphql-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: yarn install & test
       run: |
         yarn
+        yarn add graphql@${{ matrix.graphql-version }} --latest --no-lock-file --dev
         yarn test

@@ -5,7 +5,7 @@ import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
-describe('mirage/resolvers/interface', function() {
+describe('mirage/resolvers/interface', function () {
   let schema: GraphQLSchema | undefined;
   const resolverInfo = { name: 'Animal' };
 
@@ -65,7 +65,7 @@ describe('mirage/resolvers/interface', function() {
     schema = undefined;
   });
 
-  it('resolves an interface to a type by model name', async function() {
+  it('resolves an interface to a type by model name', async function () {
     const context = {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
@@ -74,7 +74,7 @@ describe('mirage/resolvers/interface', function() {
     expect(resolvedType).to.equal('Dog');
   });
 
-  it('resolves an interface to a type by mapper', async function() {
+  it('resolves an interface to a type by mapper', async function () {
     const mapper = new MirageGraphQLMapper().add(['Feline'], ['Cat']);
     const context = {
       __testUseFindInCommon: false,
@@ -84,7 +84,7 @@ describe('mirage/resolvers/interface', function() {
     expect(resolvedType).to.equal('Feline');
   });
 
-  it('resolves an interface to a type by most matching fields', async function() {
+  it('resolves an interface to a type by most matching fields', async function () {
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     const resolvedType = mirageInterfaceResolver(fishyParent, {}, context, resolverInfo);
     expect(resolvedType).to.equal('Fish');

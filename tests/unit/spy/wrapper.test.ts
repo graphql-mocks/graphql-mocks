@@ -3,8 +3,8 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 
-describe('spy/wrapper', function() {
-  it('provides accesss to spies on resolvers', function() {
+describe('spy/wrapper', function () {
+  it('provides accesss to spies on resolvers', function () {
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line

@@ -26,7 +26,7 @@ export function extractNodesFromParent({ parent, parentType, mapper, fieldName }
   const unwrappedParentType = unwrap(parentType);
   const [, mappedAttrName] = mapper && mapper.matchForGraphQL([unwrappedParentType.name, fieldName]);
   const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
-  const matchingAttr = parentAttributeCandidates.find(attr => attr && parent[attr]);
+  const matchingAttr = parentAttributeCandidates.find((attr) => attr && parent[attr]);
 
   if (!matchingAttr) {
     throw new Error(
