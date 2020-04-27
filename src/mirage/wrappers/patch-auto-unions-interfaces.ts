@@ -3,7 +3,7 @@ import { GraphQLInterfaceType, GraphQLUnionType } from 'graphql';
 import { Resolver } from '../../types';
 import { mirageUnionResolver } from '../../mirage/resolvers/union';
 import { mirageInterfaceResolver } from '../../mirage/resolvers/interface';
-import { embedPackOptions } from '../../resolver-map/pack-wrapper';
+import { embedPackOptions } from '../../utils';
 
 export const patchUnionsInterfaces = eachType({
   withType({ resolvers, type, packOptions }) {

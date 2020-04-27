@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLField } from 'graphql';
 import { Resolver, ResolverMap, ResolverMapWrapper } from '../types';
-import { embedPackOptions } from './pack-wrapper';
+import { embedPackOptions } from '../utils';
 
 export type PatchOptions = {
   patchWith: (context: {

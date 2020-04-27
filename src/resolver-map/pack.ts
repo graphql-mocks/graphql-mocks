@@ -1,8 +1,13 @@
 import { Packager, PackOptions, PackState } from '../types';
-import { packWrapper } from './pack-wrapper';
 import cloneDeep from 'lodash.clonedeep';
+import { wrapEach } from './wrap-each';
+import { embedPackOptions } from '../utils';
 
 const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
+
+export const packWrapper = wrapEach((resolver, { packOptions }) => {
+  return embedPackOptions(resolver, packOptions);
+});
 
 export const pack: Packager = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
   wrappers = [packWrapper, ...wrappers];

@@ -1,5 +1,5 @@
 import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
-import { embedPackOptions } from './pack-wrapper';
+import { embedPackOptions } from '../utils';
 
 export type WrapEachDetails = {
   resolvers: ResolverMap;
