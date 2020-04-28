@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { wrapEach } from '../../../src/resolver-map/wrap-each';
+import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
@@ -47,7 +47,7 @@ describe('wrapEach', function () {
   });
 
   it('wraps each individual resolver fn in resolver map', function () {
-    resolverMapWrapper = wrapEach(resolverWrapper);
+    resolverMapWrapper = wrapEachField(resolverWrapper);
     wrappedResolverMap = resolverMapWrapper(
       clonedResolverMap,
       generatePackOptions({ dependencies: { graphqlSchema } }),

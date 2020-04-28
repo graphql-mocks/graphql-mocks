@@ -4,7 +4,7 @@ import { embedPackOptions } from '../utils';
 
 export type PatchEachFieldWrapper = (eachFieldContext: EachFieldContext) => Resolver | undefined;
 
-export const patchEach = (patchWith: PatchEachFieldWrapper): ResolverMapWrapper => (
+export const patchEachField = (patchWith: PatchEachFieldWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions,
 ) => {

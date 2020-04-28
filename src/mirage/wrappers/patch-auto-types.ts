@@ -1,9 +1,9 @@
 import { mirageObjectResolver } from '../resolvers/object';
 import { mirageRelayResolver } from '../resolvers/relay';
-import { patchEach } from '../../resolver-map/patch-each';
+import { patchEachField } from '../../resolver-map/patch-each-field';
 import { unwrap } from '../../utils';
 
-export const patchWithAutoTypesWrapper = patchEach(({ type, field }) => {
+export const patchWithAutoTypesWrapper = patchEachField(({ type, field }) => {
   const isRootQueryType = type.name === 'Query';
   const isRootMutationType = type.name === 'Mutation';
   const isGraphQLInternalType = type.name.indexOf('__') === 0;

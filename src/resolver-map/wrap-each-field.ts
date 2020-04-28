@@ -4,7 +4,7 @@ import { GraphQLObjectType, GraphQLSchema, GraphQLFieldMap } from 'graphql';
 
 type WrapEachFieldWrapper = (resolver: Resolver, eachFieldContext: EachFieldContext) => Resolver | undefined;
 
-export const wrapEach = (wrapWith: WrapEachFieldWrapper): ResolverMapWrapper => (
+export const wrapEachField = (wrapWith: WrapEachFieldWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ) => {
@@ -41,7 +41,7 @@ export const wrapEach = (wrapWith: WrapEachFieldWrapper): ResolverMapWrapper => 
 
       if (typeof newResolver !== 'function') {
         throw new Error(
-          `${wrapEach.toString()} must return a function for resolver type: ${typeName}, field: ${fieldName}`,
+          `${wrapEachField.toString()} must return a function for resolver type: ${typeName}, field: ${fieldName}`,
         );
       }
 
