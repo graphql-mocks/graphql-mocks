@@ -1,16 +1,8 @@
-import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
+import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions, EachFieldContext } from '../types';
 import { embedPackOptions } from '../utils';
-import { GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLFieldMap } from 'graphql';
+import { GraphQLObjectType, GraphQLSchema, GraphQLFieldMap } from 'graphql';
 
-export type WrapEachDetails = {
-  resolvers: ResolverMap;
-  type: GraphQLObjectType;
-  field: GraphQLField<any, any, any>;
-  path: [string, string];
-  packOptions: PackOptions;
-};
-
-type WrapEachFieldWrapper = (resolver: Resolver, reducerMapDetails: WrapEachDetails) => Resolver;
+type WrapEachFieldWrapper = (resolver: Resolver, eachFieldContext: EachFieldContext) => Resolver | undefined;
 
 export const wrapEach = (wrapWith: WrapEachFieldWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
