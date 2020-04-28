@@ -3,9 +3,14 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
+import { generatePackOptions } from '../../mocks';
+import { buildSchema } from 'graphql';
 
 describe('stash-state/wrapper', function () {
   it('saves stashes on a result object', function () {
+    const graphqlSchema = buildSchema(`type Query {
+      rootQueryField: String!
+    }`);
     const resolverReturn = {};
     const resolverSpy = sinon.spy(() => resolverReturn);
 
@@ -15,7 +20,11 @@ describe('stash-state/wrapper', function () {
       },
     };
 
-    const { resolvers: wrappedResolvers } = pack(resolverMap, [stashStateWrapper]);
+    const { resolvers: wrappedResolvers } = pack(
+      resolverMap,
+      [stashStateWrapper],
+      generatePackOptions({ dependencies: { graphqlSchema } }),
+    );
 
     const parent = { parent: 'parent' };
     const args = { args: 'args' };

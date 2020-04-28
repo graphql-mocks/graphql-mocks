@@ -1,33 +1,59 @@
 import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
 import { embedPackOptions } from '../utils';
+import { GraphQLObjectType, GraphQLField, GraphQLSchema, GraphQLFieldMap } from 'graphql';
 
 export type WrapEachDetails = {
   resolvers: ResolverMap;
+  type: GraphQLObjectType;
+  field: GraphQLField<any, any, any>;
   path: [string, string];
   packOptions: PackOptions;
 };
 
-type EachWrapper = (resolver: Resolver, reducerMapDetails: WrapEachDetails) => Resolver;
+type WrapEachFieldWrapper = (resolver: Resolver, reducerMapDetails: WrapEachDetails) => Resolver;
 
-export const wrapEach = (eachWrapper: EachWrapper): ResolverMapWrapper => (
+export const wrapEach = (wrapWith: WrapEachFieldWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ) => {
-  for (const type in resolvers) {
-    for (const field in resolvers[type]) {
-      const resolver = resolvers[type][field];
+  const { graphqlSchema: schema } = packOptions.dependencies;
+  if (!schema) {
+    debugger;
+    throw new Error('Include in your pack dependencies, key: "graphqlSchema" with an instance of your GraphQLSchema');
+  }
 
-      const newResolver = eachWrapper(resolver, {
+  for (const typeName in resolvers) {
+    for (const fieldName in resolvers[typeName]) {
+      const resolver = resolvers[typeName][fieldName];
+
+      const type = (schema as GraphQLSchema).getType(typeName) as GraphQLObjectType;
+
+      if (!type) {
+        throw new Error(`Could not find a type ${typeName} on schema in wrapEach`);
+      }
+
+      const typeFields = type && 'getFields' in type && (type.getFields() as GraphQLFieldMap<any, any>);
+      const field = (typeFields && typeFields[fieldName]) || undefined;
+
+      if (!field) {
+        throw new Error(`Could not find a field ${fieldName} for type ${typeName} in wrapEach`);
+      }
+
+      const newResolver = wrapWith(resolver, {
         resolvers,
-        path: [type, field],
+        type,
+        field,
+        path: [typeName, fieldName],
         packOptions,
       });
 
       if (typeof newResolver !== 'function') {
-        throw new Error(`${wrapEach.toString()} must return a function for resolver type: ${type}, field: ${field}`);
+        throw new Error(
+          `${wrapEach.toString()} must return a function for resolver type: ${typeName}, field: ${fieldName}`,
+        );
       }
 
-      resolvers[type][field] = embedPackOptions(newResolver, packOptions);
+      resolvers[typeName][fieldName] = embedPackOptions(newResolver, packOptions);
     }
   }
 

@@ -3,8 +3,10 @@ import { wrapEach } from '../../../src/resolver-map/wrap-each';
 import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
+import { GraphQLSchema, buildSchema } from 'graphql';
 
 describe('wrapEach', function () {
+  let graphqlSchema: GraphQLSchema;
   let originalResolverMap: any;
   let resolverWrapper: any;
   let resolverMapWrapper: any;
@@ -12,6 +14,16 @@ describe('wrapEach', function () {
   let clonedResolverMap: any;
 
   beforeEach(() => {
+    graphqlSchema = buildSchema(`
+      type Query {
+        field: String!
+      }
+
+      type SomeType {
+        fieldResolverOnSomeType: String!
+      }
+    `);
+
     originalResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -36,7 +48,10 @@ describe('wrapEach', function () {
 
   it('wraps each individual resolver fn in resolver map', function () {
     resolverMapWrapper = wrapEach(resolverWrapper);
-    wrappedResolverMap = resolverMapWrapper(clonedResolverMap, generatePackOptions());
+    wrappedResolverMap = resolverMapWrapper(
+      clonedResolverMap,
+      generatePackOptions({ dependencies: { graphqlSchema } }),
+    );
 
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
@@ -90,14 +105,17 @@ describe('wrapEach', function () {
     expect(originalResolverMap.Query.field.firstCall.args).to.deep.equal([
       { parent: 'query-field' },
       { args: 'query-field' },
-      { context: 'query-field', pack: generatePackOptions() },
+      { context: 'query-field', pack: generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema } })) },
       { info: 'query-field' },
     ]);
 
     expect(originalResolverMap.SomeType.fieldResolverOnSomeType.firstCall.args).to.deep.equal([
       { parent: 'sometype-field-resolver' },
       { args: 'sometype-field-resolver' },
-      { context: 'sometype-field-resolver', pack: generatePackOptions() },
+      {
+        context: 'sometype-field-resolver',
+        pack: generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema } })),
+      },
       { info: 'sometype-field-resolver' },
     ]);
   });

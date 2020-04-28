@@ -1,16 +1,19 @@
 import { GraphQLObjectType, GraphQLField } from 'graphql';
-import { Resolver, ResolverMap, ResolverMapWrapper } from '../types';
+import { Resolver, ResolverMap, ResolverMapWrapper, PackOptions } from '../types';
 import { embedPackOptions } from '../utils';
 
-export type PatchOptions = {
-  patchWith: (context: {
-    resolvers: ResolverMap;
-    type: GraphQLObjectType;
-    field: GraphQLField<any, any, any>;
-  }) => Resolver | undefined;
-};
+export type PatchEachFieldWrapper = (context: {
+  resolvers: ResolverMap;
+  type: GraphQLObjectType;
+  field: GraphQLField<any, any, any>;
+  path: [string, string];
+  packOptions: PackOptions;
+}) => Resolver | undefined;
 
-export const patchEach = (options: PatchOptions): ResolverMapWrapper => (resolvers: ResolverMap, packOptions) => {
+export const patchEach = (patchWith: PatchEachFieldWrapper): ResolverMapWrapper => (
+  resolvers: ResolverMap,
+  packOptions,
+) => {
   const { graphqlSchema: schema } = packOptions.dependencies;
 
   const typeMap = schema.getTypeMap();
@@ -26,7 +29,15 @@ export const patchEach = (options: PatchOptions): ResolverMapWrapper => (resolve
         const field = fields[fieldKey];
 
         if (!resolvers[typeKey] || (resolvers[typeKey] && !resolvers[typeKey][fieldKey])) {
-          const patchResolver = options.patchWith({ resolvers, type: type as GraphQLObjectType, field });
+          const path: [string, string] = [(type as GraphQLObjectType).name, (field as GraphQLField<any, any>).name];
+
+          const patchResolver = patchWith({
+            resolvers,
+            type: type as GraphQLObjectType,
+            field,
+            path,
+            packOptions,
+          });
 
           if (typeof patchResolver === 'function') {
             resolvers[typeKey] = resolvers[typeKey] || {};
