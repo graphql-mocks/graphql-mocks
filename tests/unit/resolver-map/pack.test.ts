@@ -1,10 +1,17 @@
+import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMapWrapper } from '../../../src/types';
 import sinon from 'sinon';
 
-describe('wrap', function () {
+describe('resolver-map/pack', function () {
   it('reduces a set of resolvers', function () {
+    const graphqlSchema = buildSchema(`
+      type Type {
+        field: String!
+      }
+    `);
+
     const resolvers = {};
     const wrappers: ResolverMapWrapper[] = [
       function (resolvers) {
@@ -16,7 +23,7 @@ describe('wrap', function () {
       },
     ];
 
-    const { resolvers: wrappedResolvers } = pack(resolvers, wrappers);
+    const { resolvers: wrappedResolvers } = pack(resolvers, wrappers, { dependencies: { graphqlSchema } });
 
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(wrappedResolvers).to.have.property('Type');
@@ -24,6 +31,10 @@ describe('wrap', function () {
   });
 
   it('includes the packOptions in resolver context by default', function () {
+    const graphqlSchema = buildSchema(`type Query {
+      hello: String!
+    }`);
+
     const queryHelloSpy = sinon.spy();
     const wrappers: ResolverMapWrapper[] = [];
 
@@ -37,6 +48,7 @@ describe('wrap', function () {
       state: { value: 'hello world' },
       dependencies: {
         commonDependency: {},
+        graphqlSchema,
       },
     };
 

@@ -1,3 +1,4 @@
+import { buildSchema } from 'graphql';
 import { logWrapper } from '../../../src/log/wrapper';
 import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
@@ -17,6 +18,7 @@ describe('log/wrapper', function () {
   });
 
   it('logs details around calling resolvers', async function () {
+    const schema = buildSchema(`type Query { rootQueryField: String!}`);
     const resolverMap: ResolverMap = {
       Query: {
         // eslint-disable-next-line
@@ -26,7 +28,9 @@ describe('log/wrapper', function () {
       },
     };
 
-    const { resolvers: wrappedResolvers } = pack(resolverMap, [logWrapper]);
+    const { resolvers: wrappedResolvers } = pack(resolverMap, [logWrapper], {
+      dependencies: { graphqlSchema: schema },
+    });
 
     wrappedResolvers.Query.rootQueryField(
       { parent: 'parent' },
@@ -40,7 +44,9 @@ describe('log/wrapper', function () {
       'Resolver for type: "Query" field: "rootQueryField"',
       'parent: {"parent":"parent"}',
       'args: {"args":"args"}',
-      `context: {"context":"context","pack":${JSON.stringify(generatePackOptions())}}`,
+      `context: {"context":"context","pack":${JSON.stringify(
+        generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      )}}`,
       'info: {"info":"info"}',
     ]);
   });

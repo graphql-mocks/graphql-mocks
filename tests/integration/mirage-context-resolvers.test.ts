@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { buildHandler } from './test-helpers/executable-schema';
+import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
@@ -10,6 +10,7 @@ const { resolvers } = pack(defaultResolvers, emptyWrappers, {
   state: {},
   dependencies: {
     mirageServer,
+    graphqlSchema,
   },
 });
 

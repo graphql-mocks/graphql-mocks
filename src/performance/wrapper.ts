@@ -1,7 +1,7 @@
-import { wrapEach } from '../resolver-map/wrap-each';
+import { wrapEachField } from '../resolver-map/wrap-each-field';
 import { ResolverMapWrapper } from '../types';
 
-export const performanceWrapper: ResolverMapWrapper = wrapEach((originalResolver, wrapperDetails) => {
+export const performanceWrapper: ResolverMapWrapper = wrapEachField((originalResolver, wrapperDetails) => {
   const [type, field] = wrapperDetails.path;
   const packState = wrapperDetails.packOptions.state;
   packState.performance = packState.performance = {};

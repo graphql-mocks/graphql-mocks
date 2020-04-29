@@ -1,7 +1,7 @@
-import { wrapEach } from '../resolver-map/wrap-each';
+import { wrapEachField } from '../resolver-map/wrap-each-field';
 import { ResolverMapWrapper } from '../types';
 
-export const logWrapper: ResolverMapWrapper = wrapEach((originalResolver, wrapperDetails) => {
+export const logWrapper: ResolverMapWrapper = wrapEachField((originalResolver, wrapperDetails) => {
   const [type, field] = wrapperDetails.path;
 
   return async (parent, args, context, info) => {

@@ -1,28 +1,35 @@
-import { eachType } from '../../resolver-map/each-type';
-import { GraphQLInterfaceType, GraphQLUnionType } from 'graphql';
-import { Resolver } from '../../types';
+import { GraphQLInterfaceType, GraphQLUnionType, GraphQLSchema } from 'graphql';
+import { Resolver, PackOptions, ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../../mirage/resolvers/union';
 import { mirageInterfaceResolver } from '../../mirage/resolvers/interface';
-import { embedPackOptions } from '../../resolver-map/pack-wrapper';
+import { embedPackOptions } from '../../utils';
 
-export const patchUnionsInterfaces = eachType({
-  withType({ resolvers, type, packOptions }) {
+export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackOptions): ResolverMap {
+  const { graphqlSchema: schema } = packOptions.dependencies;
+  const typeMap = (schema as GraphQLSchema).getTypeMap();
+
+  for (const typeKey of Object.keys(typeMap)) {
+    const type = typeMap[typeKey];
+
+    const alreadyHasResolveTypeResolver = resolvers[type.name] && '__resolveType' in [type.name];
+    if (alreadyHasResolveTypeResolver) {
+      continue;
+    }
+
     let patchResolver: Resolver;
-
     if (type instanceof GraphQLUnionType) {
       patchResolver = mirageUnionResolver;
     } else if (type instanceof GraphQLInterfaceType) {
       patchResolver = mirageInterfaceResolver;
     } else {
-      return;
+      continue;
     }
 
-    if (patchResolver) {
-      const alreadyHasResolveTypeResolver = resolvers[type.name]?.__resolveType;
-      if (!alreadyHasResolveTypeResolver) {
-        resolvers[type.name] = resolvers[type.name] || {};
-        resolvers[type.name].__resolveType = embedPackOptions(patchResolver, packOptions);
-      }
+    if (typeof patchResolver === 'function') {
+      resolvers[type.name] = resolvers[type.name] || {};
+      resolvers[type.name].__resolveType = embedPackOptions(patchResolver, packOptions);
     }
-  },
-});
+  }
+
+  return resolvers;
+}
