@@ -57,13 +57,15 @@ describe('wrapEach', function () {
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
 
     // firstCall for wrapping Query.field
-    expect(resolverWrapper.firstCall.args[1].path).to.deep.equal(
+    const firstCallPackOptions = resolverWrapper.firstCall.args[1];
+    expect([firstCallPackOptions.type.name, firstCallPackOptions.field.name]).to.deep.equal(
       ['Query', 'field'],
       'first call second arg has correct path',
     );
 
     // secondCall for wrapping SomeType.fieldResolverOnSomeType
-    expect(resolverWrapper.secondCall.args[1].path).to.deep.equal(
+    const secondCallPackOptions = resolverWrapper.secondCall.args[1];
+    expect([secondCallPackOptions.type.name, secondCallPackOptions.field.name]).to.deep.equal(
       ['SomeType', 'fieldResolverOnSomeType'],
       'second call second arg matches',
     );

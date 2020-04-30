@@ -10,7 +10,6 @@ export const wrapEachField = (wrapWith: WrapEachFieldWrapper): ResolverMapWrappe
 ) => {
   const { graphqlSchema: schema } = packOptions.dependencies;
   if (!schema) {
-    debugger;
     throw new Error('Include in your pack dependencies, key: "graphqlSchema" with an instance of your GraphQLSchema');
   }
 
@@ -35,7 +34,6 @@ export const wrapEachField = (wrapWith: WrapEachFieldWrapper): ResolverMapWrappe
         resolvers,
         type,
         field,
-        path: [typeName, fieldName],
         packOptions,
       });
 

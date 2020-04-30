@@ -2,10 +2,12 @@ import { wrapEachField } from '../resolver-map/wrap-each-field';
 import { ResolverMapWrapper } from '../types';
 
 export const logWrapper: ResolverMapWrapper = wrapEachField((originalResolver, wrapperDetails) => {
-  const [type, field] = wrapperDetails.path;
+  const { type, field } = wrapperDetails;
+  const typeName = type.name;
+  const fieldName = field.name;
 
   return async (parent, args, context, info) => {
-    console.log(`Resolver for type: "${type}" field: "${field}"`);
+    console.log(`Resolver for type: "${typeName}" field: "${fieldName}"`);
     console.log(`parent: ${JSON.stringify(parent)}`);
     console.log(`args: ${JSON.stringify(args)}`);
     console.log(`context: ${JSON.stringify(context)}`);

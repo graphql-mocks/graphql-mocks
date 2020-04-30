@@ -19,7 +19,6 @@ export type EachFieldContext = {
   resolvers: ResolverMap;
   type: GraphQLObjectType;
   field: GraphQLField<any, any, any>;
-  path: [string, string];
   packOptions: PackOptions;
 };
 
