@@ -1,10 +1,8 @@
 import { GraphQLObjectType } from 'graphql';
-import { Resolver, ResolverMap, ResolverMapWrapper, EachFieldContext } from '../types';
+import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper } from '../types';
 import { embedPackOptions } from '../utils';
 
-export type PatchEachFieldWrapper = (eachFieldContext: EachFieldContext) => Resolver | undefined;
-
-export const patchEachField = (patchWith: PatchEachFieldWrapper): ResolverMapWrapper => (
+export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions,
 ) => {
