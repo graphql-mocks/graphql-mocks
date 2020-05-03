@@ -1,44 +1,33 @@
 import { stashStateWrapper, stashFor } from '../../../src/stash-state/wrapper';
-import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { generatePackOptions } from '../../mocks';
-import { buildSchema } from 'graphql';
-import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
+import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 
 describe('stash-state/wrapper', function () {
   it('saves stashes on a result object', function () {
-    const graphqlSchema = buildSchema(`type Query {
-      rootQueryField: String!
-    }`);
     const resolverReturn = {};
-    const resolverSpy = sinon.spy(() => resolverReturn);
+    const initialResolver = sinon.spy(() => resolverReturn);
+    const resolverMap: ResolverMap = {};
 
-    const resolverMap: ResolverMap = {
-      Query: {
-        rootQueryField: resolverSpy,
-      },
-    };
-
-    const { resolvers: wrappedResolvers } = pack(
-      resolverMap,
-      [wrapEachField([stashStateWrapper])],
-      generatePackOptions({ dependencies: { graphqlSchema } }),
-    );
+    const wrappedResolver = stashStateWrapper(initialResolver, {
+      resolvers: resolverMap,
+      packOptions: generatePackOptions(),
+      type: userObjectType,
+      field: userObjectNameField,
+    });
 
     const parent = { parent: 'parent' };
     const args = { args: 'args' };
     const context = { keyOnContext: 'valueOnContext' };
     const info = { info: 'info' };
 
-    wrappedResolvers.Query.rootQueryField(parent, args, context, info);
-    const stashed = stashFor(resolverSpy.firstCall.returnValue);
+    wrappedResolver(parent, args, context, info);
+    const stashed = stashFor(initialResolver.firstCall.returnValue);
 
     expect(stashed?.parent).to.equal(parent);
     expect(stashed?.args).to.equal(args);
     expect(stashed?.context.keyOnContext).to.equal('valueOnContext');
-    expect(stashed?.context.pack).to.exist;
     expect(stashed?.info).to.equal(info);
     expect(stashed?.result).to.equal(resolverReturn);
   });
