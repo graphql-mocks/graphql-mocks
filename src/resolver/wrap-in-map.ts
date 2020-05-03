@@ -1,7 +1,6 @@
-import cloneDeep from 'lodash.clonedeep';
 import { wrapResolver } from './wrap';
 import { Resolver, ResolverWrapper, ResolverMapWrapper } from '../types';
-import { getTypeAndField, addResolverToMap } from '../utils';
+import { getTypeAndField, addResolverToMap, embedPackOptions } from '../utils';
 
 export function wrapResolverInMap(
   typeName: string,
@@ -18,14 +17,15 @@ export function wrapResolverInMap(
     }
 
     resolver = resolver || resolverMap[typeName]?.[fieldName];
-    if (!resolver)
+    if (!resolver) {
       throw new Error(
         `Could not determine resolver to wrap, either pass one into this \`wrap\`, or have an initial resolver on the resolver map at type: "${typeName}", field "${fieldName}"`,
       );
+    }
 
+    resolverWrappers = [...resolverWrappers, embedPackOptions];
     const [type, field] = getTypeAndField(typeName, fieldName, schema);
-    const clonedWrappers = cloneDeep(resolverWrappers);
-    const wrappedResolver = wrapResolver(resolver, clonedWrappers, {
+    const wrappedResolver = wrapResolver(resolver, resolverWrappers, {
       type,
       field,
       resolvers: resolverMap,
