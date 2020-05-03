@@ -5,7 +5,7 @@ import { generatePackOptions, userObjectType, userObjectNameField } from '../../
 
 describe('performance/wrapper', function () {
   it('provides accesss to spies on resolvers', async function () {
-    const RESOLVER_RUN_TIME_DELAY = 500;
+    const RESOLVER_RUN_TIME_DELAY = 250;
 
     const resolver = async () => {
       return new Promise((resolve) => setTimeout(resolve, RESOLVER_RUN_TIME_DELAY));
@@ -28,10 +28,8 @@ describe('performance/wrapper', function () {
 
     const [timeElapsed] = nameFieldResolverPerformance;
 
-    expect(timeElapsed).to.be.above(
-      RESOLVER_RUN_TIME_DELAY,
-      `the resolver takes at least as long as the timeout, took ${timeElapsed}`,
-    );
+    console.log(`performance/wrapper resolver took ${timeElapsed}`);
+    expect(timeElapsed).to.be.above(RESOLVER_RUN_TIME_DELAY);
 
     expect(timeElapsed).to.be.below(
       RESOLVER_RUN_TIME_DELAY + 100,
