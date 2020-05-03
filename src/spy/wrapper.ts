@@ -1,8 +1,8 @@
 import { spy } from 'sinon';
 import { wrapEachField } from '../resolver-map/wrap-each-field';
-import { ResolverMapWrapper } from '../types';
+import { ResolverMapWrapper, ResolverWrapper } from '../types';
 
-export const spyWrapper: ResolverMapWrapper = wrapEachField((originalResolver, wrapperDetails) => {
+export const spyWrapperSingular: ResolverWrapper = (originalResolver, wrapperDetails) => {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;
@@ -14,4 +14,6 @@ export const spyWrapper: ResolverMapWrapper = wrapEachField((originalResolver, w
   packState.spies[typeName][fieldName] = resolverSpy;
 
   return resolverSpy;
-});
+};
+
+export const spyWrapper: ResolverMapWrapper = wrapEachField([spyWrapperSingular]);

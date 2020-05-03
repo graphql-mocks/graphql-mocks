@@ -47,7 +47,7 @@ describe('wrapEach', function () {
   });
 
   it('wraps each individual resolver fn in resolver map', function () {
-    resolverMapWrapper = wrapEachField(resolverWrapper);
+    resolverMapWrapper = wrapEachField([resolverWrapper]);
     wrappedResolverMap = resolverMapWrapper(
       clonedResolverMap,
       generatePackOptions({ dependencies: { graphqlSchema } }),

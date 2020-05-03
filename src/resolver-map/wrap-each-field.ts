@@ -1,8 +1,8 @@
-import { GraphQLObjectType, GraphQLSchema, GraphQLFieldMap } from 'graphql';
 import { ResolverMap, ResolverMapWrapper, PackOptions, ResolverWrapper } from '../types';
-import { embedPackOptions } from '../utils';
+import { getTypeAndField, addResolverToMap, embedPackOptions } from '../utils';
+import { wrapResolver } from '../resolver/wrap';
 
-export const wrapEachField = (wrapWith: ResolverWrapper): ResolverMapWrapper => (
+export const wrapEachField = (resolverWrappers: ResolverWrapper[]): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ) => {
@@ -13,35 +13,23 @@ export const wrapEachField = (wrapWith: ResolverWrapper): ResolverMapWrapper => 
 
   for (const typeName in resolvers) {
     for (const fieldName in resolvers[typeName]) {
-      const resolver = resolvers[typeName][fieldName];
+      const resolverToWrap = resolvers[typeName][fieldName];
+      const [type, field] = getTypeAndField(typeName, fieldName, schema);
 
-      const type = (schema as GraphQLSchema).getType(typeName) as GraphQLObjectType;
-
-      if (!type) {
-        throw new Error(`Could not find a type ${typeName} on schema in wrapEach`);
-      }
-
-      const typeFields = type && 'getFields' in type && (type.getFields() as GraphQLFieldMap<any, any>);
-      const field = (typeFields && typeFields[fieldName]) || undefined;
-
-      if (!field) {
-        throw new Error(`Could not find a field ${fieldName} for type ${typeName} in wrapEach`);
-      }
-
-      const newResolver = wrapWith(resolver, {
-        resolvers,
+      const wrappedResolver = wrapResolver(resolverToWrap, [...resolverWrappers, embedPackOptions], {
         type,
         field,
+        resolvers,
         packOptions,
       });
 
-      if (typeof newResolver !== 'function') {
-        throw new Error(
-          `${wrapEachField.toString()} must return a function for resolver type: ${typeName}, field: ${fieldName}`,
-        );
-      }
-
-      resolvers[typeName][fieldName] = embedPackOptions(newResolver, packOptions);
+      addResolverToMap({
+        resolverMap: resolvers,
+        typeName,
+        fieldName,
+        resolver: wrappedResolver,
+        overwrite: true,
+      });
     }
   }
 

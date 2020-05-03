@@ -1,5 +1,5 @@
 import { wrapEachField } from '../resolver-map/wrap-each-field';
-import { ResolverMapWrapper } from '../types';
+import { ResolverMapWrapper, ResolverWrapper } from '../types';
 
 type ResolverStash = {
   parent: any;
@@ -14,7 +14,7 @@ export const stashFor = (ref: any): ResolverStash | undefined => {
   return ref && ref[stashKey];
 };
 
-export const stashStateWrapper: ResolverMapWrapper = wrapEachField((originalResolver) => {
+export const stashStateSingular: ResolverWrapper = (originalResolver) => {
   return (parent, args, context, info) => {
     const result = originalResolver(parent, args, context, info);
 
@@ -32,4 +32,6 @@ export const stashStateWrapper: ResolverMapWrapper = wrapEachField((originalReso
 
     return result;
   };
-});
+};
+
+export const stashStateWrapper: ResolverMapWrapper = wrapEachField([stashStateSingular]);

@@ -1,16 +1,16 @@
-import { Resolver, PackOptions, ResolverMap } from './types';
-import { GraphQLSchema, GraphQLField, GraphQLType, GraphQLObjectType } from 'graphql';
+import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField } from './types';
+import { GraphQLSchema, GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType } from 'graphql';
 
 export const unwrap = (type: any): any => (type?.ofType ? unwrap(type.ofType) : type);
 
 export const extractDependencies = (context: any) => context?.pack?.dependencies;
 
-export const embedPackOptions = (resolver: Resolver, packOptions: PackOptions) => {
+export const embedPackOptions: ResolverWrapper = (resolver, options) => {
   return (parent: any, args: any, context: any, info: any) => {
     context = context || {};
     context = {
       ...context,
-      pack: context.pack || packOptions,
+      pack: context.pack || options.packOptions,
     };
 
     return resolver(parent, args, context, info);
@@ -21,13 +21,22 @@ export function getTypeAndField(
   typeName: string,
   fieldName: string,
   schema: GraphQLSchema,
-): [GraphQLObjectType, GraphQLField<any, any, any>] {
+): [ResolvableType, ResolvableField] {
   const type = schema.getType(typeName);
-  if (!type) throw new Error(`Unable to find type "${typeName}" from from schema`);
-  if (!(type instanceof GraphQLObjectType)) throw new Error(`Type "${typeName}" must be an a GraphQLObjectType`);
 
-  const fields = type.getFields();
-  const field = fields[fieldName];
+  if (!type) {
+    throw new Error(`Unable to find type "${typeName}" from from schema`);
+  }
+
+  let field: ResolvableField;
+  if (type instanceof GraphQLObjectType) {
+    const fields = type.getFields();
+    field = fields[fieldName];
+  } else if (type instanceof GraphQLUnionType || type instanceof GraphQLInterfaceType) {
+    field = { name: '__resolveType' };
+  } else {
+    throw new Error(`Type "${typeName}" must be an a GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType`);
+  }
 
   if (!field) throw new Error(`Field "${fieldName}" does not exist on type "${typeName}"`);
 

@@ -1,7 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper } from '../types';
-import { embedPackOptions } from '../utils';
-
+import { addResolverToMap, embedPackOptions } from '../utils';
 export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
   packOptions,
@@ -21,16 +20,24 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrap
         const field = fields[fieldKey];
 
         if (!resolvers[typeKey] || (resolvers[typeKey] && !resolvers[typeKey][fieldKey])) {
-          const patchResolver = patchWith({
+          const resolverWrapperOptions = {
             resolvers,
             type: type as GraphQLObjectType,
             field,
             packOptions,
-          });
+          };
+
+          let patchResolver = patchWith(resolverWrapperOptions);
 
           if (typeof patchResolver === 'function') {
-            resolvers[typeKey] = resolvers[typeKey] || {};
-            resolvers[typeKey][fieldKey] = embedPackOptions(patchResolver, packOptions);
+            patchResolver = embedPackOptions(patchResolver, resolverWrapperOptions);
+
+            addResolverToMap({
+              resolverMap: resolvers,
+              typeName: typeKey,
+              fieldName: fieldKey,
+              resolver: patchResolver,
+            });
           }
         }
       }

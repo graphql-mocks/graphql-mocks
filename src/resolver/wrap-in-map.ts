@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
+import { wrapResolver } from './wrap';
 import { Resolver, ResolverWrapper, ResolverMapWrapper } from '../types';
 import { getTypeAndField, addResolverToMap } from '../utils';
 

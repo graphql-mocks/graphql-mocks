@@ -1,7 +1,7 @@
 import { wrapEachField } from '../resolver-map/wrap-each-field';
-import { ResolverMapWrapper } from '../types';
+import { ResolverMapWrapper, ResolverWrapper } from '../types';
 
-export const logWrapper: ResolverMapWrapper = wrapEachField((originalResolver, wrapperDetails) => {
+export const logSingular: ResolverWrapper = (originalResolver, wrapperDetails) => {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;
@@ -17,4 +17,6 @@ export const logWrapper: ResolverMapWrapper = wrapEachField((originalResolver, w
 
     return result;
   };
-});
+};
+
+export const logWrapper: ResolverMapWrapper = wrapEachField([logSingular]);
