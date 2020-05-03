@@ -3,6 +3,7 @@ import { performanceWrapper } from '../../../src/performance/wrapper';
 import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
+import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 
 describe('performance/wrapper', function () {
   it('provides accesss to spies on resolvers', async function () {
@@ -20,7 +21,7 @@ describe('performance/wrapper', function () {
       },
     };
 
-    const { state, resolvers: wrappedResolvers } = pack(resolverMap, [performanceWrapper], {
+    const { state, resolvers: wrappedResolvers } = pack(resolverMap, [wrapEachField([performanceWrapper])], {
       dependencies: { graphqlSchema },
     });
 

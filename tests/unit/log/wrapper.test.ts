@@ -5,6 +5,7 @@ import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { generatePackOptions } from '../../mocks';
+import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 
 describe('log/wrapper', function () {
   let logStub: SinonStub;
@@ -28,7 +29,7 @@ describe('log/wrapper', function () {
       },
     };
 
-    const { resolvers: wrappedResolvers } = pack(resolverMap, [logWrapper], {
+    const { resolvers: wrappedResolvers } = pack(resolverMap, [wrapEachField([logWrapper])], {
       dependencies: { graphqlSchema: schema },
     });
 

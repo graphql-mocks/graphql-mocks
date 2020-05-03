@@ -4,6 +4,7 @@ import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../mocks';
 import { buildSchema } from 'graphql';
+import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 
 describe('spy/wrapper', function () {
   it('provides accesss to spies on resolvers', function () {
@@ -20,7 +21,7 @@ describe('spy/wrapper', function () {
 
     const { state, resolvers: wrappedResolvers } = pack(
       resolverMap,
-      [spyWrapper],
+      [wrapEachField([spyWrapper])],
       generatePackOptions({ dependencies: { graphqlSchema } }),
     );
 

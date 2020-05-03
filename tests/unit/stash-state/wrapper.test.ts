@@ -5,6 +5,7 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { generatePackOptions } from '../../mocks';
 import { buildSchema } from 'graphql';
+import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 
 describe('stash-state/wrapper', function () {
   it('saves stashes on a result object', function () {
@@ -22,7 +23,7 @@ describe('stash-state/wrapper', function () {
 
     const { resolvers: wrappedResolvers } = pack(
       resolverMap,
-      [stashStateWrapper],
+      [wrapEachField([stashStateWrapper])],
       generatePackOptions({ dependencies: { graphqlSchema } }),
     );
 
