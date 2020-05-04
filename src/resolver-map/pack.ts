@@ -5,12 +5,8 @@ import { embedPackOptions } from '../utils';
 
 const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
-export const packWrapper = wrapEachField((resolver, { packOptions }) => {
-  return embedPackOptions(resolver, packOptions);
-});
-
 export const pack: Packer = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
-  wrappers = [packWrapper, ...wrappers];
+  wrappers = [...wrappers, wrapEachField([embedPackOptions])];
 
   // make an intial copy
   let wrappedMap = cloneDeep(initialResolversMap);

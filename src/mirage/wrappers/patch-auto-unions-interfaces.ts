@@ -1,4 +1,4 @@
-import { GraphQLInterfaceType, GraphQLUnionType, GraphQLSchema } from 'graphql';
+import { GraphQLInterfaceType, GraphQLUnionType, GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql';
 import { Resolver, PackOptions, ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../../mirage/resolvers/union';
 import { mirageInterfaceResolver } from '../../mirage/resolvers/interface';
@@ -27,7 +27,13 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
 
     if (typeof patchResolver === 'function') {
       resolvers[type.name] = resolvers[type.name] || {};
-      resolvers[type.name].__resolveType = embedPackOptions(patchResolver, packOptions);
+
+      resolvers[type.name].__resolveType = embedPackOptions(patchResolver, {
+        type,
+        field: { name: '__resolveType' },
+        resolvers,
+        packOptions,
+      });
     }
   }
 
