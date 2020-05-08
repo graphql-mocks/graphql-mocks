@@ -20,7 +20,7 @@ describe('stash-state/wrapper', function () {
     const parent = { parent: 'parent' };
     const args = { args: 'args' };
     const context = { keyOnContext: 'valueOnContext' };
-    const info = { info: 'info' };
+    const info = { info: 'info' } as any;
 
     wrappedResolver(parent, args, context, info);
     const stashed = stashFor(initialResolver.firstCall.returnValue);

@@ -5,7 +5,7 @@ export const logWrapper: ResolverWrapper = (originalResolver, wrapperDetails) =>
   const typeName = type.name;
   const fieldName = field.name;
 
-  return async (parent, args, context, info) => {
+  return async function (parent: any, args: any, context: any, info: any) {
     console.log(`Resolver for type: "${typeName}" field: "${fieldName}"`);
     console.log(`parent: ${JSON.stringify(parent)}`);
     console.log(`args: ${JSON.stringify(args)}`);

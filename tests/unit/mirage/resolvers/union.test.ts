@@ -1,13 +1,13 @@
 import { mirageUnionResolver } from '../../../../src/mirage/resolvers/union';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema, buildSchema } from 'graphql';
+import { GraphQLSchema, buildSchema, GraphQLUnionType, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/resolvers/union', function () {
   let schema: GraphQLSchema | undefined;
-  let resolverInfo: any;
+  let animalUnionType: any;
 
   const mirageServer = new Server({
     models: {
@@ -17,6 +17,8 @@ describe('mirage/resolvers/union', function () {
       bird: Model.extend({}),
     },
   });
+
+  const resolverInfo = {} as GraphQLResolveInfo;
 
   const dogModel = mirageServer.create('dog', {
     id: '1',
@@ -54,7 +56,7 @@ describe('mirage/resolvers/union', function () {
       }
     `);
 
-    resolverInfo = schema.getType('Animal');
+    animalUnionType = schema.getType('Animal');
   });
 
   afterEach(() => {
@@ -66,7 +68,7 @@ describe('mirage/resolvers/union', function () {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
-    const resolvedType = mirageUnionResolver(dogModel, {}, context, resolverInfo);
+    const resolvedType = mirageUnionResolver(dogModel, context, resolverInfo, animalUnionType);
     expect(resolvedType).to.equal('Dog');
   });
 
@@ -76,13 +78,13 @@ describe('mirage/resolvers/union', function () {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { mapper, graphqlSchema: schema } }),
     };
-    const resolvedType = mirageUnionResolver(catModel, {}, context, resolverInfo);
+    const resolvedType = mirageUnionResolver(catModel, context, resolverInfo, animalUnionType);
     expect(resolvedType).to.equal('Feline');
   });
 
   it('resolves an union to a type by most matching fields', async function () {
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-    const resolvedType = mirageUnionResolver(fishyModel, {}, context, resolverInfo);
+    const resolvedType = mirageUnionResolver(fishyModel, context, resolverInfo, animalUnionType);
     expect(resolvedType).to.equal('Fish');
   });
 
@@ -93,7 +95,7 @@ describe('mirage/resolvers/union', function () {
     });
 
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-    expect(() => mirageUnionResolver(birdNotInGraphQL, {}, context, resolverInfo)).to.throw(
+    expect(() => mirageUnionResolver(birdNotInGraphQL, context, resolverInfo, animalUnionType)).to.throw(
       'Unable to find a matching type for resolving union Animal, checked in Bird. Was also unable to find automatically determine the type based on matching fields: Multiple types matched the fields: id, type. The matching types were: Dog, Feline, Fish',
     );
   });

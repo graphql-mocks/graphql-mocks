@@ -1,8 +1,15 @@
-import { GraphQLInterfaceType, GraphQLUnionType, GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql';
-import { Resolver, PackOptions, ResolverMap } from '../../types';
+import {
+  GraphQLTypeResolver,
+  GraphQLInterfaceType,
+  GraphQLUnionType,
+  GraphQLSchema,
+  GraphQLResolveInfo,
+  GraphQLAbstractType,
+} from 'graphql';
+import { PackOptions, ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../../mirage/resolvers/union';
 import { mirageInterfaceResolver } from '../../mirage/resolvers/interface';
-import { embedPackOptions } from '../../utils';
+import { embedPackOptionsInContext } from '../../utils';
 
 export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;
@@ -16,7 +23,7 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
       continue;
     }
 
-    let patchResolver: Resolver;
+    let patchResolver: GraphQLTypeResolver<any, any>;
     if (type instanceof GraphQLUnionType) {
       patchResolver = mirageUnionResolver;
     } else if (type instanceof GraphQLInterfaceType) {
@@ -28,12 +35,17 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
     if (typeof patchResolver === 'function') {
       resolvers[type.name] = resolvers[type.name] || {};
 
-      resolvers[type.name].__resolveType = embedPackOptions(patchResolver, {
-        type,
-        field: { name: '__resolveType' },
-        resolvers,
-        packOptions,
-      });
+      const wrappedTypeResolver = async (
+        object: Record<string, any>,
+        context: Record<string, any>,
+        info: GraphQLResolveInfo,
+        abstractType: GraphQLAbstractType,
+      ): Promise<ReturnType<GraphQLTypeResolver<any, any>>> => {
+        context = embedPackOptionsInContext(context, packOptions);
+        return await (patchResolver as GraphQLTypeResolver<any, any>)(object, context, info, abstractType);
+      };
+
+      resolvers[type.name].__resolveType = wrappedTypeResolver;
     }
   }
 

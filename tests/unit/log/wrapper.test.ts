@@ -3,6 +3,7 @@ import { ResolverMap, Resolver } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
+import { GraphQLResolveInfo } from 'graphql';
 
 describe('log/wrapper', function () {
   let logStub: SinonStub;
@@ -24,7 +25,9 @@ describe('log/wrapper', function () {
       packOptions: generatePackOptions(),
     });
 
-    wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, { info: 'info' });
+    wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, ({
+      info: 'info',
+    } as unknown) as GraphQLResolveInfo);
 
     const logCalls = logStub.getCalls().map((call) => call.args[0]);
     expect(logCalls).to.deep.equal([

@@ -1,15 +1,14 @@
-import { Resolver } from '../../types';
-import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { GraphQLObjectType, GraphQLSchema, GraphQLTypeResolver, GraphQLInterfaceType } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 
-export const mirageInterfaceResolver: Resolver = function (parent, _args, context, info) {
-  const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
+export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (object, context, _info, interfaceType) {
+  const useFindInCommon = '__testUseFindInCommon' in context ? (context as any).__testUseFindInCommon : true;
   const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
     context,
   );
-  const { name: interfaceName } = info;
+  const { name: interfaceName } = interfaceType;
 
   const typeMap = graphqlSchema.getTypeMap();
   const typesUsingInterface: GraphQLObjectType[] = Object.values(typeMap).filter(function filterTypesUsingInterface(
@@ -23,12 +22,12 @@ export const mirageInterfaceResolver: Resolver = function (parent, _args, contex
     return interfacesForType.includes(interfaceName);
   }) as GraphQLObjectType[];
 
-  const parentModelName = modelNameToTypeName(parent?.modelName);
+  const parentModelName = modelNameToTypeName(object?.modelName);
 
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError: Error | undefined;
   try {
-    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(parent, typesUsingInterface) : undefined;
+    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(object, typesUsingInterface) : undefined;
   } catch (error) {
     matchingFieldsCandidateError = error;
   }

@@ -1,13 +1,13 @@
 import { mirageInterfaceResolver } from '../../../../src/mirage/resolvers/interface';
 import { generatePackOptions } from '../../../mocks';
-import { buildSchema, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/resolvers/interface', function () {
   let schema: GraphQLSchema | undefined;
-  const resolverInfo = { name: 'Animal' };
+  const animalInterface = { name: 'Animal' };
 
   const mirageServer = new Server({
     models: {
@@ -70,7 +70,12 @@ describe('mirage/resolvers/interface', function () {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
-    const resolvedType = mirageInterfaceResolver(dogModel, {}, context, resolverInfo);
+    const resolvedType = mirageInterfaceResolver(
+      dogModel,
+      context,
+      {} as GraphQLResolveInfo,
+      animalInterface as GraphQLInterfaceType,
+    );
     expect(resolvedType).to.equal('Dog');
   });
 
@@ -80,13 +85,23 @@ describe('mirage/resolvers/interface', function () {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { mapper, graphqlSchema: schema } }),
     };
-    const resolvedType = mirageInterfaceResolver(catModel, {}, context, resolverInfo);
+    const resolvedType = mirageInterfaceResolver(
+      catModel,
+      context,
+      {} as GraphQLResolveInfo,
+      animalInterface as GraphQLInterfaceType,
+    );
     expect(resolvedType).to.equal('Feline');
   });
 
   it('resolves an interface to a type by most matching fields', async function () {
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-    const resolvedType = mirageInterfaceResolver(fishyParent, {}, context, resolverInfo);
+    const resolvedType = mirageInterfaceResolver(
+      fishyParent,
+      context,
+      {} as GraphQLResolveInfo,
+      animalInterface as GraphQLInterfaceType,
+    );
     expect(resolvedType).to.equal('Fish');
   });
 
@@ -97,7 +112,14 @@ describe('mirage/resolvers/interface', function () {
     });
 
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-    expect(() => mirageInterfaceResolver(birdNotInGraphQL, {}, context, resolverInfo)).to.throw(
+    expect(() =>
+      mirageInterfaceResolver(
+        birdNotInGraphQL,
+        context,
+        {} as GraphQLResolveInfo,
+        animalInterface as GraphQLInterfaceType,
+      ),
+    ).to.throw(
       'Unable to find a matching type for resolving interface Animal, checked types: Bird. Was also unable to find automatically determine the type based on matching fields: Multiple types matched the fields: id, type. The matching types were: Dog, Feline, Fish',
     );
   });

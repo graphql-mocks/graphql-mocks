@@ -1,5 +1,5 @@
 import { ResolverMap, ResolverMapWrapper, PackOptions, ResolverWrapper } from '../types';
-import { getTypeAndField, addResolverToMap, embedPackOptions } from '../utils';
+import { getTypeAndField, addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
 import { wrapResolver } from '../resolver/wrap';
 
 export const wrapEachField = (resolverWrappers: ResolverWrapper[]): ResolverMapWrapper => (
@@ -16,7 +16,7 @@ export const wrapEachField = (resolverWrappers: ResolverWrapper[]): ResolverMapW
       const resolverToWrap = resolvers[typeName][fieldName];
       const [type, field] = getTypeAndField(typeName, fieldName, schema);
 
-      const wrappedResolver = wrapResolver(resolverToWrap, [...resolverWrappers, embedPackOptions], {
+      const wrappedResolver = wrapResolver(resolverToWrap, [...resolverWrappers, embedPackOptionsResolverWrapper], {
         type,
         field,
         resolvers,

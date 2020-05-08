@@ -1,6 +1,6 @@
 import { wrapResolver } from './wrap';
-import { Resolver, ResolverWrapper, ResolverMapWrapper } from '../types';
-import { getTypeAndField, addResolverToMap, embedPackOptions } from '../utils';
+import { Resolver, ResolverWrapper, ResolverMapWrapper, ResolverMap } from '../types';
+import { getTypeAndField, addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
 
 export function wrapResolverInMap(
   typeName: string,
@@ -8,7 +8,7 @@ export function wrapResolverInMap(
   resolverWrappers: ResolverWrapper[],
   resolver?: Resolver,
 ): ResolverMapWrapper {
-  return (resolverMap, packOptions) => {
+  return (resolverMap, packOptions): ResolverMap => {
     const schema = packOptions.dependencies.graphqlSchema;
     if (!schema) {
       throw new Error(
@@ -23,7 +23,7 @@ export function wrapResolverInMap(
       );
     }
 
-    resolverWrappers = [...resolverWrappers, embedPackOptions];
+    resolverWrappers = [...resolverWrappers, embedPackOptionsResolverWrapper];
     const [type, field] = getTypeAndField(typeName, fieldName, schema);
     const wrappedResolver = wrapResolver(resolver, resolverWrappers, {
       type,

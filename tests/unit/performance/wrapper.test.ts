@@ -2,6 +2,7 @@ import { performanceWrapper } from '../../../src/performance/wrapper';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
+import { GraphQLResolveInfo } from 'graphql';
 
 describe('performance/wrapper', function () {
   it('provides accesss to spies on resolvers', async function () {
@@ -23,7 +24,7 @@ describe('performance/wrapper', function () {
     const nameFieldResolverPerformance = state.performance.User.name;
     expect(nameFieldResolverPerformance).to.deep.equal([]);
 
-    await wrappedResolver({}, {}, {}, {});
+    await wrappedResolver({}, {}, {}, {} as GraphQLResolveInfo);
     expect(nameFieldResolverPerformance.length).to.equal(1);
 
     const [timeElapsed] = nameFieldResolverPerformance;

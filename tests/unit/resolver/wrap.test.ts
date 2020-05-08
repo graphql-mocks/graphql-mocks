@@ -3,6 +3,7 @@ import { spy, SinonSpy } from 'sinon';
 import { wrapResolver } from '../../../src/resolver/wrap';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 import { ResolverWrapper, ResolverWrapperOptions, Resolver } from '../../../src/types';
+import { GraphQLResolveInfo } from 'graphql';
 
 describe('resolver/wrap', function () {
   let resolverWrapperOptions: ResolverWrapperOptions;
@@ -24,12 +25,14 @@ describe('resolver/wrap', function () {
 
     resolver = spy();
     internalWrapperSpy = spy();
-    resolverWrapper = spy((resolver, _options) => {
-      return (parent: any, args: any, context: any, info: any) => {
-        internalWrapperSpy();
-        return resolver(parent, args, context, info);
-      };
-    });
+    resolverWrapper = spy(
+      (resolver /*, _options*/): Resolver => {
+        return (parent, args, context, info): ReturnType<typeof resolver> => {
+          internalWrapperSpy();
+          return resolver(parent, args, context, info);
+        };
+      },
+    );
   });
 
   it('can wrap a resolver function', function () {
@@ -38,7 +41,7 @@ describe('resolver/wrap', function () {
     expect(resolverWrapper.firstCall.args).to.deep.equal([resolver, resolverWrapperOptions]);
 
     expect(internalWrapperSpy.called).to.be.false;
-    wrappedResolver(parent, args, info, context);
+    wrappedResolver(parent, args, context, info as GraphQLResolveInfo);
     expect(internalWrapperSpy.called).to.be.true;
     expect(resolver.called).to.be.true;
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
@@ -53,7 +56,7 @@ describe('resolver/wrap', function () {
     );
     expect(resolverWrapper.callCount).to.equal(2);
     expect(internalWrapperSpy.called).to.be.false;
-    wrappedResolver(parent, args, info, context);
+    wrappedResolver(parent, args, context, info as GraphQLResolveInfo);
     expect(internalWrapperSpy.callCount).to.equal(2);
     expect(resolver.callCount).to.equal(1);
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
@@ -63,7 +66,8 @@ describe('resolver/wrap', function () {
     expect(() =>
       wrapResolver(
         resolver,
-        [() => ('resolver wrapper returning a string' as unknown) as Resolver],
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [(): any => ('resolver wrapper returning a string' as unknown) as Resolver],
         resolverWrapperOptions,
       ),
     ).to.throw(`Wrapper: () => 'resolver wrapper returning a string'

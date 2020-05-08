@@ -1,6 +1,6 @@
 import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema, buildSchema, GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLSchema, buildSchema, GraphQLNonNull, GraphQLString, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server, belongsTo } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
@@ -51,7 +51,7 @@ describe('mirage/resolvers/object', function () {
       returnType: new GraphQLNonNull(GraphQLString),
     };
 
-    const result = mirageObjectResolver(user, {}, context, info);
+    const result = mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo);
     expect(result).to.equal('George');
   });
 
@@ -74,7 +74,7 @@ describe('mirage/resolvers/object', function () {
       returnType: new GraphQLNonNull(GraphQLString),
     };
 
-    const result = mirageObjectResolver(user, {}, context, info);
+    const result = mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo);
     expect(result).to.equal('Pizza');
   });
 
@@ -96,7 +96,7 @@ describe('mirage/resolvers/object', function () {
       returnType: new GraphQLNonNull(schema?.getType('Movie')!),
     };
 
-    const result = mirageObjectResolver(user, {}, context, info);
+    const result = mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo);
     expect(result.name).to.equal('Star Wars: A New Hope');
   });
 
@@ -115,7 +115,7 @@ describe('mirage/resolvers/object', function () {
       returnType: new GraphQLNonNull(GraphQLString),
     };
 
-    expect(() => mirageObjectResolver(user, {}, context, info)).to.throw(
+    expect(() => mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo)).to.throw(
       'Failed to resolve field "name" on type "User". Tried to resolve the parent object model:user(1), with the following attrs: name',
     );
   });
@@ -131,7 +131,7 @@ describe('mirage/resolvers/object', function () {
       returnType: new GraphQLNonNull(GraphQLString),
     };
 
-    expect(() => mirageObjectResolver('PARENT IS A STRING', {}, context, info)).to.throw(
+    expect(() => mirageObjectResolver('PARENT IS A STRING', {}, context, info as GraphQLResolveInfo)).to.throw(
       'Expected parent to be an object, got string, when trying to resolve field "name" on type "User"',
     );
   });
