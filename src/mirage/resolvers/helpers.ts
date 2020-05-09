@@ -2,6 +2,7 @@ import intersection from 'lodash.intersection';
 import { GraphQLObjectType } from 'graphql';
 import { classify } from 'inflected';
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]) {
   let matchedTypes: GraphQLObjectType[] = [];
   let matchedFieldCount = 0;
@@ -33,5 +34,5 @@ export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]
   return matchedTypes.pop()?.name;
 }
 
-export const modelNameToTypeName = (modelName: any): string | undefined =>
+export const modelNameToTypeName = (modelName: 'string'): string | undefined =>
   typeof modelName === 'string' ? classify(modelName.replace('-', '_')) : undefined;

@@ -1,10 +1,11 @@
-import { GraphQLObjectType, GraphQLSchema, GraphQLTypeResolver, GraphQLInterfaceType } from 'graphql';
+import { GraphQLObjectType, GraphQLSchema, GraphQLTypeResolver } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (object, context, _info, interfaceType) {
-  const useFindInCommon = '__testUseFindInCommon' in context ? (context as any).__testUseFindInCommon : true;
+  const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
   const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
     context,
   );

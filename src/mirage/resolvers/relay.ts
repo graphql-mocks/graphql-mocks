@@ -3,7 +3,14 @@ import { extractDependencies } from '../../utils';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { unwrap } from '../../utils';
 
-export function mirageRelayResolver(parent: any, args: any, context: any, info: any): any {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function mirageRelayResolver(
+  parent: any,
+  args: Record<string, any>,
+  context: any,
+  info: any,
+): Promise<any> {
+  /* eslint-enable @typescript-eslint/no-explicit-any */
   const { mapper } = extractDependencies(context);
   const {
     fieldName,

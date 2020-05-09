@@ -182,7 +182,6 @@ describe('auto resolving from mirage', function () {
     }`;
 
     const result = await graphQLHandler(query);
-    debugger;
     const [fred, barnie, wilma] = result.data!.allPersons;
 
     expect(fred.name).to.equal('Fred Flinstone');

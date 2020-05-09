@@ -37,7 +37,7 @@ type cursorForNode = (node: any) => string;
 
 export function relayPaginateNodes(
   nodes: any[],
-  args: { first: number; last: number; before: string; after: string },
+  args: { [key: string]: any; first?: number; last?: number; before?: string; after?: string },
   cursorForNode: cursorForNode,
 ) {
   const { first, last, before, after } = args;
