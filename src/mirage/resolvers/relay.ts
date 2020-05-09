@@ -24,7 +24,9 @@ export function mirageRelayResolver(parent: any, args: any, context: any, info: 
 
 export function extractNodesFromParent({ parent, parentType, mapper, fieldName }: any) {
   const unwrappedParentType = unwrap(parentType);
-  const [, mappedAttrName] = mapper && mapper.matchForGraphQL([unwrappedParentType.name, fieldName]);
+  const [, mappedAttrName] =
+    'name' in unwrappedParentType && mapper.matchForGraphQL([unwrappedParentType.name, fieldName]);
+
   const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchingAttr = parentAttributeCandidates.find((attr) => attr && parent[attr]);
 

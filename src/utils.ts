@@ -1,7 +1,24 @@
 import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField, PackOptions } from './types';
-import { GraphQLSchema, GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType } from 'graphql';
+import {
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLType,
+  GraphQLScalarType,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+} from 'graphql';
 
-export const unwrap = (type: any): any => (type?.ofType ? unwrap(type.ofType) : type);
+type unwrappedType =
+  | GraphQLScalarType
+  | GraphQLObjectType
+  | GraphQLInterfaceType
+  | GraphQLUnionType
+  | GraphQLEnumType
+  | GraphQLInputObjectType;
+
+export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
 
 export const extractDependencies = (context: any) => context?.pack?.dependencies;
 
