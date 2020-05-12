@@ -2,8 +2,8 @@ import intersection from 'lodash.intersection';
 import { GraphQLObjectType } from 'graphql';
 import { classify } from 'inflected';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {
   let matchedTypes: GraphQLObjectType[] = [];
   let matchedFieldCount = 0;
 

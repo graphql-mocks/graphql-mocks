@@ -7,6 +7,8 @@ import {
   GraphQLTypeResolver,
 } from 'graphql';
 
+export type Primitive = string | boolean | number;
+
 export type Resolver = GraphQLFieldResolver<any, any>;
 
 export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;

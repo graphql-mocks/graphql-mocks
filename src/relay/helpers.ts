@@ -1,17 +1,32 @@
-export const nodeWrapper = (node: any, cursor: string) => ({ cursor, node });
+export type Edge<T> = { node: T; cursor: string };
+export type CursorForNode<T> = (node: T) => string;
+export type RelayPaginationResult<T = unknown> = {
+  edges: { node: T }[];
+  pageInfo: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+    startCursor: string | null;
+    endCursor: string | null;
+  };
+};
 
-export function applyCursorsToEdges(
-  allEdges: any,
-  before: any,
-  after: any,
-  cursorForNode: (node: any) => string,
-): { edges: any[]; frontCut: boolean; backCut: boolean } {
+export const nodeWrapper = <T>(node: T, cursor: string): { cursor: string; node: T } => ({
+  cursor,
+  node,
+});
+
+export function applyCursorsToEdges<T = unknown>(
+  allEdges: Edge<T>[],
+  cursorForNode: CursorForNode<T>,
+  before?: string,
+  after?: string,
+): { edges: Edge<T>[]; frontCut: boolean; backCut: boolean } {
   let edges = [...allEdges];
   let frontCut = false;
   let backCut = false;
 
   if (after) {
-    const afterEdge = allEdges.find((edge: any) => cursorForNode(edge.node) === after);
+    const afterEdge = allEdges.find((edge: Edge<T>) => cursorForNode(edge.node) === after);
     if (!afterEdge) throw new Error(`${after} doesn't appear to be a valid edge`);
 
     const afterEdgeIndex = allEdges.indexOf(afterEdge);
@@ -21,7 +36,7 @@ export function applyCursorsToEdges(
   }
 
   if (before) {
-    const beforeEdge = allEdges.find((edge: any) => cursorForNode(edge.node) === before);
+    const beforeEdge = allEdges.find((edge: Edge<T>) => cursorForNode(edge.node) === before);
     if (!beforeEdge) throw new Error(`${before} doesn't appear to be a valid edge`);
 
     const beforeEdgeIndex = allEdges.indexOf(beforeEdge);
@@ -33,17 +48,15 @@ export function applyCursorsToEdges(
   return { edges: edges, frontCut, backCut };
 }
 
-type cursorForNode = (node: any) => string;
-
-export function relayPaginateNodes(
-  nodes: any[],
-  args: { [key: string]: any; first?: number; last?: number; before?: string; after?: string },
-  cursorForNode: cursorForNode,
-) {
+export function relayPaginateNodes<T = unknown>(
+  nodes: T[],
+  args: { [key: string]: unknown; first?: number; last?: number; before?: string; after?: string },
+  cursorForNode: CursorForNode<T>,
+): RelayPaginationResult {
   const { first, last, before, after } = args;
   const allEdges = nodes.map((node) => nodeWrapper(node, cursorForNode(node)));
   // eslint-disable-next-line prefer-const
-  let { edges, frontCut, backCut } = applyCursorsToEdges(allEdges, before, after, cursorForNode);
+  let { edges, frontCut, backCut } = applyCursorsToEdges<T>(allEdges, cursorForNode, before, after);
 
   let hasNextPage = backCut;
   let hasPreviousPage = frontCut;

@@ -1,6 +1,6 @@
 import { mirageRelayResolver } from '../../../../src/mirage/resolvers/relay';
 import { expect } from 'chai';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLObjectType } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry, HasMany } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
@@ -8,7 +8,7 @@ describe('mirage/relay', () => {
   let mirageServer: Server;
   let mapper: MirageGraphQLMapper;
   let resolverContext: any;
-  let sourcererParent: ModelInstance | null;
+  let sourcererParent: ModelInstance;
   let abraSpell: ModelInstance;
   let meowSpell: ModelInstance;
   let imperioSpell: ModelInstance;
@@ -54,9 +54,9 @@ describe('mirage/relay', () => {
   `);
 
   const graphqlTypes = {
-    Query: graphqlSchema.getType('Query'),
-    SpellConnection: graphqlSchema.getType('SpellConnection'),
-    Sourcerer: graphqlSchema.getType('Sourcerer'),
+    Query: graphqlSchema.getType('Query') as GraphQLObjectType,
+    SpellConnection: graphqlSchema.getType('SpellConnection') as GraphQLObjectType,
+    Sourcerer: graphqlSchema.getType('Sourcerer') as GraphQLObjectType,
   };
 
   beforeEach(() => {

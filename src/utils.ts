@@ -8,6 +8,8 @@ import {
   GraphQLScalarType,
   GraphQLEnumType,
   GraphQLInputObjectType,
+  GraphQLFieldResolver,
+  GraphQLResolveInfo,
 } from 'graphql';
 
 type unwrappedType =
@@ -20,7 +22,9 @@ type unwrappedType =
 
 export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
 
-export const extractDependencies = (context: any) => context?.pack?.dependencies;
+export const extractDependencies = <T = PackOptions['dependencies'] | undefined>(context: Record<string, any>): T => {
+  return context?.pack?.dependencies;
+};
 
 export const embedPackOptionsInContext = (
   context: Record<string, any>,
@@ -35,8 +39,8 @@ export const embedPackOptionsInContext = (
   return context;
 };
 
-export const embedPackOptionsResolverWrapper: ResolverWrapper = (resolver, options) => {
-  return (parent: any, args: any, context: any, info: any) => {
+export const embedPackOptionsResolverWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
+  return (parent: any, args: Record<string, any>, context: Record<string, any>, info: GraphQLResolveInfo): any => {
     context = embedPackOptionsInContext(context, options.packOptions);
     return resolver(parent, args, context, info);
   };
