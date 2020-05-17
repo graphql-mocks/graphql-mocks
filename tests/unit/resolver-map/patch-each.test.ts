@@ -1,8 +1,9 @@
 import { patchEachField } from '../../../src/resolver-map/patch-each-field';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../mocks';
-import { buildSchema, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema, GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
+import { Resolver } from '../../../src/types';
 
 describe('resolver-map/patch-each', function () {
   let schema: GraphQLSchema | undefined;
@@ -58,9 +59,9 @@ describe('resolver-map/patch-each', function () {
 
     expect(patchResolverSpy.callCount).to.equal(0);
 
-    patchedResolvers.Query.spells({}, {}, {}, {});
-    patchedResolvers.Mutation.addSpell({}, {}, {}, {});
-    patchedResolvers.Spell.incantation({}, {}, {}, {});
+    (patchedResolvers.Query.spells as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
+    (patchedResolvers.Mutation.addSpell as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
+    (patchedResolvers.Spell.incantation as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(patchResolverSpy.callCount).to.equal(3);
   });

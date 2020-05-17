@@ -1,4 +1,4 @@
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMapWrapper } from '../../../src/types';
@@ -53,7 +53,7 @@ describe('resolver-map/pack', function () {
     };
 
     const { resolvers: wrappedResolvers } = pack(resolvers, wrappers, packOptions);
-    wrappedResolvers.Query.hello({}, {}, {}, {});
+    wrappedResolvers.Query.hello({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(queryHelloSpy.called).to.be.true;
     const [, , context] = queryHelloSpy.firstCall.args;

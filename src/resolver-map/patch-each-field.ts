@@ -1,11 +1,15 @@
-import { GraphQLObjectType } from 'graphql';
-import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper } from '../types';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper, PackOptions } from '../types';
 import { addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
 export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrapper => (
   resolvers: ResolverMap,
-  packOptions,
-) => {
-  const { graphqlSchema: schema } = packOptions.dependencies;
+  packOptions: PackOptions,
+): ResolverMap => {
+  const { graphqlSchema: schema }: { graphqlSchema?: GraphQLSchema } = packOptions.dependencies;
+
+  if (!schema) {
+    throw new Error('A graphqlSchema dependency is required in your pack options.');
+  }
 
   const typeMap = schema.getTypeMap();
 

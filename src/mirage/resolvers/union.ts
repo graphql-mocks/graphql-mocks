@@ -3,6 +3,7 @@ import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   obj,
   context,
@@ -15,7 +16,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
     );
   }
 
-  const useFindInCommon = '__testUseFindInCommon' in context ? (context as any).__testUseFindInCommon : true;
+  const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
   const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
     context,
   );

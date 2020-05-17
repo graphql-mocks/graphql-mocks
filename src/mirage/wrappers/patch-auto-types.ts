@@ -13,6 +13,7 @@ export const patchWithAutoTypesWrapper = patchEachField(({ type, field }) => {
     throw new TypeError('field must be an instanceof GraphQLField for patching');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const unwrappedReturnType = unwrap((field as GraphQLField<any, any>).type);
 
   if ('name' in unwrappedReturnType && unwrappedReturnType.name.endsWith('Connection')) {

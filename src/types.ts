@@ -30,14 +30,18 @@ export type ResolverWrapperOptions = {
 };
 
 export type ResolverMap = {
-  [type: string]: Record<string, any>;
-} & { __resolveType?: GraphQLTypeResolver<any, any> };
+  [typeName: string]: {
+    [fieldName: string]: Resolver;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } & { __resolveType?: GraphQLTypeResolver<any, any> };
+};
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PackState = Record<any, any>;
 
 export type PackOptions = {
   state: PackState;
-  dependencies: Record<string, any>;
+  dependencies: Record<string, unknown>;
 };
 
 export type ResolverMapWrapper = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;

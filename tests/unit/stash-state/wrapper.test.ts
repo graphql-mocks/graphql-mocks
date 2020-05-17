@@ -20,6 +20,7 @@ describe('stash-state/wrapper', function () {
     const parent = { parent: 'parent' };
     const args = { args: 'args' };
     const context = { keyOnContext: 'valueOnContext' };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const info = { info: 'info' } as any;
 
     wrappedResolver(parent, args, context, info);

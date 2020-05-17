@@ -23,6 +23,7 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
       continue;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let patchResolver: GraphQLTypeResolver<any, any>;
     if (type instanceof GraphQLUnionType) {
       patchResolver = mirageUnionResolver;
@@ -35,13 +36,15 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
     if (typeof patchResolver === 'function') {
       resolvers[type.name] = resolvers[type.name] || {};
 
-      const wrappedTypeResolver = async (
-        object: Record<string, any>,
-        context: Record<string, any>,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const wrappedTypeResolver: GraphQLTypeResolver<any, any> = async (
+        object: Record<string, unknown>,
+        context: Record<string, unknown>,
         info: GraphQLResolveInfo,
         abstractType: GraphQLAbstractType,
-      ): Promise<ReturnType<GraphQLTypeResolver<any, any>>> => {
+      ) => {
         context = embedPackOptionsInContext(context, packOptions);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return await (patchResolver as GraphQLTypeResolver<any, any>)(object, context, info, abstractType);
       };
 
