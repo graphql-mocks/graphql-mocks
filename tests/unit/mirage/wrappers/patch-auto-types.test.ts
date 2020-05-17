@@ -6,8 +6,8 @@ import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
 describe('mirage/wrappers/patch-auto-types', function () {
-  let resolverMap: ResolverMap | undefined;
-  let schema: GraphQLSchema | undefined;
+  let resolverMap: ResolverMap;
+  let schema: GraphQLSchema;
 
   beforeEach(() => {
     resolverMap = {
@@ -70,8 +70,8 @@ describe('mirage/wrappers/patch-auto-types', function () {
   });
 
   afterEach(() => {
-    resolverMap = undefined;
-    schema = undefined;
+    (resolverMap as unknown) = undefined;
+    (schema as unknown) = undefined;
   });
 
   it('patches missing type field resolvers', async function () {
@@ -80,7 +80,7 @@ describe('mirage/wrappers/patch-auto-types', function () {
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper;
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+    const wrappedResolvers = wrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Spell.incantation).to.exist;
     expect(wrappedResolvers?.Potion.name).to.exist;
@@ -93,7 +93,7 @@ describe('mirage/wrappers/patch-auto-types', function () {
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper;
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+    const wrappedResolvers = wrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;
@@ -106,7 +106,7 @@ describe('mirage/wrappers/patch-auto-types', function () {
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
     const wrapper = patchWithAutoTypesWrapper;
-    const wrappedResolvers = wrapper(resolverMap!, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+    const wrappedResolvers = wrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
     expect(wrappedResolvers?.Query.spells).to.not.exist;
     expect(wrappedResolvers?.Query.potions).to.not.exist;

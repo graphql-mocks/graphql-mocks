@@ -5,7 +5,11 @@ import { MirageGraphQLMapper } from '../mapper';
 
 export const mirageObjectResolver: Resolver = function (parent, _args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const { mapper }: { mapper: MirageGraphQLMapper } = extractDependencies(context);
+  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+
+  if (!mapper) {
+    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
+  }
 
   if (typeof parent !== 'object') {
     throw new Error(
@@ -14,9 +18,9 @@ export const mirageObjectResolver: Resolver = function (parent, _args, context, 
   }
 
   const [, mappedAttrName] = mapper ? mapper.matchForGraphQL([parentType.name, fieldName]) : [undefined, undefined];
-  const candidates = [mappedAttrName, fieldName].filter(Boolean);
+  const candidates = [mappedAttrName, fieldName].filter(Boolean) as string[];
   const matchedAttr = candidates.find((candidate) => candidate in parent);
-  const value = parent[matchedAttr];
+  const value = (matchedAttr && parent[matchedAttr]) ?? undefined;
 
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist

@@ -3,15 +3,17 @@ import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
-import { GraphQLSchema, buildSchema } from 'graphql';
+import { GraphQLSchema, buildSchema, GraphQLResolveInfo } from 'graphql';
+import { ResolverWrapper, ResolverMap, ResolverMapWrapper, Resolver } from '../../../src/types';
+import { SinonSpy } from 'sinon';
 
 describe('wrapEach', function () {
   let graphqlSchema: GraphQLSchema;
-  let originalResolverMap: any;
-  let resolverWrapper: any;
-  let resolverMapWrapper: any;
-  let wrappedResolverMap: any;
-  let clonedResolverMap: any;
+  let originalResolverMap: ResolverMap<Resolver & SinonSpy>;
+  let resolverWrapper: ResolverWrapper & SinonSpy;
+  let resolverMapWrapper: ResolverMapWrapper;
+  let wrappedResolverMap: ResolverMap;
+  let clonedResolverMap: ResolverMap;
 
   beforeEach(() => {
     graphqlSchema = buildSchema(`
@@ -26,12 +28,10 @@ describe('wrapEach', function () {
 
     originalResolverMap = {
       Query: {
-        // eslint-disable-next-line
         field: sinon.spy(),
       },
 
       SomeType: {
-        // eslint-disable-next-line
         fieldResolverOnSomeType: sinon.spy(),
       },
     };
@@ -82,18 +82,15 @@ describe('wrapEach', function () {
     );
 
     // call only wrapped resolvers and they should in turn call the original
-    wrappedResolverMap.Query.field(
-      { parent: 'query-field' },
-      { args: 'query-field' },
-      { context: 'query-field' },
-      { info: 'query-field' },
-    );
+    wrappedResolverMap.Query.field({ parent: 'query-field' }, { args: 'query-field' }, { context: 'query-field' }, ({
+      info: 'query-field',
+    } as unknown) as GraphQLResolveInfo);
 
     wrappedResolverMap.SomeType.fieldResolverOnSomeType(
       { parent: 'sometype-field-resolver' },
       { args: 'sometype-field-resolver' },
       { context: 'sometype-field-resolver' },
-      { info: 'sometype-field-resolver' },
+      ({ info: 'sometype-field-resolver' } as unknown) as GraphQLResolveInfo,
     );
 
     // calling the wrapped functions calls the inner function

@@ -1,30 +1,50 @@
-import { GraphQLObjectType } from 'graphql';
+import { GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
 import { extractDependencies } from '../../utils';
-import { relayPaginateNodes } from '../../relay/helpers';
+import { relayPaginateNodes, RelayPaginationResult } from '../../relay/helpers';
 import { unwrap } from '../../utils';
+import { MirageGraphQLMapper } from '../mapper';
 
-export function mirageRelayResolver(parent: any, args: any, context: any, info: any): any {
-  const { mapper } = extractDependencies(context);
-  const {
-    fieldName,
-    parentType,
-  }: { parentType: GraphQLObjectType; returnType: GraphQLObjectType; fieldName: string } = info;
+type ExtractionArgs = {
+  parent: Record<string, unknown>;
+  parentType: GraphQLObjectType;
+  mapper: MirageGraphQLMapper;
+  fieldName: string;
+};
+
+export async function mirageRelayResolver(
+  parent: Record<string, unknown>,
+  args: Record<string, unknown>,
+  context: Record<string, unknown>,
+  info: Pick<GraphQLResolveInfo, 'fieldName' | 'parentType' | 'returnType'>,
+): Promise<RelayPaginationResult> {
+  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+  const { fieldName, parentType } = info;
+
+  if (!mapper) {
+    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
+  }
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
-  const nodes: any[] = extractNodesFromParent({
+  const nodes = extractNodesFromParent<Record<string, unknown>>({
     parent,
     parentType,
     mapper,
     fieldName,
   });
 
-  const cursorForNode = (node: any) => node.toString();
-  return relayPaginateNodes(nodes, args, cursorForNode);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cursorForNode = (node: any): string => node.toString();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return relayPaginateNodes<Record<string, any>>(nodes, args, cursorForNode);
 }
 
-export function extractNodesFromParent({ parent, parentType, mapper, fieldName }: any) {
+export function extractNodesFromParent<T>({ parent, parentType, mapper, fieldName }: ExtractionArgs): T[] {
   const unwrappedParentType = unwrap(parentType);
-  const [, mappedAttrName] = mapper && mapper.matchForGraphQL([unwrappedParentType.name, fieldName]);
+  const [, mappedAttrName] =
+    'name' in unwrappedParentType
+      ? mapper.matchForGraphQL([unwrappedParentType.name, fieldName])
+      : [undefined, undefined];
+
   const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchingAttr = parentAttributeCandidates.find((attr) => attr && parent[attr]);
 
@@ -36,6 +56,13 @@ export function extractNodesFromParent({ parent, parentType, mapper, fieldName }
     );
   }
 
-  const nodes = parent[matchingAttr].models || parent[matchingAttr];
+  const nodes =
+    ((parent?.[matchingAttr] as Record<string, unknown>)?.models as T[] | undefined) ||
+    (parent[matchingAttr] as T[] | undefined);
+
+  if (!Array.isArray(nodes)) {
+    throw new Error(`Expected "${fieldName}" on ${parent.name} to return an array, got:\n\n${JSON.stringify(nodes)}`);
+  }
+
   return nodes;
 }

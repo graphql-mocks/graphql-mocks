@@ -1,4 +1,16 @@
-export default function (_parent: any, _args: any, { pack }: any /*, info*/) {
-  const { mirageServer } = pack.dependencies;
-  return mirageServer.schema.people.all().models;
+import { ModelInstance, Server } from 'miragejs';
+import { extractDependencies } from '../../../../../src/utils';
+
+export default function (
+  _parent: unknown,
+  _args: Record<string, unknown>,
+  context: Record<string, unknown> /*, info*/,
+): ModelInstance[] {
+  const { mirageServer } = extractDependencies<{ mirageServer: Server }>(context);
+
+  if (!mirageServer) {
+    throw new Error('mirageServer is a required dependency, please include it in pack dependencies.');
+  }
+
+  return mirageServer.schema.all('person').models;
 }

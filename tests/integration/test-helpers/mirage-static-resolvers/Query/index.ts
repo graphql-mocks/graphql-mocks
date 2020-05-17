@@ -1,10 +1,9 @@
-import { QueryResolvers } from '../../types';
 import hello from './hello';
 import person from './person';
 import allPersons from './all-persons';
 import allPersonsPaginated from './all-persons-paginated';
 
-const Query: QueryResolvers = {
+const Query = {
   hello,
   person,
   allPersons,

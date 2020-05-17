@@ -20,10 +20,12 @@ describe('stash-state/wrapper', function () {
     const parent = { parent: 'parent' };
     const args = { args: 'args' };
     const context = { keyOnContext: 'valueOnContext' };
-    const info = { info: 'info' };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const info = { info: 'info' } as any;
 
     wrappedResolver(parent, args, context, info);
-    const stashed = stashFor(initialResolver.firstCall.returnValue);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stashed = stashFor(initialResolver.firstCall.returnValue as any);
 
     expect(stashed?.parent).to.equal(parent);
     expect(stashed?.args).to.equal(args);

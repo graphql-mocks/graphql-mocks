@@ -1,23 +1,39 @@
-import { Resolver } from '../../types';
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, GraphQLTypeResolver, GraphQLUnionType, GraphQLAbstractType } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 
-export const mirageUnionResolver: Resolver = function (parent, _args, context, info) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
+  obj,
+  context,
+  _info,
+  unionType: GraphQLAbstractType,
+) {
+  if (!(unionType instanceof GraphQLUnionType)) {
+    throw new Error(
+      'Expected info to be an instance of a GraphQLUnionType. This resolver can only be used as a GraphQLTypeResolver on GraphQLUnionType types',
+    );
+  }
+
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
+  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
     context,
   );
-  const { name } = info;
-  const unionTypes = info.getTypes();
 
-  const parentModelName = modelNameToTypeName(parent?.modelName);
+  if (!graphqlSchema) {
+    throw new Error('Please include `graphqlSchema: GraphQLSchema` in your pack dependencies');
+  }
+
+  const { name } = unionType;
+  const unionTypes = unionType.getTypes();
+
+  const parentModelName = modelNameToTypeName(obj?.modelName);
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError;
 
   try {
-    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(parent, unionTypes) : undefined;
+    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(obj, unionTypes) : undefined;
   } catch (error) {
     matchingFieldsCandidateError = error;
   }

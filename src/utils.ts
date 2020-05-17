@@ -1,18 +1,57 @@
-import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField } from './types';
-import { GraphQLSchema, GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType } from 'graphql';
+import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField, PackOptions } from './types';
+import {
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLUnionType,
+  GraphQLInterfaceType,
+  GraphQLType,
+  GraphQLScalarType,
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLFieldResolver,
+  GraphQLResolveInfo,
+} from 'graphql';
 
-export const unwrap = (type: any): any => (type?.ofType ? unwrap(type.ofType) : type);
+type unwrappedType =
+  | GraphQLScalarType
+  | GraphQLObjectType
+  | GraphQLInterfaceType
+  | GraphQLUnionType
+  | GraphQLEnumType
+  | GraphQLInputObjectType;
 
-export const extractDependencies = (context: any) => context?.pack?.dependencies;
+export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
 
-export const embedPackOptions: ResolverWrapper = (resolver, options) => {
-  return (parent: any, args: any, context: any, info: any) => {
-    context = context || {};
-    context = {
-      ...context,
-      pack: context.pack || options.packOptions,
-    };
+export const extractDependencies = <T>(
+  context: Record<string, unknown> & {
+    pack?: { dependencies?: PackOptions['dependencies'] };
+  },
+): Partial<T> => {
+  return (context?.pack?.dependencies ?? {}) as Partial<T>;
+};
 
+export const embedPackOptionsInContext = (
+  context: Record<string, unknown>,
+  packOptions: PackOptions,
+): Record<string, unknown> => {
+  context = context ?? {};
+  context = {
+    ...context,
+    pack: context.pack || packOptions,
+  };
+
+  return context;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const embedPackOptionsResolverWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
+  return (
+    parent: unknown,
+    args: Record<string, unknown>,
+    context: Record<string, unknown>,
+    info: GraphQLResolveInfo,
+  ): unknown => {
+    context = embedPackOptionsInContext(context, options.packOptions);
     return resolver(parent, args, context, info);
   };
 };
@@ -33,7 +72,7 @@ export function getTypeAndField(
     const fields = type.getFields();
     field = fields[fieldName];
   } else if (type instanceof GraphQLUnionType || type instanceof GraphQLInterfaceType) {
-    field = { name: '__resolveType' };
+    field = { name: '__resolveType' } as ResolvableField;
   } else {
     throw new Error(`Type "${typeName}" must be an a GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType`);
   }

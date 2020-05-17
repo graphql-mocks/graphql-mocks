@@ -10,7 +10,7 @@ export const performanceWrapper: ResolverWrapper = (originalResolver, wrapperDet
   packState.performance[typeName] = packState.performance[typeName] || {};
   packState.performance[typeName][fieldName] = packState.performance[typeName][fieldName] || [];
 
-  return async (parent, args, context, info) => {
+  return async (parent, args, context, info): Promise<unknown> => {
     const start = Date.now();
     const result = await originalResolver(parent, args, context, info);
     const end = Date.now();

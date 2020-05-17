@@ -1,7 +1,11 @@
 import { buildSchema, GraphQLObjectType } from 'graphql';
 import { PackOptions } from '../src/types';
+import { MirageGraphQLMapper } from '../src/mirage/mapper';
 
-export const generatePackOptions: (mixin?: Record<any, any>) => PackOptions = (mixin = {}) => {
+export const generatePackOptions: (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mixin?: Record<string, any>,
+) => PackOptions = (mixin = {}) => {
   return {
     ...mixin,
     state: { ...mixin.state },
@@ -24,7 +28,8 @@ export const schema = buildSchema(`
   }
 `);
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-export const userObjectType = schema.getType('User')! as GraphQLObjectType;
+export const userObjectType = schema.getType('User') as GraphQLObjectType;
 export const userObjectFields = (userObjectType as GraphQLObjectType).getFields();
 export const userObjectNameField = userObjectFields['name'];
+
+export const createEmptyMirageMapper = (): MirageGraphQLMapper => new MirageGraphQLMapper();
