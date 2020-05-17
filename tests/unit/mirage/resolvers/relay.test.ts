@@ -7,7 +7,7 @@ import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 describe('mirage/relay', () => {
   let mirageServer: Server;
   let mapper: MirageGraphQLMapper;
-  let resolverContext: any;
+  let resolverContext: Record<string, unknown>;
   let sourcererParent: ModelInstance;
   let abraSpell: ModelInstance;
   let meowSpell: ModelInstance;
@@ -115,6 +115,7 @@ describe('mirage/relay', () => {
       isEvil: true,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     sourcererParent = mirageServer.schema.create<any, any, any>('sourcerer', {
       spells: allSpells,
     });
@@ -411,6 +412,7 @@ describe('mirage/relay', () => {
   describe('mapping from graphql -> mirage', () => {
     describe('with a previously resolved parent provided', () => {
       beforeEach(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sourcererParent = mirageServer.schema.create<any, any, any>('sourcerer', {
           spells: [abertoSpell, abraSpell],
         });

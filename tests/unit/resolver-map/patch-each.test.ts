@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { generatePackOptions } from '../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
-import { Resolver } from '../../../src/types';
+import { ResolverMap } from '../../../src/types';
 
 describe('resolver-map/patch-each', function () {
   let schema: GraphQLSchema | undefined;
@@ -51,17 +51,20 @@ describe('resolver-map/patch-each', function () {
 
     const patchResolverSpy = sinon.spy();
 
-    const wrapper = patchEachField(() => patchResolverSpy as any);
-    const patchedResolvers = wrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+    const wrapper = patchEachField(() => patchResolverSpy);
+    const patchedResolvers: ResolverMap = wrapper(
+      resolverMap,
+      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+    );
 
     expect(patchedResolvers.Query.hello).to.equal(helloSpy, 'original hello resolver is untouched');
     expect(patchedResolvers.Spell.isEvil).to.equal(isEvilSpy, 'original isEvil resolver is untouched');
 
     expect(patchResolverSpy.callCount).to.equal(0);
 
-    (patchedResolvers.Query.spells as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
-    (patchedResolvers.Mutation.addSpell as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
-    (patchedResolvers.Spell.incantation as Resolver)({}, {}, {}, {} as GraphQLResolveInfo);
+    patchedResolvers.Query.spells({}, {}, {}, {} as GraphQLResolveInfo);
+    patchedResolvers.Mutation.addSpell({}, {}, {}, {} as GraphQLResolveInfo);
+    patchedResolvers.Spell.incantation({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(patchResolverSpy.callCount).to.equal(3);
   });
@@ -70,7 +73,7 @@ describe('resolver-map/patch-each', function () {
     const helloSpy = sinon.spy();
     const isEvilSpy = sinon.spy();
 
-    const resolverMap = {
+    const resolverMap: ResolverMap = {
       Query: {
         hello: helloSpy,
       },
@@ -91,7 +94,7 @@ describe('resolver-map/patch-each', function () {
       }
     });
 
-    expect((resolverMap as any).Query.spells!).to.not.exist;
+    expect(resolverMap.Query.spells).to.not.exist;
     const patchedResolvers = wrapper(
       resolverMap,
       generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema: schema } })),

@@ -1,13 +1,13 @@
 import { mirageUnionResolver } from '../../../../src/mirage/resolvers/union';
 import { generatePackOptions } from '../../../mocks';
-import { GraphQLSchema, buildSchema, GraphQLUnionType, GraphQLResolveInfo } from 'graphql';
+import { GraphQLSchema, buildSchema, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/resolvers/union', function () {
   let schema: GraphQLSchema | undefined;
-  let animalUnionType: any;
+  let animalUnionType: GraphQLUnionType;
 
   const mirageServer = new Server({
     models: {
@@ -56,7 +56,7 @@ describe('mirage/resolvers/union', function () {
       }
     `);
 
-    animalUnionType = schema.getType('Animal');
+    animalUnionType = schema.getType('Animal') as GraphQLUnionType;
   });
 
   afterEach(() => {

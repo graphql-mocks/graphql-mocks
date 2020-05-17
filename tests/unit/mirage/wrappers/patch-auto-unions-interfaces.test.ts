@@ -2,6 +2,7 @@ import { patchUnionsInterfaces } from '../../../../src/mirage/wrappers/patch-aut
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
+import { ResolverMap } from '../../../../src/types';
 
 describe('mirage/wrappers/patch-auto-unions-interfaces', function () {
   let schema: GraphQLSchema | undefined;
@@ -39,12 +40,12 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function () {
   });
 
   it('patches missing union and interface __resolveType resolvers', async function () {
-    const resolverMap: any = {};
+    const resolverMap: ResolverMap = {};
     expect(resolverMap?.Salutation?.__resolveType).to.not.exist;
     expect(resolverMap?.Animal?.__resolveType).to.not.exist;
 
     const wrappedResolvers = patchUnionsInterfaces(
-      resolverMap!,
+      resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
 
@@ -53,19 +54,17 @@ describe('mirage/wrappers/patch-auto-unions-interfaces', function () {
   });
 
   it('skips patching already filled union and interface __resolveType resolvers', async function () {
-    const resolverMap: any = {
+    const resolverMap: ResolverMap = {
       Salutation: {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        __resolveType: () => {},
+        __resolveType: (): string => 'noop',
       },
       Animal: {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        __resolveType: () => {},
+        __resolveType: (): string => 'noop',
       },
     };
 
     const wrappedResolvers = patchUnionsInterfaces(
-      resolverMap!,
+      resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
     expect(wrappedResolvers).to.deep.equal(resolverMap);

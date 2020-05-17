@@ -1,8 +1,8 @@
 import Query from './Query';
 import Person from './Person';
-import { ResolversTypes } from '../types';
+import { ResolverMap } from '../../../../src/types';
 
-const resolvers: Partial<ResolversTypes> = {
+const resolvers: ResolverMap = {
   Query,
   Person,
 };

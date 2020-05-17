@@ -1,5 +1,5 @@
 import { performanceWrapper } from '../../../src/performance/wrapper';
-import { ResolverMap } from '../../../src/types';
+import { ResolverMap, Resolver } from '../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 import { GraphQLResolveInfo } from 'graphql';
@@ -8,7 +8,7 @@ describe('performance/wrapper', function () {
   it('provides accesss to spies on resolvers', async function () {
     const RESOLVER_RUN_TIME_DELAY = 250;
 
-    const resolver = async () => {
+    const resolver: Resolver = async () => {
       return new Promise((resolve) => setTimeout(resolve, RESOLVER_RUN_TIME_DELAY));
     };
 

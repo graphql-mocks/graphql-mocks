@@ -1,7 +1,6 @@
 import friends from './friends';
-import { PersonResolvers } from '../../types';
 
-const Person: PersonResolvers = {
+const Person = {
   friends,
 };
 

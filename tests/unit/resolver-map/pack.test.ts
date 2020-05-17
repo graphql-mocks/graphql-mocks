@@ -1,7 +1,7 @@
 import { buildSchema, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { pack } from '../../../src/resolver-map/pack';
-import { ResolverMapWrapper } from '../../../src/types';
+import { ResolverMapWrapper, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
 
 describe('resolver-map/pack', function () {
@@ -14,7 +14,7 @@ describe('resolver-map/pack', function () {
 
     const resolvers = {};
     const wrappers: ResolverMapWrapper[] = [
-      function (resolvers) {
+      function (resolvers): ResolverMap {
         resolvers.Type = {};
         // eslint-disable-next-line
         resolvers.Type.field = () => {};

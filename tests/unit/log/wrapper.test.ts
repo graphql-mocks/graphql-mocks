@@ -9,7 +9,7 @@ describe('log/wrapper', function () {
   let logStub: SinonStub;
 
   beforeEach(() => {
-    logStub = stub<Console, any>(console, 'log');
+    logStub = stub<Console, 'log'>(console, 'log');
   });
 
   afterEach(() => {

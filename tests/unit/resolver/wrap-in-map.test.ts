@@ -8,8 +8,9 @@ import { GraphQLResolveInfo } from 'graphql';
 describe('resolver/wrap-in-map', function () {
   it('it can create a resolver map wrapper using a specified resolver', function () {
     const resolver = spy();
-    const resolverWrapper: ResolverWrapper = spy((resolver) => (parent: any, args: any, context: any, info: any) =>
-      resolver(parent, args, context, info),
+    const resolverWrapper: ResolverWrapper = spy(
+      (resolver) => (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<Resolver> =>
+        resolver(parent, args, context, info),
     );
 
     const wrappedInResolverMapWrapper = wrapResolverInMap('User', 'name', [resolverWrapper], resolver);
