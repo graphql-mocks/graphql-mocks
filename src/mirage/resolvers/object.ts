@@ -5,7 +5,11 @@ import { MirageGraphQLMapper } from '../mapper';
 
 export const mirageObjectResolver: Resolver = function (parent, _args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const { mapper }: { mapper: MirageGraphQLMapper } = extractDependencies(context);
+  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+
+  if (!mapper) {
+    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
+  }
 
   if (typeof parent !== 'object') {
     throw new Error(

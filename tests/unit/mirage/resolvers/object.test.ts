@@ -1,5 +1,5 @@
 import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
-import { generatePackOptions } from '../../../mocks';
+import { generatePackOptions, createEmptyMirageMapper } from '../../../mocks';
 import { GraphQLSchema, buildSchema, GraphQLNonNull, GraphQLString, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server, belongsTo } from 'miragejs';
@@ -42,7 +42,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
@@ -87,12 +87,13 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
       parentType: schema?.getType('User'),
       fieldName: 'favoriteMovie',
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       returnType: new GraphQLNonNull(schema?.getType('Movie')!),
     };
 
@@ -106,7 +107,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
@@ -122,7 +123,7 @@ describe('mirage/resolvers/object', function () {
 
   it('throws an error when the parent passed in is not an object', () => {
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
     };
 
     const info = {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
@@ -7,10 +8,12 @@ import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
 import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
 import { pack } from '../../src/resolver-map/pack';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
+import { ResolverMap } from '../../src/types';
 
 describe('auto resolving from mirage', function () {
-  let resolvers: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let graphQLHandler: any;
+  let resolvers: ResolverMap;
   let mapper: MirageGraphQLMapper;
 
   this.beforeEach(() => {
@@ -35,7 +38,7 @@ describe('auto resolving from mirage', function () {
 
   this.afterEach(() => {
     mirageServer.db.emptyData();
-    resolvers = undefined;
+    (resolvers as unknown) = undefined;
     graphQLHandler = undefined;
   });
 
@@ -437,6 +440,9 @@ describe('auto resolving from mirage', function () {
       }`;
 
       const result = await graphQLHandler(query);
+      console.log(result.errors);
+      expect(result.errors).to.equal(undefined);
+
       const edges = result.data.allPersonsPaginated.edges;
       const pageInfo = result.data.allPersonsPaginated.pageInfo;
       const firstPersonEdge = edges[0];

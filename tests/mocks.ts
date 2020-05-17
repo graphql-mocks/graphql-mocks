@@ -1,5 +1,6 @@
 import { buildSchema, GraphQLObjectType } from 'graphql';
 import { PackOptions } from '../src/types';
+import { MirageGraphQLMapper } from '../src/mirage/mapper';
 
 export const generatePackOptions: (mixin?: Record<any, any>) => PackOptions = (mixin = {}) => {
   return {
@@ -28,3 +29,5 @@ export const schema = buildSchema(`
 export const userObjectType = schema.getType('User')! as GraphQLObjectType;
 export const userObjectFields = (userObjectType as GraphQLObjectType).getFields();
 export const userObjectNameField = userObjectFields['name'];
+
+export const createEmptyMirageMapper = () => new MirageGraphQLMapper();

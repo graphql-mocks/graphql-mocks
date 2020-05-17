@@ -10,12 +10,15 @@ type ResolverStash = {
 };
 
 export const stashKey = Symbol('stash-state');
-export const stashFor = (ref: any): ResolverStash | undefined => {
+export const stashFor = (ref: {
+  [key: string]: unknown;
+  [stashKey]: ResolverStash | undefined;
+}): ResolverStash | undefined => {
   return ref && ref[stashKey];
 };
 
 export const stashStateWrapper: ResolverWrapper = (originalResolver) => {
-  return (parent, args, context, info) => {
+  return (parent, args, context, info): unknown => {
     const result = originalResolver(parent, args, context, info);
 
     if (typeof result === 'object' && result !== null) {

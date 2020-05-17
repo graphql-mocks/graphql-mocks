@@ -17,8 +17,12 @@ export async function mirageRelayResolver(
   context: Record<string, unknown>,
   info: Pick<GraphQLResolveInfo, 'fieldName' | 'parentType' | 'returnType'>,
 ): Promise<RelayPaginationResult> {
-  const { mapper } = extractDependencies(context);
+  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
   const { fieldName, parentType } = info;
+
+  if (!mapper) {
+    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
+  }
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
   const nodes = extractNodesFromParent<Record<string, unknown>>({

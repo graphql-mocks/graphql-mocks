@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {
   GraphQLFieldResolver,
   GraphQLObjectType,
@@ -18,8 +20,6 @@ export type PatchResolverWrapper = (options: ResolverWrapperOptions) => Resolver
 // A resolvable type is a type that has a "field" that can be resolved by a resolver function
 export type ResolvableType = GraphQLObjectType | GraphQLUnionType | GraphQLInterfaceType;
 
-// A resolver function can either be a GraphQLField on a GraphQLObjectType
-// or an AnonymousResolveType resolver that is specifed by __resolveType
 export type ResolvableField = GraphQLField<any, any, any>;
 
 export type ResolverWrapperOptions = {
@@ -29,14 +29,12 @@ export type ResolverWrapperOptions = {
   packOptions: PackOptions;
 };
 
-export type ResolverMap = {
+export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeResolver<any, any>> = {
   [typeName: string]: {
-    [fieldName: string]: Resolver;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } & { __resolveType?: GraphQLTypeResolver<any, any> };
+    [fieldName: string]: TFieldResolver;
+  } & { __resolveType?: TTypeResolver };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type PackState = Record<any, any>;
 
 export type PackOptions = {

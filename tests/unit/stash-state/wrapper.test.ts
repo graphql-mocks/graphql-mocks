@@ -24,7 +24,8 @@ describe('stash-state/wrapper', function () {
     const info = { info: 'info' } as any;
 
     wrappedResolver(parent, args, context, info);
-    const stashed = stashFor(initialResolver.firstCall.returnValue);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stashed = stashFor(initialResolver.firstCall.returnValue as any);
 
     expect(stashed?.parent).to.equal(parent);
     expect(stashed?.args).to.equal(args);

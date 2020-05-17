@@ -17,9 +17,14 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   }
 
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
+  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
     context,
   );
+
+  if (!graphqlSchema) {
+    throw new Error('Please include `graphqlSchema: GraphQLSchema` in your pack dependencies');
+  }
+
   const { name } = unionType;
   const unionTypes = unionType.getTypes();
 

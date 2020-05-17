@@ -22,14 +22,18 @@ type unwrappedType =
 
 export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
 
-export const extractDependencies = <T = PackOptions['dependencies'] | undefined>(context: Record<string, any>): T => {
-  return context?.pack?.dependencies;
+export const extractDependencies = <T>(
+  context: Record<string, unknown> & {
+    pack?: { dependencies?: PackOptions['dependencies'] };
+  },
+): Partial<T> => {
+  return (context?.pack?.dependencies ?? {}) as Partial<T>;
 };
 
 export const embedPackOptionsInContext = (
-  context: Record<string, any>,
+  context: Record<string, unknown>,
   packOptions: PackOptions,
-): Record<string, any> => {
+): Record<string, unknown> => {
   context = context ?? {};
   context = {
     ...context,
@@ -39,8 +43,14 @@ export const embedPackOptionsInContext = (
   return context;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const embedPackOptionsResolverWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
-  return (parent: any, args: Record<string, any>, context: Record<string, any>, info: GraphQLResolveInfo): any => {
+  return (
+    parent: unknown,
+    args: Record<string, unknown>,
+    context: Record<string, unknown>,
+    info: GraphQLResolveInfo,
+  ): unknown => {
     context = embedPackOptionsInContext(context, options.packOptions);
     return resolver(parent, args, context, info);
   };

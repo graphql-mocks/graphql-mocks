@@ -6,10 +6,16 @@ import { findMostInCommon, modelNameToTypeName } from './helpers';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (object, context, _info, interfaceType) {
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper }: { graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper } = extractDependencies(
+  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
     context,
   );
   const { name: interfaceName } = interfaceType;
+
+  if (!graphqlSchema) {
+    throw new Error(
+      'graphqlSchema is a required dependency for mirageInterfaceResolver, please include it in your pack dependencies',
+    );
+  }
 
   const typeMap = graphqlSchema.getTypeMap();
   const typesUsingInterface: GraphQLObjectType[] = Object.values(typeMap).filter(function filterTypesUsingInterface(
