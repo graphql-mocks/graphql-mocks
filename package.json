@@ -4,9 +4,9 @@
   "description": "Tools for setting up graphql test resolvers",
   "main": "./lib/index.js",
   "scripts": {
-    "lint": "eslint \"./src/**/*.ts\" \"./tests/**/*.ts\"",
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "mocha -r ts-node/register \"tests/**/*.test.ts\""
+    "test": "mocha -r ts-node/register \"./test/**/*.test.ts\""
   },
   "author": "Chad Carbert",
   "license": "ISC",
