@@ -5,7 +5,7 @@ import { embedPackOptionsResolverWrapper } from '../utils';
 
 const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
-export const pack: Packer = (initialResolversMap, wrappers, packOptions = defaultPackOptions) => {
+export const pack: Packer = (initialResolversMap = {}, wrappers = [], packOptions = defaultPackOptions) => {
   wrappers = [...wrappers, wrapEachField([embedPackOptionsResolverWrapper])];
 
   // make an intial copy
