@@ -3,7 +3,7 @@ import { Resolver, ResolverWrapper, ResolverMapWrapper, ResolverMap } from '../t
 import { getTypeAndField, addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
 import { GraphQLSchema } from 'graphql';
 
-export function wrapResolverInMap(
+export function embed(
   typeName: string,
   fieldName: string,
   resolverWrappers: ResolverWrapper[],

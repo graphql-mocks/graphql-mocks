@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { wrapResolverInMap } from '../../../src/resolver/wrap-in-map';
+import { embed } from '../../../src/resolver/embed';
 import { ResolverWrapper, Resolver } from '../../../src/types';
 import { schema, generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo } from 'graphql';
 
-describe('resolver/wrap-in-map', function () {
+describe('resolver/embed', function () {
   it('it can create a resolver map wrapper using a specified resolver', function () {
     const resolver = spy();
     const resolverWrapper: ResolverWrapper = spy(
@@ -13,7 +13,7 @@ describe('resolver/wrap-in-map', function () {
         resolver(parent, args, context, info),
     );
 
-    const wrappedInResolverMapWrapper = wrapResolverInMap('User', 'name', [resolverWrapper], resolver);
+    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper], resolver);
     const resolverMap = {};
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
@@ -40,7 +40,7 @@ describe('resolver/wrap-in-map', function () {
       info: GraphQLResolveInfo,
     ): Resolver => resolver(parent, args, context, info));
 
-    const wrappedInResolverMapWrapper = wrapResolverInMap('User', 'name', [resolverWrapper]);
+    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper]);
     const resolverMap = {
       User: {
         name: nameFieldResolver,
@@ -64,7 +64,7 @@ describe('resolver/wrap-in-map', function () {
     const resolverWrapper: ResolverWrapper = spy();
     // empty resolver map with no resolver for User.name
     const resolverMap = {};
-    const wrappedInResolverMapWrapper = wrapResolverInMap('User', 'name', [resolverWrapper]);
+    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper]);
 
     expect(() =>
       wrappedInResolverMapWrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } })),
