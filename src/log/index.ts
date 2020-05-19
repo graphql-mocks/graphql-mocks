@@ -1,0 +1,1 @@
+export { logWrapper } from './wrapper';
