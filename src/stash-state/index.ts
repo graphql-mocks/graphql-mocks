@@ -1,0 +1,1 @@
+export { stashStateWrapper } from './wrapper';
