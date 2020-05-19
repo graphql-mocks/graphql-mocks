@@ -17,7 +17,7 @@ describe('log/wrapper', function () {
   });
 
   it('logs details around calling resolvers', async function () {
-    const initialResolver = (() => ({})) as Resolver;
+    const initialResolver = (() => ({ 'the result': 'has been returned' })) as Resolver;
     const wrappedResolver = logWrapper(initialResolver, {
       resolvers: {} as ResolverMap,
       type: userObjectType,
@@ -25,17 +25,44 @@ describe('log/wrapper', function () {
       packOptions: generatePackOptions(),
     });
 
-    wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, ({
+    await wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, ({
       info: 'info',
     } as unknown) as GraphQLResolveInfo);
 
-    const logCalls = logStub.getCalls().map((call) => call.args[0]);
-    expect(logCalls).to.deep.equal([
-      'Resolver for type: "User" field: "name"',
-      'parent: {"parent":"parent"}',
-      'args: {"args":"args"}',
-      `context: {"context":"context"}`,
-      'info: {"info":"info"}',
-    ]);
+    const logCalls = logStub
+      .getCalls()
+      .map((call) => call.args[0])
+      .join('\n');
+
+    expect(logCalls).to.equal(`--- resolver start ---
+
+Resolver for type: "User" field: "name"
+
+parent:
+{
+  "parent": "parent"
+}
+
+args:
+{
+  "args": "args"
+}
+
+context:
+{
+  "context": "context"
+}
+
+info:
+{
+  "info": "info"
+}
+
+result:
+{
+  "the result": "has been returned"
+}
+
+--- resolver end ---`);
   });
 });
