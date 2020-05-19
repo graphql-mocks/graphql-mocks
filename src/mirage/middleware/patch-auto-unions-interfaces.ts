@@ -7,8 +7,8 @@ import {
   GraphQLAbstractType,
 } from 'graphql';
 import { PackOptions, ResolverMap } from '../../types';
-import { mirageUnionResolver } from '../../mirage/resolvers/union';
-import { mirageInterfaceResolver } from '../../mirage/resolvers/interface';
+import { mirageUnionResolver } from '../resolvers/union';
+import { mirageInterfaceResolver } from '../resolvers/interface';
 import { embedPackOptionsInContext } from '../../utils';
 
 export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackOptions): ResolverMap {

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { patchWithAutoTypesWrapper } from '../../src/mirage/wrappers/patch-auto-types';
-import { patchUnionsInterfaces } from '../../src/mirage/wrappers/patch-auto-unions-interfaces';
+import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
+import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
 import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
@@ -24,7 +24,7 @@ describe('auto resolving from mirage', function () {
       .add(['Person', 'fullName'], ['Person', 'name']);
 
     mirageServer.db.loadData(defaultScenario);
-    const middlewares = [patchWithAutoTypesWrapper, patchUnionsInterfaces];
+    const middlewares = [patchModelTypes, patchUnionsInterfaces];
     const packed = pack(defaultResolvers, middlewares, {
       dependencies: {
         mapper,

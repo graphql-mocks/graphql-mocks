@@ -1,10 +1,10 @@
-import { patchUnionsInterfaces } from '../../../../src/mirage/wrappers/patch-auto-unions-interfaces';
+import { patchUnionsInterfaces } from '../../../../src/mirage/middleware/patch-auto-unions-interfaces';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 import { ResolverMap } from '../../../../src/types';
 
-describe('mirage/wrappers/patch-auto-unions-interfaces', function () {
+describe('mirage/middleware/patch-auto-unions-interfaces', function () {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {

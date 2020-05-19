@@ -4,7 +4,7 @@ import { patchEachField } from '../../resolver-map/patch-each-field';
 import { unwrap } from '../../utils';
 import { GraphQLObjectType, GraphQLField } from 'graphql';
 
-export const patchWithAutoTypesWrapper = patchEachField(({ type, field }) => {
+export const patchModelTypes = patchEachField(({ type, field }) => {
   const isRootQueryType = type.name === 'Query';
   const isRootMutationType = type.name === 'Mutation';
   const isGraphQLInternalType = type.name.indexOf('__') === 0;
