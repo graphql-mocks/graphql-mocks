@@ -2,11 +2,16 @@
   "name": "graphql-test-resolvers",
   "version": "0.0.0",
   "description": "Tools for setting up graphql test resolvers",
-  "main": "./lib/index.js",
+  "main": ".index.js",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "mocha -r ts-node/register \"./test/**/*.test.ts\""
+    "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "build": "tsc",
+    "clean": "rm -rf lib",
+    "copy-package-json": "cp package.json lib",
+    "build-publishable": "yarn clean && yarn build && yarn copy-package-json",
+    "prepare-deploy": "yarn test && yarn version && yarn build-publishable"
   },
   "author": "Chad Carbert",
   "license": "ISC",
@@ -36,6 +41,7 @@
     "graphql-tools": "^5.0.0",
     "miragejs": "^0.1.32",
     "mocha": "^7.1.1",
+    "np": "^6.2.3",
     "prettier": "^2.0.5",
     "sinon": "^9.0.0",
     "ts-node": "^8.5.4",
