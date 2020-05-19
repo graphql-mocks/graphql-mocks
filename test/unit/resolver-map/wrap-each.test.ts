@@ -4,14 +4,14 @@ import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
 import cloneDeep from 'lodash.clonedeep';
 import { GraphQLSchema, buildSchema, GraphQLResolveInfo } from 'graphql';
-import { ResolverWrapper, ResolverMap, ResolverMapWrapper, Resolver } from '../../../src/types';
+import { ResolverWrapper, ResolverMap, ResolverMapMiddleware, Resolver } from '../../../src/types';
 import { SinonSpy } from 'sinon';
 
 describe('wrapEach', function () {
   let graphqlSchema: GraphQLSchema;
   let originalResolverMap: ResolverMap<Resolver & SinonSpy>;
   let resolverWrapper: ResolverWrapper & SinonSpy;
-  let resolverMapWrapper: ResolverMapWrapper;
+  let resolverMapMiddleware: ResolverMapMiddleware;
   let wrappedResolverMap: ResolverMap;
   let clonedResolverMap: ResolverMap;
 
@@ -47,8 +47,8 @@ describe('wrapEach', function () {
   });
 
   it('wraps each individual resolver fn in resolver map', function () {
-    resolverMapWrapper = wrapEachField([resolverWrapper]);
-    wrappedResolverMap = resolverMapWrapper(
+    resolverMapMiddleware = wrapEachField([resolverWrapper]);
+    wrappedResolverMap = resolverMapMiddleware(
       clonedResolverMap,
       generatePackOptions({ dependencies: { graphqlSchema } }),
     );

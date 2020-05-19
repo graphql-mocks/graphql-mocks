@@ -1,7 +1,7 @@
 import { buildSchema, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { pack } from '../../../src/resolver-map/pack';
-import { ResolverMapWrapper, ResolverMap } from '../../../src/types';
+import { ResolverMapMiddleware, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
 
 describe('resolver-map/pack', function () {
@@ -13,7 +13,7 @@ describe('resolver-map/pack', function () {
     `);
 
     const resolvers = {};
-    const wrappers: ResolverMapWrapper[] = [
+    const middlewares: ResolverMapMiddleware[] = [
       function (resolvers): ResolverMap {
         resolvers.Type = {};
         // eslint-disable-next-line
@@ -23,7 +23,7 @@ describe('resolver-map/pack', function () {
       },
     ];
 
-    const { resolvers: wrappedResolvers } = pack(resolvers, wrappers, { dependencies: { graphqlSchema } });
+    const { resolvers: wrappedResolvers } = pack(resolvers, middlewares, { dependencies: { graphqlSchema } });
 
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(wrappedResolvers).to.have.property('Type');
@@ -36,7 +36,7 @@ describe('resolver-map/pack', function () {
     }`);
 
     const queryHelloSpy = sinon.spy();
-    const wrappers: ResolverMapWrapper[] = [];
+    const middlewares: ResolverMapMiddleware[] = [];
 
     const resolvers = {
       Query: {
@@ -52,7 +52,7 @@ describe('resolver-map/pack', function () {
       },
     };
 
-    const { resolvers: wrappedResolvers } = pack(resolvers, wrappers, packOptions);
+    const { resolvers: wrappedResolvers } = pack(resolvers, middlewares, packOptions);
     wrappedResolvers.Query.hello({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(queryHelloSpy.called).to.be.true;

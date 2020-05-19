@@ -1,14 +1,14 @@
 import { wrapResolver } from './wrap';
-import { Resolver, ResolverWrapper, ResolverMapWrapper, ResolverMap } from '../types';
-import { getTypeAndField, addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
+import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '../types';
+import { getTypeAndField, addResolverToMap, embedPackOptionsWrapper } from '../utils';
 import { GraphQLSchema } from 'graphql';
 
 export function embed(
   typeName: string,
   fieldName: string,
-  resolverWrappers: ResolverWrapper[],
+  wrappers: ResolverWrapper[],
   resolver?: Resolver,
-): ResolverMapWrapper {
+): ResolverMapMiddleware {
   return (resolverMap, packOptions): ResolverMap => {
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     if (!schema) {
@@ -24,9 +24,9 @@ export function embed(
       );
     }
 
-    resolverWrappers = [...resolverWrappers, embedPackOptionsResolverWrapper];
+    wrappers = [...wrappers, embedPackOptionsWrapper];
     const [type, field] = getTypeAndField(typeName, fieldName, schema);
-    const wrappedResolver = wrapResolver(resolver, resolverWrappers, {
+    const wrappedResolver = wrapResolver(resolver, wrappers, {
       type,
       field,
       resolvers: resolverMap,

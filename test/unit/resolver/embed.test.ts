@@ -13,19 +13,19 @@ describe('resolver/embed', function () {
         resolver(parent, args, context, info),
     );
 
-    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper], resolver);
+    const embededResolverMapMiddleware = embed('User', 'name', [resolverWrapper], resolver);
     const resolverMap = {};
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
-    const wrappedResolverMap = wrappedInResolverMapWrapper(
+    const embededResolverMap = embededResolverMapMiddleware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
 
-    expect(wrappedResolverMap?.User?.name).is.a('function', 'resolver is installed at specified path');
+    expect(embededResolverMap?.User?.name).is.a('function', 'resolver is installed at specified path');
     expect(resolver.called).to.equal(false);
-    wrappedResolverMap.User.name({}, {}, {}, {} as GraphQLResolveInfo);
+    embededResolverMap.User.name({}, {}, {}, {} as GraphQLResolveInfo);
     expect(resolver.called).to.equal(true);
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
@@ -40,7 +40,7 @@ describe('resolver/embed', function () {
       info: GraphQLResolveInfo,
     ): Resolver => resolver(parent, args, context, info));
 
-    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper]);
+    const embeddedResolverMapMiddleware = embed('User', 'name', [resolverWrapper]);
     const resolverMap = {
       User: {
         name: nameFieldResolver,
@@ -48,14 +48,14 @@ describe('resolver/embed', function () {
     };
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
-    const wrappedResolverMap = wrappedInResolverMapWrapper(
+    const embededResolverMap = embeddedResolverMapMiddleware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
 
     expect(nameFieldResolver.called).to.equal(false);
-    wrappedResolverMap.User.name({}, {}, {}, {} as GraphQLResolveInfo);
+    embededResolverMap.User.name({}, {}, {}, {} as GraphQLResolveInfo);
     expect(nameFieldResolver.called).to.equal(true);
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
@@ -64,10 +64,10 @@ describe('resolver/embed', function () {
     const resolverWrapper: ResolverWrapper = spy();
     // empty resolver map with no resolver for User.name
     const resolverMap = {};
-    const wrappedInResolverMapWrapper = embed('User', 'name', [resolverWrapper]);
+    const embededResolverMapMiddleware = embed('User', 'name', [resolverWrapper]);
 
     expect(() =>
-      wrappedInResolverMapWrapper(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } })),
+      embededResolverMapMiddleware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } })),
     ).to.throw(
       'Could not determine resolver to wrap, either pass one into this `wrap`, or have an initial resolver on the resolver map at type: "User", field "name"',
     );

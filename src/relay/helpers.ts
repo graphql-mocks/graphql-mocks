@@ -10,7 +10,7 @@ export type RelayPaginationResult<T = unknown> = {
   };
 };
 
-export const nodeWrapper = <T>(node: T, cursor: string): { cursor: string; node: T } => ({
+export const createEdge = <T>(node: T, cursor: string): { cursor: string; node: T } => ({
   cursor,
   node,
 });
@@ -54,7 +54,7 @@ export function relayPaginateNodes<T = unknown>(
   cursorForNode: CursorForNode<T>,
 ): RelayPaginationResult {
   const { first, last, before, after } = args;
-  const allEdges = nodes.map((node) => nodeWrapper(node, cursorForNode(node)));
+  const allEdges = nodes.map((node) => createEdge(node, cursorForNode(node)));
   // eslint-disable-next-line prefer-const
   let { edges, frontCut, backCut } = applyCursorsToEdges<T>(allEdges, cursorForNode, before, after);
 

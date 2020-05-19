@@ -1,7 +1,7 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper, PackOptions } from '../types';
-import { addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
-export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrapper => (
+import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions } from '../types';
+import { addResolverToMap, embedPackOptionsWrapper } from '../utils';
+export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ): ResolverMap => {
@@ -34,7 +34,7 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrap
           let patchResolver = patchWith(resolverWrapperOptions);
 
           if (typeof patchResolver === 'function') {
-            patchResolver = embedPackOptionsResolverWrapper(patchResolver, resolverWrapperOptions);
+            patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions);
 
             addResolverToMap({
               resolverMap: resolvers,

@@ -42,12 +42,12 @@ export type PackOptions = {
   dependencies: Record<string, unknown>;
 };
 
-export type ResolverMapWrapper = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
+export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
 
 export type Packed = { resolvers: ResolverMap; state: PackState };
 
 export type Packer = (
   initialMap: ResolverMap,
-  wrappers: ResolverMapWrapper[],
+  middlewares: ResolverMapMiddleware[],
   packOptions?: Partial<PackOptions>,
 ) => Packed;

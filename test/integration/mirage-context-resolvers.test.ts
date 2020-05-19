@@ -4,11 +4,11 @@ import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
 import { pack } from '../../src/resolver-map/pack';
-import { ResolverMapWrapper } from '../../src/types';
+import { ResolverMapMiddleware } from '../../src/types';
 
-const emptyWrappers: ResolverMapWrapper[] = [];
+const emptyMiddlewares: ResolverMapMiddleware[] = [];
 
-const { resolvers } = pack(defaultResolvers, emptyWrappers, {
+const { resolvers } = pack(defaultResolvers, emptyMiddlewares, {
   state: {},
   dependencies: {
     mirageServer,

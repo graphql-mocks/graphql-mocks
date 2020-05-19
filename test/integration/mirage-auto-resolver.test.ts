@@ -24,8 +24,8 @@ describe('auto resolving from mirage', function () {
       .add(['Person', 'fullName'], ['Person', 'name']);
 
     mirageServer.db.loadData(defaultScenario);
-    const wrappers = [patchWithAutoTypesWrapper, patchUnionsInterfaces];
-    const packed = pack(defaultResolvers, wrappers, {
+    const middlewares = [patchWithAutoTypesWrapper, patchUnionsInterfaces];
+    const packed = pack(defaultResolvers, middlewares, {
       dependencies: {
         mapper,
         mirageServer,

@@ -1,9 +1,9 @@
-import { ResolverMap, ResolverMapWrapper, PackOptions, ResolverWrapper, Resolver } from '../types';
-import { getTypeAndField, addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
+import { ResolverMap, ResolverMapMiddleware, PackOptions, ResolverWrapper, Resolver } from '../types';
+import { getTypeAndField, addResolverToMap, embedPackOptionsWrapper } from '../utils';
 import { wrapResolver } from '../resolver/wrap';
 import { GraphQLSchema } from 'graphql';
 
-export const wrapEachField = (resolverWrappers: ResolverWrapper[]): ResolverMapWrapper => (
+export const wrapEachField = (wrappers: ResolverWrapper[]): ResolverMapMiddleware => (
   resolvers: ResolverMap,
   packOptions: PackOptions,
 ): ResolverMap => {
@@ -18,7 +18,7 @@ export const wrapEachField = (resolverWrappers: ResolverWrapper[]): ResolverMapW
       const resolverToWrap = resolvers[typeName][fieldName] as Resolver;
       const [type, field] = getTypeAndField(typeName, fieldName, schema);
 
-      const wrappedResolver = wrapResolver(resolverToWrap, [...resolverWrappers, embedPackOptionsResolverWrapper], {
+      const wrappedResolver = wrapResolver(resolverToWrap, [...wrappers, embedPackOptionsWrapper], {
         type,
         field,
         resolvers,
