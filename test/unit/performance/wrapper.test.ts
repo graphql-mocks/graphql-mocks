@@ -29,12 +29,7 @@ describe('performance/wrapper', function () {
 
     const [timeElapsed] = nameFieldResolverPerformance;
 
-    console.log(`performance/wrapper resolver took ${timeElapsed}`);
-    expect(timeElapsed).to.be.above(RESOLVER_RUN_TIME_DELAY);
-
-    expect(timeElapsed).to.be.below(
-      RESOLVER_RUN_TIME_DELAY + 100,
-      `Warning: possibly flakey test, depends on how quick the test runs\n\n the resolver runs within 100ms, took ${timeElapsed}`,
-    );
+    expect(timeElapsed).to.be.above(RESOLVER_RUN_TIME_DELAY - 1, 'run time lower bound');
+    expect(timeElapsed).to.be.below(RESOLVER_RUN_TIME_DELAY + 101, 'run time upper bound');
   });
 });
