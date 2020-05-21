@@ -34,9 +34,7 @@ describe('log/wrapper', function () {
       .map((call) => call.args[0])
       .join('\n');
 
-    expect(logCalls).to.equal(`--- resolver start ---
-
-Resolver for type: "User" field: "name"
+    expect(logCalls).to.equal(`--- resolver start for User.name---
 
 parent:
 {
@@ -48,21 +46,11 @@ args:
   "args": "args"
 }
 
-context:
-{
-  "context": "context"
-}
-
-info:
-{
-  "info": "info"
-}
-
 result:
 {
   "the result": "has been returned"
 }
 
---- resolver end ---`);
+--- resolver end for User.name---`);
   });
 });
