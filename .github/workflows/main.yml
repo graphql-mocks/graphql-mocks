@@ -4,22 +4,23 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: node ${{ matrix.node-version }}, graphql ${{ matrix.graphql-version }}
+    name: graphql ${{ matrix.graphql-version }}, miragejs ${{ matrix.miragejs-version }}
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
         graphql-version: [14, 15]
+        miragejs-version: [0.1.36, latest]
 
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }} with graphq.js ${{ matrix.graphql-version }}
+    - name: graphq.js ${{ matrix.graphql-version }} and miragejs ${{ matrix.miragejs-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 12
     - name: yarn install & test
       run: |
         yarn
         yarn add graphql@${{ matrix.graphql-version }} --latest --no-lock-file --dev
+        yarn add miragejs@${{ matrix.miragejs-version }} --latest --no-lock-file --dev
         yarn test

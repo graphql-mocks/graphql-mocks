@@ -2160,10 +2160,10 @@ minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
-miragejs@^0.1.32:
-  version "0.1.37"
-  resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.37.tgz#e6b5bc3831490fe203248478c7bd160a70926bd5"
-  integrity sha512-noJV8pt3MUuSPrqvGlT+3HJbq+YYnvJG+3sjGEfKL9K5nQJBKqvn2FETvUQqc5U5hJItsMNlmi/ra4muCC5zeA==
+miragejs@^0.1.39:
+  version "0.1.39"
+  resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.39.tgz#82111ffff5b05b2f2cff5d8a398313c2155c69a4"
+  integrity sha512-URCt9QE6EyR2/DT2ja/JYUqkWx4cC4mrdY95fkJXznxplU4efm6D9VtKS2KsLxs9XFFyr/hgOstGcWzkw0bL0w==
   dependencies:
     "@miragejs/pretender-node-polyfill" "^0.1.0"
     inflected "^2.0.4"
@@ -2190,7 +2190,7 @@ miragejs@^0.1.32:
     lodash.uniq "^4.5.0"
     lodash.uniqby "^4.7.0"
     lodash.values "^4.3.0"
-    pretender "3.4.0"
+    pretender "^3.4.3"
 
 mkdirp@0.5.3:
   version "0.5.3"
@@ -2658,10 +2658,10 @@ prepend-http@^2.0.0:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
   integrity sha1-6SQ0v6XqjBn0HN/UAddBo8gZ2Jc=
 
-pretender@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.4.0.tgz#0ccd943eccff48126bcbb912acaf9c33b0829785"
-  integrity sha512-BxmCnuVOchuP1am8p038XhSDDrRXX0bNqp6GRJPu/VcnWNFssy/BIHBefMcB535lHfMeelonkIP1ETtHEHjOVQ==
+pretender@^3.4.3:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/pretender/-/pretender-3.4.3.tgz#a3b4160516007075d29127262f3a0063d19896e9"
+  integrity sha512-AlbkBly9R8KR+R0sTCJ/ToOeEoUMtt52QVCetui5zoSmeLOU3S8oobFsyPLm1O2txR6t58qDNysqPnA1vVi8Hg==
   dependencies:
     fake-xml-http-request "^2.1.1"
     route-recognizer "^0.3.3"

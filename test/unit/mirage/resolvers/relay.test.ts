@@ -1,7 +1,7 @@
 import { mirageRelayResolver } from '../../../../src/mirage/resolvers/relay';
 import { expect } from 'chai';
 import { buildSchema, GraphQLObjectType } from 'graphql';
-import { Model, Server, hasMany, ModelInstance, Registry, HasMany } from 'miragejs';
+import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/relay', () => {
@@ -60,9 +60,8 @@ describe('mirage/relay', () => {
   };
 
   beforeEach(() => {
-    const registryHasMany: HasMany<MyRegistry> = hasMany;
     const Sourcerer = Model.extend({
-      spells: registryHasMany<'spell'>('spell'),
+      spells: hasMany('spell'),
     });
     const Spell = Model.extend({});
 
