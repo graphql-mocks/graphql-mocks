@@ -7,7 +7,7 @@ import { MirageGraphQLMapper } from '../mapper';
 type ExtractionArgs = {
   parent: Record<string, unknown>;
   parentType: GraphQLObjectType;
-  mapper: MirageGraphQLMapper;
+  mapper?: MirageGraphQLMapper;
   fieldName: string;
 };
 
@@ -19,10 +19,6 @@ export async function mirageRelayResolver(
 ): Promise<RelayPaginationResult> {
   const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
   const { fieldName, parentType } = info;
-
-  if (!mapper) {
-    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
-  }
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
   const nodes = extractNodesFromParent<Record<string, unknown>>({
@@ -41,7 +37,7 @@ export async function mirageRelayResolver(
 export function extractNodesFromParent<T>({ parent, parentType, mapper, fieldName }: ExtractionArgs): T[] {
   const unwrappedParentType = unwrap(parentType);
   const [, mappedAttrName] =
-    'name' in unwrappedParentType
+    mapper && 'name' in unwrappedParentType
       ? mapper.matchForGraphQL([unwrappedParentType.name, fieldName])
       : [undefined, undefined];
 
