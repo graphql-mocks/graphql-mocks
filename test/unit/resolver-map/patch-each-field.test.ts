@@ -5,7 +5,7 @@ import { buildSchema, GraphQLSchema, GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
 import { ResolverMap } from '../../../src/types';
 
-describe('resolver-map/patch-each', function () {
+describe('resolver-map/patch-each-field', function () {
   let schema: GraphQLSchema | undefined;
 
   beforeEach(() => {

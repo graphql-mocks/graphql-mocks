@@ -7,7 +7,7 @@ import { GraphQLSchema, buildSchema, GraphQLResolveInfo } from 'graphql';
 import { ResolverWrapper, ResolverMap, ResolverMapMiddleware, Resolver } from '../../../src/types';
 import { SinonSpy } from 'sinon';
 
-describe('wrapEach', function () {
+describe('resolver-map/wrap-each-field', function () {
   let graphqlSchema: GraphQLSchema;
   let originalResolverMap: ResolverMap<Resolver & SinonSpy>;
   let resolverWrapper: ResolverWrapper & SinonSpy;
