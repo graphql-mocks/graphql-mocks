@@ -23,7 +23,7 @@ export type ResolvableType = GraphQLObjectType | GraphQLUnionType | GraphQLInter
 export type ResolvableField = GraphQLField<any, any, any>;
 
 export type ResolverWrapperOptions = {
-  resolvers: ResolverMap;
+  resolverMap: ResolverMap;
   type: ResolvableType;
   field: ResolvableField;
   packOptions: PackOptions;
@@ -44,7 +44,7 @@ export type PackOptions = {
 
 export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
 
-export type Packed = { resolvers: ResolverMap; state: PackState };
+export type Packed = { resolverMap: ResolverMap; state: PackState };
 
 export type Packer = (
   initialMap: ResolverMap,

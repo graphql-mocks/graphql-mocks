@@ -11,14 +11,14 @@ import { mirageUnionResolver } from '../resolvers/union';
 import { mirageInterfaceResolver } from '../resolvers/interface';
 import { embedPackOptionsInContext } from '../../utils';
 
-export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackOptions): ResolverMap {
+export function patchUnionsInterfaces(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;
   const typeMap = (schema as GraphQLSchema).getTypeMap();
 
   for (const typeKey of Object.keys(typeMap)) {
     const type = typeMap[typeKey];
 
-    const alreadyHasResolveTypeResolver = resolvers[type.name] && '__resolveType' in [type.name];
+    const alreadyHasResolveTypeResolver = resolverMap[type.name] && '__resolveType' in [type.name];
     if (alreadyHasResolveTypeResolver) {
       continue;
     }
@@ -34,7 +34,7 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
     }
 
     if (typeof patchResolver === 'function') {
-      resolvers[type.name] = resolvers[type.name] || {};
+      resolverMap[type.name] = resolverMap[type.name] || {};
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const wrappedTypeResolver: GraphQLTypeResolver<any, any> = async (
@@ -48,9 +48,9 @@ export function patchUnionsInterfaces(resolvers: ResolverMap, packOptions: PackO
         return await (patchResolver as GraphQLTypeResolver<any, any>)(object, context, info, abstractType);
       };
 
-      resolvers[type.name].__resolveType = wrappedTypeResolver;
+      resolverMap[type.name].__resolveType = wrappedTypeResolver;
     }
   }
 
-  return resolvers;
+  return resolverMap;
 }

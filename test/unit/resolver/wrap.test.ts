@@ -20,7 +20,7 @@ describe('resolver/wrap', function () {
       packOptions: generatePackOptions(),
       type: userObjectType,
       field: userObjectNameField,
-      resolvers: {},
+      resolverMap: {},
     };
 
     resolver = spy();

@@ -29,7 +29,7 @@ export function embed(
     const wrappedResolver = wrapResolver(resolver, wrappers, {
       type,
       field,
-      resolvers: resolverMap,
+      resolverMap,
       packOptions,
     });
 

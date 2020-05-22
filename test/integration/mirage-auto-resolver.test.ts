@@ -32,7 +32,7 @@ describe('auto resolving from mirage', function () {
         graphqlSchema: graphqlSchema,
       },
     });
-    resolvers = packed.resolvers;
+    resolvers = packed.resolverMap;
     graphQLHandler = buildHandler(resolvers);
   });
 

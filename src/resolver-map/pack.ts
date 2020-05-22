@@ -27,5 +27,5 @@ export const pack: Packer = (initialResolversMap = {}, middlewares = [], packOpt
     wrappedMap = middleware(wrappedMap, packOptions as PackOptions);
   });
 
-  return { resolvers: wrappedMap, state: packOptions.state as PackState };
+  return { resolverMap: wrappedMap, state: packOptions.state as PackState };
 };

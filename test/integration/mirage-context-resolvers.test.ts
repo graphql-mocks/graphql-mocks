@@ -8,7 +8,7 @@ import { ResolverMapMiddleware } from '../../src/types';
 
 const emptyMiddlewares: ResolverMapMiddleware[] = [];
 
-const { resolvers } = pack(defaultResolvers, emptyMiddlewares, {
+const { resolverMap } = pack(defaultResolvers, emptyMiddlewares, {
   state: {},
   dependencies: {
     mirageServer,
@@ -16,7 +16,7 @@ const { resolvers } = pack(defaultResolvers, emptyMiddlewares, {
   },
 });
 
-const graphQLHandler = buildHandler(resolvers);
+const graphQLHandler = buildHandler(resolverMap);
 
 describe('it can resolve from basic resolvers', function () {
   beforeEach(() => {

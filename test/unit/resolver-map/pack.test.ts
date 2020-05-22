@@ -23,7 +23,7 @@ describe('resolver-map/pack', function () {
       },
     ];
 
-    const { resolvers: wrappedResolvers } = pack(resolvers, middlewares, { dependencies: { graphqlSchema } });
+    const { resolverMap: wrappedResolvers } = pack(resolvers, middlewares, { dependencies: { graphqlSchema } });
 
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(wrappedResolvers).to.have.property('Type');
@@ -52,7 +52,7 @@ describe('resolver-map/pack', function () {
       },
     };
 
-    const { resolvers: wrappedResolvers } = pack(resolvers, middlewares, packOptions);
+    const { resolverMap: wrappedResolvers } = pack(resolvers, middlewares, packOptions);
     wrappedResolvers.Query.hello({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(queryHelloSpy.called).to.be.true;

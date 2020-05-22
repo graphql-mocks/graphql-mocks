@@ -2,7 +2,7 @@ import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions } from '../types';
 import { addResolverToMap, embedPackOptionsWrapper } from '../utils';
 export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => (
-  resolvers: ResolverMap,
+  resolverMap: ResolverMap,
   packOptions: PackOptions,
 ): ResolverMap => {
   const { graphqlSchema: schema }: { graphqlSchema?: GraphQLSchema } = packOptions.dependencies;
@@ -23,9 +23,9 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
       for (const fieldKey of Object.keys(fields)) {
         const field = fields[fieldKey];
 
-        if (!resolvers[typeKey] || (resolvers[typeKey] && !resolvers[typeKey][fieldKey])) {
+        if (!resolverMap[typeKey] || (resolverMap[typeKey] && !resolverMap[typeKey][fieldKey])) {
           const resolverWrapperOptions = {
-            resolvers,
+            resolverMap,
             type: type as GraphQLObjectType,
             field,
             packOptions,
@@ -37,7 +37,7 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
             patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions);
 
             addResolverToMap({
-              resolverMap: resolvers,
+              resolverMap: resolverMap,
               typeName: typeKey,
               fieldName: fieldKey,
               resolver: patchResolver,
@@ -48,5 +48,5 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
     }
   }
 
-  return resolvers;
+  return resolverMap;
 };

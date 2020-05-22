@@ -11,7 +11,7 @@ describe('stash-state/wrapper', function () {
     const resolverMap: ResolverMap = {};
 
     const wrappedResolver = stashStateWrapper(initialResolver, {
-      resolvers: resolverMap,
+      resolverMap,
       packOptions: generatePackOptions(),
       type: userObjectType,
       field: userObjectNameField,

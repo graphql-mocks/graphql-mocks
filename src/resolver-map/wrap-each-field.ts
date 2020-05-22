@@ -4,7 +4,7 @@ import { wrapResolver } from '../resolver/wrap';
 import { GraphQLSchema } from 'graphql';
 
 export const wrapEachField = (wrappers: ResolverWrapper[]): ResolverMapMiddleware => (
-  resolvers: ResolverMap,
+  resolverMap: ResolverMap,
   packOptions: PackOptions,
 ): ResolverMap => {
   const { graphqlSchema: schema }: { graphqlSchema?: GraphQLSchema } = packOptions.dependencies;
@@ -13,20 +13,20 @@ export const wrapEachField = (wrappers: ResolverWrapper[]): ResolverMapMiddlewar
     throw new Error('Include in your pack dependencies, key: "graphqlSchema" with an instance of your GraphQLSchema');
   }
 
-  for (const typeName in resolvers) {
-    for (const fieldName in resolvers[typeName]) {
-      const resolverToWrap = resolvers[typeName][fieldName] as Resolver;
+  for (const typeName in resolverMap) {
+    for (const fieldName in resolverMap[typeName]) {
+      const resolverToWrap = resolverMap[typeName][fieldName] as Resolver;
       const [type, field] = getTypeAndField(typeName, fieldName, schema);
 
       const wrappedResolver = wrapResolver(resolverToWrap, [...wrappers, embedPackOptionsWrapper], {
         type,
         field,
-        resolvers,
+        resolverMap: resolverMap,
         packOptions,
       });
 
       addResolverToMap({
-        resolverMap: resolvers,
+        resolverMap: resolverMap,
         typeName,
         fieldName,
         resolver: wrappedResolver,
@@ -35,5 +35,5 @@ export const wrapEachField = (wrappers: ResolverWrapper[]): ResolverMapMiddlewar
     }
   }
 
-  return resolvers;
+  return resolverMap;
 };

@@ -15,7 +15,7 @@ describe('performance/wrapper', function () {
     const packOptions = generatePackOptions();
     const state = packOptions.state;
     const wrappedResolver = performanceWrapper(resolver, {
-      resolvers: {} as ResolverMap,
+      resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,
       packOptions,

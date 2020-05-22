@@ -12,7 +12,7 @@ describe('spy/wrapper', function () {
     const state = packOptions.state;
 
     const wrappedResolver = spyWrapper(initialResolver as Resolver, {
-      resolvers: {},
+      resolverMap: {},
       type: userObjectType,
       field: userObjectNameField,
       packOptions: packOptions,
