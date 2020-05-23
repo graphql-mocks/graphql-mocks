@@ -1,8 +1,8 @@
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { ResolverMap, ResolverMapWrapper, PatchResolverWrapper, PackOptions } from '../types';
-import { addResolverToMap, embedPackOptionsResolverWrapper } from '../utils';
-export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrapper => (
-  resolvers: ResolverMap,
+import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions } from '../types';
+import { addResolverToMap, embedPackOptionsWrapper } from '../utils';
+export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => (
+  resolverMap: ResolverMap,
   packOptions: PackOptions,
 ): ResolverMap => {
   const { graphqlSchema: schema }: { graphqlSchema?: GraphQLSchema } = packOptions.dependencies;
@@ -23,9 +23,9 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrap
       for (const fieldKey of Object.keys(fields)) {
         const field = fields[fieldKey];
 
-        if (!resolvers[typeKey] || (resolvers[typeKey] && !resolvers[typeKey][fieldKey])) {
+        if (!resolverMap[typeKey] || (resolverMap[typeKey] && !resolverMap[typeKey][fieldKey])) {
           const resolverWrapperOptions = {
-            resolvers,
+            resolverMap,
             type: type as GraphQLObjectType,
             field,
             packOptions,
@@ -34,10 +34,10 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrap
           let patchResolver = patchWith(resolverWrapperOptions);
 
           if (typeof patchResolver === 'function') {
-            patchResolver = embedPackOptionsResolverWrapper(patchResolver, resolverWrapperOptions);
+            patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions);
 
             addResolverToMap({
-              resolverMap: resolvers,
+              resolverMap: resolverMap,
               typeName: typeKey,
               fieldName: fieldKey,
               resolver: patchResolver,
@@ -48,5 +48,5 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapWrap
     }
   }
 
-  return resolvers;
+  return resolverMap;
 };

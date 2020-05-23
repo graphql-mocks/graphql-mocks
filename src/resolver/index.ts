@@ -1,0 +1,1 @@
+export { embed } from './embed';

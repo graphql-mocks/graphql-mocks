@@ -8,8 +8,8 @@ export const spyWrapper: ResolverWrapper = (originalResolver, wrapperDetails) =>
   const packState = wrapperDetails.packOptions.state;
   const resolverSpy = spy(originalResolver);
 
-  packState.spies = packState.spies = {};
-  packState.spies[typeName] = packState.spies[typeName] || {};
+  packState.spies = packState.spies ?? {};
+  packState.spies[typeName] = packState.spies[typeName] ?? {};
   packState.spies[typeName][fieldName] = resolverSpy;
 
   return resolverSpy;

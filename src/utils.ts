@@ -44,7 +44,7 @@ export const embedPackOptionsInContext = (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const embedPackOptionsResolverWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
+export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
   return (
     parent: unknown,
     args: Record<string, unknown>,

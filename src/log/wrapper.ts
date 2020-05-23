@@ -14,13 +14,33 @@ export const logWrapper: ResolverWrapper = (originalResolver, wrapperDetails) =>
     info: any,
   ): Promise<any> {
     /* eslint-enable @typescript-eslint/no-explicit-any */
-    console.log(`Resolver for type: "${typeName}" field: "${fieldName}"`);
-    console.log(`parent: ${JSON.stringify(parent)}`);
-    console.log(`args: ${JSON.stringify(args)}`);
-    console.log(`context: ${JSON.stringify(context)}`);
-    console.log(`info: ${JSON.stringify(info)}`);
+
+    const [parentOut, argsOut] = [parent, args].map((out) => {
+      try {
+        return JSON.stringify(out, null, 2);
+      } catch {
+        return 'Unable to JSON.stringify';
+      }
+    });
+
+    console.log(`--- resolver start for ${typeName}.${fieldName}---`);
+    console.log('');
+
+    console.log(`parent:`);
+    console.log(parentOut);
+    console.log('');
+    console.log(`args:`);
+    console.log(argsOut);
+    console.log('');
+
     const result = await originalResolver(parent, args, context, info);
-    console.log(`result: ${result}`);
+    const resultOut = JSON.stringify(result, null, 2);
+
+    console.log(`result:`);
+    console.log(resultOut);
+
+    console.log('');
+    console.log(`--- resolver end for ${typeName}.${fieldName}---`);
 
     return result;
   };

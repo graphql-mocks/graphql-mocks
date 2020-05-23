@@ -6,9 +6,9 @@ export const performanceWrapper: ResolverWrapper = (originalResolver, wrapperDet
   const fieldName = field.name;
 
   const packState = wrapperDetails.packOptions.state;
-  packState.performance = packState.performance = {};
-  packState.performance[typeName] = packState.performance[typeName] || {};
-  packState.performance[typeName][fieldName] = packState.performance[typeName][fieldName] || [];
+  packState.performance = packState.performance ?? {};
+  packState.performance[typeName] = packState.performance[typeName] ?? {};
+  packState.performance[typeName][fieldName] = packState.performance[typeName][fieldName] ?? [];
 
   return async (parent, args, context, info): Promise<unknown> => {
     const start = Date.now();

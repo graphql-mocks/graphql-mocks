@@ -7,10 +7,6 @@ export const mirageObjectResolver: Resolver = function (parent, _args, context, 
   const { returnType, fieldName, parentType } = info;
   const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
 
-  if (!mapper) {
-    throw new Error('Please include `mapper: MirageGraphQLMapper` in your pack dependencies');
-  }
-
   if (typeof parent !== 'object') {
     throw new Error(
       `Expected parent to be an object, got ${typeof parent}, when trying to resolve field "${fieldName}" on type "${parentType}"`,
