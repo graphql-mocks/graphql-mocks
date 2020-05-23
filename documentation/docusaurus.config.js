@@ -1,27 +1,34 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
-  url: 'https://your-docusaurus-test-site.com',
+  title: 'graphql-test-resolvers',
+  tagline: 'Mock GraphQL APIs',
+  url: 'https://github.com/chadian/graphql-test-resolvers',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  favicon: 'img/favicon.png',
+  organizationName: 'chadian', // Usually your GitHub org/user name.
+  projectName: 'graphql-test-resolvers', // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'graphql-test-resolvers',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'graphql-test-resolvers logo',
         src: 'img/logo.svg',
       },
       links: [
         {
-          to: 'docs/',
-          activeBasePath: 'docs',
+          to: 'docs/introduction',
           label: 'Docs',
           position: 'left',
+          // activeBaseRegex: 'docs/(?!api-quick-start)',
+          activeBaseRegex: 'docs/(?!(typedoc|api-quick-start))',
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          to: 'docs/api-quick-start',
+          label: 'API',
+          position: 'left',
+          activeBaseRegex: 'docs/(typedoc|api-quick-start)',
+        },
+        {
+          href: 'https://github.com/chadian/graphql-test-resolvers',
           label: 'GitHub',
           position: 'right',
         },
@@ -29,52 +36,8 @@ module.exports = {
     },
     footer: {
       style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Style Guide',
-              to: 'docs/',
-            },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: 'blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      links: [],
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="http://www.sticksnglue.com">sticksnglue</a>`,
     },
   },
   presets: [
@@ -85,15 +48,6 @@ module.exports = {
           // It is recommended to set document id as docs home page (`docs/` path).
           homePageId: 'doc1',
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
