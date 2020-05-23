@@ -10,15 +10,17 @@ describe('resolver-map/pack', function () {
       type Type {
         field: String!
       }
+
+      type OtherType {
+        noFieldResolver: String!
+      }
     `);
 
     const resolvers = {};
     const middlewares: ResolverMapMiddleware[] = [
       function (resolvers): ResolverMap {
         resolvers.Type = {};
-        // eslint-disable-next-line
-        resolvers.Type.field = () => {};
-
+        resolvers.Type.field = (): string => 'noop';
         return resolvers;
       },
     ];
@@ -28,6 +30,7 @@ describe('resolver-map/pack', function () {
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(wrappedResolvers).to.have.property('Type');
     expect(wrappedResolvers.Type).to.have.property('field');
+    expect(wrappedResolvers.OtherType).to.equal(undefined, 'type without a field resolver remains untouched');
   });
 
   it('includes the packOptions in resolver context by default', function () {

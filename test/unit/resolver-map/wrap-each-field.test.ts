@@ -2,18 +2,18 @@ import { expect } from 'chai';
 import { wrapEachField } from '../../../src/resolver-map/wrap-each-field';
 import { generatePackOptions } from '../../mocks';
 import * as sinon from 'sinon';
-import cloneDeep from 'lodash.clonedeep';
 import { GraphQLSchema, buildSchema, GraphQLResolveInfo } from 'graphql';
 import { ResolverWrapper, ResolverMap, ResolverMapMiddleware, Resolver } from '../../../src/types';
 import { SinonSpy } from 'sinon';
 
 describe('resolver-map/wrap-each-field', function () {
   let graphqlSchema: GraphQLSchema;
-  let originalResolverMap: ResolverMap<Resolver & SinonSpy>;
+  let resolverMap: ResolverMap<Resolver & SinonSpy>;
   let resolverWrapper: ResolverWrapper & SinonSpy;
   let resolverMapMiddleware: ResolverMapMiddleware;
   let wrappedResolverMap: ResolverMap;
-  let clonedResolverMap: ResolverMap;
+  let queryFieldSpy: SinonSpy;
+  let fieldResolverOnSomeTypeSpy: SinonSpy;
 
   beforeEach(() => {
     graphqlSchema = buildSchema(`
@@ -26,19 +26,18 @@ describe('resolver-map/wrap-each-field', function () {
       }
     `);
 
-    originalResolverMap = {
+    queryFieldSpy = sinon.spy();
+    fieldResolverOnSomeTypeSpy = sinon.spy();
+
+    resolverMap = {
       Query: {
-        field: sinon.spy(),
+        field: queryFieldSpy,
       },
 
       SomeType: {
-        fieldResolverOnSomeType: sinon.spy(),
+        fieldResolverOnSomeType: fieldResolverOnSomeTypeSpy,
       },
     };
-
-    // the pack process will give a deep cloned resolver map
-    // to ensure that the original isn't modified
-    clonedResolverMap = cloneDeep(originalResolverMap);
 
     resolverWrapper = sinon.spy((resolver) => {
       // returns a new function that wraps the existing resolver
@@ -46,12 +45,9 @@ describe('resolver-map/wrap-each-field', function () {
     });
   });
 
-  it('wraps each individual resolver fn in resolver map', function () {
+  it('wraps resolver functions in resolver map', () => {
     resolverMapMiddleware = wrapEachField([resolverWrapper]);
-    wrappedResolverMap = resolverMapMiddleware(
-      clonedResolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema } }),
-    );
+    wrappedResolverMap = resolverMapMiddleware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema } }));
 
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.callCount).to.equal(2, 'one wrapper for for each resolver');
@@ -75,8 +71,8 @@ describe('resolver-map/wrap-each-field', function () {
     expect(typeof wrappedResolverMap.SomeType.fieldResolverOnSomeType).to.equal('function');
 
     // initially none of the resolvers have been called
-    expect(originalResolverMap.Query.field.called).to.equal(false, 'original Query.field has not been called');
-    expect(originalResolverMap.SomeType.fieldResolverOnSomeType.called).to.equal(
+    expect(queryFieldSpy.called).to.equal(false, 'original Query.field has not been called');
+    expect(fieldResolverOnSomeTypeSpy.called).to.equal(
       false,
       'original SomeType.fieldResolverOnSomeType has not been called',
     );
@@ -95,20 +91,20 @@ describe('resolver-map/wrap-each-field', function () {
 
     // calling the wrapped functions calls the inner function
     // since the function passed to wrapEach wraps the passed in function
-    expect(originalResolverMap.Query.field.called).to.equal(true, 'original Query.field has been called');
-    expect(originalResolverMap.SomeType.fieldResolverOnSomeType.called).to.equal(
+    expect(queryFieldSpy.called).to.equal(true, 'original Query.field has been called');
+    expect(fieldResolverOnSomeTypeSpy.called).to.equal(
       true,
       'original SomeType.fieldResolverOnSomeType has been called',
     );
 
-    expect(originalResolverMap.Query.field.firstCall.args).to.deep.equal([
+    expect(queryFieldSpy.firstCall.args).to.deep.equal([
       { parent: 'query-field' },
       { args: 'query-field' },
       { context: 'query-field', pack: generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema } })) },
       { info: 'query-field' },
     ]);
 
-    expect(originalResolverMap.SomeType.fieldResolverOnSomeType.firstCall.args).to.deep.equal([
+    expect(fieldResolverOnSomeTypeSpy.firstCall.args).to.deep.equal([
       { parent: 'sometype-field-resolver' },
       { args: 'sometype-field-resolver' },
       {
