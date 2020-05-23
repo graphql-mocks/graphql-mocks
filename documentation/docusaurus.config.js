@@ -1,8 +1,8 @@
 module.exports = {
   title: 'graphql-test-resolvers',
   tagline: 'Mock GraphQL APIs',
-  url: 'https://github.com/chadian/graphql-test-resolvers',
-  baseUrl: '/',
+  url: 'https://chadian.github.io',
+  baseUrl: '/graphql-test-resolvers/',
   favicon: 'img/favicon.png',
   organizationName: 'chadian', // Usually your GitHub org/user name.
   projectName: 'graphql-test-resolvers', // Usually your repo name.
