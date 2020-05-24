@@ -15,6 +15,7 @@
   --ifm-color-primary-lighter: #ea5abb;
   --ifm-color-primary-lightest: #ef80ca;
   --ifm-code-font-size: 95%;
+  --ifm-font-family-base: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 .docusaurus-highlight-code-line {
