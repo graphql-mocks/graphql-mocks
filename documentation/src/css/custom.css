@@ -18,9 +18,77 @@
   --ifm-font-family-base: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
+p {
+  font-size: 1.2rem;
+}
+
 .docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
+  background-color: #dbdfe7;
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
+}
+
+.hero {
+  display: flex;
+  flex-direction: row;
+}
+
+.hero__logo {
+  width: 25%;
+  max-width: 350px;
+  grid-column: 1 / 5
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-left: 5rem;
+}
+
+.hero__title {
+  margin-bottom: 0.5rem;
+}
+
+.hero__subtitle {
+  font-style: italic;
+}
+
+.feature {
+  margin-top: 0;
+  margin-left: 2rem;
+  margin-right: 2rem;
+  list-style: none;
+  width: 60%;
+}
+
+.feature:not(:last-child) {
+  margin-bottom: 3rem;
+}
+
+.feature--left {
+  align-self: flex-start;
+  margin-left: 20%;
+}
+
+.feature__heading {
+  min-height: 2rem;
+  font-size: 1.6rem;
+  margin-bottom: 0;
+}
+
+.feature__dot-grid {
+  content: '';
+  display: block;
+  width: calc(100% + 20%);
+  margin-left: -10%;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  height: 2rem;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMCAwaDkuNTU2djkuODIxSDB6Ii8+PGNpcmNsZSBmaWxsPSIjRTUzNUFCIiBjeD0iNC43NzgiIGN5PSI0LjkxMSIgcj0iMSIvPjwvZz48L3N2Zz4=");
+}
+
+.feature > p {
+  font-size: 1.1rem;
 }

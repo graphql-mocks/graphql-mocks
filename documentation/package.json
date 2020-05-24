@@ -3,15 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "docusaurus start",
+    "start": "CODE_EXAMPLE_ENV=docs docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy"
+    "deploy": "docusaurus deploy",
+    "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.55",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.55",
+    "@docusaurus/core": "^2.0.0-alpha.58",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.58",
     "classnames": "^2.2.6",
+    "graphiql": "^1.0.3",
+    "graphql-mocks": "../lib",
+    "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
   },
@@ -28,6 +32,15 @@
     ]
   },
   "devDependencies": {
-    "lodash.uniq": "^4.5.0"
+    "@babel/node": "^7.10.4",
+    "@babel/register": "^7.10.4",
+    "babel-plugin-codegen": "^4.0.1",
+    "chai": "^4.2.0",
+    "core-js": "^3.6.5",
+    "globby": "^11.0.1",
+    "lodash.uniq": "^4.5.0",
+    "mocha": "^8.0.1",
+    "prettier": "^2.0.5",
+    "regenerator-runtime": "^0.13.5"
   }
 }

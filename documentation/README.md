@@ -4,37 +4,36 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ### Installation
 
-From the **root directory of `graphql-test-resolvers`**
+From the **root directory of `graphql-mocks`**
 ```
 $ yarn
 ```
 
-In the documentation directory
+In the `./documentation` directory
 ```
 $ yarn
 ```
 
 ### Local Development
 
-From the **root directory of `graphql-test-resolvers`**
+From the **root directory of `graphql-mocks`**
 ```
-$ npx typedoc
+$ yarn build-docs
 ```
 
 `typedoc` is configured from the **root** directory and generates a required `website/sidebars.js` file.
-Running this command from the **root** directory and it will drop `website/sidebars.js` and `docs/typedoc/*` markdown
-needed for docusarus2 integration.
+Running `yarn build-docs` from the **root** directory will drop `website/sidebars.js` and `docs/typedoc/*` markdown
+needed for docusarus2 integration with typedoc generated API docs.
 
-
+To start a local development server run in the `./documentation` directory
 ```
 $ yarn start
 ```
-
-This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
+After building, this command will open up a browser window. Most changes are reflected live without having to restart the server.
 
 ### Build
 
-From the **root directory of `graphql-test-resolvers`**
+From the **root directory of `graphql-mocks`**
 ```
 $ yarn build-docs
 ```

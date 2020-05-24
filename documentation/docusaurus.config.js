@@ -1,35 +1,33 @@
+const path = require('path');
+
 module.exports = {
-  title: 'graphql-test-resolvers',
-  tagline: 'Mock GraphQL APIs',
-  url: 'https://chadian.github.io',
-  baseUrl: '/graphql-test-resolvers/',
+  title: 'graphql-mocks',
+  tagline: 'Roll your own Mock GraphQL APIs',
+  url: 'http://www.graphql-mocks.com',
+  baseUrl: '/',
   favicon: 'img/favicon.png',
-  organizationName: 'chadian', // Usually your GitHub org/user name.
-  projectName: 'graphql-test-resolvers', // Usually your repo name.
+  organizationName: 'graphql-mocks',
+  projectName: 'graphql-mocks',
   themeConfig: {
     disableDarkMode: true,
+    prism: {
+      theme: require('prism-react-renderer/themes/github'),
+    },
     navbar: {
-      title: 'graphql-test-resolvers',
+      title: 'graphql-mocks',
       logo: {
-        alt: 'graphql-test-resolvers logo',
+        alt: 'graphql-mocks logo',
         src: 'img/logo.svg',
       },
       links: [
         {
-          to: 'docs/introduction',
+          to: 'docs/getting-started/introduction',
           label: 'Docs',
           position: 'right',
-          // activeBaseRegex: 'docs/(?!api-quick-start)',
           activeBaseRegex: 'docs/(?!(typedoc|api-quick-start))',
         },
         {
-          to: 'docs/api-quick-start',
-          label: 'API',
-          position: 'right',
-          activeBaseRegex: 'docs/(typedoc|api-quick-start)',
-        },
-        {
-          href: 'https://github.com/chadian/graphql-test-resolvers',
+          href: 'https://github.com/chadian/graphql-mocks',
           label: 'GitHub',
           position: 'right',
         },
@@ -38,7 +36,7 @@ module.exports = {
     footer: {
       style: 'dark',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} <a href="http://www.sticksnglue.com">sticksnglue</a>`,
+      copyright: `Copyright © ${new Date().getFullYear()} by <a href="https://www.github.com/chadian">chadian</a>`,
     },
   },
   presets: [
@@ -47,7 +45,7 @@ module.exports = {
       {
         docs: {
           // It is recommended to set document id as docs home page (`docs/` path).
-          homePageId: 'doc1',
+          // homePageId: 'doc1',
           sidebarPath: require.resolve('./sidebars.js'),
         },
         theme: {
@@ -56,4 +54,5 @@ module.exports = {
       },
     ],
   ],
+  plugins: [path.resolve(__dirname, './plugins/docusaurus-load-examples.js')],
 };
