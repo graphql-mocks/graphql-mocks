@@ -3,7 +3,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { wrapEachField } from './wrap-each-field';
 import { embedPackOptionsWrapper } from '../utils';
 
-const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
+export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
 export const pack: Packer = (initialResolversMap = {}, middlewares = [], packOptions = defaultPackOptions) => {
   middlewares = [...middlewares, wrapEachField([embedPackOptionsWrapper])];
