@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { graphqlSchema } from './test-helpers/executable-schema';
+import { graphqlSchema } from './test-helpers/test-schema';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';

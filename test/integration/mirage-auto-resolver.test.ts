@@ -5,7 +5,7 @@ import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
 import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
-import { graphqlSchema } from './test-helpers/executable-schema';
+import { graphqlSchema } from './test-helpers/test-schema';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { ResolverMap } from '../../src/types';
 import { createQueryHandler } from '../../src/graphql';
