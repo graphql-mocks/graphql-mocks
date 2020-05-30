@@ -1,22 +1,17 @@
 import { expect } from 'chai';
-import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
+import { graphqlSchema } from './test-helpers/executable-schema';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
-import { pack } from '../../src/resolver-map/pack';
-import { ResolverMapMiddleware } from '../../src/types';
+import { createQueryHandler } from '../../src/graphql';
 
-const emptyMiddlewares: ResolverMapMiddleware[] = [];
-
-const { resolverMap } = pack(defaultResolvers, emptyMiddlewares, {
+const { query: graphQLHandler } = createQueryHandler(defaultResolvers, {
   state: {},
   dependencies: {
     mirageServer,
     graphqlSchema,
   },
 });
-
-const graphQLHandler = buildHandler(resolverMap);
 
 describe('it can resolve from basic resolvers', function () {
   beforeEach(() => {
