@@ -32,7 +32,7 @@ export type ResolverWrapperOptions = {
 export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeResolver<any, any>> = {
   [typeName: string]: {
     [fieldName: string]: TFieldResolver;
-  } & { __resolveType?: TTypeResolver };
+  } & { __resolveType?: TTypeResolver }; // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
 };
 
 export type PackState = Record<any, any>;

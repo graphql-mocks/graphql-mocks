@@ -5,12 +5,12 @@ import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
 import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
-import { buildHandler, graphqlSchema } from './test-helpers/executable-schema';
-import { pack } from '../../src/resolver-map/pack';
+import { graphqlSchema } from './test-helpers/test-schema';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { ResolverMap } from '../../src/types';
+import { createQueryHandler } from '../../src/graphql';
 
-describe('auto resolving from mirage', function () {
+describe('integration/mirage-auto-resolver', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let graphQLHandler: any;
   let resolvers: ResolverMap;
@@ -25,29 +25,23 @@ describe('auto resolving from mirage', function () {
 
     mirageServer.db.loadData(defaultScenario);
     const middlewares = [patchModelTypes, patchUnionsInterfaces];
-    const packed = pack(defaultResolvers, middlewares, {
+    const handler = createQueryHandler(defaultResolvers, {
+      state: {},
+      middlewares,
       dependencies: {
         mapper,
         mirageServer,
         graphqlSchema: graphqlSchema,
       },
     });
-    resolvers = packed.resolverMap;
-    graphQLHandler = buildHandler(resolvers);
+
+    graphQLHandler = handler.query;
   });
 
   this.afterEach(() => {
     mirageServer.db.emptyData();
     (resolvers as unknown) = undefined;
     graphQLHandler = undefined;
-  });
-
-  it('has missing resolvers that are filled by #patchWithAutoResolvers', function () {
-    expect(defaultResolvers.Post).to.equal(undefined);
-    expect(resolvers.Post).to.not.equal(undefined);
-
-    expect(defaultResolvers.Comment).to.equal(undefined);
-    expect(resolvers.Comment).to.not.equal(undefined);
   });
 
   it('can handle a type look up', async function () {
