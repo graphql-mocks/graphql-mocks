@@ -7,6 +7,7 @@ module.exports = {
   organizationName: 'chadian', // Usually your GitHub org/user name.
   projectName: 'graphql-test-resolvers', // Usually your repo name.
   themeConfig: {
+    disableDarkMode: true,
     navbar: {
       title: 'graphql-test-resolvers',
       logo: {
@@ -17,14 +18,14 @@ module.exports = {
         {
           to: 'docs/introduction',
           label: 'Docs',
-          position: 'left',
+          position: 'right',
           // activeBaseRegex: 'docs/(?!api-quick-start)',
           activeBaseRegex: 'docs/(?!(typedoc|api-quick-start))',
         },
         {
           to: 'docs/api-quick-start',
           label: 'API',
-          position: 'left',
+          position: 'right',
           activeBaseRegex: 'docs/(typedoc|api-quick-start)',
         },
         {
