@@ -1,54 +1,145 @@
-export type GraphQLMirageMapping = {
-  graphql: MappingDefinition;
-  mirage: MappingDefinition;
+import { ModelInstance } from 'miragejs';
+import { GraphQLFieldResolver } from 'graphql';
+import { PackOptions } from '../types';
+
+export type TypeName = string;
+export type FieldName = string;
+export type ModelName = string;
+export type AttrName = string;
+
+export type TypeMap = {
+  graphql: TypeName;
+  mirage: ModelName;
 };
 
-export type MappingDefinition = [string] | [string, string];
-export type EmptyMappingDefinition = [undefined] | [undefined, undefined];
+export type FieldMap = {
+  graphql: [TypeName, FieldName];
+  mirage: [ModelName, AttrName];
+};
+
+export type FilterCallbackOptions = {
+  resolverParams: Parameters<GraphQLFieldResolver<unknown, unknown>>;
+  packOptions: PackOptions;
+};
+
+export type FilterCallback = (
+  models: ModelInstance[],
+  resolverArgs: Record<string, unknown>,
+  options: FilterCallbackOptions,
+) => ModelInstance[];
+
+export type FieldFilterMap = {
+  graphql: [TypeName, FieldName];
+  filterBy: string | FilterCallback;
+};
+
+function assertValidTupleDef(def: unknown): void {
+  if (!Array.isArray(def)) {
+    throw new TypeError(
+      `Definition must be an array with two strings: ['typeName', 'fieldName'] or ['modelName', 'attrName']`,
+    );
+  }
+
+  const hasStringValues = def.every((value: unknown) => typeof value === 'string');
+  if (!hasStringValues) {
+    throw new TypeError(`Each value in array definition must be a string`);
+  }
+
+  if (def.length !== 2) {
+    throw new TypeError(`Definition must contain two strings, got a length of ${def.length}`);
+  }
+}
 
 export class MirageGraphQLMapper {
-  readonly mappings: GraphQLMirageMapping[] = [];
+  readonly typeMappings: TypeMap[] = [];
+  readonly fieldMappings: FieldMap[] = [];
+  readonly fieldFilterMappings: FieldFilterMap[] = [];
 
-  add(graphql: MappingDefinition, mirage: MappingDefinition): MirageGraphQLMapper {
-    if (graphql.length !== mirage.length || (graphql.length !== 1 && graphql.length !== 2)) {
-      throw new Error('Mappings must mirror each other, [Type, field] <=> [Model, attr] or [Type] <=> [Model]');
+  mapType(typeName: TypeName, modelName: ModelName): MirageGraphQLMapper {
+    if (typeof typeName !== 'string') {
+      throw new TypeError(`First argument must be a string representing the GraphQL type name, got ${typeof typeName}`);
     }
 
-    this.mappings.push({ graphql, mirage });
+    if (typeof modelName !== 'string') {
+      throw new TypeError(
+        `Second argument must be a string representing the Mirage model name, got ${typeof modelName}`,
+      );
+    }
+
+    this.typeMappings.push({ graphql: typeName, mirage: modelName });
+
     return this;
   }
 
-  matchForMirage([modelToMatch, attrToMatch]: MappingDefinition): MappingDefinition | EmptyMappingDefinition {
-    const mappings = this.mappings;
-
-    const match = mappings.find(({ mirage: [model, attr] }) => {
-      const matchingModel = model === modelToMatch;
-      const matchingAttr = attr ? attr === attrToMatch : true;
-
-      return matchingModel && matchingAttr;
-    });
-
-    if (!match) {
-      return attrToMatch ? [undefined, undefined] : [undefined];
+  mapField(graphqlDef: [TypeName, FieldName], mirageDef: [ModelName, AttrName]): MirageGraphQLMapper {
+    try {
+      assertValidTupleDef(graphqlDef);
+    } catch (error) {
+      throw new Error(`Unable to use first argument GraphQL Definition: ${error.message}`);
     }
 
-    return match.graphql;
+    try {
+      assertValidTupleDef(mirageDef);
+    } catch (error) {
+      throw new Error(`Unable to use second argument Mirage Definition: ${error.message}`);
+    }
+
+    this.fieldMappings.push({ graphql: graphqlDef, mirage: mirageDef });
+
+    return this;
   }
 
-  matchForGraphQL([typeToMatch, fieldToMatch]: MappingDefinition): MappingDefinition | EmptyMappingDefinition {
-    const mappings = this.mappings;
+  addFieldFilter(graphqlDef: [TypeName, FieldName], filterBy: string | FilterCallback): MirageGraphQLMapper {
+    assertValidTupleDef(graphqlDef);
 
-    const match = mappings.find(({ graphql: [type, field] }) => {
-      const matchingType = type === typeToMatch;
-      const matchingField = field ? field === fieldToMatch : true;
-
-      return matchingType && matchingField;
-    });
-
-    if (!match) {
-      return fieldToMatch ? [undefined, undefined] : [undefined];
+    if (typeof filterBy !== 'string' || typeof filterBy !== 'function') {
+      throw new Error(`Second argument, filterBy, must be either a string or function, got ${typeof filterBy}`);
     }
 
-    return match.mirage;
+    this.fieldFilterMappings.push({ graphql: graphqlDef, filterBy });
+
+    return this;
+  }
+
+  mappingForModel(modelNameToMatch: string): TypeName | undefined {
+    const mappings = this.typeMappings;
+
+    const match = mappings.find(({ mirage: modelName }) => {
+      return modelName === modelNameToMatch;
+    });
+
+    return match?.graphql;
+  }
+
+  mappingForAttr(mirageDef: [ModelName, AttrName]): [TypeName, FieldName] | undefined {
+    assertValidTupleDef(mirageDef);
+    const mappings = this.fieldMappings;
+
+    const match = mappings.find(({ mirage: [modelName, attrName] }) => {
+      return modelName === mirageDef[0] && attrName === mirageDef[1];
+    });
+
+    return match?.graphql;
+  }
+
+  mappingForType(typeNameToMatch: string): ModelName | undefined {
+    const mappings = this.typeMappings;
+
+    const match = mappings.find(({ graphql: typeName }) => {
+      return typeName === typeNameToMatch;
+    });
+
+    return match?.mirage;
+  }
+
+  mappingForField(graphqlDef: [TypeName, FieldName]): [ModelName, AttrName] | undefined {
+    assertValidTupleDef(graphqlDef);
+    const mappings = this.fieldMappings;
+
+    const match = mappings.find(({ graphql: [typeName, fieldName] }) => {
+      return typeName === graphqlDef[0] && fieldName === graphqlDef[1];
+    });
+
+    return match?.mirage;
   }
 }

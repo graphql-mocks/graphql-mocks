@@ -73,7 +73,7 @@ describe('mirage/resolvers/union', function () {
   });
 
   it('resolves an union to a type by mapper', async function () {
-    const mapper = new MirageGraphQLMapper().add(['Feline'], ['Cat']);
+    const mapper = new MirageGraphQLMapper().mapType('Feline', 'Cat');
     const context = {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { mapper, graphqlSchema: schema } }),

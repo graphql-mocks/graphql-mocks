@@ -13,7 +13,9 @@ export const mirageObjectResolver: Resolver = function (parent, _args, context, 
     );
   }
 
-  const [, mappedAttrName] = mapper ? mapper.matchForGraphQL([parentType.name, fieldName]) : [undefined, undefined];
+  const mapping = mapper && mapper.mappingForField([parentType.name, fieldName]);
+  const mappedAttrName = mapping ? mapping[1] : undefined;
+
   const candidates = [mappedAttrName, fieldName].filter(Boolean) as string[];
   const matchedAttr = candidates.find((candidate) => candidate in parent);
   const value = (matchedAttr && parent[matchedAttr]) ?? undefined;

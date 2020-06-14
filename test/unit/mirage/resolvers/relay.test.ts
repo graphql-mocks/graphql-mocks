@@ -74,7 +74,7 @@ describe('mirage/relay', () => {
       },
     });
 
-    mapper = new MirageGraphQLMapper().add(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
+    mapper = new MirageGraphQLMapper().mapField(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
 
     meowSpell = mirageServer.schema.create('spell', {
       id: '1',

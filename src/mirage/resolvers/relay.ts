@@ -36,10 +36,10 @@ export async function mirageRelayResolver(
 
 export function extractNodesFromParent<T>({ parent, parentType, mapper, fieldName }: ExtractionArgs): T[] {
   const unwrappedParentType = unwrap(parentType);
-  const [, mappedAttrName] =
-    mapper && 'name' in unwrappedParentType
-      ? mapper.matchForGraphQL([unwrappedParentType.name, fieldName])
-      : [undefined, undefined];
+
+  const attrMapping =
+    mapper && 'name' in unwrappedParentType ? mapper.mappingForField([unwrappedParentType.name, fieldName]) : undefined;
+  const mappedAttrName = attrMapping ? attrMapping[1] : undefined;
 
   const parentAttributeCandidates = [mappedAttrName, fieldName].filter(Boolean);
   const matchingAttr = parentAttributeCandidates.find((attr) => attr && parent[attr]);
