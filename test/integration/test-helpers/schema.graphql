@@ -15,6 +15,7 @@ type Person {
   fullName: String!
   age: Int!
   friends: [Person!]!
+  friendsByAgeRange(minimum: Int!, maximum: Int!): [Person!]!
   posts: [Post!]!
   transportation: Transportation!
   hobbies: [Hobby!]!

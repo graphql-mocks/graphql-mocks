@@ -1,9 +1,10 @@
 import { Resolver } from '../../types';
-import { GraphQLNonNull } from 'graphql';
+import { GraphQLNonNull, isListType, isNonNullType } from 'graphql';
 import { extractDependencies } from '../../utils';
-import { MirageGraphQLMapper } from '../mapper';
+import { MirageGraphQLMapper, FieldFilterOptions } from '../mapper';
+import { filterModels } from './helpers';
 
-export const mirageObjectResolver: Resolver = function (parent, _args, context, info) {
+export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
 
@@ -22,7 +23,18 @@ export const mirageObjectResolver: Resolver = function (parent, _args, context, 
 
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist
-  const result = value?.models || value;
+  let result = value?.models || value;
+
+  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
+  const hasListReturnType = isListType(returnType) || (isNonNullType(returnType) && isListType(returnType.ofType));
+
+  if (fieldFilter && Array.isArray(result) && hasListReturnType) {
+    result = filterModels(result, fieldFilter, {
+      // eslint-disable-next-line prefer-rest-params
+      resolverParams: [parent, args, context, info] as FieldFilterOptions['resolverParams'],
+      packOptions: context.packOptions,
+    });
+  }
 
   if (result == null) {
     if (returnType instanceof GraphQLNonNull) {

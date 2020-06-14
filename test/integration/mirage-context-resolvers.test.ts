@@ -75,11 +75,15 @@ describe('it can resolve from basic resolvers', function () {
           friends: [
             {
               name: 'Barney Rubble',
-              age: 40,
+              age: 42,
             },
             {
               name: 'Wilma Flinstone',
               age: 40,
+            },
+            {
+              name: 'Betty Rubble',
+              age: 39,
             },
           ],
         },

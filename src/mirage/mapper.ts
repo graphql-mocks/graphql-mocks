@@ -1,5 +1,5 @@
 import { ModelInstance } from 'miragejs';
-import { GraphQLFieldResolver } from 'graphql';
+import { GraphQLResolveInfo } from 'graphql';
 import { PackOptions } from '../types';
 
 export type TypeName = string;
@@ -17,20 +17,22 @@ export type FieldMap = {
   mirage: [ModelName, AttrName];
 };
 
-export type FilterCallbackOptions = {
-  resolverParams: Parameters<GraphQLFieldResolver<unknown, unknown>>;
+export type FieldFilterOptions = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  resolverParams: [any, Record<string, any>, Record<string, any>, GraphQLResolveInfo];
   packOptions: PackOptions;
 };
 
-export type FilterCallback = (
+export type FieldFilter = (
   models: ModelInstance[],
-  resolverArgs: Record<string, unknown>,
-  options: FilterCallbackOptions,
-) => ModelInstance[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  args: Record<string, any>,
+  options: FieldFilterOptions,
+) => ModelInstance[] | undefined;
 
 export type FieldFilterMap = {
   graphql: [TypeName, FieldName];
-  filterBy: string | FilterCallback;
+  filter: FieldFilter;
 };
 
 function assertValidTupleDef(def: unknown): void {
@@ -89,14 +91,14 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  addFieldFilter(graphqlDef: [TypeName, FieldName], filterBy: string | FilterCallback): MirageGraphQLMapper {
+  addFieldFilter(graphqlDef: [TypeName, FieldName], filter: FieldFilter): MirageGraphQLMapper {
     assertValidTupleDef(graphqlDef);
 
-    if (typeof filterBy !== 'string' || typeof filterBy !== 'function') {
-      throw new Error(`Second argument, filterBy, must be either a string or function, got ${typeof filterBy}`);
+    if (typeof filter !== 'function') {
+      throw new Error(`Second argument, filterBy, must be a function, got ${typeof filter}`);
     }
 
-    this.fieldFilterMappings.push({ graphql: graphqlDef, filterBy });
+    this.fieldFilterMappings.push({ graphql: graphqlDef, filter });
 
     return this;
   }
@@ -141,5 +143,16 @@ export class MirageGraphQLMapper {
     });
 
     return match?.mirage;
+  }
+
+  findFieldFilter(graphqlDef: [TypeName, FieldName]): FieldFilter | undefined {
+    assertValidTupleDef(graphqlDef);
+    const mappings = this.fieldFilterMappings;
+
+    const match = mappings.find(({ graphql: [typeName, fieldName] }) => {
+      return typeName === graphqlDef[0] && fieldName === graphqlDef[1];
+    });
+
+    return match?.filter;
   }
 }

@@ -21,7 +21,12 @@ describe('integration/mirage-auto-resolver', function () {
       .mapType('AthleticHobby', 'SportsHobby')
       .mapType('Automobile', 'Car')
       .mapField(['Person', 'paginatedFriends'], ['Person', 'friends'])
-      .mapField(['Person', 'fullName'], ['Person', 'name']);
+      .mapField(['Person', 'fullName'], ['Person', 'name'])
+      .mapField(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
+      .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, { minimum, maximum }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return personModels.filter((model: any) => model.age >= minimum && model.age <= maximum);
+      });
 
     mirageServer.db.loadData(defaultScenario);
     const middlewares = [patchModelTypes, patchUnionsInterfaces];
@@ -96,6 +101,32 @@ describe('integration/mirage-auto-resolver', function () {
           id: '1',
           name: 'Fred Flinstone',
           fullName: 'Fred Flinstone',
+        },
+      },
+    });
+  });
+
+  it('can filter results by mirage mapper field filter', async function () {
+    const query = `query {
+      person(id: 1) {
+        friendsByAgeRange(minimum: 39, maximum: 41) {
+          name
+        }
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    expect(result).to.deep.equal({
+      data: {
+        person: {
+          friendsByAgeRange: [
+            {
+              name: 'Wilma Flinstone',
+            },
+            {
+              name: 'Betty Rubble',
+            },
+          ],
         },
       },
     });
