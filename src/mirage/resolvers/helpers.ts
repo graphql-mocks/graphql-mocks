@@ -45,6 +45,5 @@ export function filterModels(
   filterOptions: FieldFilterOptions,
 ): ModelInstance[] {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  models = filter(models, filterOptions.resolverParams[1], filterOptions) ?? [];
-  return models;
+  return filter(models, filterOptions.resolverParams[1], filterOptions);
 }

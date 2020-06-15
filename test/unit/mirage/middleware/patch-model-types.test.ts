@@ -5,7 +5,7 @@ import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
-describe('mirage/middleware/patch-auto-types', function () {
+describe('mirage/middleware/patch-model-types', function () {
   let resolverMap: ResolverMap;
   let schema: GraphQLSchema;
 
@@ -99,23 +99,8 @@ describe('mirage/middleware/patch-auto-types', function () {
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
 
-    expect(wrappedResolvers?.Query.spells).to.not.exist;
-    expect(wrappedResolvers?.Query.potions).to.not.exist;
-    expect(wrappedResolvers?.Mutation?.addSpell).to.not.exist;
-  });
-
-  it('skips missing root query and mutation field resolvers', async function () {
-    expect(resolverMap?.Query.spells).to.not.exist;
-    expect(resolverMap?.Query.potions).to.not.exist;
-    expect(resolverMap?.Mutation?.addSpell).to.not.exist;
-
-    const wrappedResolvers = patchModelTypes(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
-
-    expect(wrappedResolvers?.Query.spells).to.not.exist;
-    expect(wrappedResolvers?.Query.potions).to.not.exist;
+    expect(wrappedResolvers?.Query.spells).to.exist;
+    expect(wrappedResolvers?.Query.potions).to.exist;
     expect(wrappedResolvers?.Mutation?.addSpell).to.not.exist;
   });
 });

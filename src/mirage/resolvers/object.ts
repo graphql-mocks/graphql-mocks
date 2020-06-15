@@ -1,5 +1,5 @@
 import { Resolver } from '../../types';
-import { GraphQLNonNull, isListType, isNonNullType } from 'graphql';
+import { isListType, isNonNullType } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper, FieldFilterOptions } from '../mapper';
 import { filterModels } from './helpers';
@@ -17,8 +17,8 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
   const mapping = mapper && mapper.mappingForField([parentType.name, fieldName]);
   const mappedAttrName = mapping ? mapping[1] : undefined;
 
-  const candidates = [mappedAttrName, fieldName].filter(Boolean) as string[];
-  const matchedAttr = candidates.find((candidate) => candidate in parent);
+  const fieldCandidates = [mappedAttrName, fieldName].filter(Boolean) as string[];
+  const matchedAttr = fieldCandidates.find((candidate) => candidate in parent);
   const value = (matchedAttr && parent[matchedAttr]) ?? undefined;
 
   // if this is a mirage model we check for the models as that is where
@@ -28,26 +28,48 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
   const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
   const hasListReturnType = isListType(returnType) || (isNonNullType(returnType) && isListType(returnType.ofType));
 
-  if (fieldFilter && Array.isArray(result) && hasListReturnType) {
-    result = filterModels(result, fieldFilter, {
+  if (fieldFilter) {
+    const currentResults = Array.isArray(result) ? [...result] : [result];
+    result = filterModels(currentResults, fieldFilter, {
       // eslint-disable-next-line prefer-rest-params
       resolverParams: [parent, args, context, info] as FieldFilterOptions['resolverParams'],
       packOptions: context.packOptions,
     });
   }
 
-  if (result == null) {
-    if (returnType instanceof GraphQLNonNull) {
+  // coerce into a singular result if return type does not include a list
+  if (!hasListReturnType && Array.isArray(result)) {
+    if (result.length > 1) {
+      const fieldFilterErrorMessage = fieldFilter
+        ? 'Unable to determine the singular result when an array is returned with more than one result'
+        : 'Add a fieldFilter to narrow the results';
+
       throw new Error(
-        `Failed to resolve field "${fieldName}" on type "${
-          parentType.name
-        }". Tried to resolve the parent object ${parent.toString()}, with the following attrs: ${candidates.join(
-          ', ',
-        )}`,
+        `Unable to determine a singular result for ${parentType.name}.${fieldName}. ${fieldFilterErrorMessage}`,
       );
     }
 
-    return null;
+    result = result[0];
+  }
+
+  // coerce a non-null singular result into a list
+  if (hasListReturnType && !Array.isArray(result) && result != null) {
+    result = [result];
+  }
+
+  if (result == null && isNonNullType(returnType)) {
+    const usedMapping = Boolean(mapping);
+    let additionalHelp;
+    if (usedMapping) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const mappedModelName = mapping![0];
+      const fieldsTried = (fieldCandidates || []).join(', ');
+      additionalHelp = `Tried the following ${fieldsTried} on the parent. If the parent is a model of ${mappedModelName} then double-check that the attr "${mappedAttrName}" exists on the model or fix the field mapping.`;
+    } else {
+      additionalHelp = `If the parent is a mirage model, it does not have a "${fieldName}" attr. Consider adding a field mapping.`;
+    }
+
+    throw new Error(`Failed to resolve field "${fieldName}" on type "${parentType.name}". ${additionalHelp}`);
   }
 
   return result;

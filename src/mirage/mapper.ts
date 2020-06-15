@@ -1,4 +1,3 @@
-import { ModelInstance } from 'miragejs';
 import { GraphQLResolveInfo } from 'graphql';
 import { PackOptions } from '../types';
 
@@ -24,11 +23,12 @@ export type FieldFilterOptions = {
 };
 
 export type FieldFilter = (
-  models: ModelInstance[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  models: any[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   args: Record<string, any>,
   options: FieldFilterOptions,
-) => ModelInstance[] | undefined;
+) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type FieldFilterMap = {
   graphql: [TypeName, FieldName];

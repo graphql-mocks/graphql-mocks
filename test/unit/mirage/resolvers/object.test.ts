@@ -117,7 +117,7 @@ describe('mirage/resolvers/object', function () {
     };
 
     expect(() => mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo)).to.throw(
-      'Failed to resolve field "name" on type "User". Tried to resolve the parent object model:user(1), with the following attrs: name',
+      'Failed to resolve field "name" on type "User". If the parent is a mirage model, it does not have a "name" attr. Consider adding a field mapping.',
     );
   });
 
