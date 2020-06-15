@@ -4,7 +4,7 @@ import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
 import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
 import { server as mirageServer } from './test-helpers/mirage-sample';
-import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
+import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { ResolverMap } from '../../src/types';
