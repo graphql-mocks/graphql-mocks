@@ -2,11 +2,9 @@ import { Server as MirageServer } from 'miragejs';
 import { isListType, isNonNullType, isScalarType } from 'graphql';
 import { Resolver } from '../../types';
 import { extractDependencies, unwrap } from '../../utils';
-import { MirageGraphQLMapper, FieldFilterOptions } from '../mapper';
-import { filterModels } from './helpers';
+import { MirageGraphQLMapper } from '../mapper';
 
 export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
-  const resolverParams = [parent, args, context, info];
   const { returnType, fieldName, parentType } = info;
   const unwrappedReturnType = unwrap(returnType);
   const { mapper, mirageServer } = extractDependencies<{ mapper: MirageGraphQLMapper; mirageServer: MirageServer }>(
@@ -55,10 +53,7 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
     // pass in the current result to field filter
     // replace result with whatever is returned from filterModels
     const currentResults = Array.isArray(result) ? [...result] : [result];
-    result = filterModels(currentResults, fieldFilter, {
-      resolverParams: resolverParams as FieldFilterOptions['resolverParams'],
-      packOptions: context.packOptions,
-    });
+    result = fieldFilter(currentResults, parent, args, context, info);
 
     if (result == null && isNonNullType(returnType)) {
       throw new Error(`fieldFilter for "${parentType.name}.${fieldName}" returned null for a non-null type.`);

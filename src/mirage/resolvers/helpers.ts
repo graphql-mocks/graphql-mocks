@@ -1,8 +1,6 @@
-import { ModelInstance } from 'miragejs';
 import intersection from 'lodash.intersection';
 import { GraphQLObjectType } from 'graphql';
 import { classify } from 'inflected';
-import { FieldFilter, FieldFilterOptions } from '../mapper';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {
@@ -36,14 +34,6 @@ export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]
   return matchedTypes.pop()?.name;
 }
 
-export const modelNameToTypeName = (modelName: 'string'): string | undefined =>
-  typeof modelName === 'string' ? classify(modelName.replace('-', '_')) : undefined;
-
-export function filterModels(
-  models: ModelInstance[],
-  filter: FieldFilter,
-  filterOptions: FieldFilterOptions,
-): ModelInstance[] {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return filter(models, filterOptions.resolverParams[1], filterOptions);
+export function modelNameToTypeName(modelName: 'string'): string | undefined {
+  return typeof modelName === 'string' ? classify(modelName.replace('-', '_')) : undefined;
 }

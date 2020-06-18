@@ -1,5 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { PackOptions } from '../types';
+import { Resolver } from '../types';
 
 export type TypeName = string;
 export type FieldName = string;
@@ -16,23 +15,17 @@ export type FieldMap = {
   mirage: [ModelName, AttrName];
 };
 
-export type FieldFilterOptions = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  resolverParams: [any, Record<string, any>, Record<string, any>, GraphQLResolveInfo];
-  packOptions: PackOptions;
-};
-
-export type FieldFilter = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FieldFilterResolver = (
   models: any[],
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  args: Record<string, any>,
-  options: FieldFilterOptions,
+  parent: Parameters<Resolver>[0],
+  args: Parameters<Resolver>[1],
+  context: Parameters<Resolver>[2],
+  info: Parameters<Resolver>[3],
 ) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type FieldFilterMap = {
   graphql: [TypeName, FieldName];
-  filter: FieldFilter;
+  filter: FieldFilterResolver;
 };
 
 function assertValidTupleDef(def: unknown): void {
@@ -91,7 +84,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  addFieldFilter(graphqlDef: [TypeName, FieldName], filter: FieldFilter): MirageGraphQLMapper {
+  addFieldFilter(graphqlDef: [TypeName, FieldName], filter: FieldFilterResolver): MirageGraphQLMapper {
     assertValidTupleDef(graphqlDef);
 
     if (typeof filter !== 'function') {
@@ -145,7 +138,7 @@ export class MirageGraphQLMapper {
     return match?.mirage;
   }
 
-  findFieldFilter(graphqlDef: [TypeName, FieldName]): FieldFilter | undefined {
+  findFieldFilter(graphqlDef: [TypeName, FieldName]): FieldFilterResolver | undefined {
     assertValidTupleDef(graphqlDef);
     const mappings = this.fieldFilterMappings;
 

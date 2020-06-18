@@ -23,7 +23,7 @@ describe('integration/mirage-auto-resolver', function () {
       .mapField(['Person', 'paginatedFriends'], ['Person', 'friends'])
       .mapField(['Person', 'fullName'], ['Person', 'name'])
       .mapField(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
-      .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, { minimum, maximum }) => {
+      .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, _parent, { minimum, maximum }) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return personModels.filter((model: any) => model.age >= minimum && model.age <= maximum);
       });

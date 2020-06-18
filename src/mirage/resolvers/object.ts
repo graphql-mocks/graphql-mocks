@@ -1,8 +1,7 @@
 import { Resolver } from '../../types';
 import { isListType, isNonNullType } from 'graphql';
 import { extractDependencies } from '../../utils';
-import { MirageGraphQLMapper, FieldFilterOptions } from '../mapper';
-import { filterModels } from './helpers';
+import { MirageGraphQLMapper } from '../mapper';
 
 export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
@@ -30,11 +29,7 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
 
   if (fieldFilter) {
     const currentResults = Array.isArray(result) ? [...result] : [result];
-    result = filterModels(currentResults, fieldFilter, {
-      // eslint-disable-next-line prefer-rest-params
-      resolverParams: [parent, args, context, info] as FieldFilterOptions['resolverParams'],
-      packOptions: context.packOptions,
-    });
+    result = fieldFilter(currentResults, parent, args, context, info);
   }
 
   // coerce into a singular result if return type does not include a list
