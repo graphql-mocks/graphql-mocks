@@ -1,6 +1,6 @@
 import { mirageRelayResolver } from '../../../../src/mirage/resolvers/relay';
 import { expect } from 'chai';
-import { buildSchema, GraphQLObjectType } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLResolveInfo, GraphQLSchema } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
@@ -124,6 +124,7 @@ describe('mirage/relay', () => {
         dependencies: {
           mirageServer,
           mapper,
+          graphqlSchema,
         },
       },
     };
@@ -138,7 +139,7 @@ describe('mirage/relay', () => {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
-    });
+    } as GraphQLResolveInfo);
 
     expect(result.edges[0].node).to.deep.equal(meowSpell);
     expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -157,7 +158,7 @@ describe('mirage/relay', () => {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
-    });
+    } as GraphQLResolveInfo);
 
     expect(result.edges[0].node).to.deep.equal(meowSpell);
     expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -181,7 +182,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(imperioSpell);
       expect(result.edges[1].node).to.deep.equal(abertoSpell);
@@ -201,7 +202,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(abertoSpell);
       expect(result.edges[1].node).to.deep.equal(morsmordreSpell);
@@ -220,7 +221,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(meowSpell);
       expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -240,7 +241,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges.length).to.equal(0);
       expect(result.pageInfo.hasNextPage).to.equal(false);
@@ -261,7 +262,7 @@ describe('mirage/relay', () => {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
         e = error;
       }
@@ -279,7 +280,7 @@ describe('mirage/relay', () => {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
         expect(error.message).to.equal('`first` argument must be greater than or equal to 0');
         return;
@@ -300,7 +301,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(imperioSpell);
       expect(result.edges[1].node).to.deep.equal(abertoSpell);
@@ -319,7 +320,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(abertoSpell);
       expect(result.edges[1].node).to.deep.equal(morsmordreSpell);
@@ -339,7 +340,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(meowSpell);
       expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -359,7 +360,7 @@ describe('mirage/relay', () => {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges.length).to.equal(0);
       expect(result.pageInfo.hasNextPage).to.equal(true);
@@ -380,7 +381,7 @@ describe('mirage/relay', () => {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (e) {
         error = e;
       }
@@ -399,7 +400,7 @@ describe('mirage/relay', () => {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
         e = error;
       }
@@ -429,7 +430,7 @@ describe('mirage/relay', () => {
           fieldName: mappedGraphQLField,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,
-        });
+        } as GraphQLResolveInfo);
 
         expect(result.edges[0].node).to.deep.equal(abertoSpell);
         expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -448,7 +449,7 @@ describe('mirage/relay', () => {
           fieldName: matchingFieldAndAttrName,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,
-        });
+        } as GraphQLResolveInfo);
 
         expect(result.edges[0].node).to.deep.equal(abertoSpell);
         expect(result.edges[1].node).to.deep.equal(abraSpell);

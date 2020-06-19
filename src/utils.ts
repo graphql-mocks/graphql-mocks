@@ -108,3 +108,13 @@ export function addResolverToMap({
   resolverMap[typeName][fieldName] = resolver;
   return resolverMap;
 }
+
+export function isRootQueryType(type: GraphQLType | string, schema: GraphQLSchema): boolean {
+  if (typeof type !== 'string' && !('name' in type)) {
+    return false;
+  }
+
+  const rootQueryTypeName = schema.getQueryType()?.name;
+  const typeName = typeof type === 'string' ? type : type.name;
+  return typeName === rootQueryTypeName;
+}
