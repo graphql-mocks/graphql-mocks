@@ -1,11 +1,10 @@
 import { mirageObjectResolver } from '../resolvers/object';
-import { mirageRelayResolver } from '../resolvers/relay';
 import { mirageRootQueryResolver } from '../resolvers/root-query';
 import { patchEachField } from '../../resolver-map/patch-each-field';
-import { unwrap, isRootQueryType } from '../../utils';
-import { GraphQLObjectType, GraphQLField, GraphQLSchema } from 'graphql';
+import { isRootQueryType } from '../../utils';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
-export const patchModelTypes = patchEachField(({ type, field, packOptions }) => {
+export const patchModelTypes = patchEachField(({ type, packOptions }) => {
   const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
   const rootMutationTypeName = schema.getMutationType()?.name;
   const isRootQuery = isRootQueryType(type, schema);
@@ -14,13 +13,6 @@ export const patchModelTypes = patchEachField(({ type, field, packOptions }) => 
 
   if (!(type instanceof GraphQLObjectType)) {
     throw new TypeError('field must be an instanceof GraphQLField for patching');
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const unwrappedReturnType = unwrap((field as GraphQLField<any, any>).type);
-
-  if ('name' in unwrappedReturnType && unwrappedReturnType.name.endsWith('Connection')) {
-    return mirageRelayResolver;
   }
 
   if (isRootQuery) {

@@ -16,7 +16,8 @@ export type FieldMap = {
 };
 
 export type FieldFilterResolver = (
-  models: any[],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  results: any[],
   parent: Parameters<Resolver>[0],
   args: Parameters<Resolver>[1],
   context: Parameters<Resolver>[2],

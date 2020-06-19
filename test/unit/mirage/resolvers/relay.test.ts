@@ -1,6 +1,6 @@
-import { mirageRelayResolver } from '../../../../src/mirage/resolvers/relay';
+import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
 import { expect } from 'chai';
-import { buildSchema, GraphQLObjectType, GraphQLResolveInfo, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
@@ -135,7 +135,7 @@ describe('mirage/relay', () => {
       first: 2,
     };
 
-    const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+    const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
@@ -154,7 +154,7 @@ describe('mirage/relay', () => {
       first: allSpells.length,
     };
 
-    const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+    const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
@@ -178,7 +178,7 @@ describe('mirage/relay', () => {
         after: 'model:spell(2)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -198,7 +198,7 @@ describe('mirage/relay', () => {
         after: 'model:spell(3)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -217,7 +217,7 @@ describe('mirage/relay', () => {
         first: 2,
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -237,7 +237,7 @@ describe('mirage/relay', () => {
         after: 'model:spell(5)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -258,7 +258,7 @@ describe('mirage/relay', () => {
 
       let e: Error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
@@ -276,7 +276,7 @@ describe('mirage/relay', () => {
       };
 
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
@@ -297,7 +297,7 @@ describe('mirage/relay', () => {
         before: 'model:spell(5)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -316,7 +316,7 @@ describe('mirage/relay', () => {
         last: 2,
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
@@ -336,7 +336,7 @@ describe('mirage/relay', () => {
         before: 'model:spell(3)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
@@ -356,7 +356,7 @@ describe('mirage/relay', () => {
         before: 'model:spell(1)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
@@ -377,7 +377,7 @@ describe('mirage/relay', () => {
 
       let error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
@@ -396,7 +396,7 @@ describe('mirage/relay', () => {
 
       let e: Error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
@@ -426,7 +426,7 @@ describe('mirage/relay', () => {
           first: 2,
         };
 
-        const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: mappedGraphQLField,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,
@@ -445,7 +445,7 @@ describe('mirage/relay', () => {
           first: 2,
         };
 
-        const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: matchingFieldAndAttrName,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,

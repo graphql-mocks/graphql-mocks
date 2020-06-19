@@ -3,6 +3,8 @@ import { isListType, isNonNullType, isScalarType } from 'graphql';
 import { Resolver } from '../../types';
 import { extractDependencies, unwrap } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
+import { relayPaginateNodes } from '../../relay/helpers';
+import { cleanRelayConnectionName, prepResultForFieldFilter } from './helpers';
 
 export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
@@ -13,9 +15,10 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
 
   // return type is a scalar or is a scalar type that is wrapped (by non-null or list)
   const hasScalarInReturnType = isScalarType(unwrappedReturnType);
+  const isRelayPaginated = unwrappedReturnType?.name?.endsWith('Connection');
 
   // only use mirage in the case we aren't dealing with scalars
-  const useMirage = !hasScalarInReturnType;
+  const tryMirage = !hasScalarInReturnType;
   const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
 
   if (!mirageServer) {
@@ -31,18 +34,26 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = null;
   let mirageModelCandidates;
-  if (useMirage) {
+
+  if (tryMirage) {
     const mappedModelName = mapper && unwrappedReturnType.name && mapper.mappingForType(unwrappedReturnType.name);
-    mirageModelCandidates = useMirage ? ([mappedModelName, unwrappedReturnType.name].filter(Boolean) as string[]) : [];
+
+    const mirageModelCandidates = [
+      mappedModelName,
+      cleanRelayConnectionName(unwrappedReturnType.name),
+      unwrappedReturnType.name,
+    ];
 
     result =
       mirageModelCandidates
         .map((candidate) => {
           try {
-            return mirageServer.schema.all(candidate);
+            return candidate ? mirageServer.schema.all(candidate) : null;
           } catch {
             return null;
           }
+
+          return null;
         })
         .filter(Boolean)
         .map((collection) => collection?.models)
@@ -50,14 +61,22 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
   }
 
   if (fieldFilter) {
-    // pass in the current result to field filter
-    // replace result with whatever is returned from filterModels
-    const currentResults = Array.isArray(result) ? [...result] : [result];
-    result = fieldFilter(currentResults, parent, args, context, info);
+    result = fieldFilter(prepResultForFieldFilter(result), parent, args, context, info);
+  }
 
-    if (result == null && isNonNullType(returnType)) {
+  if (result == null) {
+    if (isNonNullType(returnType)) {
       throw new Error(`fieldFilter for "${parentType.name}.${fieldName}" returned null for a non-null type.`);
     }
+
+    return null;
+  }
+
+  if (isRelayPaginated) {
+    const nodes = (result == null || Array.isArray(result) ? result : [result]) ?? [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cursorForNode = (node: any): string => node.toString();
+    return relayPaginateNodes(nodes, args, cursorForNode);
   }
 
   const hasListReturnType = isListType(returnType) || (isNonNullType(returnType) && isListType(returnType.ofType));

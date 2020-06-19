@@ -1,11 +1,14 @@
 import { Resolver } from '../../types';
 import { isListType, isNonNullType } from 'graphql';
-import { extractDependencies } from '../../utils';
+import { extractDependencies, unwrap } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
+import { relayPaginateNodes } from '../../relay/helpers';
 
 export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+  const unwrappedReturnType = unwrap(returnType);
+  const isRelayPaginated = unwrappedReturnType?.name?.endsWith('Connection');
 
   if (typeof parent !== 'object') {
     throw new Error(
@@ -30,6 +33,13 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
   if (fieldFilter) {
     const currentResults = Array.isArray(result) ? [...result] : [result];
     result = fieldFilter(currentResults, parent, args, context, info);
+  }
+
+  if (isRelayPaginated) {
+    const nodes = Array.isArray(result) ? result : [result];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cursorForNode = (node: any): string => node.toString();
+    return relayPaginateNodes(nodes, args, cursorForNode);
   }
 
   // coerce into a singular result if return type does not include a list
