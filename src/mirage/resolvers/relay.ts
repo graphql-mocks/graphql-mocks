@@ -1,64 +1,59 @@
-import { GraphQLObjectType, GraphQLResolveInfo, GraphQLSchema, GraphQLType } from 'graphql';
+import { GraphQLSchema } from 'graphql';
 import { extractDependencies } from '../../utils';
 import { relayPaginateNodes, RelayPaginationResult } from '../../relay/helpers';
 import { unwrap, isRootQueryType } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { Server } from 'miragejs';
-
-type ExtractionArgs = {
-  parent: Record<string, unknown>;
-  parentType: GraphQLObjectType;
-  fieldName: string;
-  mapper?: MirageGraphQLMapper;
-  mirageServer?: Server;
-  isRootQuery: boolean;
-  returnType: GraphQLType;
-};
+import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo } from '../../types';
 
 export async function mirageRelayResolver(
-  parent: Record<string, unknown>,
-  args: Record<string, unknown>,
-  context: Record<string, unknown>,
-  info: GraphQLResolveInfo,
+  parent: ResolverParent,
+  args: ResolverArgs,
+  context: ResolverContext,
+  info: ResolverInfo,
 ): Promise<RelayPaginationResult> {
   const { mapper, mirageServer, graphqlSchema } = extractDependencies<{
     mapper: MirageGraphQLMapper;
     mirageServer: Server;
     graphqlSchema: GraphQLSchema;
   }>(context);
-  const { fieldName, parentType, returnType } = info;
 
   if (!graphqlSchema) {
     throw new Error('graphqlSchema is a required dependency');
   }
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
-  const nodes = extractNodesFromParent<Record<string, unknown>>({
+  const nodes = extractNodes<Record<string, unknown>>({
     parent,
-    parentType,
+    args,
+    context,
+    info,
     mapper,
-    fieldName,
     mirageServer,
-    isRootQuery: isRootQueryType(parentType, graphqlSchema),
-    returnType,
+    graphqlSchema,
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cursorForNode = (node: any): string => node.toString();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return relayPaginateNodes<Record<string, any>>(nodes, args, cursorForNode);
+  return relayPaginateNodes(nodes, args, cursorForNode);
 }
 
-export function extractNodesFromParent<T>({
-  parent,
-  parentType,
-  returnType,
-  mapper,
-  fieldName,
-  mirageServer,
-  isRootQuery,
-}: ExtractionArgs): T[] {
+export function extractNodes<T = Record<string, any>>(extractArgs: {
+  mapper?: MirageGraphQLMapper;
+  mirageServer?: Server;
+  graphqlSchema: GraphQLSchema;
+  parent: ResolverParent;
+  args: ResolverArgs;
+  context: ResolverContext;
+  info: ResolverInfo;
+}): T[] {
   let nodes;
+  const { mapper, mirageServer, graphqlSchema, parent, args: resolverArgs, info, context } = extractArgs;
+  const { parentType, fieldName, returnType } = info;
+  const isRootQuery = isRootQueryType(parentType, graphqlSchema);
+  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
+
   if (!isRootQuery) {
     const unwrappedParentType = unwrap(parentType);
 
@@ -79,9 +74,13 @@ export function extractNodesFromParent<T>({
       );
     }
 
-    nodes =
-      ((parent?.[matchingAttr] as Record<string, unknown>)?.models as T[] | undefined) ||
-      (parent[matchingAttr] as T[] | undefined);
+    const models =
+      (((parent?.[matchingAttr] as Record<string, unknown>)?.models as T[] | undefined) ||
+        (parent[matchingAttr] as T[] | undefined)) ??
+      [];
+
+    const result = (fieldFilter ? fieldFilter(models, parent, resolverArgs, context, info) : models) ?? [];
+    nodes = Array.isArray(result) ? result : [result];
   } else {
     const unwrappedReturnType = unwrap(returnType);
 
@@ -91,17 +90,19 @@ export function extractNodesFromParent<T>({
 
     const mappedName = mapper?.mappingForType(unwrappedReturnType.name);
 
-    const models = [cleanedName, unwrappedReturnType.name, mappedName]
-      .map((candidate) => {
-        try {
-          return candidate ? mirageServer?.schema.all(candidate).models : undefined;
-        } catch {
-          return undefined;
-        }
-      })
-      .find(Boolean) as T[] | undefined;
+    const models =
+      ([cleanedName, unwrappedReturnType.name, mappedName]
+        .map((candidate) => {
+          try {
+            return candidate ? mirageServer?.schema.all(candidate).models : undefined;
+          } catch {
+            return undefined;
+          }
+        })
+        .find(Boolean) as T[] | undefined) ?? [];
 
-    nodes = models;
+    const result = (fieldFilter ? fieldFilter(models, parent, resolverArgs, context, info) : models) ?? [];
+    nodes = Array.isArray(result) ? result : [result];
   }
 
   if (!Array.isArray(nodes)) {

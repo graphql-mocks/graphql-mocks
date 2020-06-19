@@ -12,6 +12,10 @@ import {
 export type Primitive = string | boolean | number;
 
 export type Resolver = GraphQLFieldResolver<any, any>;
+export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
+export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
+export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
+export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
 
