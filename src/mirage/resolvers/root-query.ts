@@ -1,115 +1,96 @@
-import { Server as MirageServer } from 'miragejs';
-import { isListType, isNonNullType, isScalarType } from 'graphql';
+import { Server as MirageServer, ModelInstance } from 'miragejs';
+import { isScalarType, GraphQLSchema } from 'graphql';
 import { Resolver } from '../../types';
-import { extractDependencies, unwrap } from '../../utils';
+import { extractDependencies, unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
-import { cleanRelayConnectionName, prepResultForFieldFilter } from './helpers';
+import { cleanRelayConnectionName, mirageCursorForNode } from './helpers';
+
+function findMatchingModelsForType({
+  type,
+  mapper,
+  mirageServer,
+}: any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
+  type = unwrap(type);
+  const mappedModelName = mapper && type.name && mapper.mappingForType(type.name);
+
+  // model candidates are ordered in terms of preference:
+  // [0] A manual type mapping already exists
+  // [1] A model exists for a relay type name
+  // [2] The type's name itself exists as a model name
+  const modelNameCandidates = [mappedModelName, cleanRelayConnectionName(type.name), type.name].filter(Boolean);
+
+  const matchedModelName = modelNameCandidates.find((candidate) => {
+    try {
+      // try each candidate in the schema
+      return Boolean(mirageServer.schema.all(candidate));
+    } catch {
+      // nope; no match
+      return false;
+    }
+  });
+
+  const models = mirageServer.schema.all(matchedModelName).models;
+
+  return {
+    models,
+    matchedModelName,
+    modelNameCandidates,
+  };
+}
 
 export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const unwrappedReturnType = unwrap(returnType);
-  const { mapper, mirageServer } = extractDependencies<{ mapper: MirageGraphQLMapper; mirageServer: MirageServer }>(
-    context,
-  );
-
-  // return type is a scalar or is a scalar type that is wrapped (by non-null or list)
-  const hasScalarInReturnType = isScalarType(unwrappedReturnType);
-  const isRelayPaginated = unwrappedReturnType?.name?.endsWith('Connection');
-
-  // only use mirage in the case we aren't dealing with scalars
-  const tryMirage = !hasScalarInReturnType;
-  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
-
-  if (!mirageServer) {
-    throw new Error('Dependency "mirageServer" is a required dependency');
+  const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
+  const { mapper, mirageServer, graphqlSchema } = extractDependencies<{
+    mapper: MirageGraphQLMapper;
+    mirageServer: MirageServer;
+    graphqlSchema: GraphQLSchema;
+  }>(context);
+  if (!graphqlSchema) {
+    throw new Error('graphqlSchema is a required dependency');
   }
 
-  if (!fieldFilter && hasScalarInReturnType) {
+  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
+
+  let result: any = null;
+  const meta: any = {};
+
+  const hasScalarInReturnType = isScalarType(unwrap(returnType));
+
+  // Root query types that return scalars cannot use mirage models
+  // since models represent an object with attributes.
+  // We have to throw an error and recommend a field filter (or resolver in map)
+  if (hasScalarInReturnType && !fieldFilter) {
     throw new Error(
-      `Scalars cannot be auto-resolved with mirage from the root query type. ${parentType.name}.${fieldName} resolves to a scalar, or a list, of type ${unwrappedReturnType.name}. Try adding a field filter for this field and returning a root value.`,
+      `Scalars cannot be auto-resolved with mirage from the root query type. ${
+        parentType.name
+      }.${fieldName} resolves to a scalar, or a list, of type ${
+        unwrap(returnType).name
+      }. Try adding a field filter for this field and returning a value for this field.`,
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let result: any = null;
-  let mirageModelCandidates;
+  if (!hasScalarInReturnType) {
+    // at this point we are querying on a query root type:
+    // * there is no parent on root query types
+    // * we are querying for something non-scalar (so we can use mirage)
+    // * we can use the mappings to assist in finding something from mirage
+    const matched = findMatchingModelsForType({ type: returnType, mapper, mirageServer });
+    meta.modelNameCandidates = matched.modelNameCandidates;
+    meta.matchedModelName = matched.matchedModelName;
 
-  if (tryMirage) {
-    const mappedModelName = mapper && unwrappedReturnType.name && mapper.mappingForType(unwrappedReturnType.name);
-
-    const mirageModelCandidates = [
-      mappedModelName,
-      cleanRelayConnectionName(unwrappedReturnType.name),
-      unwrappedReturnType.name,
-    ];
-
-    result =
-      mirageModelCandidates
-        .map((candidate) => {
-          try {
-            return candidate ? mirageServer.schema.all(candidate) : null;
-          } catch {
-            return null;
-          }
-
-          return null;
-        })
-        .filter(Boolean)
-        .map((collection) => collection?.models)
-        .find((models) => models && models.length > 0) ?? null;
+    result = matched.models;
   }
 
   if (fieldFilter) {
-    result = fieldFilter(prepResultForFieldFilter(result), parent, args, context, info);
-  }
-
-  if (result == null) {
-    if (isNonNullType(returnType)) {
-      throw new Error(`fieldFilter for "${parentType.name}.${fieldName}" returned null for a non-null type.`);
-    }
-
-    return null;
+    result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
   }
 
   if (isRelayPaginated) {
-    const nodes = (result == null || Array.isArray(result) ? result : [result]) ?? [];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const cursorForNode = (node: any): string => node.toString();
-    return relayPaginateNodes(nodes, args, cursorForNode);
+    const nodes = coerceToList(result);
+    return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
   }
 
-  const hasListReturnType = isListType(returnType) || (isNonNullType(returnType) && isListType(returnType.ofType));
-
-  // coerce into a singular result if return type does not include a list
-  if (!hasListReturnType && Array.isArray(result)) {
-    if (result.length > 1) {
-      const fieldFilterErrorMessage = fieldFilter
-        ? 'Return a singular result from this fieldFilter'
-        : 'Add a fieldFilter to narrow the results';
-
-      throw new Error(
-        `Unable to determine a singular result for ${parentType.name}.${fieldName}. ${fieldFilterErrorMessage}`,
-      );
-    }
-
-    result = result[0];
-  }
-
-  // coerce a non-null singular result into a list
-  if (hasListReturnType && !Array.isArray(result) && result != null) {
-    result = [result];
-  }
-
-  if (result == null && isNonNullType(returnType)) {
-    throw new Error(
-      `Failed to resolve field "${fieldName}" on type "${
-        parentType.name
-      }". Tried to map to the following mirage models: ${(mirageModelCandidates || []).join(
-        ', ',
-      )}. Try adding a type mapping and/or a field filter.`,
-    );
-  }
-
-  return result;
+  return coerceReturnType(result, info);
 };

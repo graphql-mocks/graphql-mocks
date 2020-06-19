@@ -42,14 +42,6 @@ export function cleanRelayConnectionName(name: string): string | undefined {
   return name.endsWith('Connection') ? name.replace('Connection', '') : undefined;
 }
 
-export function prepResultForFieldFilter(result: unknown): unknown[] {
-  // default to an empty filter set if the value is nullish
-  result = result ?? [];
-
-  // if it's not an array already, make it one
-  if (!Array.isArray(result)) {
-    result = [result];
-  }
-
-  return result as unknown[];
+export function mirageCursorForNode(node: any): string {
+  return node.toString();
 }

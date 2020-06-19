@@ -199,7 +199,7 @@ describe('integration/mirage-object', function () {
       });
     });
 
-    it('returns a filtered collection of relationships from a model', async () => {
+    it('returns a filtered collection of relationships from a model using a field filter', async () => {
       mapper
         .addFieldFilter(['Query', 'person'], () => rootPerson)
         .addFieldFilter(['Person', 'friends'], (models) => {

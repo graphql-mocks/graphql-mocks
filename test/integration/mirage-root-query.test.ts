@@ -113,7 +113,7 @@ describe('integration/mirage-root-query', function () {
 
       expect(result.errors?.length).to.equal(1);
       expect(result.errors?.[0]?.message).to.deep.equal(
-        'Scalars cannot be auto-resolved with mirage from the root query type. Query.personName resolves to a scalar, or a list, of type String. Try adding a field filter for this field and returning a root value.',
+        'Scalars cannot be auto-resolved with mirage from the root query type. Query.personName resolves to a scalar, or a list, of type String. Try adding a field filter for this field and returning a value for this field.',
       );
     });
   });
@@ -435,7 +435,7 @@ describe('integration/mirage-root-query', function () {
         expect(result.data?.person).to.equal(null);
         expect(result.errors?.length).to.equal(1);
         expect(result.errors[0].message).to.equal(
-          'Unable to determine a singular result for Query.person. Add a fieldFilter to narrow the results',
+          'Tried to a coerce singular result but got an array of more than one result.',
         );
       });
 
@@ -503,7 +503,7 @@ describe('integration/mirage-root-query', function () {
           // as it calls out that the field filter is returning multiple results
           // when only one is expected
           expect(result.errors[0].message).to.equal(
-            'Unable to determine a singular result for Query.person. Return a singular result from this fieldFilter',
+            'Tried to a coerce singular result but got an array of more than one result.',
           );
         });
       });
