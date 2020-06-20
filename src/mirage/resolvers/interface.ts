@@ -39,7 +39,7 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (
     matchingFieldsCandidateError = error;
   }
 
-  const mappedModelName = mapper && parentModelName ? mapper.mappingForModel(parentModelName) : undefined;
+  const mappedModelName = mapper && parentModelName ? mapper.findMatchForModel(parentModelName) : undefined;
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 

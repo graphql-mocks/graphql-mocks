@@ -51,7 +51,7 @@ export class MirageGraphQLMapper {
   readonly fieldMappings: FieldMap[] = [];
   readonly fieldFilterMappings: FieldFilterMap[] = [];
 
-  mapType(typeName: TypeName, modelName: ModelName): MirageGraphQLMapper {
+  addTypeMapping(typeName: TypeName, modelName: ModelName): MirageGraphQLMapper {
     if (typeof typeName !== 'string') {
       throw new TypeError(`First argument must be a string representing the GraphQL type name, got ${typeof typeName}`);
     }
@@ -67,7 +67,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  mapField(graphqlDef: [TypeName, FieldName], mirageDef: [ModelName, AttrName]): MirageGraphQLMapper {
+  addFieldMapping(graphqlDef: [TypeName, FieldName], mirageDef: [ModelName, AttrName]): MirageGraphQLMapper {
     try {
       assertValidTupleDef(graphqlDef);
     } catch (error) {
@@ -97,7 +97,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  mappingForModel(modelNameToMatch: string): TypeName | undefined {
+  findMatchForModel(modelNameToMatch: string): TypeName | undefined {
     const mappings = this.typeMappings;
 
     const match = mappings.find(({ mirage: modelName }) => {
@@ -107,7 +107,7 @@ export class MirageGraphQLMapper {
     return match?.graphql;
   }
 
-  mappingForAttr(mirageDef: [ModelName, AttrName]): [TypeName, FieldName] | undefined {
+  findMatchForAttr(mirageDef: [ModelName, AttrName]): [TypeName, FieldName] | undefined {
     assertValidTupleDef(mirageDef);
     const mappings = this.fieldMappings;
 
@@ -118,7 +118,7 @@ export class MirageGraphQLMapper {
     return match?.graphql;
   }
 
-  mappingForType(typeNameToMatch: string): ModelName | undefined {
+  findMatchForType(typeNameToMatch: string): ModelName | undefined {
     const mappings = this.typeMappings;
 
     const match = mappings.find(({ graphql: typeName }) => {
@@ -128,7 +128,7 @@ export class MirageGraphQLMapper {
     return match?.mirage;
   }
 
-  mappingForField(graphqlDef: [TypeName, FieldName]): [ModelName, AttrName] | undefined {
+  findMatchForField(graphqlDef: [TypeName, FieldName]): [ModelName, AttrName] | undefined {
     assertValidTupleDef(graphqlDef);
     const mappings = this.fieldMappings;
 

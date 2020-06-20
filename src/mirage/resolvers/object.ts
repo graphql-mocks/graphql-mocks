@@ -23,7 +23,7 @@ function findMatchingFieldForObjectParent({
     );
   }
 
-  const mapping = mapper && mapper.mappingForField([parentType.name, fieldName]);
+  const mapping = mapper && mapper.findMatchForField([parentType.name, fieldName]);
   const parentModelName = parent?.modelName;
   const matchedModelName = mapping && mapping[0];
   const mappedPropertyOnParent = mapping && mapping[1];

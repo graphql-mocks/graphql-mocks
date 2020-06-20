@@ -62,7 +62,7 @@ describe('mirage/resolvers/object', function () {
       foodPreference: 'Pizza',
     });
 
-    const mapper = new MirageGraphQLMapper().mapField(['User', 'favoriteFood'], ['User', 'foodPreference']);
+    const mapper = new MirageGraphQLMapper().addFieldMapping(['User', 'favoriteFood'], ['User', 'foodPreference']);
 
     const context = {
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper } }),

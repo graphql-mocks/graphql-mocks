@@ -13,7 +13,7 @@ function findMatchingModelsForType({
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
   type = unwrap(type);
-  const mappedModelName = mapper && type.name && mapper.mappingForType(type.name);
+  const mappedModelName = mapper && type.name && mapper.findMatchForType(type.name);
 
   // model candidates are ordered in terms of preference:
   // [0] A manual type mapping already exists

@@ -17,11 +17,11 @@ describe('integration/mirage-auto-resolver', function () {
 
   this.beforeEach(() => {
     mapper = new MirageGraphQLMapper()
-      .mapType('AthleticHobby', 'SportsHobby')
-      .mapType('Automobile', 'Car')
-      .mapField(['Person', 'paginatedFriends'], ['Person', 'friends'])
-      .mapField(['Person', 'fullName'], ['Person', 'name'])
-      .mapField(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
+      .addTypeMapping('AthleticHobby', 'SportsHobby')
+      .addTypeMapping('Automobile', 'Car')
+      .addFieldMapping(['Person', 'paginatedFriends'], ['Person', 'friends'])
+      .addFieldMapping(['Person', 'fullName'], ['Person', 'name'])
+      .addFieldMapping(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
       .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, _parent, { minimum, maximum }) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return personModels.filter((model: any) => model.age >= minimum && model.age <= maximum);
@@ -86,7 +86,7 @@ describe('integration/mirage-auto-resolver', function () {
     const modelAttrs = mirageServer.schema.first('person')!.attrs;
     expect('name' in modelAttrs).to.be.true;
     expect('fullName' in modelAttrs).to.be.false;
-    expect(mapper.mappingForField(['Person', 'fullName'])).to.deep.equal(
+    expect(mapper.findMatchForField(['Person', 'fullName'])).to.deep.equal(
       ['Person', 'name'],
       'Person.fullname <=> Person.name mapping exists',
     );
@@ -240,7 +240,7 @@ describe('integration/mirage-auto-resolver', function () {
       'AthleticHobby does exist as a mirage model',
     );
 
-    expect(mapper.mappingForType('AthleticHobby')).to.be.equal(
+    expect(mapper.findMatchForType('AthleticHobby')).to.be.equal(
       'SportsHobby',
       'Type <=> Model mapping exists on mapper',
     );

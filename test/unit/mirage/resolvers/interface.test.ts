@@ -80,7 +80,7 @@ describe('mirage/resolvers/interface', function () {
   });
 
   it('resolves an interface to a type by mapper', async function () {
-    const mapper = new MirageGraphQLMapper().mapType('Feline', 'Cat');
+    const mapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
 
     const context = {
       __testUseFindInCommon: false,
