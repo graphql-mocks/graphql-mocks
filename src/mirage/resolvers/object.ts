@@ -1,9 +1,10 @@
 import { Resolver, ResolverInfo, ResolverParent } from '../../types';
 import { GraphQLResolveInfo } from 'graphql';
-import { extractDependencies, unwrap, coerceReturnType, coerceToList } from '../../utils';
+import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { mirageCursorForNode } from './helpers';
+import { extractDependencies } from '../../resolver-map/extract-dependencies';
 
 function findMatchingFieldForObjectParent({
   mirageMapper,

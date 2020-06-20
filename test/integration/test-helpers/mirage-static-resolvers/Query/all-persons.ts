@@ -1,5 +1,5 @@
 import { ModelInstance, Server } from 'miragejs';
-import { extractDependencies } from '../../../../../src/utils';
+import { extractDependencies } from '../../../../../src/resolver-map/extract-dependencies';
 
 export default function (
   _parent: unknown,

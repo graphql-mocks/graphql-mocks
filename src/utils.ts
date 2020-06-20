@@ -32,14 +32,6 @@ type unwrappedType =
 
 export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
 
-export const extractDependencies = <T>(
-  context: Record<string, unknown> & {
-    pack?: { dependencies?: PackOptions['dependencies'] };
-  },
-): Partial<T> => {
-  return (context?.pack?.dependencies ?? {}) as Partial<T>;
-};
-
 export const embedPackOptionsInContext = (
   context: Record<string, unknown>,
   packOptions: PackOptions,

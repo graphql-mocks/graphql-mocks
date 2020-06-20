@@ -1,10 +1,11 @@
 import { Server as MirageServer, ModelInstance } from 'miragejs';
 import { isScalarType, GraphQLSchema } from 'graphql';
 import { Resolver } from '../../types';
-import { extractDependencies, unwrap, coerceReturnType, coerceToList } from '../../utils';
+import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { cleanRelayConnectionName, mirageCursorForNode } from './helpers';
+import { extractDependencies } from '../../resolver-map/extract-dependencies';
 
 function findMatchingModelsForType({
   type,
