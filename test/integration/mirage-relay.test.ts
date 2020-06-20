@@ -41,7 +41,7 @@ const schemaString = `
   }
 `;
 
-describe('integration/mirage-object', function () {
+describe('integration/mirage-relay', function () {
   let mirageServer: Server;
   let mapper: MirageGraphQLMapper;
   let handler: QueryHandler;

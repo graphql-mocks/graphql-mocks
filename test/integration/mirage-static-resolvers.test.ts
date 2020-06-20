@@ -13,7 +13,7 @@ const { query: graphQLHandler } = createQueryHandler(defaultResolvers, {
   },
 });
 
-describe('it can resolve from basic resolvers', function () {
+describe('integration/mirage-static-resolvers', function () {
   beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
   });

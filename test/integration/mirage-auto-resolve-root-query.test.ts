@@ -7,7 +7,11 @@ import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-
 import { createQueryHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 
-describe('integration/mirage-root-query', function () {
+// patchAutoFieldResolvers middleware covers both auto-resolving of
+// root queries and graphql object types. This test focuses on the
+// feature of auto-resolving fields on graphql root query type and its
+// fields, provided by patchAutoFieldResolvers
+describe('integration/mirage-auto-resolve-root-query', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mirageServer: Server;
 

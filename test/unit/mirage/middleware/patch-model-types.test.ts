@@ -5,7 +5,7 @@ import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
 import sinon from 'sinon';
 
-describe('mirage/middleware/patch-model-types', function () {
+describe('mirage/middleware/patch-auto-field-resolvers', function () {
   let resolverMap: ResolverMap;
   let schema: GraphQLSchema;
 
