@@ -1,9 +1,8 @@
-import { Resolver } from '../types';
+import { Resolver, TypeName, FieldReference } from '../types';
 
-export type TypeName = string;
-export type FieldName = string;
 export type ModelName = string;
 export type AttrName = string;
+export type MirageAttrReference = [ModelName, AttrName];
 
 export type TypeMap = {
   graphql: TypeName;
@@ -11,8 +10,8 @@ export type TypeMap = {
 };
 
 export type FieldMap = {
-  graphql: [TypeName, FieldName];
-  mirage: [ModelName, AttrName];
+  graphql: FieldReference;
+  mirage: MirageAttrReference;
 };
 
 export type FieldFilterResolver = (
@@ -25,14 +24,14 @@ export type FieldFilterResolver = (
 ) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type FieldFilterMap = {
-  graphql: [TypeName, FieldName];
+  graphql: FieldReference;
   filter: FieldFilterResolver;
 };
 
 function assertValidTupleDef(def: unknown): void {
   if (!Array.isArray(def)) {
     throw new TypeError(
-      `Definition must be an array with two strings: ['typeName', 'fieldName'] or ['modelName', 'attrName']`,
+      `Definition given must be a valid FieldReference (ie: ['typeName', 'fieldName']) or a valid MirageAttrReference(ie: ['modelName', 'attrName'])`,
     );
   }
 
@@ -67,7 +66,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  addFieldMapping(graphqlDef: [TypeName, FieldName], mirageDef: [ModelName, AttrName]): MirageGraphQLMapper {
+  addFieldMapping(graphqlDef: FieldReference, mirageDef: MirageAttrReference): MirageGraphQLMapper {
     try {
       assertValidTupleDef(graphqlDef);
     } catch (error) {
@@ -85,7 +84,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  addFieldFilter(graphqlDef: [TypeName, FieldName], filter: FieldFilterResolver): MirageGraphQLMapper {
+  addFieldFilter(graphqlDef: FieldReference, filter: FieldFilterResolver): MirageGraphQLMapper {
     assertValidTupleDef(graphqlDef);
 
     if (typeof filter !== 'function') {
@@ -107,7 +106,7 @@ export class MirageGraphQLMapper {
     return match?.graphql;
   }
 
-  findMatchForAttr(mirageDef: [ModelName, AttrName]): [TypeName, FieldName] | undefined {
+  findMatchForAttr(mirageDef: MirageAttrReference): FieldReference | undefined {
     assertValidTupleDef(mirageDef);
     const mappings = this.fieldMappings;
 
@@ -128,7 +127,7 @@ export class MirageGraphQLMapper {
     return match?.mirage;
   }
 
-  findMatchForField(graphqlDef: [TypeName, FieldName]): [ModelName, AttrName] | undefined {
+  findMatchForField(graphqlDef: FieldReference): MirageAttrReference | undefined {
     assertValidTupleDef(graphqlDef);
     const mappings = this.fieldMappings;
 
@@ -139,7 +138,7 @@ export class MirageGraphQLMapper {
     return match?.mirage;
   }
 
-  findFieldFilter(graphqlDef: [TypeName, FieldName]): FieldFilterResolver | undefined {
+  findFieldFilter(graphqlDef: FieldReference): FieldFilterResolver | undefined {
     assertValidTupleDef(graphqlDef);
     const mappings = this.fieldFilterMappings;
 

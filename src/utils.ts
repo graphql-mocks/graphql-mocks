@@ -1,4 +1,12 @@
-import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField, PackOptions } from './types';
+import {
+  Resolver,
+  ResolverMap,
+  ResolverWrapper,
+  ResolvableType,
+  ResolvableField,
+  PackOptions,
+  FieldReference,
+} from './types';
 import {
   GraphQLSchema,
   GraphQLObjectType,
@@ -58,11 +66,11 @@ export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): Gra
   };
 };
 
-export function getTypeAndField(
-  typeName: string,
-  fieldName: string,
+export function getTypeAndFieldDefinitions(
+  fieldReference: FieldReference,
   schema: GraphQLSchema,
 ): [ResolvableType, ResolvableField] {
+  const [typeName, fieldName] = fieldReference;
   const type = schema.getType(typeName);
 
   if (!type) {
@@ -86,17 +94,16 @@ export function getTypeAndField(
 
 export function addResolverToMap({
   resolverMap,
-  typeName,
-  fieldName,
+  fieldReference,
   resolver,
   overwrite = false,
 }: {
   resolverMap: ResolverMap;
-  typeName: string;
-  fieldName: string;
+  fieldReference: FieldReference;
   resolver: Resolver;
   overwrite?: boolean;
 }): ResolverMap {
+  const [typeName, fieldName] = fieldReference;
   if (typeof resolverMap !== 'object') throw new TypeError('resolverMap must be an object');
 
   resolverMap[typeName] = resolverMap[typeName] ?? {};

@@ -13,7 +13,7 @@ describe('resolver/embed', function () {
         resolver(parent, args, context, info),
     );
 
-    const embededResolverMapMiddleware = embed('User', 'name', [resolverWrapper], resolver);
+    const embededResolverMapMiddleware = embed(['User', 'name'], [resolverWrapper], resolver);
     const resolverMap = {};
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
@@ -40,7 +40,7 @@ describe('resolver/embed', function () {
       info: GraphQLResolveInfo,
     ): Resolver => resolver(parent, args, context, info));
 
-    const embeddedResolverMapMiddleware = embed('User', 'name', [resolverWrapper]);
+    const embeddedResolverMapMiddleware = embed(['User', 'name'], [resolverWrapper]);
     const resolverMap = {
       User: {
         name: nameFieldResolver,
@@ -64,7 +64,7 @@ describe('resolver/embed', function () {
     const resolverWrapper: ResolverWrapper = spy();
     // empty resolver map with no resolver for User.name
     const resolverMap = {};
-    const embededResolverMapMiddleware = embed('User', 'name', [resolverWrapper]);
+    const embededResolverMapMiddleware = embed(['User', 'name'], [resolverWrapper]);
 
     expect(() =>
       embededResolverMapMiddleware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } })),

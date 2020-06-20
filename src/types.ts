@@ -10,6 +10,9 @@ import {
 } from 'graphql';
 
 export type Primitive = string | boolean | number;
+export type TypeName = string;
+export type FieldName = string;
+export type FieldReference = [TypeName, FieldName];
 
 export type Resolver = GraphQLFieldResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
