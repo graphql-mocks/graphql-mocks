@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
-import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
+import { patchAutoResolvers } from '../../src/mirage/';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
@@ -29,10 +28,8 @@ describe('integration/mirage-auto-resolver', function () {
       });
 
     mirageServer.db.loadData(defaultScenario);
-    const middlewares = [patchModelTypes, patchUnionsInterfaces];
     const handler = createQueryHandler(defaultResolvers, {
-      state: {},
-      middlewares,
+      middlewares: [patchAutoResolvers],
       dependencies: {
         mapper,
         mirageServer,
