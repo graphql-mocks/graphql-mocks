@@ -4,7 +4,7 @@ import { patchEachField } from '../../resolver-map/patch-each-field';
 import { GraphQLSchema } from 'graphql';
 import { isRootQueryType } from '../../utils';
 
-export const patchModelTypes = patchEachField(({ type, packOptions }) => {
+export const patchAutoFieldResolvers = patchEachField(({ type, packOptions }) => {
   const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
   const rootMutationTypeName = schema.getMutationType()?.name;
   const isRootMutationType = rootMutationTypeName && rootMutationTypeName === type.name;

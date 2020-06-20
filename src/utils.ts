@@ -128,6 +128,7 @@ export function hasListType(type: GraphQLType): boolean {
   return isListType(type) || (isNonNullType(type) && isListType(type.ofType));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function coerceSingular(subject: any): any {
   if (!Array.isArray(subject)) {
     return subject;
@@ -144,6 +145,7 @@ export function coerceSingular(subject: any): any {
   throw new Error('Tried to a coerce singular result but got an array of more than one result.');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function coerceToList(subject: any): any[] | null | undefined {
   if (subject == null) {
     return subject;

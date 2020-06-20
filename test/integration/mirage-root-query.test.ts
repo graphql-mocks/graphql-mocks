@@ -3,7 +3,7 @@
 
 import { Model, Server } from 'miragejs';
 import { expect } from 'chai';
-import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
+import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
 import { createQueryHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 
@@ -30,7 +30,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mapper,
             mirageServer,
@@ -63,7 +63,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mapper,
             mirageServer,
@@ -91,7 +91,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             graphqlSchema: `
@@ -157,7 +157,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             graphqlSchema,
@@ -186,7 +186,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             mapper,
@@ -216,7 +216,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             mapper,
@@ -246,7 +246,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             mapper,
@@ -294,7 +294,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             graphqlSchema,
@@ -319,7 +319,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
             graphqlSchema,
@@ -346,7 +346,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mapper,
             mirageServer,
@@ -374,7 +374,7 @@ describe('integration/mirage-root-query', function () {
       const handler = createQueryHandler(
         {},
         {
-          middlewares: [patchModelTypes],
+          middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mapper,
             mirageServer,
@@ -417,7 +417,7 @@ describe('integration/mirage-root-query', function () {
         const handler = createQueryHandler(
           {},
           {
-            middlewares: [patchModelTypes],
+            middlewares: [patchAutoFieldResolvers],
             dependencies: {
               mirageServer,
               graphqlSchema,
@@ -448,7 +448,7 @@ describe('integration/mirage-root-query', function () {
           const handler = createQueryHandler(
             {},
             {
-              middlewares: [patchModelTypes],
+              middlewares: [patchAutoFieldResolvers],
               dependencies: {
                 mirageServer,
                 graphqlSchema,
@@ -480,7 +480,7 @@ describe('integration/mirage-root-query', function () {
           const handler = createQueryHandler(
             {},
             {
-              middlewares: [patchModelTypes],
+              middlewares: [patchAutoFieldResolvers],
               dependencies: {
                 mirageServer,
                 graphqlSchema,

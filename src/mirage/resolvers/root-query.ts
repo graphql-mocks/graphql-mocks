@@ -10,7 +10,8 @@ function findMatchingModelsForType({
   type,
   mapper,
   mirageServer,
-}: any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
+}: // eslint-disable-next-line @typescript-eslint/no-explicit-any
+any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
   type = unwrap(type);
   const mappedModelName = mapper && type.name && mapper.mappingForType(type.name);
 
@@ -53,7 +54,9 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
 
   const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const meta: any = {};
 
   const hasScalarInReturnType = isScalarType(unwrap(returnType));

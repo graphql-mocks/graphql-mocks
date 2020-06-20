@@ -42,6 +42,7 @@ export function cleanRelayConnectionName(name: string): string | undefined {
   return name.endsWith('Connection') ? name.replace('Connection', '') : undefined;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mirageCursorForNode(node: any): string {
   return node.toString();
 }

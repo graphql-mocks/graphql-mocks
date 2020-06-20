@@ -1,4 +1,4 @@
-import { patchModelTypes } from '../../../../src/mirage/middleware/patch-model-types';
+import { patchAutoFieldResolvers } from '../../../../src/mirage/middleware/patch-auto-field-resolvers';
 import { ResolverMap } from '../../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
@@ -79,7 +79,7 @@ describe('mirage/middleware/patch-model-types', function () {
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrappedResolvers = patchModelTypes(
+    const wrappedResolvers = patchAutoFieldResolvers(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -94,7 +94,7 @@ describe('mirage/middleware/patch-model-types', function () {
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
-    const wrappedResolvers = patchModelTypes(
+    const wrappedResolvers = patchAutoFieldResolvers(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );

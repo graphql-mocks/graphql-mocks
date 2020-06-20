@@ -1,3 +1,3 @@
-export { patchModelTypes } from './patch-model-types';
-export { patchUnionsInterfaces } from './patch-auto-unions-interfaces';
+export { patchAutoFieldResolvers as patchModelTypes } from './patch-auto-field-resolvers';
+export { patchAutoTypeResolvers as patchUnionsInterfaces } from './patch-auto-type-resolvers';
 export { patchAutoResolvers } from './patch-auto-resolvers';

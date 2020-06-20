@@ -3,7 +3,7 @@
 
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
-import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
+import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
 import { createQueryHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { QueryHandler } from '../../src/graphql/handler';
@@ -80,7 +80,7 @@ describe('integration/mirage-object', function () {
     handler = createQueryHandler(
       {},
       {
-        middlewares: [patchModelTypes],
+        middlewares: [patchAutoFieldResolvers],
         dependencies: {
           mirageServer,
           mapper,
