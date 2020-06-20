@@ -8,12 +8,12 @@ import { cleanRelayConnectionName, mirageCursorForNode } from './helpers';
 
 function findMatchingModelsForType({
   type,
-  mapper,
+  mirageMapper,
   mirageServer,
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
   type = unwrap(type);
-  const mappedModelName = mapper && type.name && mapper.findMatchForType(type.name);
+  const mappedModelName = mirageMapper && type.name && mirageMapper.findMatchForType(type.name);
 
   // model candidates are ordered in terms of preference:
   // [0] A manual type mapping already exists
@@ -43,8 +43,8 @@ any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelIn
 export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
-  const { mapper, mirageServer, graphqlSchema } = extractDependencies<{
-    mapper: MirageGraphQLMapper;
+  const { mirageMapper, mirageServer, graphqlSchema } = extractDependencies<{
+    mirageMapper: MirageGraphQLMapper;
     mirageServer: MirageServer;
     graphqlSchema: GraphQLSchema;
   }>(context);
@@ -52,7 +52,7 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
     throw new Error('graphqlSchema is a required dependency');
   }
 
-  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
+  const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = null;
@@ -79,7 +79,7 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
     // * there is no parent on root query types
     // * we are querying for something non-scalar (so we can use mirage)
     // * we can use the mappings to assist in finding something from mirage
-    const matched = findMatchingModelsForType({ type: returnType, mapper, mirageServer });
+    const matched = findMatchingModelsForType({ type: returnType, mirageMapper, mirageServer });
     meta.modelNameCandidates = matched.modelNameCandidates;
     meta.matchedModelName = matched.matchedModelName;
 

@@ -6,7 +6,7 @@ import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/relay', () => {
   let mirageServer: Server;
-  let mapper: MirageGraphQLMapper;
+  let mirageMapper: MirageGraphQLMapper;
   let resolverContext: Record<string, unknown>;
   let sourcererParent: ModelInstance;
   let abraSpell: ModelInstance;
@@ -74,7 +74,7 @@ describe('mirage/relay', () => {
       },
     });
 
-    mapper = new MirageGraphQLMapper().addFieldMapping(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
+    mirageMapper = new MirageGraphQLMapper().addFieldMapping(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
 
     meowSpell = mirageServer.schema.create('spell', {
       id: '1',
@@ -123,7 +123,7 @@ describe('mirage/relay', () => {
       pack: {
         dependencies: {
           mirageServer,
-          mapper,
+          mirageMapper,
           graphqlSchema,
         },
       },

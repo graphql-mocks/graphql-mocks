@@ -6,12 +6,12 @@ import { relayPaginateNodes } from '../../relay/helpers';
 import { mirageCursorForNode } from './helpers';
 
 function findMatchingFieldForObjectParent({
-  mapper,
+  mirageMapper,
   parent,
   parentType,
   fieldName,
 }: {
-  mapper?: MirageGraphQLMapper;
+  mirageMapper?: MirageGraphQLMapper;
   parent: ResolverParent;
   parentType: ResolverInfo['parentType'];
   fieldName: ResolverInfo['fieldName'];
@@ -23,10 +23,9 @@ function findMatchingFieldForObjectParent({
     );
   }
 
-  const mapping = mapper && mapper.findMatchForField([parentType.name, fieldName]);
-  const parentModelName = parent?.modelName;
-  const matchedModelName = mapping && mapping[0];
-  const mappedPropertyOnParent = mapping && mapping[1];
+  const match = mirageMapper && mirageMapper.findMatchForField([parentType.name, fieldName]);
+  const matchedModelName = match && match[0];
+  const mappedPropertyOnParent = match && match[1];
 
   const fieldCandidates = [mappedPropertyOnParent, fieldName].filter(Boolean) as string[];
 
@@ -41,9 +40,9 @@ function findMatchingFieldForObjectParent({
   return {
     fieldCandidates,
     matchedModelName,
-    parentModelName,
     matchedProperty,
     propertyValue,
+    parentModelName: parent?.modelName,
   };
 }
 
@@ -66,7 +65,7 @@ type FieldMatchMeta = Partial<{
 
 export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+  const { mirageMapper: mirageMapper } = extractDependencies<{ mirageMapper: MirageGraphQLMapper }>(context);
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
   const meta: MirageResolverMeta = {
     info,
@@ -79,14 +78,14 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
     );
   }
 
-  const matchedMeta = findMatchingFieldForObjectParent({ mapper, parent, parentType, fieldName });
+  const matchedMeta = findMatchingFieldForObjectParent({ mirageMapper, parent, parentType, fieldName });
   meta.match = matchedMeta;
 
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist
   let result = matchedMeta.propertyValue;
 
-  const fieldFilter = mapper?.findFieldFilter([parentType.name, fieldName]);
+  const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 
   if (fieldFilter) {
     result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);

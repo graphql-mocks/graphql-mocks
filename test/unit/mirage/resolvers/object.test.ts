@@ -42,7 +42,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
@@ -62,10 +62,13 @@ describe('mirage/resolvers/object', function () {
       foodPreference: 'Pizza',
     });
 
-    const mapper = new MirageGraphQLMapper().addFieldMapping(['User', 'favoriteFood'], ['User', 'foodPreference']);
+    const mirageMapper = new MirageGraphQLMapper().addFieldMapping(
+      ['User', 'favoriteFood'],
+      ['User', 'foodPreference'],
+    );
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mirageMapper } }),
     };
 
     const info = {
@@ -87,7 +90,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
@@ -107,7 +110,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };
 
     const info = {
@@ -123,7 +126,7 @@ describe('mirage/resolvers/object', function () {
 
   it('throws an error when the parent passed in is not an object', () => {
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };
 
     const info = {

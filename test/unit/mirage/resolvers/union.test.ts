@@ -73,10 +73,10 @@ describe('mirage/resolvers/union', function () {
   });
 
   it('resolves an union to a type by mapper', async function () {
-    const mapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
+    const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
     const context = {
       __testUseFindInCommon: false,
-      pack: generatePackOptions({ dependencies: { mapper, graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
     };
     const resolvedType = mirageUnionResolver(catModel, context, resolverInfo, animalUnionType);
     expect(resolvedType).to.equal('Feline');

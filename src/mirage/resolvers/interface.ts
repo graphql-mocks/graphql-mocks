@@ -6,9 +6,10 @@ import { findMostInCommon, modelNameToTypeName } from './helpers';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (object, context, _info, interfaceType) {
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
-    context,
-  );
+  const { graphqlSchema, mirageMapper } = extractDependencies<{
+    graphqlSchema: GraphQLSchema;
+    mirageMapper: MirageGraphQLMapper;
+  }>(context);
   const { name: interfaceName } = interfaceType;
 
   if (!graphqlSchema) {
@@ -39,7 +40,7 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (
     matchingFieldsCandidateError = error;
   }
 
-  const mappedModelName = mapper && parentModelName ? mapper.findMatchForModel(parentModelName) : undefined;
+  const mappedModelName = mirageMapper && parentModelName ? mirageMapper.findMatchForModel(parentModelName) : undefined;
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 

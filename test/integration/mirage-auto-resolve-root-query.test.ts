@@ -29,14 +29,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
   describe('scalar types', () => {
     it('can return a scalar using a filter field', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personName'], () => 'Grace Hopper');
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personName'], () => 'Grace Hopper');
 
       const handler = createQueryHandler(
         {},
         {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
-            mapper,
+            mirageMapper,
             mirageServer,
             graphqlSchema: `
             schema {
@@ -59,7 +59,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('can return a list of scalars using a filter field', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personNames'], () => [
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personNames'], () => [
         'Grace Hopper',
         'Anita Borg',
       ]);
@@ -69,7 +69,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
-            mapper,
+            mirageMapper,
             mirageServer,
             graphqlSchema: `
             schema {
@@ -183,7 +183,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('uses mirage models from a mapper field filter', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], (models) => {
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], (models) => {
         return models.filter((model: any) => ['wilma', 'fred'].includes(model.name));
       });
 
@@ -193,7 +193,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
-            mapper,
+            mirageMapper,
             graphqlSchema,
           },
         },
@@ -213,7 +213,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('uses pojos from a mapper field filter', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], () => {
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], () => {
         return [{ name: 'Ada Lovelace' }, { name: 'Grace Hopper' }];
       });
 
@@ -223,7 +223,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
-            mapper,
+            mirageMapper,
             graphqlSchema,
           },
         },
@@ -243,7 +243,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('uses null from a mapper field filter', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], () => {
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'allPeople'], () => {
         return null;
       });
 
@@ -253,7 +253,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
             mirageServer,
-            mapper,
+            mirageMapper,
             graphqlSchema,
           },
         },
@@ -345,14 +345,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('returns null from field filter', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => null);
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => null);
 
       const handler = createQueryHandler(
         {},
         {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
-            mapper,
+            mirageMapper,
             mirageServer,
             graphqlSchema,
           },
@@ -373,14 +373,16 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('returns pojo from field filter', async function () {
-      const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => ({ name: 'Grace Hopper' }));
+      const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => ({
+        name: 'Grace Hopper',
+      }));
 
       const handler = createQueryHandler(
         {},
         {
           middlewares: [patchAutoFieldResolvers],
           dependencies: {
-            mapper,
+            mirageMapper,
             mirageServer,
             graphqlSchema,
           },
@@ -445,7 +447,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
       describe('when a field filter exists', () => {
         it('uses singular result from field filter', async function () {
-          const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], (models) => {
+          const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], (models) => {
             return models[0];
           });
 
@@ -456,7 +458,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
               dependencies: {
                 mirageServer,
                 graphqlSchema,
-                mapper,
+                mirageMapper,
               },
             },
           );
@@ -477,7 +479,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         });
 
         it('throws an error when field filter returns more than one result', async function () {
-          const mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], (models) => {
+          const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], (models) => {
             return models;
           });
 
@@ -488,7 +490,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
               dependencies: {
                 mirageServer,
                 graphqlSchema,
-                mapper,
+                mirageMapper,
               },
             },
           );

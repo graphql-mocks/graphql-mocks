@@ -17,9 +17,10 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   }
 
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
-    context,
-  );
+  const { graphqlSchema, mirageMapper } = extractDependencies<{
+    graphqlSchema: GraphQLSchema;
+    mirageMapper: MirageGraphQLMapper;
+  }>(context);
 
   if (!graphqlSchema) {
     throw new Error('Please include `graphqlSchema: GraphQLSchema` in your pack dependencies');
@@ -38,7 +39,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
     matchingFieldsCandidateError = error;
   }
 
-  const mappedModelName = mapper && parentModelName && mapper.findMatchForModel(parentModelName);
+  const mappedModelName = mirageMapper && parentModelName && mirageMapper.findMatchForModel(parentModelName);
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 

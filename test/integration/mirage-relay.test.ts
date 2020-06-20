@@ -43,7 +43,7 @@ const schemaString = `
 
 describe('integration/mirage-relay', function () {
   let mirageServer: Server;
-  let mapper: MirageGraphQLMapper;
+  let mirageMapper: MirageGraphQLMapper;
   let handler: QueryHandler;
 
   beforeEach(() => {
@@ -75,7 +75,7 @@ describe('integration/mirage-relay', function () {
       friends: rootFriends,
     });
 
-    mapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
+    mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
 
     handler = createQueryHandler(
       {},
@@ -83,7 +83,7 @@ describe('integration/mirage-relay', function () {
         middlewares: [patchAutoFieldResolvers],
         dependencies: {
           mirageServer,
-          mapper,
+          mirageMapper,
           graphqlSchema: schemaString,
         },
       },
@@ -92,7 +92,7 @@ describe('integration/mirage-relay', function () {
 
   afterEach(() => {
     (mirageServer as any) = null;
-    (mapper as any) = null;
+    (mirageMapper as any) = null;
     (handler as any) = null;
   });
 
@@ -160,7 +160,7 @@ describe('integration/mirage-relay', function () {
     });
 
     it('relay paginates on the root query type using a field filter', async () => {
-      mapper.addFieldFilter(['Query', 'people'], (results) =>
+      mirageMapper.addFieldFilter(['Query', 'people'], (results) =>
         results.filter((result: any) => result.name === 'Princess Leia' || result.name === 'Greedo'),
       );
 
@@ -268,7 +268,9 @@ describe('integration/mirage-relay', function () {
     });
 
     it('relay paginates models from a relationship using a field filter', async () => {
-      mapper.addFieldFilter(['Person', 'friends'], (results) => results.filter((result) => result.name === 'R2-D2'));
+      mirageMapper.addFieldFilter(['Person', 'friends'], (results) =>
+        results.filter((result) => result.name === 'R2-D2'),
+      );
 
       const result = await handler.query(`{
         person {
