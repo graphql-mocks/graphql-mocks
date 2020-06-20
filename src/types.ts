@@ -44,9 +44,10 @@ export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeRe
 
 export type PackState = Record<any, any>;
 
+type NonNullDependency = object | string | boolean | symbol | number;
 export type PackOptions = {
   state: PackState;
-  dependencies: Record<string, unknown>;
+  dependencies: Record<string, NonNullDependency>;
 };
 
 export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;

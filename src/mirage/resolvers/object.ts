@@ -66,8 +66,11 @@ type FieldMatchMeta = Partial<{
 
 export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const { mirageMapper: mirageMapper } = extractDependencies<{ mirageMapper: MirageGraphQLMapper }>(context);
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
+  const { mirageMapper } = extractDependencies<{ mirageMapper: MirageGraphQLMapper }>(['mirageMapper'], context, {
+    required: false,
+  });
+
   const meta: MirageResolverMeta = {
     info,
     isRelay: isRelayPaginated,

@@ -1,5 +1,5 @@
 import { Server as MirageServer, ModelInstance } from 'miragejs';
-import { isScalarType, GraphQLSchema } from 'graphql';
+import { isScalarType } from 'graphql';
 import { Resolver } from '../../types';
 import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
@@ -44,14 +44,10 @@ any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelIn
 export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
-  const { mirageMapper, mirageServer, graphqlSchema } = extractDependencies<{
+  const { mirageMapper, mirageServer } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
     mirageServer: MirageServer;
-    graphqlSchema: GraphQLSchema;
-  }>(context);
-  if (!graphqlSchema) {
-    throw new Error('graphqlSchema is a required dependency');
-  }
+  }>(['mirageMapper', 'mirageServer'], context, { required: false });
 
   const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 
