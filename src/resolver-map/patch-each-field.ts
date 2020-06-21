@@ -38,8 +38,7 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
 
             addResolverToMap({
               resolverMap: resolverMap,
-              typeName: typeKey,
-              fieldName: fieldKey,
+              fieldReference: [typeKey, fieldKey],
               resolver: patchResolver,
             });
           }

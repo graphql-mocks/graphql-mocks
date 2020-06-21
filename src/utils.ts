@@ -1,4 +1,12 @@
-import { Resolver, ResolverMap, ResolverWrapper, ResolvableType, ResolvableField, PackOptions } from './types';
+import {
+  Resolver,
+  ResolverMap,
+  ResolverWrapper,
+  ResolvableType,
+  ResolvableField,
+  PackOptions,
+  FieldReference,
+} from './types';
 import {
   GraphQLSchema,
   GraphQLObjectType,
@@ -10,6 +18,8 @@ import {
   GraphQLInputObjectType,
   GraphQLFieldResolver,
   GraphQLResolveInfo,
+  isListType,
+  isNonNullType,
 } from 'graphql';
 
 type unwrappedType =
@@ -21,14 +31,6 @@ type unwrappedType =
   | GraphQLInputObjectType;
 
 export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
-
-export const extractDependencies = <T>(
-  context: Record<string, unknown> & {
-    pack?: { dependencies?: PackOptions['dependencies'] };
-  },
-): Partial<T> => {
-  return (context?.pack?.dependencies ?? {}) as Partial<T>;
-};
 
 export const embedPackOptionsInContext = (
   context: Record<string, unknown>,
@@ -56,11 +58,11 @@ export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): Gra
   };
 };
 
-export function getTypeAndField(
-  typeName: string,
-  fieldName: string,
+export function getTypeAndFieldDefinitions(
+  fieldReference: FieldReference,
   schema: GraphQLSchema,
 ): [ResolvableType, ResolvableField] {
+  const [typeName, fieldName] = fieldReference;
   const type = schema.getType(typeName);
 
   if (!type) {
@@ -84,17 +86,16 @@ export function getTypeAndField(
 
 export function addResolverToMap({
   resolverMap,
-  typeName,
-  fieldName,
+  fieldReference,
   resolver,
   overwrite = false,
 }: {
   resolverMap: ResolverMap;
-  typeName: string;
-  fieldName: string;
+  fieldReference: FieldReference;
   resolver: Resolver;
   overwrite?: boolean;
 }): ResolverMap {
+  const [typeName, fieldName] = fieldReference;
   if (typeof resolverMap !== 'object') throw new TypeError('resolverMap must be an object');
 
   resolverMap[typeName] = resolverMap[typeName] ?? {};
@@ -107,4 +108,68 @@ export function addResolverToMap({
 
   resolverMap[typeName][fieldName] = resolver;
   return resolverMap;
+}
+
+export function isRootQueryType(type: GraphQLType | string, schema: GraphQLSchema): boolean {
+  if (typeof type !== 'string' && !('name' in type)) {
+    return false;
+  }
+
+  const rootQueryTypeName = schema.getQueryType()?.name;
+  const typeName = typeof type === 'string' ? type : type.name;
+  return typeName === rootQueryTypeName;
+}
+
+/**
+ * Checks if a type is a list type or a wrapped list type (ie: wrapped with non-null)
+ */
+export function hasListType(type: GraphQLType): boolean {
+  return isListType(type) || (isNonNullType(type) && isListType(type.ofType));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function coerceSingular(subject: any): any {
+  if (!Array.isArray(subject)) {
+    return subject;
+  }
+
+  if (subject.length === 1) {
+    return subject[0];
+  }
+
+  if (subject.length === 0) {
+    return null;
+  }
+
+  throw new Error('Tried to a coerce singular result but got an array of more than one result.');
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function coerceToList(subject: any): any[] | null | undefined {
+  if (subject == null) {
+    return subject;
+  }
+
+  if (Array.isArray(subject)) {
+    return subject;
+  }
+
+  return [subject];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function coerceReturnType(result: any, info: GraphQLResolveInfo): any {
+  if (!hasListType(info.returnType)) {
+    result = coerceSingular(result);
+  } else {
+    result = coerceToList(result);
+  }
+
+  if (result == null && isNonNullType(info.returnType)) {
+    throw new Error(
+      `Failed to resolve field "${info.parentType.name}.${info.fieldName}", got a nullish result for a non-null return type.`,
+    );
+  }
+
+  return result;
 }

@@ -1,15 +1,15 @@
 import { wrapResolver } from './wrap';
-import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '../types';
-import { getTypeAndField, addResolverToMap, embedPackOptionsWrapper } from '../utils';
+import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap, FieldReference } from '../types';
+import { getTypeAndFieldDefinitions, addResolverToMap, embedPackOptionsWrapper } from '../utils';
 import { GraphQLSchema } from 'graphql';
 
 export function embed(
-  typeName: string,
-  fieldName: string,
+  fieldReference: FieldReference,
   wrappers: ResolverWrapper[],
   resolver?: Resolver,
 ): ResolverMapMiddleware {
   return (resolverMap, packOptions): ResolverMap => {
+    const [typeName, fieldName] = fieldReference;
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     if (!schema) {
       throw new Error(
@@ -25,7 +25,7 @@ export function embed(
     }
 
     wrappers = [...wrappers, embedPackOptionsWrapper];
-    const [type, field] = getTypeAndField(typeName, fieldName, schema);
+    const [type, field] = getTypeAndFieldDefinitions([typeName, fieldName], schema);
     const wrappedResolver = wrapResolver(resolver, wrappers, {
       type,
       field,
@@ -35,8 +35,7 @@ export function embed(
 
     addResolverToMap({
       resolverMap,
-      typeName,
-      fieldName,
+      fieldReference: [typeName, fieldName],
       resolver: wrappedResolver,
       overwrite: true,
     });

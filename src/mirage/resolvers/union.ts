@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLUnionType, GraphQLAbstractType } from 'graphql';
-import { extractDependencies } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
+import { extractDependencies } from '../../resolver-map/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
@@ -17,9 +17,13 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   }
 
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
-  const { graphqlSchema, mapper } = extractDependencies<{ graphqlSchema: GraphQLSchema; mapper: MirageGraphQLMapper }>(
-    context,
-  );
+  const { graphqlSchema } = extractDependencies<{
+    graphqlSchema: GraphQLSchema;
+  }>(['graphqlSchema'], context);
+
+  const { mirageMapper } = extractDependencies<{
+    mirageMapper: MirageGraphQLMapper;
+  }>(['mirageMapper'], context, { required: false });
 
   if (!graphqlSchema) {
     throw new Error('Please include `graphqlSchema: GraphQLSchema` in your pack dependencies');
@@ -38,8 +42,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
     matchingFieldsCandidateError = error;
   }
 
-  const [mappedModelName] = mapper && parentModelName ? mapper.matchForMirage([parentModelName]) : [undefined];
-
+  const mappedModelName = mirageMapper && parentModelName && mirageMapper.findMatchForModel(parentModelName);
   const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 

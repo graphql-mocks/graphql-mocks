@@ -10,8 +10,15 @@ import {
 } from 'graphql';
 
 export type Primitive = string | boolean | number;
+export type TypeName = string;
+export type FieldName = string;
+export type FieldReference = [TypeName, FieldName];
 
 export type Resolver = GraphQLFieldResolver<any, any>;
+export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
+export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
+export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
+export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
 
@@ -37,9 +44,10 @@ export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeRe
 
 export type PackState = Record<any, any>;
 
+type NonNullDependency = object | string | boolean | symbol | number;
 export type PackOptions = {
   state: PackState;
-  dependencies: Record<string, unknown>;
+  dependencies: Record<string, NonNullDependency>;
 };
 
 export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;

@@ -20,7 +20,7 @@ export default {
       id: '1',
       name: 'Fred Flinstone',
       age: 43,
-      friendIds: ['2', '3'],
+      friendIds: ['2', '3', '4'],
       postIds: ['1'],
       transportationId: { type: 'bike', id: '1' },
       hobbyIds: [
@@ -34,7 +34,7 @@ export default {
     {
       id: '2',
       name: 'Barney Rubble',
-      age: 40,
+      age: 42,
       friendIds: ['1'],
       transportationId: { type: 'publicTransit', id: '3' },
       hobbyIds: [
@@ -51,6 +51,15 @@ export default {
       transportationId: { type: 'car', id: '3' },
       hobbyIds: [{ type: 'makerHobby', id: '1' }],
       favoriteColor: 'Red',
+    },
+    {
+      id: '4',
+      name: 'Betty Rubble',
+      age: 39,
+      friendIds: ['2', '3'],
+      transportationId: { type: 'bike', id: '2' },
+      hobbyIds: [{ type: 'makerHobby', id: '1' }],
+      favoriteColor: 'Yellow',
     },
   ],
   bikes: [

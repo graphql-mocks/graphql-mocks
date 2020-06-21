@@ -11,7 +11,7 @@ import { mirageUnionResolver } from '../resolvers/union';
 import { mirageInterfaceResolver } from '../resolvers/interface';
 import { embedPackOptionsInContext } from '../../utils';
 
-export function patchUnionsInterfaces(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
+export function patchAutoTypeResolvers(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;
   const typeMap = (schema as GraphQLSchema).getTypeMap();
 

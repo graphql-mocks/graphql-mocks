@@ -1,11 +1,68 @@
-import { Resolver } from '../../types';
-import { GraphQLNonNull } from 'graphql';
-import { extractDependencies } from '../../utils';
+import { Resolver, ResolverInfo, ResolverParent } from '../../types';
+import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
+import { relayPaginateNodes } from '../../relay/helpers';
+import { mirageCursorForNode, ObjectResolverMatch, AutoResolverErrorMeta } from './helpers';
+import { extractDependencies } from '../../resolver-map/extract-dependencies';
+import { AutoResolverError } from './auto-resolver-error';
 
-export const mirageObjectResolver: Resolver = function (parent, _args, context, info) {
+function findMatchingFieldForObjectParent({
+  mirageMapper,
+  parent,
+  parentType,
+  fieldName,
+}: {
+  mirageMapper?: MirageGraphQLMapper;
+  parent: ResolverParent;
+  parentType: ResolverInfo['parentType'];
+  fieldName: ResolverInfo['fieldName'];
+}): ObjectResolverMatch {
+  // we assume the parent is a mirage model or POJO
+  if (typeof parent !== 'object') {
+    throw new Error(
+      `Expected parent to be an object, got ${typeof parent}, when trying to resolve field "${fieldName}" on type "${parentType}"`,
+    );
+  }
+
+  const match = mirageMapper && mirageMapper.findMatchForField([parentType.name, fieldName]);
+  const matchedModelName = match && match[0];
+  const mappedPropertyOnParent = match && match[1];
+
+  const fieldNameCandidates = [mappedPropertyOnParent, fieldName].filter(Boolean) as string[];
+
+  // considered a match if it exists on the parent
+  const matchedProperty = fieldNameCandidates.find((candidate) => candidate in parent);
+
+  const value = (matchedProperty && parent[matchedProperty]) ?? null;
+
+  // if this is a mirage model we check for the models as that is where
+  // the relationship with the parents exist.
+  const propertyValue = value?.models ?? value;
+
+  return {
+    fieldNameCandidates,
+    matchedModelName,
+    matchedProperty,
+    propertyValue,
+    parentModelName: parent?.modelName,
+  };
+}
+
+export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
-  const { mapper } = extractDependencies<{ mapper: MirageGraphQLMapper }>(context);
+  const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
+  const { mirageMapper } = extractDependencies<{ mirageMapper: MirageGraphQLMapper }>(['mirageMapper'], context, {
+    required: false,
+  });
+
+  const errorMeta: AutoResolverErrorMeta = {
+    parent,
+    args,
+    context,
+    info,
+    autoResolverType: 'OBJECT',
+    isRelay: isRelayPaginated,
+  };
 
   if (typeof parent !== 'object') {
     throw new Error(
@@ -13,28 +70,28 @@ export const mirageObjectResolver: Resolver = function (parent, _args, context, 
     );
   }
 
-  const [, mappedAttrName] = mapper ? mapper.matchForGraphQL([parentType.name, fieldName]) : [undefined, undefined];
-  const candidates = [mappedAttrName, fieldName].filter(Boolean) as string[];
-  const matchedAttr = candidates.find((candidate) => candidate in parent);
-  const value = (matchedAttr && parent[matchedAttr]) ?? undefined;
+  const match = findMatchingFieldForObjectParent({ mirageMapper, parent, parentType, fieldName });
+  errorMeta.match = match;
 
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist
-  const result = value?.models || value;
+  let result = match.propertyValue;
 
-  if (result == null) {
-    if (returnType instanceof GraphQLNonNull) {
-      throw new Error(
-        `Failed to resolve field "${fieldName}" on type "${
-          parentType.name
-        }". Tried to resolve the parent object ${parent.toString()}, with the following attrs: ${candidates.join(
-          ', ',
-        )}`,
-      );
+  const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
+
+  try {
+    if (fieldFilter) {
+      result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
+      errorMeta.usedFieldFilter = true;
     }
 
-    return null;
-  }
+    if (isRelayPaginated) {
+      const nodes = coerceToList(result);
+      return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
+    }
 
-  return result;
+    return coerceReturnType(result, info);
+  } catch (error) {
+    throw new AutoResolverError(error, errorMeta);
+  }
 };

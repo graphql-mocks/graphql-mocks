@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { patchModelTypes } from '../../src/mirage/middleware/patch-model-types';
-import { patchUnionsInterfaces } from '../../src/mirage/middleware/patch-auto-unions-interfaces';
+import { patchAutoResolvers } from '../../src/mirage/';
 import { server as mirageServer } from './test-helpers/mirage-sample';
-import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
+import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { ResolverMap } from '../../src/types';
@@ -14,22 +13,25 @@ describe('integration/mirage-auto-resolver', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let graphQLHandler: any;
   let resolvers: ResolverMap;
-  let mapper: MirageGraphQLMapper;
+  let mirageMapper: MirageGraphQLMapper;
 
   this.beforeEach(() => {
-    mapper = new MirageGraphQLMapper()
-      .add(['AthleticHobby'], ['SportsHobby'])
-      .add(['Automobile'], ['Car'])
-      .add(['Person', 'paginatedFriends'], ['Person', 'friends'])
-      .add(['Person', 'fullName'], ['Person', 'name']);
+    mirageMapper = new MirageGraphQLMapper()
+      .addTypeMapping('AthleticHobby', 'SportsHobby')
+      .addTypeMapping('Automobile', 'Car')
+      .addFieldMapping(['Person', 'paginatedFriends'], ['Person', 'friends'])
+      .addFieldMapping(['Person', 'fullName'], ['Person', 'name'])
+      .addFieldMapping(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
+      .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, _parent, { minimum, maximum }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return personModels.filter((model: any) => model.age >= minimum && model.age <= maximum);
+      });
 
     mirageServer.db.loadData(defaultScenario);
-    const middlewares = [patchModelTypes, patchUnionsInterfaces];
     const handler = createQueryHandler(defaultResolvers, {
-      state: {},
-      middlewares,
+      middlewares: [patchAutoResolvers],
       dependencies: {
-        mapper,
+        mirageMapper,
         mirageServer,
         graphqlSchema: graphqlSchema,
       },
@@ -84,12 +86,10 @@ describe('integration/mirage-auto-resolver', function () {
     const modelAttrs = mirageServer.schema.first('person')!.attrs;
     expect('name' in modelAttrs).to.be.true;
     expect('fullName' in modelAttrs).to.be.false;
-    expect(
-      mapper.mappings.find(
-        ({ graphql: [type, field], mirage: [model, attr] }) =>
-          type === 'Person' && field === 'fullName' && model === 'Person' && attr === 'name',
-      ),
-    ).to.not.equal(undefined);
+    expect(mirageMapper.findMatchForField(['Person', 'fullName'])).to.deep.equal(
+      ['Person', 'name'],
+      'Person.fullname <=> Person.name mapping exists',
+    );
 
     const result = await graphQLHandler(query);
     expect(result).to.deep.equal({
@@ -98,6 +98,32 @@ describe('integration/mirage-auto-resolver', function () {
           id: '1',
           name: 'Fred Flinstone',
           fullName: 'Fred Flinstone',
+        },
+      },
+    });
+  });
+
+  it('can filter results by mirage mapper field filter', async function () {
+    const query = `query {
+      person(id: 1) {
+        friendsByAgeRange(minimum: 39, maximum: 41) {
+          name
+        }
+      }
+    }`;
+
+    const result = await graphQLHandler(query);
+    expect(result).to.deep.equal({
+      data: {
+        person: {
+          friendsByAgeRange: [
+            {
+              name: 'Wilma Flinstone',
+            },
+            {
+              name: 'Betty Rubble',
+            },
+          ],
         },
       },
     });
@@ -213,11 +239,11 @@ describe('integration/mirage-auto-resolver', function () {
       `Mirage: You're trying to find model(s) of type AthleticHobby but this collection doesn't exist in the database`,
       'AthleticHobby does exist as a mirage model',
     );
-    expect(
-      mapper.mappings.some((mapping) => {
-        return mapping.graphql[0] === 'AthleticHobby' && mapping.mirage[0] === 'SportsHobby';
-      }),
-    ).to.be.equal(true, 'mapping exists betwene mirage and graphql');
+
+    expect(mirageMapper.findMatchForType('AthleticHobby')).to.be.equal(
+      'SportsHobby',
+      'Type <=> Model mapping exists on mapper',
+    );
 
     // Case #3 pre-checks
     expect(graphqlSchema.getType('CulinaryHobby')).to.equal(undefined, 'CulinaryHobby does not exist on schema');
@@ -231,10 +257,10 @@ describe('integration/mirage-auto-resolver', function () {
       'CookingHobby does exist as a mirage model',
     );
     expect(
-      mapper.mappings.some((mapping) => {
+      mirageMapper.typeMappings.some((mapping) => {
         return mapping.graphql[0] === 'CookingHobby' && mapping.mirage[0] === 'CulinaryHobby';
       }),
-    ).to.be.equal(false, 'no mappings exists betwene mirage and graphql');
+    ).to.be.equal(false, 'no mappings exists between mirage and graphql');
 
     const query = `query {
       allPersons {

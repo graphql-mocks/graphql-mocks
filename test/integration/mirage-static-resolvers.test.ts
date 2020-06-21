@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { graphqlSchema } from './test-helpers/test-schema';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
-import defaultScenario from './test-helpers/mirage-sample/scenarios/default';
+import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { createQueryHandler } from '../../src/graphql';
 
 const { query: graphQLHandler } = createQueryHandler(defaultResolvers, {
@@ -13,7 +13,7 @@ const { query: graphQLHandler } = createQueryHandler(defaultResolvers, {
   },
 });
 
-describe('it can resolve from basic resolvers', function () {
+describe('integration/mirage-static-resolvers', function () {
   beforeEach(() => {
     mirageServer.db.loadData(defaultScenario);
   });
@@ -75,11 +75,15 @@ describe('it can resolve from basic resolvers', function () {
           friends: [
             {
               name: 'Barney Rubble',
-              age: 40,
+              age: 42,
             },
             {
               name: 'Wilma Flinstone',
               age: 40,
+            },
+            {
+              name: 'Betty Rubble',
+              age: 39,
             },
           ],
         },

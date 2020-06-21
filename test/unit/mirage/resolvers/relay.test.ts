@@ -1,12 +1,12 @@
-import { mirageRelayResolver } from '../../../../src/mirage/resolvers/relay';
+import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
 import { expect } from 'chai';
-import { buildSchema, GraphQLObjectType } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
 
 describe('mirage/relay', () => {
   let mirageServer: Server;
-  let mapper: MirageGraphQLMapper;
+  let mirageMapper: MirageGraphQLMapper;
   let resolverContext: Record<string, unknown>;
   let sourcererParent: ModelInstance;
   let abraSpell: ModelInstance;
@@ -74,7 +74,7 @@ describe('mirage/relay', () => {
       },
     });
 
-    mapper = new MirageGraphQLMapper().add(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
+    mirageMapper = new MirageGraphQLMapper().addFieldMapping(['Sourcerer', 'paginatedSpells'], ['Sourcerer', 'spells']);
 
     meowSpell = mirageServer.schema.create('spell', {
       id: '1',
@@ -123,7 +123,8 @@ describe('mirage/relay', () => {
       pack: {
         dependencies: {
           mirageServer,
-          mapper,
+          mirageMapper,
+          graphqlSchema,
         },
       },
     };
@@ -134,11 +135,11 @@ describe('mirage/relay', () => {
       first: 2,
     };
 
-    const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+    const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
-    });
+    } as GraphQLResolveInfo);
 
     expect(result.edges[0].node).to.deep.equal(meowSpell);
     expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -153,11 +154,11 @@ describe('mirage/relay', () => {
       first: allSpells.length,
     };
 
-    const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+    const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
       fieldName: 'paginatedSpells',
       returnType: graphqlTypes.SpellConnection,
       parentType: graphqlTypes.Sourcerer,
-    });
+    } as GraphQLResolveInfo);
 
     expect(result.edges[0].node).to.deep.equal(meowSpell);
     expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -177,11 +178,11 @@ describe('mirage/relay', () => {
         after: 'model:spell(2)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(imperioSpell);
       expect(result.edges[1].node).to.deep.equal(abertoSpell);
@@ -197,11 +198,11 @@ describe('mirage/relay', () => {
         after: 'model:spell(3)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(abertoSpell);
       expect(result.edges[1].node).to.deep.equal(morsmordreSpell);
@@ -216,11 +217,11 @@ describe('mirage/relay', () => {
         first: 2,
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(meowSpell);
       expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -236,11 +237,11 @@ describe('mirage/relay', () => {
         after: 'model:spell(5)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges.length).to.equal(0);
       expect(result.pageInfo.hasNextPage).to.equal(false);
@@ -257,16 +258,16 @@ describe('mirage/relay', () => {
 
       let e: Error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
         e = error;
       }
 
-      expect(e.message).to.equal("ANARCHY doesn't appear to be a valid edge");
+      expect(e.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
     it('throws an error when first is less than 0', async () => {
@@ -275,13 +276,13 @@ describe('mirage/relay', () => {
       };
 
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
-        expect(error.message).to.equal('`first` argument must be greater than or equal to 0');
+        expect(error.message).to.contain('`first` argument must be greater than or equal to 0');
         return;
       }
 
@@ -296,11 +297,11 @@ describe('mirage/relay', () => {
         before: 'model:spell(5)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(imperioSpell);
       expect(result.edges[1].node).to.deep.equal(abertoSpell);
@@ -315,11 +316,11 @@ describe('mirage/relay', () => {
         last: 2,
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(abertoSpell);
       expect(result.edges[1].node).to.deep.equal(morsmordreSpell);
@@ -335,11 +336,11 @@ describe('mirage/relay', () => {
         before: 'model:spell(3)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         parentType: graphqlTypes.Sourcerer,
         returnType: graphqlTypes.SpellConnection,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges[0].node).to.deep.equal(meowSpell);
       expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -355,11 +356,11 @@ describe('mirage/relay', () => {
         before: 'model:spell(1)',
       };
 
-      const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+      const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
         fieldName: 'paginatedSpells',
         returnType: graphqlTypes.SpellConnection,
         parentType: graphqlTypes.Sourcerer,
-      });
+      } as GraphQLResolveInfo);
 
       expect(result.edges.length).to.equal(0);
       expect(result.pageInfo.hasNextPage).to.equal(true);
@@ -376,16 +377,16 @@ describe('mirage/relay', () => {
 
       let error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (e) {
         error = e;
       }
 
-      expect(error.message).to.equal("ANARCHY doesn't appear to be a valid edge");
+      expect(error.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
     it('throws an error when last is less than 0', async () => {
@@ -395,16 +396,16 @@ describe('mirage/relay', () => {
 
       let e: Error = new Error();
       try {
-        await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: 'paginatedSpells',
           returnType: graphqlTypes.SpellConnection,
           parentType: graphqlTypes.Sourcerer,
-        });
+        } as GraphQLResolveInfo);
       } catch (error) {
         e = error;
       }
 
-      expect(e.message).to.equal('`last` argument must be greater than or equal to 0');
+      expect(e.message).to.contain('`last` argument must be greater than or equal to 0');
     });
   });
 
@@ -425,11 +426,11 @@ describe('mirage/relay', () => {
           first: 2,
         };
 
-        const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: mappedGraphQLField,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,
-        });
+        } as GraphQLResolveInfo);
 
         expect(result.edges[0].node).to.deep.equal(abertoSpell);
         expect(result.edges[1].node).to.deep.equal(abraSpell);
@@ -444,11 +445,11 @@ describe('mirage/relay', () => {
           first: 2,
         };
 
-        const result = await mirageRelayResolver(sourcererParent, args, resolverContext, {
+        const result = await mirageObjectResolver(sourcererParent, args, resolverContext, {
           fieldName: matchingFieldAndAttrName,
           parentType: graphqlTypes.Sourcerer,
           returnType: graphqlTypes.SpellConnection,
-        });
+        } as GraphQLResolveInfo);
 
         expect(result.edges[0].node).to.deep.equal(abertoSpell);
         expect(result.edges[1].node).to.deep.equal(abraSpell);

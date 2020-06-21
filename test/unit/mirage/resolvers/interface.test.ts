@@ -80,11 +80,13 @@ describe('mirage/resolvers/interface', function () {
   });
 
   it('resolves an interface to a type by mapper', async function () {
-    const mapper = new MirageGraphQLMapper().add(['Feline'], ['Cat']);
+    const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
+
     const context = {
       __testUseFindInCommon: false,
-      pack: generatePackOptions({ dependencies: { mapper, graphqlSchema: schema } }),
+      pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
     };
+
     const resolvedType = mirageInterfaceResolver(
       catModel,
       context,
