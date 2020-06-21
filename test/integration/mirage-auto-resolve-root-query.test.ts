@@ -440,7 +440,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
         expect(result.data?.person).to.equal(null);
         expect(result.errors?.length).to.equal(1);
-        expect(result.errors[0].message).to.equal(
+        expect(result.errors[0].message).to.contain(
           'Tried to a coerce singular result but got an array of more than one result.',
         );
       });
@@ -508,7 +508,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           // this error message is slightly different than for no field filter
           // as it calls out that the field filter is returning multiple results
           // when only one is expected
-          expect(result.errors[0].message).to.equal(
+          expect(result.errors[0].message).to.contain(
             'Tried to a coerce singular result but got an array of more than one result.',
           );
         });

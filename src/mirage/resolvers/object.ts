@@ -1,10 +1,10 @@
 import { Resolver, ResolverInfo, ResolverParent } from '../../types';
-import { GraphQLResolveInfo } from 'graphql';
 import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
-import { mirageCursorForNode } from './helpers';
+import { mirageCursorForNode, ObjectResolverMatch, AutoResolverErrorMeta } from './helpers';
 import { extractDependencies } from '../../resolver-map/extract-dependencies';
+import { AutoResolverError } from './auto-resolver-error';
 
 function findMatchingFieldForObjectParent({
   mirageMapper,
@@ -16,7 +16,7 @@ function findMatchingFieldForObjectParent({
   parent: ResolverParent;
   parentType: ResolverInfo['parentType'];
   fieldName: ResolverInfo['fieldName'];
-}): FieldMatchMeta {
+}): ObjectResolverMatch {
   // we assume the parent is a mirage model or POJO
   if (typeof parent !== 'object') {
     throw new Error(
@@ -28,41 +28,25 @@ function findMatchingFieldForObjectParent({
   const matchedModelName = match && match[0];
   const mappedPropertyOnParent = match && match[1];
 
-  const fieldCandidates = [mappedPropertyOnParent, fieldName].filter(Boolean) as string[];
+  const fieldNameCandidates = [mappedPropertyOnParent, fieldName].filter(Boolean) as string[];
 
   // considered a match if it exists on the parent
-  const matchedProperty = fieldCandidates.find((candidate) => candidate in parent);
+  const matchedProperty = fieldNameCandidates.find((candidate) => candidate in parent);
 
   const value = (matchedProperty && parent[matchedProperty]) ?? null;
+
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist.
   const propertyValue = value?.models ?? value;
 
   return {
-    fieldCandidates,
+    fieldNameCandidates,
     matchedModelName,
     matchedProperty,
     propertyValue,
     parentModelName: parent?.modelName,
   };
 }
-
-type MirageResolverMeta = {
-  info: GraphQLResolveInfo;
-  match?: FieldMatchMeta;
-  isRelay?: boolean;
-  hasFieldFilter?: boolean;
-  usedFieldFilter?: boolean;
-};
-
-type FieldMatchMeta = Partial<{
-  fieldCandidates: string[];
-  parentModelName: string;
-  matchedModelName: string;
-  matchedProperty: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  propertyValue: any;
-}>;
 
 export const mirageObjectResolver: Resolver = function (parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
@@ -71,8 +55,12 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
     required: false,
   });
 
-  const meta: MirageResolverMeta = {
+  const errorMeta: AutoResolverErrorMeta = {
+    parent,
+    args,
+    context,
     info,
+    autoResolverType: 'OBJECT',
     isRelay: isRelayPaginated,
   };
 
@@ -82,23 +70,28 @@ export const mirageObjectResolver: Resolver = function (parent, args, context, i
     );
   }
 
-  const matchedMeta = findMatchingFieldForObjectParent({ mirageMapper, parent, parentType, fieldName });
-  meta.match = matchedMeta;
+  const match = findMatchingFieldForObjectParent({ mirageMapper, parent, parentType, fieldName });
+  errorMeta.match = match;
 
   // if this is a mirage model we check for the models as that is where
   // the relationship with the parents exist
-  let result = matchedMeta.propertyValue;
+  let result = match.propertyValue;
 
   const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 
-  if (fieldFilter) {
-    result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
-  }
+  try {
+    if (fieldFilter) {
+      result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
+      errorMeta.usedFieldFilter = true;
+    }
 
-  if (isRelayPaginated) {
-    const nodes = coerceToList(result);
-    return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
-  }
+    if (isRelayPaginated) {
+      const nodes = coerceToList(result);
+      return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
+    }
 
-  return coerceReturnType(result, info);
+    return coerceReturnType(result, info);
+  } catch (error) {
+    throw new AutoResolverError(error, errorMeta);
+  }
 };

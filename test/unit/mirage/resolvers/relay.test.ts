@@ -267,7 +267,7 @@ describe('mirage/relay', () => {
         e = error;
       }
 
-      expect(e.message).to.equal("ANARCHY doesn't appear to be a valid edge");
+      expect(e.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
     it('throws an error when first is less than 0', async () => {
@@ -282,7 +282,7 @@ describe('mirage/relay', () => {
           parentType: graphqlTypes.Sourcerer,
         } as GraphQLResolveInfo);
       } catch (error) {
-        expect(error.message).to.equal('`first` argument must be greater than or equal to 0');
+        expect(error.message).to.contain('`first` argument must be greater than or equal to 0');
         return;
       }
 
@@ -386,7 +386,7 @@ describe('mirage/relay', () => {
         error = e;
       }
 
-      expect(error.message).to.equal("ANARCHY doesn't appear to be a valid edge");
+      expect(error.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
     it('throws an error when last is less than 0', async () => {
@@ -405,7 +405,7 @@ describe('mirage/relay', () => {
         e = error;
       }
 
-      expect(e.message).to.equal('`last` argument must be greater than or equal to 0');
+      expect(e.message).to.contain('`last` argument must be greater than or equal to 0');
     });
   });
 

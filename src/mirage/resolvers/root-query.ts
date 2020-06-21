@@ -1,18 +1,24 @@
-import { Server as MirageServer, ModelInstance } from 'miragejs';
+import { Server as MirageServer } from 'miragejs';
 import { isScalarType } from 'graphql';
 import { Resolver } from '../../types';
 import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
-import { cleanRelayConnectionName, mirageCursorForNode } from './helpers';
+import {
+  cleanRelayConnectionName,
+  mirageCursorForNode,
+  RootQueryResolverMatch,
+  AutoResolverErrorMeta,
+} from './helpers';
 import { extractDependencies } from '../../resolver-map/extract-dependencies';
+import { AutoResolverError } from './auto-resolver-error';
 
 function findMatchingModelsForType({
   type,
   mirageMapper,
   mirageServer,
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-any): { modelNameCandidates: string[]; matchedModelName: string; models: ModelInstance[] | null } {
+any): RootQueryResolverMatch {
   type = unwrap(type);
   const mappedModelName = mirageMapper && type.name && mirageMapper.findMatchForType(type.name);
 
@@ -51,11 +57,19 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
 
   const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 
+  const errorMeta: AutoResolverErrorMeta = {
+    parent,
+    args,
+    info,
+    context,
+    autoResolverType: 'ROOT_TYPE',
+    isRelay: isRelayPaginated,
+    usedFieldFilter: false,
+    hasFieldFilter: Boolean(fieldFilter),
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const meta: any = {};
-
   const hasScalarInReturnType = isScalarType(unwrap(returnType));
 
   // Root query types that return scalars cannot use mirage models
@@ -76,21 +90,24 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
     // * there is no parent on root query types
     // * we are querying for something non-scalar (so we can use mirage)
     // * we can use the mappings to assist in finding something from mirage
-    const matched = findMatchingModelsForType({ type: returnType, mirageMapper, mirageServer });
-    meta.modelNameCandidates = matched.modelNameCandidates;
-    meta.matchedModelName = matched.matchedModelName;
-
-    result = matched.models;
+    const match = findMatchingModelsForType({ type: returnType, mirageMapper, mirageServer });
+    errorMeta.match = match;
+    result = match.models;
   }
 
-  if (fieldFilter) {
-    result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
-  }
+  try {
+    if (fieldFilter) {
+      result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
+      errorMeta.usedFieldFilter = true;
+    }
 
-  if (isRelayPaginated) {
-    const nodes = coerceToList(result);
-    return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
-  }
+    if (isRelayPaginated) {
+      const nodes = coerceToList(result);
+      return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
+    }
 
-  return coerceReturnType(result, info);
+    return coerceReturnType(result, info);
+  } catch (error) {
+    throw new AutoResolverError(error, errorMeta);
+  }
 };
