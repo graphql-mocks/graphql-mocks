@@ -9,16 +9,36 @@ import {
   GraphQLTypeResolver,
 } from 'graphql';
 
-export type Primitive = string | boolean | number;
-export type TypeName = string;
-export type FieldName = string;
-export type FieldReference = [TypeName, FieldName];
+// Resolvers Shorthands
 
+export type Primitive = string | boolean | number;
 export type Resolver = GraphQLFieldResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
 export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
 export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
 export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
+
+// Library Abstractions
+
+// * Field References
+
+export type TypeName = string;
+export type FieldName = string;
+export type FieldReference = [TypeName, FieldName];
+
+// * Targets
+
+export enum SPECIAL_TYPE_TARGET {
+  ALL_TYPES = '*',
+}
+
+export enum SPECIAL_FIELD_TARGET {
+  ALL_FIELDS = '*',
+}
+
+export type TargetReference = [TypeTarget, FieldTarget];
+export type TypeTarget = SPECIAL_TYPE_TARGET.ALL_TYPES | string;
+export type FieldTarget = SPECIAL_FIELD_TARGET | string;
 
 export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
 export type PatchResolverWrapper = (options: ResolverWrapperOptions) => Resolver | undefined;
