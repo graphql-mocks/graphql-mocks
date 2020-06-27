@@ -104,7 +104,7 @@ export function addResolverToMap({
 
   if (resolverMap[typeName][fieldName] && !overwrite) {
     throw new Error(
-      `The resolverMap already has a field specified at ${fieldName}, and the overwrite option was not set to true`,
+      `Cannot add resolver to resolver map at ["${typeName}", "${fieldName}"] when overwrite is set to false`,
     );
   }
 
