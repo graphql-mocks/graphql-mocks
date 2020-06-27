@@ -1,5 +1,5 @@
-import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions } from '../types';
+import { GraphQLObjectType, GraphQLSchema, isObjectType } from 'graphql';
+import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions, Resolver } from '../types';
 import { addResolverToMap, embedPackOptionsWrapper } from '../utils';
 export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => (
   resolverMap: ResolverMap,
@@ -15,9 +15,8 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
 
   for (const typeKey of Object.keys(typeMap)) {
     const type = typeMap[typeKey];
-    const isObjectType = type instanceof GraphQLObjectType;
 
-    if (isObjectType) {
+    if (isObjectType(type)) {
       const fields = (type as GraphQLObjectType).getFields();
 
       for (const fieldKey of Object.keys(fields)) {
@@ -34,7 +33,7 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
           let patchResolver = patchWith(resolverWrapperOptions);
 
           if (typeof patchResolver === 'function') {
-            patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions);
+            patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions) as Resolver;
 
             addResolverToMap({
               resolverMap: resolverMap,

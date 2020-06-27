@@ -1,5 +1,5 @@
 import { ResolverMap } from '../types';
-import { GraphQLSchema, GraphQLInterfaceType, GraphQLUnionType, GraphQLObjectType } from 'graphql';
+import { GraphQLSchema, isAbstractType, isObjectType } from 'graphql';
 
 export function addTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
   for (const typeName in resolverMap) {
@@ -12,7 +12,7 @@ export function addTypeResolversToSchema(resolverMap: ResolverMap, schema: Graph
     const typeResolver = resolverMap[typeName].__resolveType;
     const hasTypeResolver = Boolean(typeResolver);
 
-    if (hasTypeResolver && (type instanceof GraphQLInterfaceType || type instanceof GraphQLUnionType)) {
+    if (hasTypeResolver && isAbstractType(type)) {
       type.resolveType = typeResolver;
     }
   }
@@ -22,7 +22,7 @@ export function addFieldResolverstoSchema(resolverMap: ResolverMap, schema: Grap
   for (const typeName in resolverMap) {
     const type = schema.getType(typeName);
 
-    if (!(type instanceof GraphQLObjectType)) {
+    if (!isObjectType(type)) {
       continue;
     }
 

@@ -7,6 +7,7 @@ import {
   PackOptions,
   FieldReference,
 } from './types';
+
 import {
   GraphQLSchema,
   GraphQLObjectType,
@@ -16,10 +17,11 @@ import {
   GraphQLScalarType,
   GraphQLEnumType,
   GraphQLInputObjectType,
-  GraphQLFieldResolver,
   GraphQLResolveInfo,
   isListType,
   isNonNullType,
+  isObjectType,
+  isAbstractType,
 } from 'graphql';
 
 type unwrappedType =
@@ -46,7 +48,7 @@ export const embedPackOptionsInContext = (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): GraphQLFieldResolver<any, any> => {
+export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): Resolver => {
   return (
     parent: unknown,
     args: Record<string, unknown>,
@@ -66,14 +68,14 @@ export function getTypeAndFieldDefinitions(
   const type = schema.getType(typeName);
 
   if (!type) {
-    throw new Error(`Unable to find type "${typeName}" from from schema`);
+    throw new Error(`Unable to find type "${typeName}" from schema`);
   }
 
   let field: ResolvableField;
-  if (type instanceof GraphQLObjectType) {
+  if (isObjectType(type)) {
     const fields = type.getFields();
     field = fields[fieldName];
-  } else if (type instanceof GraphQLUnionType || type instanceof GraphQLInterfaceType) {
+  } else if (isAbstractType(type)) {
     field = { name: '__resolveType' } as ResolvableField;
   } else {
     throw new Error(`Type "${typeName}" must be an a GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType`);

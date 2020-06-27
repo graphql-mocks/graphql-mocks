@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLTypeResolver, GraphQLUnionType, GraphQLAbstractType } from 'graphql';
+import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, isUnionType } from 'graphql';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
 import { extractDependencies } from '../../resolver-map/extract-dependencies';
@@ -10,7 +10,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   _info,
   unionType: GraphQLAbstractType,
 ) {
-  if (!(unionType instanceof GraphQLUnionType)) {
+  if (!isUnionType(unionType)) {
     throw new Error(
       'Expected info to be an instance of a GraphQLUnionType. This resolver can only be used as a GraphQLTypeResolver on GraphQLUnionType types',
     );

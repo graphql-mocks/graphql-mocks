@@ -21,7 +21,6 @@ export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
 export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
-
 export type PatchResolverWrapper = (options: ResolverWrapperOptions) => Resolver | undefined;
 
 // A resolvable type is a type that has a "field" that can be resolved by a resolver function
