@@ -1,12 +1,12 @@
 import { Packer, PackOptions, PackState } from '../types';
 import cloneDeep from 'lodash.clonedeep';
-import { wrapEachField } from './wrap-each-field';
 import { embedPackOptionsWrapper } from '../utils';
+import { embed } from '../resolver/embed';
 
 export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
 export const pack: Packer = (initialResolversMap = {}, middlewares = [], packOptions = defaultPackOptions) => {
-  middlewares = [...middlewares, wrapEachField([embedPackOptionsWrapper])];
+  middlewares = [...middlewares, embed({ wrappers: [embedPackOptionsWrapper] })];
 
   // make an intial copy
   let wrappedMap = cloneDeep(initialResolversMap);

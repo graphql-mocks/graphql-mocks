@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { createQueryHandler, QueryHandler } from '../../../src/graphql/handler';
 import { ResolverMap } from '../../../src/types';
 import { buildSchema } from 'graphql';
-import { wrapEachField } from '../../../src/resolver-map';
 import { spyWrapper } from '../../../src/spy';
+import { embed } from '../../../src/resolver/embed';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -83,7 +83,7 @@ Syntax Error: Unexpected Name "NOT"`);
     // produces a state with the spy function accessible at
     // state.spies.Query.hello
     const handler = await createQueryHandler(resolverMap, {
-      middlewares: [wrapEachField([spyWrapper])],
+      middlewares: [embed({ wrappers: [spyWrapper] })],
       dependencies: { graphqlSchema: schemaString },
     });
 
