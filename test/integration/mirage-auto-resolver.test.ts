@@ -28,6 +28,7 @@ describe('integration/mirage-auto-resolver', function () {
       });
 
     mirageServer.db.loadData(defaultScenario);
+
     const handler = await createQueryHandler(defaultResolvers, {
       middlewares: [patchAutoResolvers],
       dependencies: {

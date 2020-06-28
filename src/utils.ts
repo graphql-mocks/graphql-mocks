@@ -202,3 +202,8 @@ export function coerceReturnType(result: any, info: GraphQLResolveInfo): any {
 
   return result;
 }
+
+export function resolverExistsInResolverMap(fieldReference: FieldReference, resolverMap: ResolverMap): boolean {
+  const [typeName, fieldName] = fieldReference;
+  return typeof resolverMap?.[typeName]?.[fieldName] === 'function';
+}

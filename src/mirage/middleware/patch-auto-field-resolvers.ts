@@ -1,26 +1,57 @@
+import { GraphQLSchema } from 'graphql';
 import { mirageRootQueryResolver } from '../resolvers/root-query';
 import { mirageObjectResolver } from '../resolvers/object';
-import { GraphQLSchema } from 'graphql';
-import { isRootQueryType } from '../../utils';
-import { patchEachField } from '../..';
-import { ResolverMapMiddleware } from '../../types';
+import {
+  isRootQueryType,
+  addResolverToMap,
+  isRootMutationType,
+  isInternalType,
+  resolverExistsInResolverMap,
+} from '../../utils';
+import { ResolverMapMiddleware, TargetReference, PackOptions, ResolverMap } from '../../types';
+import { walk } from '../../resolver-map/utils/walk';
 
-export const patchAutoFieldResolvers = (): ResolverMapMiddleware =>
-  patchEachField(({ type, packOptions }) => {
-    const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
-    const rootMutationTypeName = schema.getMutationType()?.name;
-    const isRootMutationType = rootMutationTypeName && rootMutationTypeName === type.name;
-    const isGraphQLInternalType = type.name.indexOf('__') === 0;
-    const isRootQuery = isRootQueryType(type, schema);
+export function patchAutoFieldResolvers(target: TargetReference = ['*', '*']): ResolverMapMiddleware {
+  return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {
+    const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
-    if (isRootQuery) {
-      return mirageRootQueryResolver;
+    if (!graphqlSchema) {
+      throw new Error('graphqlSchema is required in dependencies to patch field resolvers');
     }
 
-    const skipAutoResolving = isRootMutationType || isGraphQLInternalType;
-    if (skipAutoResolving) {
-      return;
-    }
+    await walk(
+      {
+        target,
+        graphqlSchema,
+      },
+      async (fieldReference) => {
+        const [typeName] = fieldReference;
+        const isRootQuery = isRootQueryType(typeName, graphqlSchema);
+        const isRootMutation = isRootMutationType(typeName, graphqlSchema);
 
-    return mirageObjectResolver;
-  });
+        if (resolverExistsInResolverMap(fieldReference, resolverMap)) {
+          return;
+        }
+
+        if (isRootMutation || isInternalType(typeName)) {
+          return;
+        }
+
+        let resolver;
+        if (isRootQuery) {
+          resolver = mirageRootQueryResolver;
+        } else {
+          resolver = mirageObjectResolver;
+        }
+
+        addResolverToMap({
+          resolverMap: resolverMap,
+          fieldReference: fieldReference,
+          resolver,
+        });
+      },
+    );
+
+    return resolverMap;
+  };
+}
