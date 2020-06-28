@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { wrapResolver } from './wrap';
+import { wrapResolver } from '../resolver/wrap';
 import {
   Resolver,
   ResolverWrapper,
@@ -10,7 +10,7 @@ import {
   SPECIAL_FIELD_TARGET,
 } from '../types';
 import { getTypeAndFieldDefinitions, addResolverToMap, embedPackOptionsWrapper } from '../utils';
-import { expandTarget } from '../resolver-map/utils/expand-target';
+import { expandTarget } from './utils/expand-target';
 
 export type EmbedOptions = {
   target?: TargetReference;

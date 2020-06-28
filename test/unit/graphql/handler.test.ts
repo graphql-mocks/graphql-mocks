@@ -3,7 +3,7 @@ import { createQueryHandler, QueryHandler } from '../../../src/graphql/handler';
 import { ResolverMap } from '../../../src/types';
 import { buildSchema } from 'graphql';
 import { spyWrapper } from '../../../src/spy';
-import { embed } from '../../../src/resolver/embed';
+import { embed } from '../../../src/resolver-map/embed';
 
 describe('graphql/hander', function () {
   const schemaString = `

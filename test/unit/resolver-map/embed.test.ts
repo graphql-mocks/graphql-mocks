@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { embed } from '../../../src/resolver/embed';
+import { embed } from '../../../src/resolver-map/embed';
 import { ResolverWrapper, Resolver } from '../../../src/types';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema } from 'graphql';
 
-describe('resolver/embed', () => {
+describe('resolver-map/embed', () => {
   const schema = buildSchema(`
     schema {
       query: Query
