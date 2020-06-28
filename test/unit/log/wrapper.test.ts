@@ -18,7 +18,7 @@ describe('log/wrapper', function () {
 
   it('logs details around calling resolvers', async function () {
     const initialResolver = (() => ({ 'the result': 'has been returned' })) as Resolver;
-    const wrappedResolver = logWrapper(initialResolver, {
+    const wrappedResolver = await logWrapper(initialResolver, {
       resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,

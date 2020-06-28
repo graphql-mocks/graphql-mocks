@@ -79,7 +79,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrappedResolvers = patchAutoFieldResolvers(
+    const wrappedResolvers = await patchAutoFieldResolvers()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -94,7 +94,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     expect(resolverMap?.Query.potions).to.not.exist;
     expect(resolverMap?.Mutation?.addSpell).to.not.exist;
 
-    const wrappedResolvers = patchAutoFieldResolvers(
+    const wrappedResolvers = await patchAutoFieldResolvers()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );

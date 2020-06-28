@@ -6,6 +6,10 @@ import {
   ResolvableField,
   PackOptions,
   FieldReference,
+  ResolverParent,
+  ResolverArgs,
+  ResolverInfo,
+  ResolverContext,
 } from './types';
 
 import {
@@ -22,6 +26,7 @@ import {
   isNonNullType,
   isObjectType,
   isAbstractType,
+  isNamedType,
 } from 'graphql';
 
 type unwrappedType =
@@ -48,13 +53,13 @@ export const embedPackOptionsInContext = (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const embedPackOptionsWrapper: ResolverWrapper = (resolver, options): Resolver => {
+export const embedPackOptionsWrapper: ResolverWrapper = async (resolver, options): Promise<Resolver> => {
   return (
-    parent: unknown,
-    args: Record<string, unknown>,
-    context: Record<string, unknown>,
-    info: GraphQLResolveInfo,
-  ): unknown => {
+    parent: ResolverParent,
+    args: ResolverArgs,
+    context: ResolverContext,
+    info: ResolverInfo,
+  ): Promise<unknown> => {
     context = embedPackOptionsInContext(context, options.packOptions);
     return resolver(parent, args, context, info);
   };
@@ -120,6 +125,28 @@ export function isRootQueryType(type: GraphQLType | string, schema: GraphQLSchem
   const rootQueryTypeName = schema.getQueryType()?.name;
   const typeName = typeof type === 'string' ? type : type.name;
   return typeName === rootQueryTypeName;
+}
+
+export function isRootMutationType(type: GraphQLType | string, schema: GraphQLSchema): boolean {
+  if (typeof type !== 'string' && !('name' in type)) {
+    return false;
+  }
+
+  const rootQueryTypeName = schema.getMutationType()?.name;
+  const typeName = typeof type === 'string' ? type : type.name;
+  return typeName === rootQueryTypeName;
+}
+
+export function isInternalType(type: GraphQLType | string): boolean {
+  if (isNamedType(type)) {
+    type = type.name;
+  }
+
+  if (typeof type !== 'string') {
+    return false;
+  }
+
+  return type.startsWith('__');
 }
 
 /**

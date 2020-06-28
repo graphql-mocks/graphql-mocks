@@ -40,8 +40,11 @@ export type TargetReference = [TypeTarget, FieldTarget];
 export type TypeTarget = SPECIAL_TYPE_TARGET.ALL_TYPES | string;
 export type FieldTarget = SPECIAL_FIELD_TARGET | string;
 
-export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
-export type PatchResolverWrapper = (options: ResolverWrapperOptions) => Resolver | undefined;
+export type ResolverWrapper = (resolver: Resolver, options: ResolverWrapperOptions) => Resolver | Promise<Resolver>;
+
+export type PatchResolverWrapper = (
+  options: ResolverWrapperOptions,
+) => Resolver | undefined | Promise<Resolver | undefined>;
 
 // A resolvable type is a type that has a "field" that can be resolved by a resolver function
 export type ResolvableType = GraphQLObjectType | GraphQLUnionType | GraphQLInterfaceType;
@@ -69,7 +72,7 @@ export type PackOptions = {
   dependencies: Record<string, NonNullDependency>;
 };
 
-export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
+export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap | Promise<ResolverMap>;
 
 export type Packed = { resolverMap: ResolverMap; state: PackState };
 
@@ -77,4 +80,4 @@ export type Packer = (
   initialMap: ResolverMap,
   middlewares: ResolverMapMiddleware[],
   packOptions?: Partial<PackOptions>,
-) => Packed;
+) => Promise<Packed>;

@@ -25,7 +25,7 @@ describe('resolver-map/embed', () => {
     }
   `);
 
-  it('can embed a resolver on multiple targets', () => {
+  it('can embed a resolver on multiple targets', async () => {
     const resolver = spy();
     const embeddedMiddleware = embed({
       resolver,
@@ -33,7 +33,7 @@ describe('resolver-map/embed', () => {
     });
 
     const emptyResolverMap = {};
-    const embeddedResolverMap = embeddedMiddleware(
+    const embeddedResolverMap = await embeddedMiddleware(
       emptyResolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -44,7 +44,7 @@ describe('resolver-map/embed', () => {
     expect(embeddedResolverMap.Person.pet).to.be.a('function');
   });
 
-  it('throws an error when trying to replace an existing resolver when { overwrite: false }', () => {
+  it('throws an error when trying to replace an existing resolver when { overwrite: false }', async () => {
     const originalPersonNameResolver = spy();
 
     const resolverMap = {
@@ -54,7 +54,7 @@ describe('resolver-map/embed', () => {
     };
 
     let wrappedResolver;
-    const resolverWrapper: ResolverWrapper = (resolver) => {
+    const resolverWrapper: ResolverWrapper = async (resolver) => {
       wrappedResolver = spy(resolver);
       return wrappedResolver;
     };
@@ -69,12 +69,19 @@ describe('resolver-map/embed', () => {
 
     expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
 
-    expect(() =>
-      embeddedMiddlware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } })),
-    ).to.throw('Cannot add resolver to resolver map at ["Person", "name"] when overwrite is set to false');
+    let error: Error | null = null;
+    try {
+      await embeddedMiddlware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+    } catch (e) {
+      error = e;
+    } finally {
+      expect(error?.message).to.equal(
+        'Cannot add resolver to resolver map at ["Person", "name"] when overwrite is set to false',
+      );
+    }
   });
 
-  it('can replace an existing resolver with resolver wrappers at a specific target', () => {
+  it('can replace an existing resolver with resolver wrappers at a specific target', async () => {
     const originalPersonNameResolver = spy();
 
     const resolverMap = {
@@ -84,14 +91,14 @@ describe('resolver-map/embed', () => {
     };
 
     let wrappedResolver;
-    const resolverWrapper: ResolverWrapper = (resolver) => {
+    const resolverWrapper: ResolverWrapper = async (resolver) => {
       wrappedResolver = spy(resolver);
       return wrappedResolver;
     };
 
     const replacedPersonNameResolver = spy();
 
-    const embeddedMiddlware = embed({
+    const embeddedMiddlware = await embed({
       target: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
@@ -100,7 +107,7 @@ describe('resolver-map/embed', () => {
 
     expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
 
-    const embededResolverMap = embeddedMiddlware(
+    const embededResolverMap = await embeddedMiddlware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -122,10 +129,10 @@ describe('resolver-map/embed', () => {
     expect((wrappedResolver as any).called).to.be.true;
   });
 
-  it('it can embed a new resolver with wrappers on a specific target', () => {
+  it('it can embed a new resolver with wrappers on a specific target', async () => {
     const resolver = spy();
     const resolverWrapper: ResolverWrapper = spy(
-      (resolver) => (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<Resolver> =>
+      async (resolver) => (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<Resolver> =>
         resolver(parent, args, context, info),
     );
 
@@ -139,7 +146,7 @@ describe('resolver-map/embed', () => {
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
 
-    const embededResolverMap = embeddedMiddleware(
+    const embededResolverMap = await embeddedMiddleware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -153,9 +160,9 @@ describe('resolver-map/embed', () => {
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
 
-  it('it can embed wrappers around an existing target', () => {
+  it('it can embed wrappers around an existing target', async () => {
     const nameFieldResolver = spy();
-    const resolverWrapper: ResolverWrapper = spy((resolver) => (
+    const resolverWrapper: ResolverWrapper = spy(async (resolver) => (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       parent: any,
       args: Record<string, unknown>,
@@ -175,7 +182,7 @@ describe('resolver-map/embed', () => {
     };
 
     expect((resolverWrapper as SinonSpy).called).to.equal(false);
-    const embededResolverMap = embeddedResolverMapMiddleware(
+    const embededResolverMap = await embeddedResolverMapMiddleware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -187,7 +194,7 @@ describe('resolver-map/embed', () => {
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
 
-  it('quietly does nothing if a resolver is not given, nor is on the resolver map', () => {
+  it('quietly does nothing if a resolver is not given, nor is on the resolver map', async () => {
     const resolverWrapper: ResolverWrapper = spy();
     // empty resolver map with no resolver for Person.name
     const resolverMap = {};
@@ -196,7 +203,7 @@ describe('resolver-map/embed', () => {
       wrappers: [resolverWrapper],
     });
 
-    const embededResolverMap = embeddedMiddleware(
+    const embededResolverMap = await embeddedMiddleware(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );

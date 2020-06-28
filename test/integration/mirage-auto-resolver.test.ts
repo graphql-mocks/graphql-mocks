@@ -15,7 +15,7 @@ describe('integration/mirage-auto-resolver', function () {
   let resolvers: ResolverMap;
   let mirageMapper: MirageGraphQLMapper;
 
-  this.beforeEach(() => {
+  this.beforeEach(async () => {
     mirageMapper = new MirageGraphQLMapper()
       .addTypeMapping('AthleticHobby', 'SportsHobby')
       .addTypeMapping('Automobile', 'Car')
@@ -28,7 +28,7 @@ describe('integration/mirage-auto-resolver', function () {
       });
 
     mirageServer.db.loadData(defaultScenario);
-    const handler = createQueryHandler(defaultResolvers, {
+    const handler = await createQueryHandler(defaultResolvers, {
       middlewares: [patchAutoResolvers],
       dependencies: {
         mirageMapper,

@@ -4,18 +4,21 @@ import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { createQueryHandler } from '../../src/graphql';
-
-const { query: graphQLHandler } = createQueryHandler(defaultResolvers, {
-  state: {},
-  dependencies: {
-    mirageServer,
-    graphqlSchema,
-  },
-});
+import { QueryHandler } from '../../src/graphql/handler';
 
 describe('integration/mirage-static-resolvers', function () {
-  beforeEach(() => {
+  let handler: QueryHandler;
+
+  beforeEach(async () => {
     mirageServer.db.loadData(defaultScenario);
+
+    handler = await createQueryHandler(defaultResolvers, {
+      state: {},
+      dependencies: {
+        mirageServer,
+        graphqlSchema,
+      },
+    });
   });
 
   afterEach(() => {
@@ -27,7 +30,7 @@ describe('integration/mirage-static-resolvers', function () {
       hello
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await handler.query(query);
     expect(result).to.deep.equal({
       data: {
         hello: 'hi',
@@ -43,7 +46,7 @@ describe('integration/mirage-static-resolvers', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await handler.query(query);
     expect(result).to.deep.equal({
       data: {
         person: {
@@ -66,7 +69,7 @@ describe('integration/mirage-static-resolvers', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await handler.query(query);
     expect(result).to.deep.equal({
       data: {
         person: {

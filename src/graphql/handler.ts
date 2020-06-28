@@ -1,7 +1,7 @@
 import { graphql, GraphQLSchema, printSchema, buildSchema } from 'graphql';
 import { pack, defaultPackOptions } from '../resolver-map/pack';
 import { ResolverMap, ResolverMapMiddleware, PackOptions, PackState } from '../types';
-import { addTypeResolversToSchema, addFieldResolverstoSchema } from './utils';
+import { attachTypeResolversToSchema, attachFieldResolverstoSchema } from './utils';
 
 export type QueryHandler = {
   state: PackState;
@@ -15,7 +15,10 @@ export type CreateQueryHandlerOptions = {
   state?: PackOptions['state'];
 };
 
-export function createQueryHandler(resolverMap: ResolverMap = {}, options: CreateQueryHandlerOptions): QueryHandler {
+export async function createQueryHandler(
+  resolverMap: ResolverMap = {},
+  options: CreateQueryHandlerOptions,
+): Promise<QueryHandler> {
   let originalSchema = options?.dependencies?.graphqlSchema;
 
   if (typeof originalSchema === 'string') {
@@ -54,14 +57,14 @@ createQueryHandler(initialResolverMap, { dependencies: { graphqlSchema: schema }
   };
 
   // pack middlewares against resolverMap
-  const { resolverMap: packedResolverMap, state } = pack(resolverMap, middlewares, packOptions);
+  const { resolverMap: packedResolverMap, state } = await pack(resolverMap, middlewares, packOptions);
 
   // apply resolverMap against copied graphql schema, attaching to schema:
   // 1. Field Resolvers { Type: { field: fieldResolver } }
   // 2. Type Resolvers for Abstract Types (interfaces, unions):
   //    { Type: { __resolveType: typeResolver }}
-  addFieldResolverstoSchema(packedResolverMap, graphqlSchema);
-  addTypeResolversToSchema(packedResolverMap, graphqlSchema);
+  attachFieldResolverstoSchema(packedResolverMap, graphqlSchema);
+  attachTypeResolversToSchema(packedResolverMap, graphqlSchema);
 
   const query: QueryHandler['query'] = async (query, variables = {}) => {
     if (typeof variables !== 'object') {

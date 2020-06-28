@@ -35,8 +35,8 @@ describe('resolver/wrap', function () {
     );
   });
 
-  it('can wrap a resolver function', function () {
-    const wrappedResolver = wrapResolver(resolver, [resolverWrapper as ResolverWrapper], resolverWrapperOptions);
+  it('can wrap a resolver function', async function () {
+    const wrappedResolver = await wrapResolver(resolver, [resolverWrapper as ResolverWrapper], resolverWrapperOptions);
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.firstCall.args).to.deep.equal([resolver, resolverWrapperOptions]);
 
@@ -47,8 +47,8 @@ describe('resolver/wrap', function () {
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
   });
 
-  it('can wrap a resolver function with multiple resolver wrappers', function () {
-    const wrappedResolver = wrapResolver(
+  it('can wrap a resolver function with multiple resolver wrappers', async function () {
+    const wrappedResolver = await wrapResolver(
       resolver,
       // using the same resolverWrapper twice
       [resolverWrapper as ResolverWrapper, resolverWrapper as ResolverWrapper],
@@ -62,16 +62,22 @@ describe('resolver/wrap', function () {
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
   });
 
-  it('throws an error if a wrapper does not return a function', function () {
-    expect(() =>
-      wrapResolver(
+  it('throws an error if a wrapper does not return a function', async function () {
+    let error: Error | null = null;
+
+    try {
+      await wrapResolver(
         resolver,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [(): any => ('resolver wrapper returning a string' as unknown) as Resolver],
         resolverWrapperOptions,
-      ),
-    ).to.throw(`Wrapper: () => 'resolver wrapper returning a string'
+      );
+    } catch (e) {
+      error = e;
+    } finally {
+      expect(error?.message).to.equal(`Wrapper: () => 'resolver wrapper returning a string'
 
 This wrapper did not return a function, got string.`);
+    }
   });
 });

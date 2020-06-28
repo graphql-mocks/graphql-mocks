@@ -1,7 +1,7 @@
 import { ResolverMap } from '../types';
 import { GraphQLSchema, isAbstractType, isObjectType } from 'graphql';
 
-export function addTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
+export function attachTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
   for (const typeName in resolverMap) {
     const type = schema.getType(typeName);
 
@@ -18,7 +18,7 @@ export function addTypeResolversToSchema(resolverMap: ResolverMap, schema: Graph
   }
 }
 
-export function addFieldResolverstoSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
+export function attachFieldResolverstoSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
   for (const typeName in resolverMap) {
     const type = schema.getType(typeName);
 

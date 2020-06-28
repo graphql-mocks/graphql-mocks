@@ -5,13 +5,13 @@ import { Resolver } from '../../../src/types';
 import { GraphQLResolveInfo } from 'graphql';
 
 describe('spy/wrapper', function () {
-  it('provides accesss to spies on resolvers', function () {
+  it('provides accesss to spies on resolvers', async function () {
     const resolverReturnValue = 'resolver return value!';
     const initialResolver = (): string => resolverReturnValue;
     const packOptions = generatePackOptions();
     const state = packOptions.state;
 
-    const wrappedResolver = spyWrapper(initialResolver as Resolver, {
+    const wrappedResolver = await spyWrapper(initialResolver as Resolver, {
       resolverMap: {},
       type: userObjectType,
       field: userObjectNameField,

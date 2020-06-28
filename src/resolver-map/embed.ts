@@ -25,7 +25,7 @@ export function embed({
   resolver: resolverToApply,
   overwrite: overwriteOption = false,
 }: EmbedOptions): ResolverMapMiddleware {
-  return (resolverMap, packOptions): ResolverMap => {
+  return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
     if (!schema) {
@@ -35,7 +35,8 @@ export function embed({
     }
 
     const fieldReferences = expandTarget(target, schema);
-    fieldReferences.forEach(([typeName, fieldName]) => {
+
+    for (const [typeName, fieldName] of fieldReferences) {
       // these MUST be kept in the local iteration
       // as to not overwrite the global values
       let shouldOverwrite = overwriteOption;
@@ -52,12 +53,12 @@ export function embed({
 
       // No resolver in the Resolver Map; continue.
       if (!resolver) {
-        return;
+        continue;
       }
 
       const [type, field] = getTypeAndFieldDefinitions([typeName, fieldName], schema);
 
-      const wrappedResolver = wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
+      const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
         type,
         field,
         resolverMap,
@@ -70,7 +71,7 @@ export function embed({
         resolver: wrappedResolver,
         overwrite: shouldOverwrite,
       });
-    });
+    }
 
     return resolverMap;
   };

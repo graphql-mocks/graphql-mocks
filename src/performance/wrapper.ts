@@ -1,6 +1,6 @@
-import { ResolverWrapper } from '../types';
+import { ResolverWrapper, ResolverArgs, ResolverContext, ResolverParent, ResolverInfo } from '../types';
 
-export const performanceWrapper: ResolverWrapper = (originalResolver, wrapperDetails) => {
+export const performanceWrapper: ResolverWrapper = async (originalResolver, wrapperDetails) => {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;
@@ -10,7 +10,12 @@ export const performanceWrapper: ResolverWrapper = (originalResolver, wrapperDet
   packState.performance[typeName] = packState.performance[typeName] ?? {};
   packState.performance[typeName][fieldName] = packState.performance[typeName][fieldName] ?? [];
 
-  return async (parent, args, context, info): Promise<unknown> => {
+  return async (
+    parent: ResolverParent,
+    args: ResolverArgs,
+    context: ResolverContext,
+    info: ResolverInfo,
+  ): Promise<unknown> => {
     const start = Date.now();
     const result = await originalResolver(parent, args, context, info);
     const end = Date.now();

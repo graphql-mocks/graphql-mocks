@@ -1,10 +1,10 @@
 import { GraphQLObjectType, GraphQLSchema, isObjectType } from 'graphql';
-import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions, Resolver } from '../types';
+import { ResolverMap, ResolverMapMiddleware, PatchResolverWrapper, PackOptions } from '../types';
 import { addResolverToMap, embedPackOptionsWrapper } from '../utils';
-export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => (
+export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMiddleware => async (
   resolverMap: ResolverMap,
   packOptions: PackOptions,
-): ResolverMap => {
+): Promise<ResolverMap> => {
   const { graphqlSchema: schema }: { graphqlSchema?: GraphQLSchema } = packOptions.dependencies;
 
   if (!schema) {
@@ -30,10 +30,10 @@ export const patchEachField = (patchWith: PatchResolverWrapper): ResolverMapMidd
             packOptions,
           };
 
-          let patchResolver = patchWith(resolverWrapperOptions);
+          let patchResolver = await patchWith(resolverWrapperOptions);
 
           if (typeof patchResolver === 'function') {
-            patchResolver = embedPackOptionsWrapper(patchResolver, resolverWrapperOptions) as Resolver;
+            patchResolver = await embedPackOptionsWrapper(patchResolver, resolverWrapperOptions);
 
             addResolverToMap({
               resolverMap: resolverMap,

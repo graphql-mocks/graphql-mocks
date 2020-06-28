@@ -51,8 +51,8 @@ describe('resolver-map/patch-each-field', function () {
 
     const patchResolverSpy = sinon.spy();
 
-    const wrapper = patchEachField(() => patchResolverSpy);
-    const patchedResolvers: ResolverMap = wrapper(
+    const wrapper = await patchEachField(async () => patchResolverSpy);
+    const patchedResolvers: ResolverMap = await wrapper(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -85,7 +85,7 @@ describe('resolver-map/patch-each-field', function () {
     const patchResolver = sinon.spy();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const wrapper = patchEachField(({ type, field }) => {
+    const wrapper = patchEachField(async ({ type, field }) => {
       // only skip patching Query.spells
       if (type.name === 'Query' && field.name === 'spells') {
         return;
@@ -95,9 +95,9 @@ describe('resolver-map/patch-each-field', function () {
     });
 
     expect(resolverMap.Query.spells).to.not.exist;
-    const patchedResolvers = wrapper(
+    const patchedResolvers = await wrapper(
       resolverMap,
-      generatePackOptions(generatePackOptions({ dependencies: { graphqlSchema: schema } })),
+      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
     expect(patchedResolvers.Query.spells).to.not.exist;
     expect(patchedResolvers.Mutation.addSpell).to.exist;
