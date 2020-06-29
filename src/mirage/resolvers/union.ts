@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, isUnionType } from 'graphql';
 import { MirageGraphQLMapper } from '../mapper';
 import { findMostInCommon, modelNameToTypeName } from './helpers';
-import { extractDependencies } from '../../resolver-map/extract-dependencies';
+import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (

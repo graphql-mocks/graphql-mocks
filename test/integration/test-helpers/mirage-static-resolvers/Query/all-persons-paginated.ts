@@ -1,4 +1,4 @@
-import { extractDependencies } from '../../../../../src/resolver-map/extract-dependencies';
+import { extractDependencies } from '../../../../../src/resolver/extract-dependencies';
 import { relayPaginateNodes } from '../../../../../src/relay/helpers';
 import { Server } from 'miragejs';
 

@@ -3,7 +3,7 @@ import { unwrap, coerceReturnType, coerceToList } from '../../utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { mirageCursorForNode, ObjectResolverMatch, AutoResolverErrorMeta } from './helpers';
-import { extractDependencies } from '../../resolver-map/extract-dependencies';
+import { extractDependencies } from '../../resolver/extract-dependencies';
 import { AutoResolverError } from './auto-resolver-error';
 
 function findMatchingFieldForObjectParent({
