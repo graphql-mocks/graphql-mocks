@@ -1,10 +1,10 @@
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { walk, WalkSource } from '../../../../src/resolver-map/walk';
-import { FieldReference } from '../../../../src/types';
+import { walk, WalkSource } from '../../../src/resolver-map/walk';
+import { FieldReference } from '../../../src/types';
 
-describe('resolver-map/utils/walk', function () {
+describe('resolver-map/walk', function () {
   const graphqlSchema = buildSchema(`
     schema {
       query: Query
