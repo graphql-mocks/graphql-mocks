@@ -29,7 +29,7 @@ describe('resolver-map/embed', () => {
     const resolver = spy();
     const embeddedMiddleware = embed({
       resolver,
-      target: ['*', '*'],
+      include: ['*', '*'],
     });
 
     const emptyResolverMap = {};
@@ -62,7 +62,7 @@ describe('resolver-map/embed', () => {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = embed({
-      target: ['Person', 'name'],
+      include: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
     });
@@ -99,7 +99,7 @@ describe('resolver-map/embed', () => {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = await embed({
-      target: ['Person', 'name'],
+      include: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
       overwrite: true,
@@ -137,7 +137,7 @@ describe('resolver-map/embed', () => {
     );
 
     const embeddedMiddleware = embed({
-      target: ['Person', 'name'],
+      include: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver,
     });
@@ -171,7 +171,7 @@ describe('resolver-map/embed', () => {
     ): Resolver => resolver(parent, args, context, info));
 
     const embeddedResolverMapMiddleware = embed({
-      target: ['Person', 'name'],
+      include: ['Person', 'name'],
       wrappers: [resolverWrapper],
     });
 
@@ -199,7 +199,7 @@ describe('resolver-map/embed', () => {
     // empty resolver map with no resolver for Person.name
     const resolverMap = {};
     const embeddedMiddleware = embed({
-      target: ['Person', 'name'],
+      include: ['Person', 'name'],
       wrappers: [resolverWrapper],
     });
 

@@ -9,18 +9,21 @@ import {
   SPECIAL_TYPE_TARGET,
   SPECIAL_FIELD_TARGET,
 } from '../types';
-import { getTypeAndFieldDefinitions, addResolverToMap, embedPackOptionsWrapper } from '../utils';
-import { expandTarget } from './utils/expand-target';
+import { getTypeAndFieldDefinitions, addResolverToMap, embedPackOptionsWrapper } from '../utils/utils';
+import { expand } from '../utils/target-reference';
+import { difference, unique } from '../utils/field-reference';
 
 export type EmbedOptions = {
-  target?: TargetReference;
+  include?: TargetReference | TargetReference[];
+  exclude?: TargetReference | TargetReference[];
   wrappers?: ResolverWrapper[];
   resolver?: Resolver;
   overwrite?: boolean;
 };
 
 export function embed({
-  target = [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
+  include = [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
+  exclude = [],
   wrappers = [],
   resolver: resolverToApply,
   overwrite: overwriteOption = false,
@@ -34,7 +37,9 @@ export function embed({
       );
     }
 
-    const fieldReferences = expandTarget(target, schema);
+    const includedFieldReferences = expand(include, schema) ?? [];
+    const excludedFieldReferences = expand(exclude, schema) ?? [];
+    const fieldReferences = unique(difference(includedFieldReferences, excludedFieldReferences));
 
     for (const [typeName, fieldName] of fieldReferences) {
       // these MUST be kept in the local iteration

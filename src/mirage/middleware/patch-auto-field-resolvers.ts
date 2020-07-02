@@ -7,9 +7,9 @@ import {
   isRootMutationType,
   isInternalType,
   resolverExistsInResolverMap,
-} from '../../utils';
+} from '../../utils/utils';
 import { ResolverMapMiddleware, TargetReference, PackOptions, ResolverMap } from '../../types';
-import { walk } from '../../resolver-map/utils/walk';
+import { walk } from '../../resolver-map/walk';
 
 export function patchAutoFieldResolvers(target: TargetReference = ['*', '*']): ResolverMapMiddleware {
   return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {

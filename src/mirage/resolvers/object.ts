@@ -1,5 +1,5 @@
 import { Resolver, ResolverInfo, ResolverParent } from '../../types';
-import { unwrap, coerceReturnType, coerceToList } from '../../utils';
+import { unwrap, coerceReturnType, coerceToList } from '../../utils/utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
 import { mirageCursorForNode, ObjectResolverMatch, AutoResolverErrorMeta } from './helpers';

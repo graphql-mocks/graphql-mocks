@@ -1,7 +1,7 @@
 import { Server as MirageServer } from 'miragejs';
 import { isScalarType } from 'graphql';
 import { Resolver } from '../../types';
-import { unwrap, coerceReturnType, coerceToList } from '../../utils';
+import { unwrap, coerceReturnType, coerceToList } from '../../utils/utils';
 import { MirageGraphQLMapper } from '../mapper';
 import { relayPaginateNodes } from '../../relay/helpers';
 import {
