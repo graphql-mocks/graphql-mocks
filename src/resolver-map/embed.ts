@@ -9,9 +9,10 @@ import {
   SPECIAL_TYPE_TARGET,
   SPECIAL_FIELD_TARGET,
 } from '../types';
-import { getTypeAndFieldDefinitions, addResolverToMap, embedPackOptionsWrapper } from '../utils/utils';
 import { expand } from '../utils/target-reference';
 import { difference, unique } from '../utils/field-reference';
+import { getTypeAndFieldDefinitions } from '../graphql/utils';
+import { embedPackOptionsWrapper, addResolverToMap } from './utils';
 
 export type EmbedOptions = {
   include?: TargetReference | TargetReference[];

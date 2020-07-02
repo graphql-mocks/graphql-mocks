@@ -1,7 +1,7 @@
 import { Packer, PackOptions, PackState } from '../types';
 import cloneDeep from 'lodash.clonedeep';
-import { embedPackOptionsWrapper } from '../utils/utils';
 import { embed } from './embed';
+import { embedPackOptionsWrapper } from './utils';
 
 export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 

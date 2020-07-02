@@ -1,15 +1,10 @@
 import { GraphQLSchema } from 'graphql';
 import { mirageRootQueryResolver } from '../resolvers/root-query';
 import { mirageObjectResolver } from '../resolvers/object';
-import {
-  isRootQueryType,
-  addResolverToMap,
-  isRootMutationType,
-  isInternalType,
-  resolverExistsInResolverMap,
-} from '../../utils/utils';
 import { ResolverMapMiddleware, TargetReference, PackOptions, ResolverMap } from '../../types';
 import { walk } from '../../resolver-map/walk';
+import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
+import { resolverExistsInResolverMap, addResolverToMap } from '../../resolver-map/utils';
 
 export function patchAutoFieldResolvers(target: TargetReference = ['*', '*']): ResolverMapMiddleware {
   return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {

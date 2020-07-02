@@ -9,7 +9,7 @@ import {
 import { PackOptions, ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../resolvers/union';
 import { mirageInterfaceResolver } from '../resolvers/interface';
-import { embedPackOptionsInContext } from '../../utils/utils';
+import { embedPackOptionsInContext } from '../../resolver-map/utils';
 
 export function patchAutoTypeResolvers(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;

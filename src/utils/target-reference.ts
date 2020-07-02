@@ -38,6 +38,7 @@ export function expandTarget(target: TargetReference, schema: GraphQLSchema): Fi
   return flattenDepth(filtered, 1) as FieldReference[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isTargetReference(candidate: any): candidate is TargetReference {
   if (!Array.isArray(candidate)) {
     return false;
@@ -54,12 +55,9 @@ export function isTargetReference(candidate: any): candidate is TargetReference 
   return true;
 }
 
-export function expand(
-  target: TargetReference | TargetReference[],
-  schema: GraphQLSchema,
-): TargetReference[] | undefined {
+export function expand(target: TargetReference | TargetReference[], schema: GraphQLSchema): FieldReference[] {
   if (isTargetReference(target)) {
-    return expandTarget(target, schema);
+    return expandTarget(target, schema) as FieldReference[];
   }
 
   if (Array.isArray(target)) {
