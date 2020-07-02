@@ -1,6 +1,7 @@
-import { TargetReference, ResolverMap, FieldReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from '../../types';
+import { TargetReference, ResolverMap, FieldReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from '../types';
 import { GraphQLSchema } from 'graphql';
-import { expandTarget } from './expand-target';
+import { expandTarget } from '../utils/target-reference';
+import { fieldReferenceInResolverMap } from '../utils/field-reference';
 
 export enum WalkSource {
   GRAPHQL_SCHEMA = 'GRAPHQL_SCHEMA',
@@ -37,17 +38,21 @@ export async function walk(options: WalkOptions, callback: WalkCallback): Promis
     throw new Error('A callback is required argument for the `walk` function');
   }
 
-  if (typeof resolverMap !== 'object' && source === WalkSource.RESOLVER_MAP) {
-    throw new Error(`To walk on a resolver map it must be provided in the options, got ${typeof resolverMap}`);
-  }
-
   let fieldReferences = expandTarget(target, graphqlSchema);
 
-  if (source === WalkSource.RESOLVER_MAP) {
-    fieldReferences = fieldReferences.filter(([typeName, fieldName]) => Boolean(resolverMap?.[typeName]?.[fieldName]));
-  }
+  if (fieldReferences) {
+    if (source === WalkSource.RESOLVER_MAP) {
+      if (typeof resolverMap !== 'object') {
+        throw new Error(`To walk on a resolver map it must be provided in the options, got ${typeof resolverMap}`);
+      }
 
-  for (const reference of fieldReferences) {
-    await callback(reference);
+      fieldReferences = fieldReferences.filter((fieldReference) =>
+        fieldReferenceInResolverMap(fieldReference, resolverMap as ResolverMap),
+      );
+    }
+
+    for (const reference of fieldReferences) {
+      await callback(reference);
+    }
   }
 }

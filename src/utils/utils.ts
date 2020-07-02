@@ -10,7 +10,7 @@ import {
   ResolverArgs,
   ResolverInfo,
   ResolverContext,
-} from './types';
+} from '../types';
 
 import {
   GraphQLSchema,
