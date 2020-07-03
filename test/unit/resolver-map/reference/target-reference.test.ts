@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
-import { expand, expandTarget } from '../../../src/utils/target-reference';
+import { expand, expandTarget } from '../../../../src/resolver-map/reference/target-reference';
 
-describe('utils/target-reference', () => {
+describe('resolver-map/reference/target-reference', () => {
   const schema = buildSchema(`
     schema {
       query: Query

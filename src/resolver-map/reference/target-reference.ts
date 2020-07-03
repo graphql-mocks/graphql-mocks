@@ -1,6 +1,6 @@
 import { GraphQLSchema, isObjectType, GraphQLObjectType } from 'graphql';
 import flattenDepth from 'lodash.flattendepth';
-import { FieldReference, TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from '../types';
+import { FieldReference, TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from '../../types';
 import { unique } from './field-reference';
 
 const { ALL_TYPES } = SPECIAL_TYPE_TARGET;

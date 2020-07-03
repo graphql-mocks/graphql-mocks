@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { unique, difference, fieldExistsInResolverMap } from '../../../src/utils/field-reference';
+import { unique, difference, fieldExistsInResolverMap } from '../../../../src/resolver-map/reference/field-reference';
 
-describe('utils/field-reference', () => {
+describe('resolver-map/reference/field-reference', () => {
   describe('#unique', () => {
     expect(
       unique([

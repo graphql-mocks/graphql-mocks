@@ -9,8 +9,8 @@ import {
   SPECIAL_TYPE_TARGET,
   SPECIAL_FIELD_TARGET,
 } from '../types';
-import { expand } from '../utils/target-reference';
-import { difference } from '../utils/field-reference';
+import { expand } from './reference/target-reference';
+import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
 import { embedPackOptionsWrapper, addResolverToMap } from './utils';
 

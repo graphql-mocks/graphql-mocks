@@ -1,4 +1,4 @@
-import { FieldReference, ResolverMap } from '../types';
+import { FieldReference, ResolverMap } from '../../types';
 
 export function unique(fieldReferences: FieldReference[]): FieldReference[] {
   const unique: FieldReference[] = [];
