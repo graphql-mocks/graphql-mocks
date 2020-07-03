@@ -15,7 +15,7 @@ describe('integration/mirage-auto-resolver', function () {
   let resolvers: ResolverMap;
   let mirageMapper: MirageGraphQLMapper;
 
-  this.beforeEach(() => {
+  this.beforeEach(async () => {
     mirageMapper = new MirageGraphQLMapper()
       .addTypeMapping('AthleticHobby', 'SportsHobby')
       .addTypeMapping('Automobile', 'Car')
@@ -28,8 +28,9 @@ describe('integration/mirage-auto-resolver', function () {
       });
 
     mirageServer.db.loadData(defaultScenario);
-    const handler = createQueryHandler(defaultResolvers, {
-      middlewares: [patchAutoResolvers],
+
+    const handler = await createQueryHandler(defaultResolvers, {
+      middlewares: [patchAutoResolvers()],
       dependencies: {
         mirageMapper,
         mirageServer,
@@ -439,7 +440,7 @@ describe('integration/mirage-auto-resolver', function () {
     });
   });
 
-  describe('Relay Connections', () => {
+  context('Relay Connections', () => {
     it('can resolve a root-level relay connection (via static resolver with helpers)', async () => {
       const query = `query {
         allPersonsPaginated(first: 2) {
@@ -460,7 +461,6 @@ describe('integration/mirage-auto-resolver', function () {
       }`;
 
       const result = await graphQLHandler(query);
-      console.log(result.errors);
       expect(result.errors).to.equal(undefined);
 
       const edges = result.data.allPersonsPaginated.edges;
@@ -519,6 +519,87 @@ describe('integration/mirage-auto-resolver', function () {
         hasNextPage: true,
         hasPreviousPage: false,
         startCursor: 'model:person(2)',
+      });
+    });
+  });
+
+  context('Middleware Options', () => {
+    const allPersonsQuery = `
+      {
+        allPersons {
+          name
+        }
+      }
+    `;
+
+    context('with Query.allPersons included', () => {
+      beforeEach(async () => {
+        const handler = await createQueryHandler(
+          {},
+          {
+            middlewares: [
+              patchAutoResolvers({
+                include: ['Query', 'allPersons'],
+              }),
+            ],
+            dependencies: {
+              mirageMapper,
+              mirageServer,
+              graphqlSchema: graphqlSchema,
+            },
+          },
+        );
+
+        graphQLHandler = handler.query;
+      });
+
+      it('can query on the auto-resolvers patched in by in the `include` option', async () => {
+        expect(await graphQLHandler(allPersonsQuery)).to.deep.equal({
+          data: {
+            allPersons: [
+              {
+                name: 'Fred Flinstone',
+              },
+              {
+                name: 'Barney Rubble',
+              },
+              {
+                name: 'Wilma Flinstone',
+              },
+              {
+                name: 'Betty Rubble',
+              },
+            ],
+          },
+        });
+      });
+    });
+
+    context('with Query.allPersons excluded', () => {
+      beforeEach(async () => {
+        const handler = await createQueryHandler(
+          {},
+          {
+            middlewares: [
+              patchAutoResolvers({
+                exclude: ['Query', 'allPersons'],
+              }),
+            ],
+            dependencies: {
+              mirageMapper,
+              mirageServer,
+              graphqlSchema: graphqlSchema,
+            },
+          },
+        );
+
+        graphQLHandler = handler.query;
+      });
+
+      it('can not query on excluded auto-resolvers ', async () => {
+        expect((await graphQLHandler(allPersonsQuery))?.errors?.[0]?.message).to.include(
+          'Cannot return null for non-nullable field Query.allPersons',
+        );
       });
     });
   });

@@ -1,5 +1,5 @@
 import { ModelInstance, Server } from 'miragejs';
-import { extractDependencies } from '../../../../../src/resolver-map/extract-dependencies';
+import { extractDependencies } from '../../../../../src/resolver/extract-dependencies';
 
 const resolver = function (
   _parent: unknown,

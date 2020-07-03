@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { createQueryHandler, QueryHandler } from '../../../src/graphql/handler';
 import { ResolverMap } from '../../../src/types';
 import { buildSchema } from 'graphql';
-import { wrapEachField } from '../../../src/resolver-map';
 import { spyWrapper } from '../../../src/spy';
+import { embed } from '../../../src/resolver-map/embed';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -28,7 +28,7 @@ describe('graphql/hander', function () {
   });
 
   it('can execute a graphql query constructed from a schema string', async function () {
-    handler = createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaString } });
+    handler = await createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaString } });
     const result = await handler.query(`
       {
         hello
@@ -44,7 +44,7 @@ describe('graphql/hander', function () {
 
   it('can execute a graphql query constructed from a schema instance', async function () {
     const schemaInstance = buildSchema(schemaString);
-    handler = createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaInstance } });
+    handler = await createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaInstance } });
     const result = await handler.query(`
       {
         hello
@@ -59,13 +59,19 @@ describe('graphql/hander', function () {
   });
 
   it('throws a helpful error if the schema string cannot be parsed', async function () {
-    expect(
-      () =>
-        (handler = createQueryHandler(resolverMap, { dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' } })),
-    ).to
-      .throw(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
+    let error: null | Error = null;
+    try {
+      await createQueryHandler(resolverMap, {
+        dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
+      });
+    } catch (e) {
+      error = e;
+    } finally {
+      expect(error?.message).to
+        .contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
 
 Syntax Error: Unexpected Name "NOT"`);
+    }
   });
 
   it('returns maintains the same state object argument', async function () {
@@ -83,7 +89,7 @@ Syntax Error: Unexpected Name "NOT"`);
     // produces a state with the spy function accessible at
     // state.spies.Query.hello
     const handler = await createQueryHandler(resolverMap, {
-      middlewares: [wrapEachField([spyWrapper])],
+      middlewares: [embed({ wrappers: [spyWrapper] })],
       dependencies: { graphqlSchema: schemaString },
     });
 

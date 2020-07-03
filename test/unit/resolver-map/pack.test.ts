@@ -4,8 +4,8 @@ import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMapMiddleware, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
 
-describe('resolver-map/pack', function () {
-  it('reduces a set of resolvers', function () {
+describe('resolver-map/pack', () => {
+  it('reduces a set of resolvers', async () => {
     const graphqlSchema = buildSchema(`
       type Type {
         field: String!
@@ -18,14 +18,14 @@ describe('resolver-map/pack', function () {
 
     const resolvers = {};
     const middlewares: ResolverMapMiddleware[] = [
-      function (resolvers): ResolverMap {
+      async function (resolvers): Promise<ResolverMap> {
         resolvers.Type = {};
         resolvers.Type.field = (): string => 'noop';
         return resolvers;
       },
     ];
 
-    const { resolverMap: wrappedResolvers } = pack(resolvers, middlewares, { dependencies: { graphqlSchema } });
+    const { resolverMap: wrappedResolvers } = await pack(resolvers, middlewares, { dependencies: { graphqlSchema } });
 
     expect(resolvers).to.deep.equal({}, 'original resolvers are untouched');
     expect(wrappedResolvers).to.have.property('Type');
@@ -33,7 +33,7 @@ describe('resolver-map/pack', function () {
     expect(wrappedResolvers.OtherType).to.equal(undefined, 'type without a field resolver remains untouched');
   });
 
-  it('includes the packOptions in resolver context by default', function () {
+  it('includes the packOptions in resolver context by default', async () => {
     const graphqlSchema = buildSchema(`type Query {
       hello: String!
     }`);
@@ -55,7 +55,7 @@ describe('resolver-map/pack', function () {
       },
     };
 
-    const { resolverMap: wrappedResolvers } = pack(resolvers, middlewares, packOptions);
+    const { resolverMap: wrappedResolvers } = await pack(resolvers, middlewares, packOptions);
     wrappedResolvers.Query.hello({}, {}, {}, {} as GraphQLResolveInfo);
 
     expect(queryHelloSpy.called).to.be.true;

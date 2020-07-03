@@ -5,7 +5,7 @@ import { generatePackOptions, userObjectType, userObjectNameField } from '../../
 import { GraphQLResolveInfo } from 'graphql';
 
 describe('performance/wrapper', function () {
-  it('provides accesss to spies on resolvers', async function () {
+  it('reports the performance of a resolver', async function () {
     const RESOLVER_RUN_TIME_DELAY = 250;
 
     const resolver: Resolver = async () => {
@@ -14,7 +14,7 @@ describe('performance/wrapper', function () {
 
     const packOptions = generatePackOptions();
     const state = packOptions.state;
-    const wrappedResolver = performanceWrapper(resolver, {
+    const wrappedResolver = await performanceWrapper(resolver, {
       resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,

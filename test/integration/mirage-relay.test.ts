@@ -46,7 +46,7 @@ describe('integration/mirage-relay', function () {
   let mirageMapper: MirageGraphQLMapper;
   let handler: QueryHandler;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mirageServer = new Server({
       models: {
         person: Model.extend({
@@ -77,10 +77,10 @@ describe('integration/mirage-relay', function () {
 
     mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
 
-    handler = createQueryHandler(
+    handler = await createQueryHandler(
       {},
       {
-        middlewares: [patchAutoFieldResolvers],
+        middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageServer,
           mirageMapper,

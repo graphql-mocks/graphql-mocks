@@ -1,10 +1,10 @@
 import { Resolver, ResolverWrapper, ResolverWrapperOptions } from '../types';
 
-export const wrapResolver = (
+export const wrapResolver = async (
   resolver: Resolver,
   wrappers: ResolverWrapper[],
   wrapperOptions: ResolverWrapperOptions,
-): Resolver => {
+): Promise<Resolver> => {
   wrappers = [...wrappers];
   const wrapper = wrappers.shift();
 
@@ -12,7 +12,8 @@ export const wrapResolver = (
     return resolver;
   }
 
-  const wrappedResolver = wrapper(resolver, wrapperOptions);
+  const wrappedResolver = await wrapper(resolver, wrapperOptions);
+
   if (typeof wrappedResolver !== 'function') {
     throw new Error(
       `Wrapper: ${wrapper.toString()}\n\nThis wrapper did not return a function, got ${typeof wrappedResolver}.`,

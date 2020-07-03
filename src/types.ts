@@ -9,20 +9,22 @@ import {
   GraphQLTypeResolver,
 } from 'graphql';
 
-export type Primitive = string | boolean | number;
-export type TypeName = string;
-export type FieldName = string;
-export type FieldReference = [TypeName, FieldName];
+// Resolvers Shorthands
 
+export type Primitive = string | boolean | number;
 export type Resolver = GraphQLFieldResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
 export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
 export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
 export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
-export type ResolverWrapper = (resolver: GraphQLFieldResolver<any, any>, options: ResolverWrapperOptions) => Resolver;
+// Library Abstractions
 
-export type PatchResolverWrapper = (options: ResolverWrapperOptions) => Resolver | undefined;
+export type ResolverWrapper = (resolver: Resolver, options: ResolverWrapperOptions) => Resolver | Promise<Resolver>;
+
+export type PatchResolverWrapper = (
+  options: ResolverWrapperOptions,
+) => Resolver | undefined | Promise<Resolver | undefined>;
 
 // A resolvable type is a type that has a "field" that can be resolved by a resolver function
 export type ResolvableType = GraphQLObjectType | GraphQLUnionType | GraphQLInterfaceType;
@@ -50,7 +52,7 @@ export type PackOptions = {
   dependencies: Record<string, NonNullDependency>;
 };
 
-export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap;
+export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap | Promise<ResolverMap>;
 
 export type Packed = { resolverMap: ResolverMap; state: PackState };
 
@@ -58,4 +60,4 @@ export type Packer = (
   initialMap: ResolverMap,
   middlewares: ResolverMapMiddleware[],
   packOptions?: Partial<PackOptions>,
-) => Packed;
+) => Promise<Packed>;

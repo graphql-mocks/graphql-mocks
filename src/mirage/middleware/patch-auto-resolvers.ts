@@ -1,8 +1,14 @@
-import { ResolverMapMiddleware } from '../../types';
+import { ResolverMapMiddleware, ResolverMap } from '../../types';
 import { patchAutoFieldResolvers } from './patch-auto-field-resolvers';
 import { patchAutoTypeResolvers } from './patch-auto-type-resolvers';
+import { IncludeExcludeMiddlewareOptions, defaultIncludeExcludeOptions } from '../../resolver-map/types';
 
-export const patchAutoResolvers: ResolverMapMiddleware = (resolverMap, packOptions) => {
-  //  piping these two together middlewares together
-  return patchAutoTypeResolvers(patchAutoFieldResolvers(resolverMap, packOptions), packOptions);
-};
+export function patchAutoResolvers(
+  options: IncludeExcludeMiddlewareOptions = defaultIncludeExcludeOptions,
+): ResolverMapMiddleware {
+  return async (resolverMap, packOptions): Promise<ResolverMap> => {
+    //  piping these two together middlewares together
+    const patchedResolverMap = await patchAutoFieldResolvers(options)(resolverMap, packOptions);
+    return patchAutoTypeResolvers(patchedResolverMap, packOptions);
+  };
+}

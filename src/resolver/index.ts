@@ -1,1 +1,1 @@
-export { embed } from './embed';
+export { embed } from '../resolver-map/embed';

@@ -1,15 +1,15 @@
 import {
   GraphQLTypeResolver,
-  GraphQLInterfaceType,
-  GraphQLUnionType,
   GraphQLSchema,
   GraphQLResolveInfo,
   GraphQLAbstractType,
+  isUnionType,
+  isInterfaceType,
 } from 'graphql';
 import { PackOptions, ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../resolvers/union';
 import { mirageInterfaceResolver } from '../resolvers/interface';
-import { embedPackOptionsInContext } from '../../utils';
+import { embedPackOptionsInContext } from '../../resolver-map/utils';
 
 export function patchAutoTypeResolvers(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;
@@ -25,9 +25,9 @@ export function patchAutoTypeResolvers(resolverMap: ResolverMap, packOptions: Pa
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let patchResolver: GraphQLTypeResolver<any, any>;
-    if (type instanceof GraphQLUnionType) {
+    if (isUnionType(type)) {
       patchResolver = mirageUnionResolver;
-    } else if (type instanceof GraphQLInterfaceType) {
+    } else if (isInterfaceType(type)) {
       patchResolver = mirageInterfaceResolver;
     } else {
       continue;

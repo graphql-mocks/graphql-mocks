@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { extractDependencies, extractAllDependencies } from '../../../src/resolver-map/extract-dependencies';
+import { extractDependencies, extractAllDependencies } from '../../../src/resolver/extract-dependencies';
 import { generatePackOptions } from '../../mocks';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +16,7 @@ Either:
  * Add to the these \`dependencies\` in your \`createQueryHandler\` or \`pack\` function
  * Use { required : false } as the third argument to \`extractDependencies\` and allow for these to be optional dependencies`;
 
-describe('resolver-map/extract-dependencies', function () {
+describe('resolvers/extract-dependencies', function () {
   const mockContext = generateMocksContextWithDependencies({
     test: 'hello world',
     otherDependency: 'guten tag',
