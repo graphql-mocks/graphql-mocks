@@ -10,7 +10,7 @@ import {
   SPECIAL_FIELD_TARGET,
 } from '../types';
 import { expand } from '../utils/target-reference';
-import { difference, unique } from '../utils/field-reference';
+import { difference } from '../utils/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
 import { embedPackOptionsWrapper, addResolverToMap } from './utils';
 
@@ -40,7 +40,7 @@ export function embed({
 
     const includedFieldReferences = expand(include, schema) ?? [];
     const excludedFieldReferences = expand(exclude, schema) ?? [];
-    const fieldReferences = unique(difference(includedFieldReferences, excludedFieldReferences));
+    const fieldReferences = difference(includedFieldReferences, excludedFieldReferences);
 
     for (const [typeName, fieldName] of fieldReferences) {
       // these MUST be kept in the local iteration
