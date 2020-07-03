@@ -20,26 +20,6 @@ export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions
 
-// * Field References
-
-export type TypeName = string;
-export type FieldName = string;
-export type FieldReference = [TypeName, FieldName];
-
-// * Targets
-
-export enum SPECIAL_TYPE_TARGET {
-  ALL_TYPES = '*',
-}
-
-export enum SPECIAL_FIELD_TARGET {
-  ALL_FIELDS = '*',
-}
-
-export type TargetReference = [TypeTarget, FieldTarget];
-export type TypeTarget = SPECIAL_TYPE_TARGET.ALL_TYPES | string;
-export type FieldTarget = SPECIAL_FIELD_TARGET | string;
-
 export type ResolverWrapper = (resolver: Resolver, options: ResolverWrapperOptions) => Resolver | Promise<Resolver>;
 
 export type PatchResolverWrapper = (

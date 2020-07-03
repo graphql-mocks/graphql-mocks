@@ -1,4 +1,5 @@
-import { Resolver, TypeName, FieldReference } from '../types';
+import { Resolver } from '../types';
+import { TypeName, FieldReference } from '../resolver-map/reference/field-reference';
 
 export type ModelName = string;
 export type AttrName = string;

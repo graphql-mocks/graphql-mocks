@@ -1,15 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
-import {
-  Resolver,
-  ResolverWrapper,
-  ResolverMapMiddleware,
-  ResolverMap,
-  TargetReference,
-  SPECIAL_TYPE_TARGET,
-  SPECIAL_FIELD_TARGET,
-} from '../types';
-import { expand } from './reference/target-reference';
+import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '../types';
+import { expand, TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
 import { embedPackOptionsWrapper, addResolverToMap } from './utils';

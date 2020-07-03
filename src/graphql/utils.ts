@@ -1,4 +1,4 @@
-import { ResolverMap, FieldReference, ResolvableType, ResolvableField } from '../types';
+import { ResolverMap, ResolvableType, ResolvableField } from '../types';
 import {
   GraphQLSchema,
   isAbstractType,
@@ -14,6 +14,7 @@ import {
   GraphQLEnumType,
   GraphQLInputObjectType,
 } from 'graphql';
+import { FieldReference } from '../resolver-map/reference/field-reference';
 
 export function attachTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
   for (const typeName in resolverMap) {

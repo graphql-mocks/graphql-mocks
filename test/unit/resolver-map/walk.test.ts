@@ -2,7 +2,7 @@ import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { walk, WalkSource } from '../../../src/resolver-map/walk';
-import { FieldReference } from '../../../src/types';
+import { FieldReference } from '../../../src/resolver-map/reference/field-reference';
 
 describe('resolver-map/walk', function () {
   const graphqlSchema = buildSchema(`

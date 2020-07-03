@@ -1,5 +1,4 @@
 import {
-  FieldReference,
   ResolverMap,
   PackOptions,
   ResolverWrapper,
@@ -9,6 +8,7 @@ import {
   ResolverContext,
   ResolverInfo,
 } from '../types';
+import { FieldReference } from './reference/field-reference';
 
 export function resolverExistsInResolverMap(fieldReference: FieldReference, resolverMap: ResolverMap): boolean {
   const [typeName, fieldName] = fieldReference;

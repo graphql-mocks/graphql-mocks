@@ -1,7 +1,7 @@
-import { TargetReference, ResolverMap, FieldReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from '../types';
+import { ResolverMap } from '../types';
 import { GraphQLSchema } from 'graphql';
-import { expandTarget } from './reference/target-reference';
-import { fieldExistsInResolverMap } from './reference/field-reference';
+import { expandTarget, TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
+import { fieldExistsInResolverMap, FieldReference } from './reference/field-reference';
 
 export enum WalkSource {
   GRAPHQL_SCHEMA = 'GRAPHQL_SCHEMA',

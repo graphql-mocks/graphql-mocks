@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
-import { expand, expandTarget } from '../../../../src/resolver-map/reference/target-reference';
-import { TargetReference } from '../../../../src/types';
+import { expand, expandTarget, TargetReference } from '../../../../src/resolver-map/reference/target-reference';
 
 describe('resolver-map/reference/target-reference', () => {
   const schema = buildSchema(`
