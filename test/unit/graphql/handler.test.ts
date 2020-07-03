@@ -68,7 +68,7 @@ describe('graphql/hander', function () {
       error = e;
     } finally {
       expect(error?.message).to
-        .equal(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
+        .contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
 
 Syntax Error: Unexpected Name "NOT"`);
     }

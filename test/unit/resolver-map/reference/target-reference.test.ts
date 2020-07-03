@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
 import { expand, expandTarget } from '../../../../src/resolver-map/reference/target-reference';
+import { TargetReference } from '../../../../src/types';
 
 describe('resolver-map/reference/target-reference', () => {
   const schema = buildSchema(`
@@ -31,31 +32,37 @@ describe('resolver-map/reference/target-reference', () => {
 
   describe('#expandTarget', () => {
     it('expands all types and fields', () => {
-      expect(expandTarget(['*', '*'], schema)).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-        ['Person', 'name'],
-        ['Person', 'location'],
-        ['Person', 'pet'],
-        ['Location', 'city'],
-        ['Location', 'street'],
-        ['Pet', 'name'],
-      ]);
+      expect((expandTarget(['*', '*'], schema) as TargetReference[]).sort()).to.deep.equal(
+        [
+          ['Query', 'person'],
+          ['Query', 'locations'],
+          ['Person', 'name'],
+          ['Person', 'location'],
+          ['Person', 'pet'],
+          ['Location', 'city'],
+          ['Location', 'street'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('expands all types filtered on specific field', () => {
-      expect(expandTarget(['*', 'name'], schema)).to.deep.equal([
-        ['Person', 'name'],
-        ['Pet', 'name'],
-      ]);
+      expect((expandTarget(['*', 'name'], schema) as TargetReference[]).sort()).to.deep.equal(
+        [
+          ['Person', 'name'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('expands all fields filtered on specific type', () => {
-      expect(expandTarget(['Person', '*'], schema)).to.deep.equal([
-        ['Person', 'name'],
-        ['Person', 'location'],
-        ['Person', 'pet'],
-      ]);
+      expect((expandTarget(['Person', '*'], schema) as TargetReference[]).sort()).to.deep.equal(
+        [
+          ['Person', 'name'],
+          ['Person', 'location'],
+          ['Person', 'pet'],
+        ].sort(),
+      );
     });
 
     it('expands on filtered type and name', () => {

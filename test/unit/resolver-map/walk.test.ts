@@ -39,16 +39,18 @@ describe('resolver-map/walk', function () {
       await walk({ graphqlSchema }, callbackSpy);
       const args = callbackArgs(callbackSpy);
 
-      expect(args).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-        ['Person', 'name'],
-        ['Person', 'location'],
-        ['Person', 'pet'],
-        ['Location', 'city'],
-        ['Location', 'street'],
-        ['Pet', 'name'],
-      ]);
+      expect(args.sort()).to.deep.equal(
+        [
+          ['Query', 'person'],
+          ['Query', 'locations'],
+          ['Person', 'name'],
+          ['Person', 'location'],
+          ['Person', 'pet'],
+          ['Location', 'city'],
+          ['Location', 'street'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('walks a graphql schema when specified', async () => {
@@ -56,16 +58,18 @@ describe('resolver-map/walk', function () {
       await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA }, callbackSpy);
       const args = callbackArgs(callbackSpy);
 
-      expect(args).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-        ['Person', 'name'],
-        ['Person', 'location'],
-        ['Person', 'pet'],
-        ['Location', 'city'],
-        ['Location', 'street'],
-        ['Pet', 'name'],
-      ]);
+      expect(args.sort()).to.deep.equal(
+        [
+          ['Query', 'person'],
+          ['Query', 'locations'],
+          ['Person', 'name'],
+          ['Person', 'location'],
+          ['Person', 'pet'],
+          ['Location', 'city'],
+          ['Location', 'street'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('filters down on target', async () => {
@@ -99,12 +103,14 @@ describe('resolver-map/walk', function () {
       await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap }, callbackSpy);
       const args = callbackArgs(callbackSpy);
 
-      expect(args).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-        ['Person', 'location'],
-        ['Pet', 'name'],
-      ]);
+      expect(args.sort()).to.deep.equal(
+        [
+          ['Query', 'person'],
+          ['Query', 'locations'],
+          ['Person', 'location'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('walks a resolver map filtered by target', async () => {
@@ -142,12 +148,14 @@ describe('resolver-map/walk', function () {
       );
       const args = callbackArgs(callbackSpy);
 
-      expect(args).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-        ['Person', 'location'],
-        ['Pet', 'name'],
-      ]);
+      expect(args.sort()).to.deep.equal(
+        [
+          ['Query', 'person'],
+          ['Query', 'locations'],
+          ['Person', 'location'],
+          ['Pet', 'name'],
+        ].sort(),
+      );
     });
 
     it('throws an error if a resolver map source is expected but a resolver map is not passed in', async () => {
