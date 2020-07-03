@@ -1,18 +1,17 @@
 import { GraphQLSchema } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
 import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '../types';
-import { expand, TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
+import { expand, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
 import { embedPackOptionsWrapper, addResolverToMap } from './utils';
+import { IncludeExcludeMiddlewareOptions } from './types';
 
 export type EmbedOptions = {
-  include?: TargetReference | TargetReference[];
-  exclude?: TargetReference | TargetReference[];
   wrappers?: ResolverWrapper[];
   resolver?: Resolver;
   overwrite?: boolean;
-};
+} & IncludeExcludeMiddlewareOptions;
 
 export function embed({
   include = [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],

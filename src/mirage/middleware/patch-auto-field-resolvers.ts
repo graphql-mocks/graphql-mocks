@@ -5,9 +5,12 @@ import { ResolverMapMiddleware, PackOptions, ResolverMap } from '../../types';
 import { walk } from '../../resolver-map/walk';
 import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
 import { resolverExistsInResolverMap, addResolverToMap } from '../../resolver-map/utils';
-import { TargetReference } from '../../resolver-map/reference/target-reference';
+import { IncludeExcludeMiddlewareOptions } from '../../resolver-map/types';
 
-export function patchAutoFieldResolvers(target: TargetReference = ['*', '*']): ResolverMapMiddleware {
+export function patchAutoFieldResolvers({
+  include = ['*', '*'],
+  exclude = [],
+}: IncludeExcludeMiddlewareOptions = {}): ResolverMapMiddleware {
   return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
@@ -17,7 +20,8 @@ export function patchAutoFieldResolvers(target: TargetReference = ['*', '*']): R
 
     await walk(
       {
-        target,
+        include,
+        exclude,
         graphqlSchema,
       },
       async (fieldReference) => {

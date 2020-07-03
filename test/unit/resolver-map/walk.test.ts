@@ -72,9 +72,9 @@ describe('resolver-map/walk', function () {
       );
     });
 
-    it('filters down on target', async () => {
+    it('filters down on include target', async () => {
       const callbackSpy = spy();
-      await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA, target: ['Query', '*'] }, callbackSpy);
+      await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA, include: ['Query', '*'] }, callbackSpy);
       const args = callbackArgs(callbackSpy);
 
       expect(args).to.deep.equal([
@@ -113,10 +113,10 @@ describe('resolver-map/walk', function () {
       );
     });
 
-    it('walks a resolver map filtered by target', async () => {
+    it('walks a resolver map filtered by include target', async () => {
       const callbackSpy = spy();
 
-      await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap, target: ['Query', '*'] }, callbackSpy);
+      await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap, include: ['Query', '*'] }, callbackSpy);
       const args = callbackArgs(callbackSpy);
 
       expect(args).to.deep.equal([
