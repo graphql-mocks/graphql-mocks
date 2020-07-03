@@ -5,13 +5,19 @@ import { ResolverMapMiddleware, PackOptions, ResolverMap } from '../../types';
 import { walk } from '../../resolver-map/walk';
 import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
 import { resolverExistsInResolverMap, addResolverToMap } from '../../resolver-map/utils';
-import { IncludeExcludeMiddlewareOptions } from '../../resolver-map/types';
+import { IncludeExcludeMiddlewareOptions, defaultIncludeExcludeOptions } from '../../resolver-map/types';
 
-export function patchAutoFieldResolvers({
-  include = ['*', '*'],
-  exclude = [],
-}: IncludeExcludeMiddlewareOptions = {}): ResolverMapMiddleware {
+export function patchAutoFieldResolvers(
+  options: IncludeExcludeMiddlewareOptions = defaultIncludeExcludeOptions,
+): ResolverMapMiddleware {
   return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {
+    options = {
+      ...defaultIncludeExcludeOptions,
+      ...options,
+    };
+
+    const { include, exclude } = options;
+
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
     if (!graphqlSchema) {

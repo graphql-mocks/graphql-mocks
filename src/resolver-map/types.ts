@@ -1,4 +1,4 @@
-import { TargetReference } from './reference/target-reference';
+import { TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 
 /**
  * For high-level middlwares that might have an exclude or include,
@@ -11,3 +11,8 @@ export interface IncludeExcludeMiddlewareOptions {
   include?: TargetMiddlewareOption;
   exclude?: TargetMiddlewareOption;
 }
+
+export const defaultIncludeExcludeOptions: IncludeExcludeMiddlewareOptions = {
+  include: [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
+  exclude: [],
+};
