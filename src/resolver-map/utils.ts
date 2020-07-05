@@ -1,45 +1,10 @@
-import {
-  ResolverMap,
-  PackOptions,
-  ResolverWrapper,
-  Resolver,
-  ResolverParent,
-  ResolverArgs,
-  ResolverContext,
-  ResolverInfo,
-} from '../types';
+import { ResolverMap, Resolver } from '../types';
 import { FieldReference } from './reference/field-reference';
 
 export function resolverExistsInResolverMap(fieldReference: FieldReference, resolverMap: ResolverMap): boolean {
   const [typeName, fieldName] = fieldReference;
   return typeof resolverMap?.[typeName]?.[fieldName] === 'function';
 }
-
-export const embedPackOptionsInContext = (
-  context: Record<string, unknown>,
-  packOptions: PackOptions,
-): Record<string, unknown> => {
-  context = context ?? {};
-  context = {
-    ...context,
-    pack: context.pack || packOptions,
-  };
-
-  return context;
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const embedPackOptionsWrapper: ResolverWrapper = async (resolver, options): Promise<Resolver> => {
-  return (
-    parent: ResolverParent,
-    args: ResolverArgs,
-    context: ResolverContext,
-    info: ResolverInfo,
-  ): Promise<unknown> => {
-    context = embedPackOptionsInContext(context, options.packOptions);
-    return resolver(parent, args, context, info);
-  };
-};
 
 export function addResolverToMap({
   resolverMap,
