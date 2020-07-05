@@ -7,7 +7,7 @@ import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { ResolverMap } from '../../src/types';
-import { createQueryHandler } from '../../src/graphql';
+import { createGraphQLHandler } from '../../src/graphql';
 
 describe('integration/mirage-auto-resolver', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +29,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     mirageServer.db.loadData(defaultScenario);
 
-    const handler = await createQueryHandler(defaultResolvers, {
+    const handler = await createGraphQLHandler(defaultResolvers, {
       middlewares: [patchAutoResolvers()],
       dependencies: {
         mirageMapper,
@@ -114,6 +114,7 @@ describe('integration/mirage-auto-resolver', function () {
     }`;
 
     const result = await graphQLHandler(query);
+
     expect(result).to.deep.equal({
       data: {
         person: {
@@ -534,7 +535,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons included', () => {
       beforeEach(async () => {
-        const handler = await createQueryHandler(
+        const handler = await createGraphQLHandler(
           {},
           {
             middlewares: [
@@ -577,7 +578,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons excluded', () => {
       beforeEach(async () => {
-        const handler = await createQueryHandler(
+        const handler = await createGraphQLHandler(
           {},
           {
             middlewares: [

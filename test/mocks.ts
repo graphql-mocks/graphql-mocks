@@ -1,6 +1,6 @@
 import { buildSchema, GraphQLObjectType } from 'graphql';
-import { PackOptions } from '../src/types';
 import { MirageGraphQLMapper } from '../src/mirage/mapper';
+import { PackOptions } from '../src/pack/types';
 
 export const generatePackOptions: (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -4,8 +4,9 @@ import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '.
 import { expand, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
-import { embedPackOptionsWrapper, addResolverToMap } from './utils';
 import { IncludeExcludeMiddlewareOptions } from './types';
+import { embedPackOptionsWrapper } from '../pack/utils';
+import { addResolverToMap } from './utils';
 
 export type EmbedOptions = {
   wrappers?: ResolverWrapper[];

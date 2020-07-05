@@ -6,10 +6,11 @@ import {
   isUnionType,
   isInterfaceType,
 } from 'graphql';
-import { PackOptions, ResolverMap } from '../../types';
+import { ResolverMap } from '../../types';
 import { mirageUnionResolver } from '../resolvers/union';
 import { mirageInterfaceResolver } from '../resolvers/interface';
-import { embedPackOptionsInContext } from '../../resolver-map/utils';
+import { embedPackOptionsInContext } from '../../pack/utils';
+import { PackOptions } from '../../pack/types';
 
 export function patchAutoTypeResolvers(resolverMap: ResolverMap, packOptions: PackOptions): ResolverMap {
   const { graphqlSchema: schema } = packOptions.dependencies;

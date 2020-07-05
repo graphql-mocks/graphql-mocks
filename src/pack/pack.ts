@@ -1,7 +1,7 @@
-import { Packer, PackOptions, PackState } from '../types';
 import cloneDeep from 'lodash.clonedeep';
-import { embed } from './embed';
-import { embedPackOptionsWrapper } from './utils';
+import { embed } from '../resolver-map/embed';
+import { embedPackOptionsWrapper, normalizePackOptions } from './utils';
+import { PackOptions, Packer, PackState } from './types';
 
 export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
@@ -10,18 +10,7 @@ export const pack: Packer = async (initialResolversMap = {}, middlewares = [], p
 
   // make an intial copy
   let wrappedMap = cloneDeep(initialResolversMap);
-
-  packOptions = {
-    ...packOptions,
-
-    state: {
-      ...packOptions.state,
-    },
-
-    dependencies: {
-      ...packOptions.dependencies,
-    },
-  };
+  packOptions = normalizePackOptions(packOptions);
 
   for (const middleware of middlewares) {
     wrappedMap = await middleware(wrappedMap, packOptions as PackOptions);

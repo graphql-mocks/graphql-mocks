@@ -1,86 +1,50 @@
-import { graphql, GraphQLSchema, printSchema, buildSchema } from 'graphql';
-import { pack, defaultPackOptions } from '../resolver-map/pack';
-import { ResolverMap, ResolverMapMiddleware, PackOptions, PackState } from '../types';
-import { attachTypeResolversToSchema, attachFieldResolverstoSchema } from './utils';
+import { graphql, GraphQLSchema, ExecutionResult } from 'graphql';
+import { pack } from '../pack';
+import { ResolverMap } from '../types';
+import { createSchema, attachResolversToSchema } from './utils';
+import { normalizePackOptions } from '../pack/utils';
+import { createGraphQLHandlerOptions, GraphQLHandler } from './types';
 
-export type QueryHandler = {
-  state: PackState;
-  graphqlSchema: GraphQLSchema;
-  query: (query: string, variables?: Record<string, unknown>) => ReturnType<typeof graphql>;
-};
-
-export type CreateQueryHandlerOptions = {
-  dependencies: PackOptions['dependencies'] & { graphqlSchema: GraphQLSchema | string };
-  middlewares?: ResolverMapMiddleware[];
-  state?: PackOptions['state'];
-};
-
-export async function createQueryHandler(
+export async function createGraphQLHandler(
   resolverMap: ResolverMap = {},
-  options: CreateQueryHandlerOptions,
-): Promise<QueryHandler> {
-  let originalSchema = options?.dependencies?.graphqlSchema;
+  options: createGraphQLHandlerOptions,
+): Promise<GraphQLHandler> {
+  const graphqlSchema = createSchema(options?.dependencies?.graphqlSchema);
+  options.dependencies.graphqlSchema = graphqlSchema;
 
-  if (typeof originalSchema === 'string') {
-    try {
-      originalSchema = buildSchema(originalSchema);
-    } catch (error) {
-      throw new Error(
-        'Unable to build a schema from the string passed into the `graphqlSchema` dependency. Failed with error:\n\n' +
-          error.message,
-      );
-    }
-  }
+  const middlewares = options.middlewares ?? [];
+  const dependencies = options.dependencies;
+  const initialState = options.state;
 
-  if (typeof originalSchema !== 'object') {
-    throw new Error(`Expected graphqlSchema to be an object, got "${typeof originalSchema}".
-Please double-check that a graphqlSchema dependency is provided:
-createQueryHandler(initialResolverMap, { dependencies: { graphqlSchema: schema }})
-`);
-  }
-
-  const { middlewares = [] } = options;
-
-  // create a copy of the schema by dumping the passed in schema to a string
-  // and then using buildSchema on the string to rebuild a schema instance
-  const graphqlSchema = buildSchema(printSchema(originalSchema));
-
-  const packOptions = {
-    ...defaultPackOptions,
-
-    dependencies: {
-      ...defaultPackOptions.dependencies,
-      ...options.dependencies,
-      graphqlSchema,
-    },
-    state: options.state ?? defaultPackOptions.state,
-  };
+  const packOptions = normalizePackOptions({
+    dependencies,
+    state: initialState,
+  });
 
   // pack middlewares against resolverMap
-  const { resolverMap: packedResolverMap, state } = await pack(resolverMap, middlewares, packOptions);
+  const { resolverMap: packedResolverMap } = await pack(resolverMap, middlewares, packOptions);
 
   // apply resolverMap against copied graphql schema, attaching to schema:
-  // 1. Field Resolvers { Type: { field: fieldResolver } }
-  // 2. Type Resolvers for Abstract Types (interfaces, unions):
-  //    { Type: { __resolveType: typeResolver }}
-  attachFieldResolverstoSchema(packedResolverMap, graphqlSchema);
-  attachTypeResolversToSchema(packedResolverMap, graphqlSchema);
-
-  const query: QueryHandler['query'] = async (query, variables = {}) => {
-    if (typeof variables !== 'object') {
-      throw new Error(`Variables must be an object, got ${typeof variables}`);
-    }
-
-    return graphql({
-      schema: graphqlSchema,
-      source: query,
-      variableValues: variables,
-    });
-  };
+  attachResolversToSchema(packedResolverMap, graphqlSchema);
 
   return {
-    state,
+    state: packOptions.state,
+    dependencies: packOptions.dependencies,
+    packedResolverMap,
+    middlewares,
     graphqlSchema,
-    query,
+
+    query: async (query, variables = {}, graphqlArgs): Promise<ExecutionResult> => {
+      if (typeof variables !== 'object') {
+        throw new Error(`Variables must be an object, got ${typeof variables}`);
+      }
+
+      return graphql({
+        schema: graphqlSchema as GraphQLSchema,
+        source: query,
+        variableValues: variables,
+        ...graphqlArgs,
+      });
+    },
   };
 }

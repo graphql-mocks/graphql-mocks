@@ -1,1 +1,1 @@
-export { createQueryHandler } from './handler';
+export { createGraphQLHandler } from './handler';

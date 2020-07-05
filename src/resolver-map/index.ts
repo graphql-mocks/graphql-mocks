@@ -1,2 +1,2 @@
-export { pack } from './pack';
+export { pack } from '../pack';
 export { extractDependencies } from '../resolver/extract-dependencies';

@@ -9,6 +9,8 @@ import {
   GraphQLTypeResolver,
 } from 'graphql';
 
+import { PackOptions } from './pack/types';
+
 // Resolvers Shorthands
 
 export type Primitive = string | boolean | number;
@@ -44,20 +46,4 @@ export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeRe
   } & { __resolveType?: TTypeResolver }; // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
 };
 
-export type PackState = Record<any, any>;
-
-type NonNullDependency = object | string | boolean | symbol | number;
-export type PackOptions = {
-  state: PackState;
-  dependencies: Record<string, NonNullDependency>;
-};
-
 export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap | Promise<ResolverMap>;
-
-export type Packed = { resolverMap: ResolverMap; state: PackState };
-
-export type Packer = (
-  initialMap: ResolverMap,
-  middlewares: ResolverMapMiddleware[],
-  packOptions?: Partial<PackOptions>,
-) => Promise<Packed>;

@@ -13,6 +13,9 @@ import {
   GraphQLUnionType,
   GraphQLEnumType,
   GraphQLInputObjectType,
+  isSchema,
+  buildSchema,
+  printSchema,
 } from 'graphql';
 import { FieldReference } from '../resolver-map/reference/field-reference';
 
@@ -46,6 +49,11 @@ export function attachFieldResolverstoSchema(resolverMap: ResolverMap, schema: G
       fieldMap[fieldName].resolve = resolverMap[typeName][fieldName];
     }
   }
+}
+
+export function attachResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
+  attachTypeResolversToSchema(resolverMap, schema);
+  attachFieldResolverstoSchema(resolverMap, schema);
 }
 
 type unwrappedType =
@@ -121,4 +129,26 @@ export function getTypeAndFieldDefinitions(
   if (!field) throw new Error(`Field "${fieldName}" does not exist on type "${typeName}"`);
 
   return [type, field];
+}
+
+export function copySchema(schema: GraphQLSchema): GraphQLSchema {
+  return buildSchema(printSchema(schema));
+}
+
+export function createSchema(schema: GraphQLSchema | string): GraphQLSchema {
+  // creates a copy of the schema
+  if (isSchema(schema)) return copySchema(schema);
+
+  if (typeof schema === 'string') {
+    try {
+      return buildSchema(schema);
+    } catch (error) {
+      throw new Error(
+        'Unable to build a schema from the string passed into the `graphqlSchema` dependency. Failed with error:\n\n' +
+          error.message,
+      );
+    }
+  }
+
+  throw new Error('Unable to build schema, pass in an instance of schema or a string');
 }

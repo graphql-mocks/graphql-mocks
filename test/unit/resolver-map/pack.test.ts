@@ -1,8 +1,8 @@
 import { buildSchema, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
-import { pack } from '../../../src/resolver-map/pack';
 import { ResolverMapMiddleware, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
+import { pack } from '../../../src/pack';
 
 describe('resolver-map/pack', () => {
   it('reduces a set of resolvers', async () => {
