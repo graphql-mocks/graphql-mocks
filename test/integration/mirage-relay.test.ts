@@ -4,9 +4,9 @@
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
 import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
-import { createQueryHandler } from '../../src/graphql';
+import { createGraphQLHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper';
-import { QueryHandler } from '../../src/graphql/handler';
+import { GraphQLHandler } from '../../src/graphql/types';
 
 const schemaString = `
   schema {
@@ -44,7 +44,7 @@ const schemaString = `
 describe('integration/mirage-relay', function () {
   let mirageServer: Server;
   let mirageMapper: MirageGraphQLMapper;
-  let handler: QueryHandler;
+  let handler: GraphQLHandler;
 
   beforeEach(async () => {
     mirageServer = new Server({
@@ -77,7 +77,7 @@ describe('integration/mirage-relay', function () {
 
     mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
 
-    handler = await createQueryHandler(
+    handler = await createGraphQLHandler(
       {},
       {
         middlewares: [patchAutoFieldResolvers()],

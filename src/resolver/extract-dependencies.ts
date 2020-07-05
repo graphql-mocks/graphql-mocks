@@ -1,4 +1,5 @@
-import { ResolverContext, PackOptions } from '../types';
+import { ResolverContext } from '../types';
+import { PackOptions } from '../pack/types';
 
 type PackDependencies = PackOptions['dependencies'];
 type PackedContext = ResolverContext & {
@@ -57,7 +58,7 @@ export function extractDependencies<T>(
     throw new Error(
       `Expected to find dependencies with keys: ${missingKeys}\n` +
         'Either:\n' +
-        ' * Add to the these `dependencies` in your `createQueryHandler` or `pack` function\n' +
+        ' * Add to the these `dependencies` in your `createGraphQLHandler` or `pack` function\n' +
         ' * Use { required : false } as the third argument to `extractDependencies` and allow for these to be optional dependencies',
     );
   }

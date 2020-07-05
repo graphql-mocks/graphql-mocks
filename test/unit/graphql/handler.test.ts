@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { createQueryHandler, QueryHandler } from '../../../src/graphql/handler';
+import { createGraphQLHandler } from '../../../src/graphql/handler';
+import { GraphQLHandler } from '../../../src/graphql/types';
 import { ResolverMap } from '../../../src/types';
 import { buildSchema } from 'graphql';
 import { spyWrapper } from '../../../src/spy';
@@ -16,7 +17,7 @@ describe('graphql/hander', function () {
     }
   `;
 
-  let handler: QueryHandler;
+  let handler: GraphQLHandler;
   let resolverMap: ResolverMap;
 
   beforeEach(() => {
@@ -28,7 +29,7 @@ describe('graphql/hander', function () {
   });
 
   it('can execute a graphql query constructed from a schema string', async function () {
-    handler = await createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaString } });
+    handler = await createGraphQLHandler(resolverMap, { dependencies: { graphqlSchema: schemaString } });
     const result = await handler.query(`
       {
         hello
@@ -44,7 +45,7 @@ describe('graphql/hander', function () {
 
   it('can execute a graphql query constructed from a schema instance', async function () {
     const schemaInstance = buildSchema(schemaString);
-    handler = await createQueryHandler(resolverMap, { dependencies: { graphqlSchema: schemaInstance } });
+    handler = await createGraphQLHandler(resolverMap, { dependencies: { graphqlSchema: schemaInstance } });
     const result = await handler.query(`
       {
         hello
@@ -61,7 +62,7 @@ describe('graphql/hander', function () {
   it('throws a helpful error if the schema string cannot be parsed', async function () {
     let error: null | Error = null;
     try {
-      await createQueryHandler(resolverMap, {
+      await createGraphQLHandler(resolverMap, {
         dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
       });
     } catch (e) {
@@ -76,7 +77,7 @@ Syntax Error: Unexpected Name "NOT"`);
 
   it('returns maintains the same state object argument', async function () {
     const initialState = { key: 'value' };
-    const handler = await createQueryHandler(resolverMap, {
+    const handler = await createGraphQLHandler(resolverMap, {
       state: initialState,
       dependencies: { graphqlSchema: schemaString },
     });
@@ -88,7 +89,7 @@ Syntax Error: Unexpected Name "NOT"`);
     // using the wrapEachField middleware with the spyWrapper
     // produces a state with the spy function accessible at
     // state.spies.Query.hello
-    const handler = await createQueryHandler(resolverMap, {
+    const handler = await createGraphQLHandler(resolverMap, {
       middlewares: [embed({ wrappers: [spyWrapper] })],
       dependencies: { graphqlSchema: schemaString },
     });

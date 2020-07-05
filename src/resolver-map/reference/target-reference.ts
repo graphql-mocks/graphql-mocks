@@ -47,7 +47,6 @@ export function expandTarget(target: TargetReference, schema: GraphQLSchema): Fi
   }
 
   const [typeTarget, fieldTarget] = target;
-
   const types = schema.getTypeMap();
 
   const filtered = Object.entries(types)

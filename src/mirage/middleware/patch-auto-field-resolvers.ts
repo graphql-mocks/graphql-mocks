@@ -6,7 +6,7 @@ import { walk } from '../../resolver-map/walk';
 import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
 import { resolverExistsInResolverMap, addResolverToMap } from '../../resolver-map/utils';
 import { IncludeExcludeMiddlewareOptions, defaultIncludeExcludeOptions } from '../../resolver-map/types';
-import { PackOptions } from '../../pack';
+import { PackOptions } from '../../pack/types';
 
 export function patchAutoFieldResolvers(
   options: IncludeExcludeMiddlewareOptions = defaultIncludeExcludeOptions,

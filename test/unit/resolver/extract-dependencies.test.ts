@@ -13,7 +13,7 @@ const generateMocksContextWithDependencies = (dependencies: any): any => {
 
 const missingRequiredDependencyError = `Expected to find dependencies with keys: "does not exist"
 Either:
- * Add to the these \`dependencies\` in your \`createQueryHandler\` or \`pack\` function
+ * Add to the these \`dependencies\` in your \`createGraphQLHandler\` or \`pack\` function
  * Use { required : false } as the third argument to \`extractDependencies\` and allow for these to be optional dependencies`;
 
 describe('resolvers/extract-dependencies', function () {
