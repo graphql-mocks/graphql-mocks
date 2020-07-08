@@ -44,7 +44,7 @@ describe('resolver-map/embed', () => {
     expect(embeddedResolverMap.Person.pet).to.be.a('function');
   });
 
-  it('throws an error when trying to replace an existing resolver when { overwrite: false }', async () => {
+  it('throws an error when trying to replace an existing resolver when { replace: false }', async () => {
     const originalPersonNameResolver = spy();
 
     const resolverMap = {
@@ -76,7 +76,7 @@ describe('resolver-map/embed', () => {
       error = e;
     } finally {
       expect(error?.message).to.equal(
-        'Cannot add resolver to resolver map at ["Person", "name"] when overwrite is set to false',
+        'Cannot add resolver to resolver map at ["Person", "name"] when replace is set to false',
       );
     }
   });
@@ -102,7 +102,7 @@ describe('resolver-map/embed', () => {
       include: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
-      overwrite: true,
+      replace: true,
     });
 
     expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
@@ -116,7 +116,7 @@ describe('resolver-map/embed', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     embededResolverMap.Person.name('parent', 'args' as any, 'context', 'info' as any);
 
-    // because it was swapped out with the `overwrite: true` it should not be
+    // because it was swapped out with the `replace: true` it should not be
     // on the resolver map
     expect(originalPersonNameResolver.called).to.be.false;
 

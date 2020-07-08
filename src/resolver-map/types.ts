@@ -1,18 +1,18 @@
 import { TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 
-/**
- * For high-level middlwares that might have an exclude or include,
- * for consistency it's useful to allow for a single target reference
- * or a list of target references
- */
-export type TargetMiddlewareOption = TargetReference | TargetReference[];
+type FlexibleTargetOption = TargetReference | TargetReference[];
 
-export interface IncludeExcludeMiddlewareOptions {
-  include?: TargetMiddlewareOption;
-  exclude?: TargetMiddlewareOption;
+/**
+ * For common high-level middlwares that support targets (include, exclude, and replace)
+ */
+export interface TargetableMiddlewareOptions {
+  include?: FlexibleTargetOption;
+  exclude?: FlexibleTargetOption;
+  replace?: boolean;
 }
 
-export const defaultIncludeExcludeOptions: IncludeExcludeMiddlewareOptions = {
+export const defaultTargetableOptions: TargetableMiddlewareOptions = {
   include: [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
   exclude: [],
+  replace: false,
 };

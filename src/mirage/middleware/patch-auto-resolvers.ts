@@ -1,10 +1,10 @@
 import { ResolverMapMiddleware, ResolverMap } from '../../types';
 import { patchAutoFieldResolvers } from './patch-auto-field-resolvers';
 import { patchAutoTypeResolvers } from './patch-auto-type-resolvers';
-import { IncludeExcludeMiddlewareOptions, defaultIncludeExcludeOptions } from '../../resolver-map/types';
+import { defaultTargetableOptions, TargetableMiddlewareOptions } from '../../resolver-map/types';
 
 export function patchAutoResolvers(
-  options: IncludeExcludeMiddlewareOptions = defaultIncludeExcludeOptions,
+  options: TargetableMiddlewareOptions = defaultTargetableOptions,
 ): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     //  piping these two together middlewares together

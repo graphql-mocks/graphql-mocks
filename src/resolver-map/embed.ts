@@ -4,22 +4,21 @@ import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '.
 import { expand, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
 import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
-import { IncludeExcludeMiddlewareOptions } from './types';
+import { TargetableMiddlewareOptions } from './types';
 import { embedPackOptionsWrapper } from '../pack/utils';
 import { addResolverToMap } from './add-resolver';
 
 export type EmbedOptions = {
   wrappers?: ResolverWrapper[];
   resolver?: Resolver;
-  overwrite?: boolean;
-} & IncludeExcludeMiddlewareOptions;
+} & TargetableMiddlewareOptions;
 
 export function embed({
   include = [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
   exclude = [],
   wrappers = [],
   resolver: resolverToApply,
-  overwrite: overwriteOption = false,
+  replace: replaceOption = false,
 }: EmbedOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
@@ -36,17 +35,17 @@ export function embed({
 
     for (const [typeName, fieldName] of fieldReferences) {
       // these MUST be kept in the local iteration
-      // as to not overwrite the global values
-      let shouldOverwrite = overwriteOption;
+      // as to not replace the global values
+      let shouldreplace = replaceOption;
       let resolver = resolverToApply;
 
       if (typeof resolver !== 'function') {
         resolver = resolverMap[typeName]?.[fieldName] as Resolver;
 
         // we are using the existing resolver to wrap and to put it back
-        // in the resolver map. we will need to overwrite the original
+        // in the resolver map. we will need to replace the original
         // with the wrapped
-        shouldOverwrite = true;
+        shouldreplace = true;
       }
 
       // No resolver in the Resolver Map; continue.
@@ -67,7 +66,7 @@ export function embed({
         resolverMap,
         fieldReference: [typeName, fieldName],
         resolver: wrappedResolver,
-        overwrite: shouldOverwrite,
+        replace: shouldreplace,
       });
     }
 
