@@ -1,8 +1,8 @@
 import { ResolverMap } from '../types';
 import { GraphQLSchema } from 'graphql';
-import { SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET, expand } from './reference/target-reference';
-import { fieldExistsInResolverMap, FieldReference, difference } from './reference/field-reference';
-import { IncludeExcludeMiddlewareOptions } from './types';
+import { SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET, expand } from '../resolver-map/reference/target-reference';
+import { fieldExistsInResolverMap, FieldReference, difference } from '../resolver-map/reference/field-reference';
+import { IncludeExcludeMiddlewareOptions } from '../resolver-map/types';
 
 export enum WalkSource {
   GRAPHQL_SCHEMA = 'GRAPHQL_SCHEMA',
