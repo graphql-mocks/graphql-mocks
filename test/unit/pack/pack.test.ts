@@ -4,7 +4,7 @@ import { ResolverMapMiddleware, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
 import { pack } from '../../../src/pack';
 
-describe('resolver-map/pack', () => {
+describe('pack/pack', () => {
   it('reduces a set of resolvers', async () => {
     const graphqlSchema = buildSchema(`
       type Type {

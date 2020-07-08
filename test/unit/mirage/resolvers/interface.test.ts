@@ -3,7 +3,7 @@ import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
-import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
+import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/interface', function () {
   let schema: GraphQLSchema | undefined;

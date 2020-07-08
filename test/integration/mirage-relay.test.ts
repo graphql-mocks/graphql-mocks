@@ -5,8 +5,8 @@ import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
 import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
 import { createGraphQLHandler } from '../../src/graphql';
-import { MirageGraphQLMapper } from '../../src/mirage/mapper';
 import { GraphQLHandler } from '../../src/graphql/types';
+import { MirageGraphQLMapper } from '../../src/mirage';
 
 const schemaString = `
   schema {
