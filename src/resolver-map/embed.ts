@@ -6,7 +6,7 @@ import { difference } from './reference/field-reference';
 import { getTypeAndFieldDefinitions } from '../graphql/utils';
 import { IncludeExcludeMiddlewareOptions } from './types';
 import { embedPackOptionsWrapper } from '../pack/utils';
-import { addResolverToMap } from './utils';
+import { addResolverToMap } from './add-resolver';
 
 export type EmbedOptions = {
   wrappers?: ResolverWrapper[];
