@@ -1,1 +1,2 @@
-export { embed } from '../resolver-map/embed';
+export { extractDependencies, extractAllDependencies } from './extract-dependencies';
+export { wrapResolver } from './wrap';
