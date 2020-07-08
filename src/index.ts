@@ -1,3 +1,3 @@
-export * from './graphql';
-export * from './resolver-map';
-export * from './resolver';
+export { createGraphQLHandler } from './graphql';
+export { pack } from './pack';
+export { embed } from './resolver-map';
