@@ -1,39 +1,6 @@
 import intersection from 'lodash.intersection';
 import { GraphQLObjectType } from 'graphql';
 import { classify } from 'inflected';
-import { ModelInstance } from 'miragejs';
-import { ResolverInfo, ResolverParent, ResolverArgs, ResolverContext } from '../../types';
-
-type AutoFieldResolverType = 'OBJECT' | 'ROOT_TYPE';
-
-export type AutoResolverErrorMeta = {
-  autoResolverType: AutoFieldResolverType;
-  parent: ResolverParent;
-  args: ResolverArgs;
-  context: ResolverContext;
-  info: ResolverInfo;
-  match?: ObjectResolverMatch | RootQueryResolverMatch;
-  isRelay?: boolean;
-  hasFieldFilter?: boolean;
-  usedFieldFilter?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result?: any;
-};
-
-export type ObjectResolverMatch = {
-  fieldNameCandidates: string[];
-  parentModelName?: string;
-  matchedModelName?: string;
-  matchedProperty?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  propertyValue?: any;
-};
-
-export type RootQueryResolverMatch = {
-  models: ModelInstance[];
-  modelNameCandidates: string[];
-  matchedModelName?: string;
-};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {

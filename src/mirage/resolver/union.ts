@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, isUnionType } from 'graphql';
-import { MirageGraphQLMapper } from '../mapper';
-import { findMostInCommon, modelNameToTypeName } from './helpers';
+import { MirageGraphQLMapper } from '../mapper/mapper';
+import { findMostInCommon, modelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

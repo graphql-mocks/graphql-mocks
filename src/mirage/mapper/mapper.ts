@@ -1,50 +1,6 @@
-import { Resolver } from '../types';
-import { TypeName, FieldReference } from '../resolver-map/reference/field-reference';
-
-export type ModelName = string;
-export type AttrName = string;
-export type MirageAttrReference = [ModelName, AttrName];
-
-export type TypeMap = {
-  graphql: TypeName;
-  mirage: ModelName;
-};
-
-export type FieldMap = {
-  graphql: FieldReference;
-  mirage: MirageAttrReference;
-};
-
-export type FieldFilterResolver = (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  results: any[],
-  parent: Parameters<Resolver>[0],
-  args: Parameters<Resolver>[1],
-  context: Parameters<Resolver>[2],
-  info: Parameters<Resolver>[3],
-) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-export type FieldFilterMap = {
-  graphql: FieldReference;
-  filter: FieldFilterResolver;
-};
-
-function assertValidTupleDef(def: unknown): void {
-  if (!Array.isArray(def)) {
-    throw new TypeError(
-      `Definition given must be a valid FieldReference (ie: ['typeName', 'fieldName']) or a valid MirageAttrReference(ie: ['modelName', 'attrName'])`,
-    );
-  }
-
-  const hasStringValues = def.every((value: unknown) => typeof value === 'string');
-  if (!hasStringValues) {
-    throw new TypeError(`Each value in array definition must be a string`);
-  }
-
-  if (def.length !== 2) {
-    throw new TypeError(`Definition must contain two strings, got a length of ${def.length}`);
-  }
-}
+import { TypeName, FieldReference } from '../../resolver-map/reference/field-reference';
+import { FieldMap, FieldFilterMap, ModelName, MirageAttrReference, FieldFilterResolver, TypeMap } from '../types';
+import { assertValidTupleDef } from './utils';
 
 export class MirageGraphQLMapper {
   readonly typeMappings: TypeMap[] = [];

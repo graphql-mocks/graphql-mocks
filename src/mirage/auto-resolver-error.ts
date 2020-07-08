@@ -1,4 +1,4 @@
-import { AutoResolverErrorMeta, ObjectResolverMatch, RootQueryResolverMatch } from './helpers';
+import { AutoResolverErrorMeta, ObjectResolverMatch, RootQueryResolverMatch } from './types';
 
 export class AutoResolverError extends Error {
   _message?: string;

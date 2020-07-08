@@ -1,4 +1,4 @@
-import { mirageInterfaceResolver } from '../../../../src/mirage/resolvers/interface';
+import { mirageInterfaceResolver } from '../../../../src/mirage/resolver/interface';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';

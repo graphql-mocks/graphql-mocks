@@ -1,4 +1,4 @@
-import { mirageUnionResolver } from '../../../../src/mirage/resolvers/union';
+import { mirageUnionResolver } from '../../../../src/mirage/resolver/union';
 import { generatePackOptions } from '../../../mocks';
 import { GraphQLSchema, buildSchema, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
