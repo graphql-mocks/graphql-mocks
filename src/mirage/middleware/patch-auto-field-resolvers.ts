@@ -1,19 +1,20 @@
 import { GraphQLSchema } from 'graphql';
-import { mirageRootQueryResolver } from '../resolvers/root-query';
-import { mirageObjectResolver } from '../resolvers/object';
+import { mirageRootQueryResolver } from '../resolver/root-query';
+import { mirageObjectResolver } from '../resolver/object';
 import { ResolverMapMiddleware, ResolverMap } from '../../types';
-import { walk } from '../../resolver-map/walk';
+import { walk } from '../../utils/walk';
 import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
-import { resolverExistsInResolverMap, addResolverToMap } from '../../resolver-map/utils';
-import { IncludeExcludeMiddlewareOptions, defaultIncludeExcludeOptions } from '../../resolver-map/types';
+import { resolverExistsInResolverMap } from '../../resolver-map/utils';
+import { TargetableMiddlewareOptions, defaultTargetableOptions } from '../../resolver-map/types';
 import { PackOptions } from '../../pack/types';
+import { addResolverToMap } from '../../resolver-map';
 
 export function patchAutoFieldResolvers(
-  options: IncludeExcludeMiddlewareOptions = defaultIncludeExcludeOptions,
+  options: TargetableMiddlewareOptions = defaultTargetableOptions,
 ): ResolverMapMiddleware {
   return async (resolverMap: ResolverMap, packOptions: PackOptions): Promise<ResolverMap> => {
     options = {
-      ...defaultIncludeExcludeOptions,
+      ...defaultTargetableOptions,
       ...options,
     };
 

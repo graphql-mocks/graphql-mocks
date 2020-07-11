@@ -1,9 +1,9 @@
-import { mirageUnionResolver } from '../../../../src/mirage/resolvers/union';
+import { mirageUnionResolver } from '../../../../src/mirage/resolver/union';
 import { generatePackOptions } from '../../../mocks';
 import { GraphQLSchema, buildSchema, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server } from 'miragejs';
-import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
+import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/union', function () {
   let schema: GraphQLSchema | undefined;

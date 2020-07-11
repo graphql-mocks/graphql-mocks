@@ -1,10 +1,6 @@
-import { ResolverContext } from '../types';
-import { PackOptions } from '../pack/types';
+import { PackOptions, PackedContext } from '../pack/types';
 
 type PackDependencies = PackOptions['dependencies'];
-type PackedContext = ResolverContext & {
-  pack?: { dependencies?: PackOptions['dependencies'] };
-};
 
 export function extractAllDependencies<T = PackDependencies>(
   context: PackedContext,

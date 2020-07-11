@@ -1,8 +1,8 @@
-import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
+import { mirageObjectResolver } from '../../../../src/mirage/resolver/object';
 import { expect } from 'chai';
 import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
-import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
+import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/relay', () => {
   let mirageServer: Server;

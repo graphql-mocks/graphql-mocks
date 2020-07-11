@@ -5,7 +5,7 @@ import { Model, Server, hasMany, belongsTo } from 'miragejs';
 import { expect } from 'chai';
 import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
 import { createGraphQLHandler } from '../../src/graphql';
-import { MirageGraphQLMapper } from '../../src/mirage/mapper';
+import { MirageGraphQLMapper } from '../../src/mirage/mapper/mapper';
 
 // patchAutoFieldResolvers middleware covers both auto-resolving of
 // root queries and graphql object types. This test focuses on the

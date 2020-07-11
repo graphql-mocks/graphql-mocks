@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, isUnionType } from 'graphql';
-import { MirageGraphQLMapper } from '../mapper';
-import { findMostInCommon, modelNameToTypeName } from './helpers';
+import { MirageGraphQLMapper } from '../mapper/mapper';
+import { findMostInCommon, modelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,6 +17,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   }
 
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
+
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
   }>(['graphqlSchema'], context);
@@ -24,10 +25,6 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   const { mirageMapper } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
   }>(['mirageMapper'], context, { required: false });
-
-  if (!graphqlSchema) {
-    throw new Error('Please include `graphqlSchema: GraphQLSchema` in your pack dependencies');
-  }
 
   const { name } = unionType;
   const unionTypes = unionType.getTypes();

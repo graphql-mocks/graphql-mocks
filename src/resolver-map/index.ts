@@ -1,2 +1,2 @@
-export { pack } from '../pack';
-export { extractDependencies } from '../resolver/extract-dependencies';
+export { embed } from './embed';
+export { addResolverToMap } from './add-resolver';

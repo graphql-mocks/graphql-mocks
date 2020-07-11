@@ -1,9 +1,9 @@
-import { mirageObjectResolver } from '../../../../src/mirage/resolvers/object';
+import { mirageObjectResolver } from '../../../../src/mirage/resolver/object';
 import { generatePackOptions, createEmptyMirageMapper } from '../../../mocks';
 import { GraphQLSchema, buildSchema, GraphQLNonNull, GraphQLString, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server, belongsTo } from 'miragejs';
-import { MirageGraphQLMapper } from '../../../../src/mirage/mapper';
+import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/object', function () {
   let schema: GraphQLSchema | undefined;

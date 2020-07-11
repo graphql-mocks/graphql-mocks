@@ -7,8 +7,8 @@ import {
   isInterfaceType,
 } from 'graphql';
 import { ResolverMap } from '../../types';
-import { mirageUnionResolver } from '../resolvers/union';
-import { mirageInterfaceResolver } from '../resolvers/interface';
+import { mirageUnionResolver } from '../resolver/union';
+import { mirageInterfaceResolver } from '../resolver/interface';
 import { embedPackOptionsInContext } from '../../pack/utils';
 import { PackOptions } from '../../pack/types';
 
