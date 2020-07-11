@@ -36,7 +36,7 @@ export function embed({
     for (const [typeName, fieldName] of fieldReferences) {
       // these MUST be kept in the local iteration
       // as to not replace the global values
-      let shouldreplace = replaceOption;
+      let shouldReplace = replaceOption;
       let resolver = resolverToApply;
 
       if (typeof resolver !== 'function') {
@@ -45,7 +45,7 @@ export function embed({
         // we are using the existing resolver to wrap and to put it back
         // in the resolver map. we will need to replace the original
         // with the wrapped
-        shouldreplace = true;
+        shouldReplace = true;
       }
 
       // No resolver in the Resolver Map; continue.
@@ -66,7 +66,7 @@ export function embed({
         resolverMap,
         fieldReference: [typeName, fieldName],
         resolver: wrappedResolver,
-        replace: shouldreplace,
+        replace: shouldReplace,
       });
     }
 
