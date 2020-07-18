@@ -28,7 +28,8 @@ describe('integration/mirage-auto-resolver', function () {
 
     mirageServer.db.loadData(defaultScenario);
 
-    const handler = await createGraphQLHandler(defaultResolvers, {
+    const handler = await createGraphQLHandler({
+      resolverMap: defaultResolvers,
       middlewares: [patchAutoResolvers()],
       dependencies: {
         mirageMapper,
@@ -534,21 +535,18 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons included', () => {
       beforeEach(async () => {
-        const handler = await createGraphQLHandler(
-          {},
-          {
-            middlewares: [
-              patchAutoResolvers({
-                include: ['Query', 'allPersons'],
-              }),
-            ],
-            dependencies: {
-              mirageMapper,
-              mirageServer,
-              graphqlSchema: graphqlSchema,
-            },
+        const handler = await createGraphQLHandler({
+          middlewares: [
+            patchAutoResolvers({
+              include: ['Query', 'allPersons'],
+            }),
+          ],
+          dependencies: {
+            mirageMapper,
+            mirageServer,
+            graphqlSchema: graphqlSchema,
           },
-        );
+        });
 
         graphQLHandler = handler.query;
       });
@@ -577,21 +575,18 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons excluded', () => {
       beforeEach(async () => {
-        const handler = await createGraphQLHandler(
-          {},
-          {
-            middlewares: [
-              patchAutoResolvers({
-                exclude: ['Query', 'allPersons'],
-              }),
-            ],
-            dependencies: {
-              mirageMapper,
-              mirageServer,
-              graphqlSchema: graphqlSchema,
-            },
+        const handler = await createGraphQLHandler({
+          middlewares: [
+            patchAutoResolvers({
+              exclude: ['Query', 'allPersons'],
+            }),
+          ],
+          dependencies: {
+            mirageMapper,
+            mirageServer,
+            graphqlSchema: graphqlSchema,
           },
-        );
+        });
 
         graphQLHandler = handler.query;
       });

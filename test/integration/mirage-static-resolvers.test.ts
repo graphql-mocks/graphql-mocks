@@ -12,7 +12,8 @@ describe('integration/mirage-static-resolvers', function () {
   beforeEach(async () => {
     mirageServer.db.loadData(defaultScenario);
 
-    handler = await createGraphQLHandler(defaultResolvers, {
+    handler = await createGraphQLHandler({
+      resolverMap: defaultResolvers,
       state: {},
       dependencies: {
         mirageServer,

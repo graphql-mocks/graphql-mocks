@@ -77,17 +77,14 @@ describe('integration/mirage-relay', function () {
 
     mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
 
-    handler = await createGraphQLHandler(
-      {},
-      {
-        middlewares: [patchAutoFieldResolvers()],
-        dependencies: {
-          mirageServer,
-          mirageMapper,
-          graphqlSchema: schemaString,
-        },
+    handler = await createGraphQLHandler({
+      middlewares: [patchAutoFieldResolvers()],
+      dependencies: {
+        mirageServer,
+        mirageMapper,
+        graphqlSchema: schemaString,
       },
-    );
+    });
   });
 
   afterEach(() => {
