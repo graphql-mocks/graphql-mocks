@@ -29,7 +29,7 @@ describe('graphql/hander', function () {
   });
 
   it('can execute a graphql query constructed from a schema string', async function () {
-    handler = await createGraphQLHandler(resolverMap, { dependencies: { graphqlSchema: schemaString } });
+    handler = await createGraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaString } });
     const result = await handler.query(`
       {
         hello
@@ -45,7 +45,7 @@ describe('graphql/hander', function () {
 
   it('can execute a graphql query constructed from a schema instance', async function () {
     const schemaInstance = buildSchema(schemaString);
-    handler = await createGraphQLHandler(resolverMap, { dependencies: { graphqlSchema: schemaInstance } });
+    handler = await createGraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaInstance } });
     const result = await handler.query(`
       {
         hello
@@ -62,7 +62,8 @@ describe('graphql/hander', function () {
   it('throws a helpful error if the schema string cannot be parsed', async function () {
     let error: null | Error = null;
     try {
-      await createGraphQLHandler(resolverMap, {
+      await createGraphQLHandler({
+        resolverMap,
         dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
       });
     } catch (e) {
@@ -77,7 +78,8 @@ Syntax Error: Unexpected Name "NOT"`);
 
   it('returns maintains the same state object argument', async function () {
     const initialState = { key: 'value' };
-    const handler = await createGraphQLHandler(resolverMap, {
+    const handler = await createGraphQLHandler({
+      resolverMap,
       state: initialState,
       dependencies: { graphqlSchema: schemaString },
     });
@@ -86,10 +88,8 @@ Syntax Error: Unexpected Name "NOT"`);
   });
 
   it('can use ResolverMap middlewares', async function () {
-    // using the wrapEachField middleware with the spyWrapper
-    // produces a state with the spy function accessible at
-    // state.spies.Query.hello
-    const handler = await createGraphQLHandler(resolverMap, {
+    const handler = await createGraphQLHandler({
+      resolverMap,
       middlewares: [embed({ wrappers: [spyWrapper] })],
       dependencies: { graphqlSchema: schemaString },
     });

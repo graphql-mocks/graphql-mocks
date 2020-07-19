@@ -17,6 +17,7 @@ export interface GraphQLHandler {
 }
 
 export type createGraphQLHandlerOptions = Partial<PackOptions> & {
+  resolverMap?: ResolverMap;
   middlewares?: ResolverMapMiddleware[];
   dependencies: PackOptions['dependencies'] & { graphqlSchema: GraphQLSchema | string };
 };

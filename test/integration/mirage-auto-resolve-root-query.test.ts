@@ -31,14 +31,12 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     it('can return a scalar using a filter field', async function () {
       const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personName'], () => 'Grace Hopper');
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageMapper,
-            mirageServer,
-            graphqlSchema: `
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageMapper,
+          mirageServer,
+          graphqlSchema: `
             schema {
               query: Query
             }
@@ -47,9 +45,8 @@ describe('integration/mirage-auto-resolve-root-query', function () {
               # a list of persons
               personName: String!
             }`,
-          },
         },
-      );
+      });
 
       const result = await handler.query(`{
         personName
@@ -64,14 +61,12 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         'Anita Borg',
       ]);
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageMapper,
-            mirageServer,
-            graphqlSchema: `
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageMapper,
+          mirageServer,
+          graphqlSchema: `
             schema {
               query: Query
             }
@@ -80,9 +75,8 @@ describe('integration/mirage-auto-resolve-root-query', function () {
               # a list of persons
               personNames: [String!]!
             }`,
-          },
         },
-      );
+      });
 
       const result = await handler.query(`{
         personNames
@@ -92,13 +86,11 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('throws an error when a field filter is not provided', async function () {
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            graphqlSchema: `
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          graphqlSchema: `
             schema {
               query: Query
             }
@@ -107,9 +99,8 @@ describe('integration/mirage-auto-resolve-root-query', function () {
               # a list of persons
               personName: String
             }`,
-          },
         },
-      );
+      });
 
       const result = await handler.query(`{
         personName
@@ -158,16 +149,13 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     `;
 
     it('by default returns an array of all models', async function () {
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
       allPeople {
@@ -187,17 +175,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         return models.filter((model: any) => ['wilma', 'fred'].includes(model.name));
       });
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            mirageMapper,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          mirageMapper,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
         allPeople {
@@ -217,17 +202,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         return [{ name: 'Ada Lovelace' }, { name: 'Grace Hopper' }];
       });
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            mirageMapper,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          mirageMapper,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
         allPeople {
@@ -247,17 +229,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         return null;
       });
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            mirageMapper,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          mirageMapper,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
         allPeople {
@@ -295,16 +274,13 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         name: 'fred',
       });
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
           person {
@@ -320,16 +296,13 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
 
     it('returns null when there are no models', async function () {
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageServer,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageServer,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
           person {
@@ -347,17 +320,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     it('returns null from field filter', async function () {
       const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => null);
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageMapper,
-            mirageServer,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageMapper,
+          mirageServer,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
           person {
@@ -377,17 +347,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         name: 'Grace Hopper',
       }));
 
-      const handler = await createGraphQLHandler(
-        {},
-        {
-          middlewares: [patchAutoFieldResolvers()],
-          dependencies: {
-            mirageMapper,
-            mirageServer,
-            graphqlSchema,
-          },
+      const handler = await createGraphQLHandler({
+        middlewares: [patchAutoFieldResolvers()],
+        dependencies: {
+          mirageMapper,
+          mirageServer,
+          graphqlSchema,
         },
-      );
+      });
 
       const result = await handler.query(`{
           person {
@@ -420,16 +387,13 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
 
       it('when no field filter exists it throws an error', async function () {
-        const handler = await createGraphQLHandler(
-          {},
-          {
-            middlewares: [patchAutoFieldResolvers()],
-            dependencies: {
-              mirageServer,
-              graphqlSchema,
-            },
+        const handler = await createGraphQLHandler({
+          middlewares: [patchAutoFieldResolvers()],
+          dependencies: {
+            mirageServer,
+            graphqlSchema,
           },
-        );
+        });
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = await handler.query(`{
@@ -451,17 +415,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
             return models[0];
           });
 
-          const handler = await createGraphQLHandler(
-            {},
-            {
-              middlewares: [patchAutoFieldResolvers()],
-              dependencies: {
-                mirageServer,
-                graphqlSchema,
-                mirageMapper,
-              },
+          const handler = await createGraphQLHandler({
+            middlewares: [patchAutoFieldResolvers()],
+            dependencies: {
+              mirageServer,
+              graphqlSchema,
+              mirageMapper,
             },
-          );
+          });
 
           const result = await handler.query(`{
             person {
@@ -483,17 +444,14 @@ describe('integration/mirage-auto-resolve-root-query', function () {
             return models;
           });
 
-          const handler = await createGraphQLHandler(
-            {},
-            {
-              middlewares: [patchAutoFieldResolvers()],
-              dependencies: {
-                mirageServer,
-                graphqlSchema,
-                mirageMapper,
-              },
+          const handler = await createGraphQLHandler({
+            middlewares: [patchAutoFieldResolvers()],
+            dependencies: {
+              mirageServer,
+              graphqlSchema,
+              mirageMapper,
             },
-          );
+          });
 
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const result: any = await handler.query(`{

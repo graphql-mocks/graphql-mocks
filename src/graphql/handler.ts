@@ -1,14 +1,11 @@
 import { graphql, GraphQLSchema, ExecutionResult } from 'graphql';
 import { pack } from '../pack';
-import { ResolverMap } from '../types';
 import { createSchema, attachResolversToSchema } from './utils';
 import { normalizePackOptions } from '../pack/utils';
 import { createGraphQLHandlerOptions, GraphQLHandler } from './types';
 
-export async function createGraphQLHandler(
-  resolverMap: ResolverMap = {},
-  options: createGraphQLHandlerOptions,
-): Promise<GraphQLHandler> {
+export async function createGraphQLHandler(options: createGraphQLHandlerOptions): Promise<GraphQLHandler> {
+  const resolverMap = options?.resolverMap ?? {};
   const graphqlSchema = createSchema(options?.dependencies?.graphqlSchema);
   options.dependencies.graphqlSchema = graphqlSchema;
 
