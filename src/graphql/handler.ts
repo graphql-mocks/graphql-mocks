@@ -1,47 +1,73 @@
-import { graphql, GraphQLSchema, ExecutionResult } from 'graphql';
+import { graphql, GraphQLSchema, ExecutionResult, GraphQLArgs } from 'graphql';
 import { pack } from '../pack';
 import { createSchema, attachResolversToSchema } from './utils';
 import { normalizePackOptions } from '../pack/utils';
-import { createGraphQLHandlerOptions, GraphQLHandler } from './types';
+import { CreateGraphQLHandlerOptions } from './types';
+import { ResolverMapMiddleware, ResolverMap } from '../types';
+import { PackOptions } from '../pack/types';
 
-export async function createGraphQLHandler(options: createGraphQLHandlerOptions): Promise<GraphQLHandler> {
-  const resolverMap = options?.resolverMap ?? {};
-  const graphqlSchema = createSchema(options?.dependencies?.graphqlSchema);
-  options.dependencies.graphqlSchema = graphqlSchema;
+export class GraphQLHandler {
+  state: PackOptions['state'];
 
-  const middlewares = options.middlewares ?? [];
-  const dependencies = options.dependencies;
-  const initialState = options.state;
+  protected packed = false;
+  protected packOptions: PackOptions;
+  protected middlewares: ResolverMapMiddleware[];
+  protected graphqlSchema: GraphQLSchema;
+  protected initialResolverMap: ResolverMap;
 
-  const packOptions = normalizePackOptions({
-    dependencies,
-    state: initialState,
-  });
+  constructor(options: CreateGraphQLHandlerOptions) {
+    const graphqlSchema = createSchema(options.dependencies?.graphqlSchema);
 
-  // pack middlewares against resolverMap
-  const { resolverMap: packedResolverMap } = await pack(resolverMap, middlewares, packOptions);
+    this.packOptions = normalizePackOptions({
+      dependencies: {
+        ...options.dependencies,
+        graphqlSchema,
+      },
+      state: options.state,
+    });
 
-  // apply resolverMap against copied graphql schema, attaching to schema:
-  attachResolversToSchema(packedResolverMap, graphqlSchema);
+    this.graphqlSchema = graphqlSchema;
+    this.initialResolverMap = options.resolverMap ?? {};
+    this.state = options.state ?? {};
+    this.middlewares = options.middlewares ?? [];
+  }
 
-  return {
-    state: packOptions.state,
-    dependencies: packOptions.dependencies,
-    packedResolverMap,
-    middlewares,
-    graphqlSchema,
+  async query(
+    query: GraphQLArgs['source'],
+    variables?: GraphQLArgs['variableValues'],
+    queryContext?: GraphQLArgs['contextValue'],
+    graphqlArgs?: GraphQLArgs,
+  ): Promise<ExecutionResult> {
+    await this.pack();
 
-    query: async (query, variables = {}, graphqlArgs): Promise<ExecutionResult> => {
-      if (typeof variables !== 'object') {
-        throw new Error(`Variables must be an object, got ${typeof variables}`);
-      }
+    variables = variables ?? {};
+    queryContext = queryContext ?? {};
 
-      return graphql({
-        schema: graphqlSchema as GraphQLSchema,
-        source: query,
-        variableValues: variables,
-        ...graphqlArgs,
-      });
-    },
-  };
+    if (typeof variables !== 'object') {
+      throw new Error(`Variables must be an object, got ${typeof variables}`);
+    }
+
+    return graphql({
+      schema: this.graphqlSchema,
+      source: query,
+      variableValues: variables,
+
+      ...graphqlArgs,
+
+      contextValue: {
+        ...graphqlArgs?.contextValue,
+        queryContext,
+      },
+    });
+  }
+
+  protected async pack(): Promise<void> {
+    if (!this.packed) {
+      const { resolverMap, state } = await pack(this.initialResolverMap, this.middlewares ?? [], this.packOptions);
+      this.state = state;
+      attachResolversToSchema(resolverMap, this.graphqlSchema);
+    }
+
+    this.packed = true;
+  }
 }

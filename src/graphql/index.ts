@@ -1,1 +1,1 @@
-export { createGraphQLHandler } from './handler';
+export { GraphQLHandler } from './handler';
