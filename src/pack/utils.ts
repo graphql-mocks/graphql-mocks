@@ -1,6 +1,6 @@
 import { ResolverWrapper, ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
 import { defaultPackOptions } from './pack';
-import { PackOptions, PackedContext } from './types';
+import { PackOptions } from './types';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
@@ -16,7 +16,7 @@ export function normalizePackOptions(packOptions: Partial<PackOptions> = default
 export const embedPackOptionsInContext = (
   context: Record<string, unknown>,
   packOptions: PackOptions,
-): PackedContext => {
+): ResolverContext => {
   context = context ?? {};
   context = {
     ...context,

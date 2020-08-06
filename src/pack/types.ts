@@ -1,4 +1,4 @@
-import { ResolverMapMiddleware, ResolverMap, ResolverContext } from '../types';
+import { ResolverMapMiddleware, ResolverMap } from '../types';
 
 type NonNullDependency = object | string | boolean | symbol | number;
 
@@ -16,7 +16,3 @@ export type Packer = (
   middlewares: ResolverMapMiddleware[],
   packOptions?: Partial<PackOptions>,
 ) => Promise<Packed>;
-
-export type PackedContext = ResolverContext & {
-  pack?: { dependencies?: PackOptions['dependencies'] };
-};

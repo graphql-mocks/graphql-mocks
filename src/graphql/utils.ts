@@ -1,4 +1,4 @@
-import { ResolverMap, ResolvableType, ResolvableField } from '../types';
+import { ResolverMap, ResolvableType, ResolvableField, ResolverContext } from '../types';
 import {
   GraphQLSchema,
   isAbstractType,
@@ -16,8 +16,10 @@ import {
   isSchema,
   buildSchema,
   printSchema,
+  GraphQLArgs,
 } from 'graphql';
 import { FieldReference } from '../resolver-map/reference/field-reference';
+import { PackOptions } from '../pack/types';
 
 export function attachTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
   for (const typeName in resolverMap) {
@@ -151,4 +153,20 @@ export function createSchema(schema: GraphQLSchema | string): GraphQLSchema {
   }
 
   throw new Error('Unable to build schema, pass in an instance of schema or a string');
+}
+
+export function buildContext({
+  initialContext,
+  queryContext,
+  packOptions,
+}: {
+  initialContext?: GraphQLArgs['contextValue'];
+  queryContext?: GraphQLArgs['contextValue'];
+  packOptions: PackOptions;
+}): ResolverContext {
+  return {
+    ...initialContext,
+    ...queryContext,
+    pack: packOptions,
+  };
 }

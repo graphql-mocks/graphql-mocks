@@ -4,6 +4,7 @@ import { ResolverMap } from '../../../src/types';
 import { buildSchema } from 'graphql';
 import { spyWrapper } from '../../../src/spy';
 import { embed } from '../../../src/resolver-map/embed';
+import * as sinon from 'sinon';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -75,7 +76,7 @@ Syntax Error: Unexpected Name "NOT"`);
     }
   });
 
-  it('returns maintains the same state object argument', async function () {
+  it('returns maintains the structure of the state object argument', async function () {
     const initialState = { key: 'value' };
     const handler = new GraphQLHandler({
       resolverMap,
@@ -97,5 +98,29 @@ Syntax Error: Unexpected Name "NOT"`);
 
     await handler.query(`{ hello }`);
     expect(handler.state?.spies?.Query?.hello).to.exist;
+  });
+
+  it('sets up managed context for resolvers', async function () {
+    const helloResolverSpy = sinon.spy();
+
+    const resolverMap = {
+      Query: {
+        hello: helloResolverSpy,
+      },
+    };
+
+    const handler = new GraphQLHandler({
+      resolverMap,
+      initialContext: { fromInitialContext: true },
+      dependencies: { graphqlSchema: schemaString },
+    });
+
+    await handler.query(`{ hello }`, {}, { fromQueryContext: true });
+    const [, , context] = helloResolverSpy.firstCall.args;
+
+    expect(context.fromInitialContext, 'initial context is spread into context').to.exist;
+    expect(context.fromQueryContext, 'query context is spread into context').to.exist;
+    expect(context.pack, 'is defined in context').to.exist;
+    expect(context.pack.dependencies.graphqlSchema, 'graphqlSchema exists in pack dependencies').to.exist;
   });
 });
