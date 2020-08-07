@@ -6,11 +6,10 @@ import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { ResolverMap } from '../../src/types';
-import { createGraphQLHandler } from '../../src/graphql';
+import { GraphQLHandler } from '../../src/graphql';
 
 describe('integration/mirage-auto-resolver', function () {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let graphQLHandler: any;
+  let graphQLHandler: GraphQLHandler;
   let resolvers: ResolverMap;
   let mirageMapper: MirageGraphQLMapper;
 
@@ -28,7 +27,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     mirageServer.db.loadData(defaultScenario);
 
-    const handler = await createGraphQLHandler({
+    graphQLHandler = new GraphQLHandler({
       resolverMap: defaultResolvers,
       middlewares: [patchAutoResolvers()],
       dependencies: {
@@ -37,14 +36,12 @@ describe('integration/mirage-auto-resolver', function () {
         graphqlSchema: graphqlSchema,
       },
     });
-
-    graphQLHandler = handler.query;
   });
 
   this.afterEach(() => {
     mirageServer.db.emptyData();
     (resolvers as unknown) = undefined;
-    graphQLHandler = undefined;
+    (graphQLHandler as unknown) = undefined;
   });
 
   it('can handle a type look up', async function () {
@@ -58,7 +55,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     expect(result).to.deep.equal({
       data: {
         person: {
@@ -92,7 +89,7 @@ describe('integration/mirage-auto-resolver', function () {
       'Person.fullname <=> Person.name mapping exists',
     );
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     expect(result).to.deep.equal({
       data: {
         person: {
@@ -113,7 +110,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
 
     expect(result).to.deep.equal({
       data: {
@@ -154,7 +151,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
 
     expect(result.data!.person.id).to.equal(result.data!.person.posts[0].author.id);
     expect(result.data!.person.name).to.equal(result.data!.person.posts[0].author.name);
@@ -176,7 +173,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     expect(result.data!.person.posts[0].comments[0].body).to.equal('I love the town of Bedrock!');
     expect(result.data!.person.posts[0].comments[0].author.name).to.equal('Barney Rubble');
   });
@@ -206,7 +203,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     const [fred, barnie, wilma] = result.data!.allPersons;
 
     expect(fred.name).to.equal('Fred Flinstone');
@@ -291,7 +288,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     const [firstPerson, secondPerson] = result.data!.allPersons;
 
     expect(firstPerson.name).to.equal('Fred Flinstone');
@@ -344,7 +341,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     const [firstPerson, secondPerson] = result.data!.allPersons;
 
     expect(firstPerson.name).to.equal('Fred Flinstone');
@@ -364,7 +361,7 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
+    const result = await graphQLHandler.query(query);
     const [firstPerson, secondPerson] = result.data!.allPersons;
 
     expect(firstPerson.name).to.equal('Fred Flinstone');
@@ -399,8 +396,8 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
-    const [fred, barney, wilma] = result.data.allPersons;
+    const result = await graphQLHandler.query(query);
+    const [fred, barney, wilma] = result.data!.allPersons;
 
     expect(fred).to.deep.equal({
       name: 'Fred Flinstone',
@@ -424,8 +421,8 @@ describe('integration/mirage-auto-resolver', function () {
       }
     }`;
 
-    const result = await graphQLHandler(query);
-    const [fred, barney, wilma] = result.data.allPersons;
+    const result = await graphQLHandler.query(query);
+    const [fred, barney, wilma] = result.data!.allPersons;
 
     expect(fred).to.deep.equal({
       name: 'Fred Flinstone',
@@ -461,11 +458,11 @@ describe('integration/mirage-auto-resolver', function () {
         }
       }`;
 
-      const result = await graphQLHandler(query);
+      const result = await graphQLHandler.query(query);
       expect(result.errors).to.equal(undefined);
 
-      const edges = result.data.allPersonsPaginated.edges;
-      const pageInfo = result.data.allPersonsPaginated.pageInfo;
+      const edges = result.data!.allPersonsPaginated.edges;
+      const pageInfo = result.data!.allPersonsPaginated.pageInfo;
       const firstPersonEdge = edges[0];
       const secondPersonEdge = edges[1];
 
@@ -507,8 +504,8 @@ describe('integration/mirage-auto-resolver', function () {
         }
       }`;
 
-      const result = await graphQLHandler(query);
-      const firstPerson = result.data.allPersons[0];
+      const result = await graphQLHandler.query(query);
+      const firstPerson = result.data!.allPersons[0];
 
       expect(firstPerson.name).to.equal('Fred Flinstone');
       expect(firstPerson.id).to.equal('1');
@@ -535,7 +532,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons included', () => {
       beforeEach(async () => {
-        const handler = await createGraphQLHandler({
+        graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
               include: ['Query', 'allPersons'],
@@ -547,12 +544,10 @@ describe('integration/mirage-auto-resolver', function () {
             graphqlSchema: graphqlSchema,
           },
         });
-
-        graphQLHandler = handler.query;
       });
 
       it('can query on the auto-resolvers patched in by in the `include` option', async () => {
-        expect(await graphQLHandler(allPersonsQuery)).to.deep.equal({
+        expect(await graphQLHandler.query(allPersonsQuery)).to.deep.equal({
           data: {
             allPersons: [
               {
@@ -575,7 +570,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     context('with Query.allPersons excluded', () => {
       beforeEach(async () => {
-        const handler = await createGraphQLHandler({
+        graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
               exclude: ['Query', 'allPersons'],
@@ -587,12 +582,10 @@ describe('integration/mirage-auto-resolver', function () {
             graphqlSchema: graphqlSchema,
           },
         });
-
-        graphQLHandler = handler.query;
       });
 
       it('can not query on excluded auto-resolvers ', async () => {
-        expect((await graphQLHandler(allPersonsQuery))?.errors?.[0]?.message).to.include(
+        expect((await graphQLHandler.query(allPersonsQuery))?.errors?.[0]?.message).to.include(
           'Cannot return null for non-nullable field Query.allPersons',
         );
       });

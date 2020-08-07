@@ -3,8 +3,7 @@ import { graphqlSchema } from './test-helpers/test-schema';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
-import { createGraphQLHandler } from '../../src/graphql';
-import { GraphQLHandler } from '../../src/graphql/types';
+import { GraphQLHandler } from '../../src/graphql';
 
 describe('integration/mirage-static-resolvers', function () {
   let handler: GraphQLHandler;
@@ -12,7 +11,7 @@ describe('integration/mirage-static-resolvers', function () {
   beforeEach(async () => {
     mirageServer.db.loadData(defaultScenario);
 
-    handler = await createGraphQLHandler({
+    handler = new GraphQLHandler({
       resolverMap: defaultResolvers,
       state: {},
       dependencies: {

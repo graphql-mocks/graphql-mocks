@@ -13,11 +13,17 @@ import { PackOptions } from './pack/types';
 
 // Resolvers Shorthands
 
+type ManagedContext = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+  pack?: PackOptions;
+};
+
 export type Primitive = string | boolean | number;
 export type Resolver = GraphQLFieldResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
 export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
-export type ResolverContext = Parameters<GraphQLFieldResolver<any, any>>[2];
+export type ResolverContext = ManagedContext;
 export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions

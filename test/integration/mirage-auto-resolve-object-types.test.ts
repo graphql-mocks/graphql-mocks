@@ -4,7 +4,7 @@
 import { Model, Server, hasMany, belongsTo } from 'miragejs';
 import { expect } from 'chai';
 import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
-import { createGraphQLHandler } from '../../src/graphql';
+import { GraphQLHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper/mapper';
 
 // patchAutoFieldResolvers middleware covers both auto-resolving of
@@ -54,7 +54,7 @@ describe('integration/mirage-auto-resolve-types', function () {
     });
 
     it('returns a scalar from a model attr', async () => {
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageServer,
@@ -84,7 +84,7 @@ describe('integration/mirage-auto-resolve-types', function () {
     it('returns a scalar from a field filter', async () => {
       mirageMapper.addFieldFilter(['Person', 'name'], () => 'Person Name Override');
 
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageMapper,
@@ -146,7 +146,7 @@ describe('integration/mirage-auto-resolve-types', function () {
     it('returns a collection of relationships from a model', async () => {
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
 
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageMapper,
@@ -201,7 +201,7 @@ describe('integration/mirage-auto-resolve-types', function () {
           return models.filter((model: any) => model?.name?.startsWith('M'));
         });
 
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageMapper,
@@ -259,7 +259,7 @@ describe('integration/mirage-auto-resolve-types', function () {
 
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
 
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageMapper,
@@ -311,7 +311,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
       mirageMapper.addFieldFilter(['Person', 'bestFriend'], () => bestFriendOverride);
 
-      const handler = await createGraphQLHandler({
+      const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
           mirageMapper,

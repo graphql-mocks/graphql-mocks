@@ -1,28 +1,27 @@
-import { PackOptions, PackedContext } from '../pack/types';
+import { PackOptions } from '../pack/types';
+import { ResolverContext } from '../types';
 
 type PackDependencies = PackOptions['dependencies'];
 
-export function extractAllDependencies<T = PackDependencies>(
-  context: PackedContext,
-): T extends PackDependencies ? Partial<T> : PackDependencies {
+export function extractAllDependencies<T extends PackDependencies>(context: ResolverContext): T {
   const packedDependencies = context?.pack?.dependencies ?? {};
-  return packedDependencies;
+  return packedDependencies as T;
 }
 
-export function extractDependencies<T>(
+export function extractDependencies<T extends PackDependencies>(
   requestedDependencies: (keyof T)[],
-  context: PackedContext,
+  context: ResolverContext,
   options?: { required: true },
 ): T extends PackDependencies ? Required<T> : Required<PackDependencies>;
-export function extractDependencies<T>(
+export function extractDependencies<T extends PackDependencies>(
   requestedDependencies: (keyof T)[],
-  context: PackedContext,
+  context: ResolverContext,
   options?: { required: false },
 ): T extends PackDependencies ? Partial<T> : Partial<PackDependencies>;
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function extractDependencies<T>(
+export function extractDependencies<T extends PackDependencies>(
   requestedDependencies: (keyof T)[],
-  context: PackedContext,
+  context: ResolverContext,
   options = { required: true },
 ) {
   const packedDependencies = extractAllDependencies<T>(context);
@@ -54,7 +53,7 @@ export function extractDependencies<T>(
     throw new Error(
       `Expected to find dependencies with keys: ${missingKeys}\n` +
         'Either:\n' +
-        ' * Add to the these `dependencies` in your `createGraphQLHandler` or `pack` function\n' +
+        ' * Add these to `dependencies` to your `GraphQLHandler` class or `pack` function\n' +
         ' * Use { required : false } as the third argument to `extractDependencies` and allow for these to be optional dependencies',
     );
   }
