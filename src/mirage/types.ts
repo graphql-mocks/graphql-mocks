@@ -1,6 +1,7 @@
-import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
 import { ModelInstance } from 'miragejs';
+import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
 import { TypeName, FieldReference } from '../resolver-map/reference/field-reference';
+import { RouteHandler } from 'miragejs/server';
 
 type AutoFieldResolverType = 'OBJECT' | 'ROOT_TYPE';
 
@@ -60,3 +61,6 @@ export type RootQueryResolverMatch = {
   modelNameCandidates: string[];
   matchedModelName?: string;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type MirageRouteHandler = RouteHandler<any>;

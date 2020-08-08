@@ -43,6 +43,7 @@ export class GraphQLHandler {
     const initialContext = this.initialContext;
     const packOptions = this.packOptions;
     const schema = this.graphqlSchema;
+
     variableValues = variableValues ?? {};
     queryContext = queryContext ?? {};
 
@@ -54,10 +55,6 @@ export class GraphQLHandler {
       packOptions,
     });
 
-    if (typeof variableValues !== 'object') {
-      throw new Error(`Variables must be an object, got ${typeof variableValues}`);
-    }
-
     return graphql({
       ...graphqlArgs,
       source: query,
@@ -68,10 +65,12 @@ export class GraphQLHandler {
   }
 
   protected async pack(): Promise<void> {
+    const { initialResolverMap, middlewares, packOptions, graphqlSchema } = this;
+
     if (!this.packed) {
-      const { resolverMap, state } = await pack(this.initialResolverMap, this.middlewares ?? [], this.packOptions);
+      const { resolverMap, state } = await pack(initialResolverMap, middlewares, packOptions);
       this.state = state;
-      attachResolversToSchema(resolverMap, this.graphqlSchema);
+      attachResolversToSchema(resolverMap, graphqlSchema);
     }
 
     this.packed = true;

@@ -6,36 +6,35 @@ export const createEdge = <T>(node: T, cursor: string): { cursor: string; node: 
 });
 
 export function applyCursorsToEdges<T = unknown>(
-  allEdges: Edge<T>[],
+  edges: Edge<T>[],
   cursorForNode: CursorForNode<T>,
   before?: string,
   after?: string,
 ): { edges: Edge<T>[]; frontCut: boolean; backCut: boolean } {
-  let edges = [...allEdges];
   let frontCut = false;
   let backCut = false;
 
   if (after) {
-    const afterEdge = allEdges.find((edge: Edge<T>) => cursorForNode(edge.node) === after);
+    const afterEdge = edges.find((edge: Edge<T>) => cursorForNode(edge.node) === after);
     if (!afterEdge) throw new Error(`${after} doesn't appear to be a valid edge`);
 
-    const afterEdgeIndex = allEdges.indexOf(afterEdge);
+    const afterEdgeIndex = edges.indexOf(afterEdge);
     const sliced = edges.slice(afterEdgeIndex + 1, edges.length);
     frontCut = sliced.length !== edges.length;
     edges = sliced;
   }
 
   if (before) {
-    const beforeEdge = allEdges.find((edge: Edge<T>) => cursorForNode(edge.node) === before);
+    const beforeEdge = edges.find((edge: Edge<T>) => cursorForNode(edge.node) === before);
     if (!beforeEdge) throw new Error(`${before} doesn't appear to be a valid edge`);
 
-    const beforeEdgeIndex = allEdges.indexOf(beforeEdge);
+    const beforeEdgeIndex = edges.indexOf(beforeEdge);
     const sliced = edges.slice(0, beforeEdgeIndex);
     backCut = sliced.length !== edges.length;
     edges = sliced;
   }
 
-  return { edges: edges, frontCut, backCut };
+  return { edges, frontCut, backCut };
 }
 
 export function relayPaginateNodes<T = unknown>(

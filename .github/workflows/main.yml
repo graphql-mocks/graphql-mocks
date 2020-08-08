@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         graphql-version: [14, 15]
-        miragejs-version: [0.1.36, latest]
+        miragejs-version: [0.1.40, latest]
 
     steps:
     - uses: actions/checkout@v1
