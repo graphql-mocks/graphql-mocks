@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0",
-    "miragejs": "^0.1.36"
+    "miragejs": "^0.1.40"
   },
   "devDependencies": {
     "@types/chai": "^4.2.7",
@@ -44,7 +44,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "graphql": "^14",
-    "miragejs": "^0.1.39",
+    "miragejs": "^0.1.40",
     "mocha": "^7.1.1",
     "np": "^6.2.3",
     "prettier": "^2.0.5",
