@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { createServer } from 'miragejs';
-import { createRouteHandler } from '../../../src/mirage/route-handler';
+import { createRouteHandler } from '../../../src/mirage';
 import { createMockRequest, MockPretender } from '../../integration/test-helpers/pretender';
 import { ResolverMap } from '../../../src/types';
 import { GraphQLHandler } from '../../../src';
