@@ -36,6 +36,12 @@ export class MirageGraphQLMapper {
       throw new Error(`Unable to use second argument Mirage Definition: ${error.message}`);
     }
 
+    const [typeName] = graphqlDef;
+    const [modelName] = mirageDef;
+    if (typeName !== modelName) {
+      this.addTypeMapping(typeName, modelName);
+    }
+
     this.fieldMappings.push({ graphql: graphqlDef, mirage: mirageDef });
 
     return this;
