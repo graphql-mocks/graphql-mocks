@@ -70,7 +70,7 @@ export class GraphQLHandler {
     if (!this.packed) {
       const { resolverMap, state } = await pack(initialResolverMap, middlewares, packOptions);
       this.state = state;
-      attachResolversToSchema(resolverMap, graphqlSchema);
+      attachResolversToSchema(graphqlSchema, resolverMap);
     }
 
     this.packed = true;
