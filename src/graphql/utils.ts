@@ -1,4 +1,3 @@
-import { ResolverMap, ResolvableType, ResolvableField, ResolverContext } from '../types';
 import {
   GraphQLSchema,
   isAbstractType,
@@ -17,7 +16,10 @@ import {
   buildSchema,
   printSchema,
   GraphQLArgs,
+  buildASTSchema,
+  DocumentNode,
 } from 'graphql';
+import { ResolverMap, ResolvableType, ResolvableField, ResolverContext } from '../types';
 import { FieldReference } from '../resolver-map/reference/field-reference';
 import { PackOptions } from '../pack/types';
 
@@ -137,9 +139,19 @@ export function copySchema(schema: GraphQLSchema): GraphQLSchema {
   return buildSchema(printSchema(schema));
 }
 
-export function createSchema(schema: GraphQLSchema | string): GraphQLSchema {
-  // creates a copy of the schema
+export function createSchema(schema: GraphQLSchema | DocumentNode | string): GraphQLSchema {
   if (isSchema(schema)) return copySchema(schema);
+
+  if (typeof schema === 'object' && schema.kind === 'Document') {
+    try {
+      return buildASTSchema(schema);
+    } catch (error) {
+      throw new Error(
+        'Unable to build a schema from the AST Schema passed into the `graphqlSchema` dependency. Failed with error:\n\n' +
+          error.message,
+      );
+    }
+  }
 
   if (typeof schema === 'string') {
     try {
