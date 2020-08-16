@@ -1,1 +1,1 @@
-export { stashStateWrapper } from './wrapper';
+export { stashStateWrapper, stashFor } from './wrapper';
