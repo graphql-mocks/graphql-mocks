@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema, GraphQLTypeResolver } from 'graphql';
 import { MirageGraphQLMapper } from '../mapper/mapper';
-import { findMostInCommon, modelNameToTypeName } from './utils';
+import { findMostInCommon, convertModelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +22,8 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function m
   }>(context, ['mirageMapper'], { required: false });
 
   const typesUsingInterface: GraphQLObjectType[] = graphqlSchema.getPossibleTypes(interfaceType) as GraphQLObjectType[];
-  const parentModelName = modelNameToTypeName(object?.modelName);
+
+  const parentModelName = convertModelNameToTypeName(object?.modelName);
 
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError: Error | undefined;
