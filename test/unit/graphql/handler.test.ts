@@ -1,10 +1,10 @@
+import { buildSchema, parse } from 'graphql';
+import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap } from '../../../src/types';
-import { buildSchema } from 'graphql';
 import { spyWrapper } from '../../../src/spy';
 import { embed } from '../../../src/resolver-map/embed';
-import * as sinon from 'sinon';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -28,52 +28,77 @@ describe('graphql/hander', function () {
     };
   });
 
-  it('can execute a graphql query constructed from a schema string', async function () {
-    handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaString } });
-    const result = await handler.query(`
+  context('using different schema types', function () {
+    context('Schema string', function () {
+      it('can execute a graphql query constructed from a schema string', async function () {
+        handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaString } });
+        const result = await handler.query(`
       {
         hello
       }
     `);
 
-    expect(result).to.deep.equal({
-      data: {
-        hello: 'Hello world!',
-      },
-    });
-  });
-
-  it('can execute a graphql query constructed from a schema instance', async function () {
-    const schemaInstance = buildSchema(schemaString);
-    handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaInstance } });
-    const result = await handler.query(`
-      {
-        hello
-      }
-    `);
-
-    expect(result).to.deep.equal({
-      data: {
-        hello: 'Hello world!',
-      },
-    });
-  });
-
-  it('throws a helpful error if the schema string cannot be parsed', async function () {
-    let error: null | Error = null;
-    try {
-      new GraphQLHandler({
-        resolverMap,
-        dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
+        expect(result).to.deep.equal({
+          data: {
+            hello: 'Hello world!',
+          },
+        });
       });
-    } catch (e) {
-      error = e;
-    } finally {
-      expect(error?.message).to
-        .contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
+
+      it('throws a helpful error if the schema string cannot be parsed', async function () {
+        let error: null | Error = null;
+        try {
+          new GraphQLHandler({
+            resolverMap,
+            dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
+          });
+        } catch (e) {
+          error = e;
+        } finally {
+          expect(
+            error?.message,
+          ).to.contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
 
 Syntax Error: Unexpected Name "NOT"`);
-    }
+        }
+      });
+    });
+
+    context('Schema instance', function () {
+      it('can execute a graphql query constructed from a schema instance', async function () {
+        const schemaInstance = buildSchema(schemaString);
+        handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaInstance } });
+        const result = await handler.query(`
+      {
+        hello
+      }
+    `);
+
+        expect(result).to.deep.equal({
+          data: {
+            hello: 'Hello world!',
+          },
+        });
+      });
+    });
+
+    context('Schema AST', function () {
+      it('can execute a graphql query constructed from a schema AST', async function () {
+        const schemaAST = parse(schemaString);
+        handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema: schemaAST } });
+        const result = await handler.query(`
+      {
+        hello
+      }
+    `);
+
+        expect(result).to.deep.equal({
+          data: {
+            hello: 'Hello world!',
+          },
+        });
+      });
+    });
   });
 
   it('returns maintains the structure of the state object argument', async function () {
