@@ -51,7 +51,7 @@ any): RootQueryResolverMatch {
   };
 }
 
-export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
+export const mirageRootQueryResolver: Resolver = function mirageRootQueryResolver(parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
   const { mirageMapper, mirageServer } = extractDependencies<{

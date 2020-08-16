@@ -1,9 +1,11 @@
 import { Edge, CursorForNode, RelayPaginationResult } from './types';
 
-export const createEdge = <T>(node: T, cursor: string): { cursor: string; node: T } => ({
-  cursor,
-  node,
-});
+export function createEdge<T>(node: T, cursor: string): { cursor: string; node: T } {
+  return {
+    cursor,
+    node,
+  };
+}
 
 export function applyCursorsToEdges<T = unknown>(
   edges: Edge<T>[],

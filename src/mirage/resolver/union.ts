@@ -4,7 +4,7 @@ import { findMostInCommon, modelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
+export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function mirageUnionResolver(
   obj,
   context,
   _info,

@@ -73,7 +73,9 @@ type unwrappedType =
   | GraphQLEnumType
   | GraphQLInputObjectType;
 
-export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
+export function unwrap(type: GraphQLType): unwrappedType {
+  return 'ofType' in type ? unwrap(type.ofType) : type;
+}
 
 export function isRootQueryType(schema: GraphQLSchema, type: GraphQLType | string): boolean {
   if (typeof type !== 'string' && !('name' in type)) {

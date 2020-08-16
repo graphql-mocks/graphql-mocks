@@ -1,4 +1,4 @@
-import { ResolverWrapper, ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
+import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
 import { ResolverWrapperOptions } from '../../lib/types';
@@ -25,14 +25,13 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
 }
 
 export async function embedPackOptionsWrapper(resolver: Resolver, options: ResolverWrapperOptions) {
-    return (
-      parent: ResolverParent,
-      args: ResolverArgs,
-      context: ResolverContext,
-      info: ResolverInfo,
-    ): Promise<unknown> => {
-      context = embedPackOptionsInContext(context, options.packOptions);
-      return resolver(parent, args, context, info);
-    };
+  return (
+    parent: ResolverParent,
+    args: ResolverArgs,
+    context: ResolverContext,
+    info: ResolverInfo,
+  ): Promise<unknown> => {
+    context = embedPackOptionsInContext(context, options.packOptions);
+    return resolver(parent, args, context, info);
   };
 }

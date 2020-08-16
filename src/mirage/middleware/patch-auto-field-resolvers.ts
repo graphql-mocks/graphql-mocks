@@ -37,7 +37,7 @@ export function patchAutoFieldResolvers(
         const isRootQuery = isRootQueryType(graphqlSchema, typeName);
         const isRootMutation = isRootMutationType(graphqlSchema, typeName);
 
-        if (resolverExistsInResolverMap(fieldReference, resolverMap)) {
+        if (resolverExistsInResolverMap(resolverMap, fieldReference)) {
           return;
         }
 
