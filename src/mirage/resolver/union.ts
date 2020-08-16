@@ -26,9 +26,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
     mirageMapper: MirageGraphQLMapper;
   }>(['mirageMapper'], context, { required: false });
 
-  const { name } = unionType;
   const unionTypes = unionType.getTypes();
-
   const parentModelName = modelNameToTypeName(obj?.modelName);
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError;
@@ -44,14 +42,24 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 
   if (!match) {
-    const matchingFieldsError = matchingFieldsCandidateError
-      ? `Was also unable to find automatically determine the type based on matching fields: ${matchingFieldsCandidateError.message}`
-      : '';
-    const triedCandidates = candidates.join(', ');
+    const triedCandidates = candidates.map((c) => `*  ${c}`);
 
-    throw new Error(
-      `Unable to find a matching type for resolving union ${name}, checked in ${triedCandidates}. ${matchingFieldsError}`,
-    );
+    let matchingFieldsError;
+    if (matchingFieldsCandidateError) {
+      matchingFieldsError = `Was also unable to find automatically determine the type based on matching fields: ${matchingFieldsCandidateError.message}`;
+    }
+
+    const message = [
+      `Unable to find a matching type for resolving the union type "${unionType.name}"`,
+      'Checked on types:',
+      ...triedCandidates,
+      matchingFieldsError,
+      `Manually handle with a Type Resolver by adding the resolver at ["${unionType.name}", "__resolveType"] to the resolver map used by the \`GraphQLHandler\` instance or \`pack\`.`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    throw new Error(message);
   }
 
   return match;

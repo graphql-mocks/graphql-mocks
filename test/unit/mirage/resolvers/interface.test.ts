@@ -108,10 +108,9 @@ describe('mirage/resolvers/interface', function () {
   });
 
   it('throws an error when an interface cannot be found', () => {
-    const birdNotInGraphQL = mirageServer.create('bird', {
-      id: '1',
-      type: 'eagle',
-    });
+    // create a model that is not in the interface and not mapped
+    // to a type in the interface either
+    const birdNotInGraphQL = mirageServer.create('bird');
 
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     expect(() =>
@@ -121,8 +120,6 @@ describe('mirage/resolvers/interface', function () {
         {} as GraphQLResolveInfo,
         animalInterface as GraphQLInterfaceType,
       ),
-    ).to.throw(
-      'Unable to find a matching type for resolving interface Animal, checked types: Bird. Was also unable to find automatically determine the type based on matching fields: Multiple types matched the fields: id, type. The matching types were: Dog, Feline, Fish',
-    );
+    ).to.throw(/Unable to find a matching type for resolving the interface type "Animal"/);
   });
 });

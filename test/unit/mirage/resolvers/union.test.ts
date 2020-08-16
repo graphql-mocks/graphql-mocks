@@ -89,14 +89,11 @@ describe('mirage/resolvers/union', function () {
   });
 
   it('throws an error when an union cannot be found', () => {
-    const birdNotInGraphQL = mirageServer.create('bird', {
-      id: '1',
-      type: 'eagle',
-    });
+    const birdNotInGraphQL = mirageServer.create('bird');
 
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     expect(() => mirageUnionResolver(birdNotInGraphQL, context, resolverInfo, animalUnionType)).to.throw(
-      'Unable to find a matching type for resolving union Animal, checked in Bird. Was also unable to find automatically determine the type based on matching fields: Multiple types matched the fields: id, type. The matching types were: Dog, Feline, Fish',
+      /Unable to find a matching type for resolving the union type "Animal"/,
     );
   });
 });
