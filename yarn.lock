@@ -2057,10 +2057,10 @@ minimist@^1.2.0, minimist@^1.2.5:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
-miragejs@^0.1.39:
-  version "0.1.39"
-  resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.39.tgz#82111ffff5b05b2f2cff5d8a398313c2155c69a4"
-  integrity sha512-URCt9QE6EyR2/DT2ja/JYUqkWx4cC4mrdY95fkJXznxplU4efm6D9VtKS2KsLxs9XFFyr/hgOstGcWzkw0bL0w==
+miragejs@^0.1.40:
+  version "0.1.40"
+  resolved "https://registry.yarnpkg.com/miragejs/-/miragejs-0.1.40.tgz#5bcba7634312c012748ae7f294e1516b74b37182"
+  integrity sha512-7zxIcynzdS6425KZ2+TWD6F6DqESorulSDW2QBXf4iKyVn/J5vSielcubAK8sTKUefTPCrSRi7PwgNOb0JlmIg==
   dependencies:
     "@miragejs/pretender-node-polyfill" "^0.1.0"
     inflected "^2.0.4"

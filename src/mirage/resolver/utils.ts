@@ -23,12 +23,10 @@ export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]
   }
 
   if (matchedTypes.length > 1) {
-    const matchingTypeNames = matchedTypes.map((type) => type.name);
-    throw new Error(
-      `Multiple types matched the fields: ${parentFields.join(', ')}. The matching types were: ${matchingTypeNames.join(
-        ', ',
-      )}`,
-    );
+    const matchingTypeNames = matchedTypes.map((type) => type.name).join(', ');
+    const matchedFields = parentFields.map((field) => `"${field}"`).join(', ');
+    const errorMessage = `Multiple types matched (${matchingTypeNames}) the fields: ${matchedFields}.`;
+    throw new Error(errorMessage);
   }
 
   return matchedTypes.pop()?.name;

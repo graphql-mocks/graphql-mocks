@@ -19,13 +19,6 @@ function findMatchingFieldForObjectParent({
   parentType: ResolverInfo['parentType'];
   fieldName: ResolverInfo['fieldName'];
 }): ObjectResolverMatch {
-  // we assume the parent is a mirage model or POJO
-  if (typeof parent !== 'object') {
-    throw new Error(
-      `Expected parent to be an object, got ${typeof parent}, when trying to resolve field "${fieldName}" on type "${parentType}"`,
-    );
-  }
-
   const match = mirageMapper && mirageMapper.findMatchForField([parentType.name, fieldName]);
   const matchedModelName = match && match[0];
   const mappedPropertyOnParent = match && match[1];

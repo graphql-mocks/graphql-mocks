@@ -28,14 +28,21 @@ any): RootQueryResolverMatch {
   const matchedModelName = modelNameCandidates.find((candidate) => {
     try {
       // try each candidate in the schema
-      return Boolean(mirageServer.schema.all(candidate));
+      return Boolean(mirageServer.schema.collectionForType(candidate));
     } catch {
       // nope; no match
       return false;
     }
   });
 
-  const models = mirageServer.schema.all(matchedModelName).models;
+  let models = [];
+  try {
+    models = mirageServer.schema.all(matchedModelName)?.models;
+  } catch (e) {
+    throw new Error(
+      `Unable to look up collection for ${matchedModelName} on mirage schema, received error:\n${e.message}`,
+    );
+  }
 
   return {
     models,

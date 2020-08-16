@@ -16,19 +16,7 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (
     mirageMapper: MirageGraphQLMapper;
   }>(['mirageMapper'], context, { required: false });
 
-  const { name: interfaceName } = interfaceType;
-  const typeMap = graphqlSchema.getTypeMap();
-  const typesUsingInterface: GraphQLObjectType[] = Object.values(typeMap).filter(function filterTypesUsingInterface(
-    type,
-  ) {
-    if (!('getInterfaces' in type)) {
-      return false;
-    }
-
-    const interfacesForType = type.getInterfaces().map(({ name: interfaceName }: { name: string }) => interfaceName);
-    return interfacesForType.includes(interfaceName);
-  }) as GraphQLObjectType[];
-
+  const typesUsingInterface: GraphQLObjectType[] = graphqlSchema.getPossibleTypes(interfaceType) as GraphQLObjectType[];
   const parentModelName = modelNameToTypeName(object?.modelName);
 
   let matchingFieldsCandidate;
@@ -44,13 +32,24 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (
   const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
 
   if (!match) {
-    const checkedCandidates = candidates.join(', ');
-    const matchingFieldsErrorMessage = matchingFieldsCandidateError
-      ? `Was also unable to find automatically determine the type based on matching fields: ${matchingFieldsCandidateError.message}`
-      : '';
-    throw new Error(
-      `Unable to find a matching type for resolving interface ${interfaceName}, checked types: ${checkedCandidates}. ${matchingFieldsErrorMessage}`,
-    );
+    const checkedCandidates = candidates.map((c) => ` * ${c}`);
+
+    let matchingFieldsErrorMessage = null;
+    if (matchingFieldsCandidateError) {
+      matchingFieldsErrorMessage = `Tried to automatically determined the type based on matching fields: ${matchingFieldsCandidateError.message}.`;
+    }
+
+    const message = [
+      `Unable to find a matching type for resolving the interface type "${interfaceType.name}".`,
+      'Checked on types:',
+      ...checkedCandidates,
+      matchingFieldsErrorMessage,
+      `Manually handle with a Type Resolver by adding the resolver at ["${interfaceType.name}", "__resolveType"] to the resolver map used by the \`GraphQLHandler\` instance or \`pack\`.`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    throw new Error(message);
   }
 
   return match;
