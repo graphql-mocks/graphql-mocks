@@ -73,9 +73,11 @@ type unwrappedType =
   | GraphQLEnumType
   | GraphQLInputObjectType;
 
-export const unwrap = (type: GraphQLType): unwrappedType => ('ofType' in type ? unwrap(type.ofType) : type);
+export function unwrap(type: GraphQLType): unwrappedType {
+  return 'ofType' in type ? unwrap(type.ofType) : type;
+}
 
-export function isRootQueryType(type: GraphQLType | string, schema: GraphQLSchema): boolean {
+export function isRootQueryType(schema: GraphQLSchema, type: GraphQLType | string): boolean {
   if (typeof type !== 'string' && !('name' in type)) {
     return false;
   }
@@ -85,7 +87,7 @@ export function isRootQueryType(type: GraphQLType | string, schema: GraphQLSchem
   return typeName === rootQueryTypeName;
 }
 
-export function isRootMutationType(type: GraphQLType | string, schema: GraphQLSchema): boolean {
+export function isRootMutationType(schema: GraphQLSchema, type: GraphQLType | string): boolean {
   if (typeof type !== 'string' && !('name' in type)) {
     return false;
   }
@@ -115,8 +117,8 @@ export function hasListType(type: GraphQLType): boolean {
 }
 
 export function getTypeAndFieldDefinitions(
-  fieldReference: FieldReference,
   schema: GraphQLSchema,
+  fieldReference: FieldReference,
 ): [ResolvableType, ResolvableField] {
   const [typeName, fieldName] = fieldReference;
   const type = schema.getType(typeName);

@@ -37,11 +37,11 @@ describe('resolver-map/reference/field-reference', () => {
     };
 
     it('returns true when a field exists in a resolver map', () => {
-      expect(fieldExistsInResolverMap(['Query', 'field'], resolverMap)).to.be.true;
+      expect(fieldExistsInResolverMap(resolverMap, ['Query', 'field'])).to.be.true;
     });
 
     it('returns false when a field does not exist in a resolver map', () => {
-      expect(fieldExistsInResolverMap(['Query', 'nonInMap'], resolverMap)).to.be.false;
+      expect(fieldExistsInResolverMap(resolverMap, ['Query', 'nonInMap'])).to.be.false;
     });
   });
 });

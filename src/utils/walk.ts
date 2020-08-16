@@ -39,8 +39,8 @@ export async function walk(options: WalkOptions, callback: WalkCallback): Promis
     throw new Error('A callback is required argument for the `walk` function');
   }
 
-  const includeFieldReferences = expand(include, graphqlSchema);
-  const excludeFieldReferences = expand(exclude ?? [], graphqlSchema);
+  const includeFieldReferences = expand(graphqlSchema, include);
+  const excludeFieldReferences = expand(graphqlSchema, exclude ?? []);
   let fieldReferences = difference(includeFieldReferences, excludeFieldReferences);
 
   if (fieldReferences) {
@@ -51,7 +51,7 @@ export async function walk(options: WalkOptions, callback: WalkCallback): Promis
 
       // filter field references based on what is available in Resolver Map
       fieldReferences = fieldReferences.filter((fieldReference) =>
-        fieldExistsInResolverMap(fieldReference, resolverMap as ResolverMap),
+        fieldExistsInResolverMap(resolverMap, fieldReference),
       );
     }
 

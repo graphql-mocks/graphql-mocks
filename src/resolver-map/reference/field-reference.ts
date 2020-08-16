@@ -34,7 +34,7 @@ export function difference(initialSet: FieldReference[], excludedSet: FieldRefer
   return result;
 }
 
-export function fieldExistsInResolverMap(fieldReference: FieldReference, resolverMap: ResolverMap): boolean {
+export function fieldExistsInResolverMap(resolverMap: ResolverMap, fieldReference: FieldReference): boolean {
   if (!fieldReference || !Array.isArray(fieldReference) || fieldReference.length !== 2) {
     return false;
   }

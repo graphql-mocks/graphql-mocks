@@ -31,7 +31,7 @@ describe('resolver-map/reference/target-reference', () => {
 
   describe('#expandTarget', () => {
     it('expands all types and fields', () => {
-      expect((expandTarget(['*', '*'], schema) as TargetReference[]).sort()).to.deep.equal(
+      expect((expandTarget(schema, ['*', '*']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Query', 'person'],
           ['Query', 'locations'],
@@ -46,7 +46,7 @@ describe('resolver-map/reference/target-reference', () => {
     });
 
     it('expands all types filtered on specific field', () => {
-      expect((expandTarget(['*', 'name'], schema) as TargetReference[]).sort()).to.deep.equal(
+      expect((expandTarget(schema, ['*', 'name']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Person', 'name'],
           ['Pet', 'name'],
@@ -55,7 +55,7 @@ describe('resolver-map/reference/target-reference', () => {
     });
 
     it('expands all fields filtered on specific type', () => {
-      expect((expandTarget(['Person', '*'], schema) as TargetReference[]).sort()).to.deep.equal(
+      expect((expandTarget(schema, ['Person', '*']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Person', 'name'],
           ['Person', 'location'],
@@ -65,16 +65,16 @@ describe('resolver-map/reference/target-reference', () => {
     });
 
     it('expands on filtered type and name', () => {
-      expect(expandTarget(['Person', 'name'], schema)).to.deep.equal([['Person', 'name']]);
+      expect(expandTarget(schema, ['Person', 'name'])).to.deep.equal([['Person', 'name']]);
     });
 
     it('expands to an empty array when the target does not exist in the schema', () => {
-      expect(expandTarget(['Alien', 'homePlanet'], schema)).to.deep.equal([]);
+      expect(expandTarget(schema, ['Alien', 'homePlanet'])).to.deep.equal([]);
     });
 
     it('throws an error when a target reference is not valid', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(() => expandTarget([10010101 as any, 1010101 as any], schema)).to.throw(
+      expect(() => expandTarget(schema, [10010101 as any, 1010101 as any])).to.throw(
         'Expected a target reference like ([ "type" , "field" ]) got [10010101,1010101',
       );
     });
@@ -82,7 +82,7 @@ describe('resolver-map/reference/target-reference', () => {
 
   describe('#expand', () => {
     it('can expand a single target reference', () => {
-      expect(expand(['Query', '*'], schema)).to.deep.equal([
+      expect(expand(schema, ['Query', '*'])).to.deep.equal([
         ['Query', 'person'],
         ['Query', 'locations'],
       ]);
@@ -90,13 +90,10 @@ describe('resolver-map/reference/target-reference', () => {
 
     it('can expand several target references', () => {
       expect(
-        expand(
-          [
-            ['Query', '*'],
-            ['Person', '*'],
-          ],
-          schema,
-        ),
+        expand(schema, [
+          ['Query', '*'],
+          ['Person', '*'],
+        ]),
       ).to.deep.equal([
         ['Query', 'person'],
         ['Query', 'locations'],
@@ -108,13 +105,10 @@ describe('resolver-map/reference/target-reference', () => {
 
     it('dedupes field references', () => {
       expect(
-        expand(
-          [
-            ['Query', '*'],
-            ['Person', 'locations'],
-          ],
-          schema,
-        ),
+        expand(schema, [
+          ['Query', '*'],
+          ['Person', 'locations'],
+        ]),
       ).to.deep.equal([
         ['Query', 'person'],
         ['Query', 'locations'],
@@ -123,7 +117,7 @@ describe('resolver-map/reference/target-reference', () => {
 
     it('throws an error when a non-target is not passed in', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(() => expand('HELLO World' as any, schema)).to.throw(
+      expect(() => expand(schema, 'HELLO World' as any)).to.throw(
         '`expand` was unable to find a target reference or list of target references passed in, got: "HELLO World"',
       );
     });

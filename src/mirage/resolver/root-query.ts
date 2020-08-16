@@ -51,13 +51,13 @@ any): RootQueryResolverMatch {
   };
 }
 
-export const mirageRootQueryResolver: Resolver = function (parent, args, context, info) {
+export const mirageRootQueryResolver: Resolver = function mirageRootQueryResolver(parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
   const { mirageMapper, mirageServer } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
     mirageServer: MirageServer;
-  }>(['mirageMapper', 'mirageServer'], context, { required: false });
+  }>(context, ['mirageMapper', 'mirageServer'], { required: false });
 
   const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 

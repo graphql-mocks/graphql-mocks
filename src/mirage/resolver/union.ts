@@ -4,7 +4,7 @@ import { findMostInCommon, modelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
+export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function mirageUnionResolver(
   obj,
   context,
   _info,
@@ -20,11 +20,11 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
 
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
-  }>(['graphqlSchema'], context);
+  }>(context, ['graphqlSchema']);
 
   const { mirageMapper } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
-  }>(['mirageMapper'], context, { required: false });
+  }>(context, ['mirageMapper'], { required: false });
 
   const unionTypes = unionType.getTypes();
   const parentModelName = modelNameToTypeName(obj?.modelName);

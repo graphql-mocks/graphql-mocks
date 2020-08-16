@@ -34,10 +34,10 @@ export function patchAutoFieldResolvers(
       },
       async (fieldReference) => {
         const [typeName] = fieldReference;
-        const isRootQuery = isRootQueryType(typeName, graphqlSchema);
-        const isRootMutation = isRootMutationType(typeName, graphqlSchema);
+        const isRootQuery = isRootQueryType(graphqlSchema, typeName);
+        const isRootMutation = isRootMutationType(graphqlSchema, typeName);
 
-        if (resolverExistsInResolverMap(fieldReference, resolverMap)) {
+        if (resolverExistsInResolverMap(resolverMap, fieldReference)) {
           return;
         }
 

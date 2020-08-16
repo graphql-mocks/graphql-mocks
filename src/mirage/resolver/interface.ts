@@ -4,17 +4,22 @@ import { findMostInCommon, modelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (object, context, _info, interfaceType) {
+export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function mirageInterfaceResolver(
+  object,
+  context,
+  _info,
+  interfaceType,
+) {
   // special property on context to be able to test the 'useFindInCommon' feature
   const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
 
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
-  }>(['graphqlSchema'], context);
+  }>(context, ['graphqlSchema']);
 
   const { mirageMapper } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
-  }>(['mirageMapper'], context, { required: false });
+  }>(context, ['mirageMapper'], { required: false });
 
   const typesUsingInterface: GraphQLObjectType[] = graphqlSchema.getPossibleTypes(interfaceType) as GraphQLObjectType[];
   const parentModelName = modelNameToTypeName(object?.modelName);

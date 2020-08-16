@@ -1,7 +1,7 @@
 import { ResolverWrapper } from '../types';
 import { GraphQLResolveInfo } from 'graphql';
 
-export const logWrapper: ResolverWrapper = async (originalResolver, wrapperDetails) => {
+export const logWrapper: ResolverWrapper = async function logWrapper(originalResolver, wrapperDetails) {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;

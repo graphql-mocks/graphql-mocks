@@ -1,10 +1,10 @@
 import { Resolver, ResolverWrapper, ResolverWrapperOptions } from '../types';
 
-export const wrapResolver = async (
+export async function wrapResolver(
   resolver: Resolver,
   wrappers: ResolverWrapper[],
   wrapperOptions: ResolverWrapperOptions,
-): Promise<Resolver> => {
+): Promise<Resolver> {
   wrappers = [...wrappers];
   const wrapper = wrappers.shift();
 
@@ -21,4 +21,4 @@ export const wrapResolver = async (
   }
 
   return wrapResolver(wrappedResolver, wrappers, wrapperOptions);
-};
+}

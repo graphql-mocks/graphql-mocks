@@ -5,7 +5,11 @@ import { PackOptions, Packer, PackState } from './types';
 
 export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
 
-export const pack: Packer = async (initialResolversMap = {}, middlewares = [], packOptions = defaultPackOptions) => {
+export const pack: Packer = async function pack(
+  initialResolversMap = {},
+  middlewares = [],
+  packOptions = defaultPackOptions,
+) {
   middlewares = [...middlewares, embed({ wrappers: [embedPackOptionsWrapper] })];
 
   // make an intial copy

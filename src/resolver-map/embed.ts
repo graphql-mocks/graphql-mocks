@@ -29,8 +29,8 @@ export function embed({
       );
     }
 
-    const includedFieldReferences = expand(include, schema) ?? [];
-    const excludedFieldReferences = expand(exclude, schema) ?? [];
+    const includedFieldReferences = expand(schema, include) ?? [];
+    const excludedFieldReferences = expand(schema, exclude) ?? [];
     const fieldReferences = difference(includedFieldReferences, excludedFieldReferences);
 
     for (const [typeName, fieldName] of fieldReferences) {
@@ -53,7 +53,7 @@ export function embed({
         continue;
       }
 
-      const [type, field] = getTypeAndFieldDefinitions([typeName, fieldName], schema);
+      const [type, field] = getTypeAndFieldDefinitions(schema, [typeName, fieldName]);
 
       const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
         type,

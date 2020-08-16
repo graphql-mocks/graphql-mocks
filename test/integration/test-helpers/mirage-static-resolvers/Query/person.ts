@@ -6,7 +6,7 @@ const resolver = function (
   args: Record<string, unknown>,
   context: Record<string, unknown>,
 ): ModelInstance | undefined {
-  const { mirageServer } = extractDependencies<{ mirageServer: Server }>(['mirageServer'], context);
+  const { mirageServer } = extractDependencies<{ mirageServer: Server }>(context, ['mirageServer']);
   return mirageServer?.schema.find('person', args.id as string) ?? undefined;
 };
 
