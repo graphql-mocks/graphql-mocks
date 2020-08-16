@@ -1,7 +1,7 @@
 import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
-import { ResolverWrapperOptions } from '../../lib/types';
+import { ResolverWrapperOptions } from '../../src/types';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {

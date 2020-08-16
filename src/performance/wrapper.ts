@@ -1,6 +1,6 @@
 import { ResolverWrapper, ResolverArgs, ResolverContext, ResolverParent, ResolverInfo } from '../types';
 
-export const performanceWrapper: ResolverWrapper = async function performanceWrapper (originalResolver, wrapperDetails) {
+export const performanceWrapper: ResolverWrapper = async function performanceWrapper(originalResolver, wrapperDetails) {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;

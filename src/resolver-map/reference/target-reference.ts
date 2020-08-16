@@ -37,7 +37,7 @@ export function isTargetReference(candidate: any): candidate is TargetReference 
 /**
  * Expands a single target
  */
-export function expandTarget(target: TargetReference, schema: GraphQLSchema): FieldReference[] | undefined {
+export function expandTarget(schema: GraphQLSchema, target: TargetReference): FieldReference[] | undefined {
   if (!isTargetReference(target)) {
     throw new Error(`Expected a target reference like ([ "type" , "field" ]) got ${JSON.stringify(target)}`);
   }
@@ -77,13 +77,13 @@ export function expandTarget(target: TargetReference, schema: GraphQLSchema): Fi
 /**
  * Expands single or multiple target into a list of field references
  */
-export function expand(target: TargetReference | TargetReference[], schema: GraphQLSchema): FieldReference[] {
+export function expand(schema: GraphQLSchema, target: TargetReference | TargetReference[]): FieldReference[] {
   if (isTargetReference(target)) {
-    return expandTarget(target, schema) as FieldReference[];
+    return expandTarget(schema, target) as FieldReference[];
   }
 
   if (Array.isArray(target)) {
-    const expanded = target.map((reference) => expandTarget(reference, schema)).filter(Boolean);
+    const expanded = target.map((reference) => expandTarget(schema, reference)).filter(Boolean);
     const flattened = flattenDepth(expanded, 1) as TargetReference[];
     const uniqued = unique(flattened);
 
