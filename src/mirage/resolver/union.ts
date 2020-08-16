@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, isUnionType } from 'graphql';
 import { MirageGraphQLMapper } from '../mapper/mapper';
-import { findMostInCommon, modelNameToTypeName } from './utils';
+import { findMostInCommon, convertModelNameToTypeName } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +27,7 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function mirag
   }>(context, ['mirageMapper'], { required: false });
 
   const unionTypes = unionType.getTypes();
-  const parentModelName = modelNameToTypeName(obj?.modelName);
+  const parentModelName = convertModelNameToTypeName(obj?.modelName);
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError;
 
