@@ -19,11 +19,13 @@ export class GraphQLHandler {
   constructor(options: CreateGraphQLHandlerOptions) {
     const graphqlSchema = createSchema(options.dependencies?.graphqlSchema);
 
+    const dependencies = {
+      ...options.dependencies,
+      graphqlSchema,
+    };
+
     this.packOptions = normalizePackOptions({
-      dependencies: {
-        ...options.dependencies,
-        graphqlSchema,
-      },
+      dependencies,
       state: options.state,
     });
 
