@@ -10,11 +10,11 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function (
 
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
-  }>(['graphqlSchema'], context);
+  }>(context, ['graphqlSchema']);
 
   const { mirageMapper } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
-  }>(['mirageMapper'], context, { required: false });
+  }>(context, ['mirageMapper'], { required: false });
 
   const typesUsingInterface: GraphQLObjectType[] = graphqlSchema.getPossibleTypes(interfaceType) as GraphQLObjectType[];
   const parentModelName = modelNameToTypeName(object?.modelName);

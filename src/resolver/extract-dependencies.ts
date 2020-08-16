@@ -9,19 +9,19 @@ export function extractAllDependencies<T extends PackDependencies>(context: Reso
 }
 
 export function extractDependencies<T extends PackDependencies>(
-  requestedDependencies: (keyof T)[],
   context: ResolverContext,
+  requestedDependencies: (keyof T)[],
   options?: { required: true },
 ): T extends PackDependencies ? Required<T> : Required<PackDependencies>;
 export function extractDependencies<T extends PackDependencies>(
-  requestedDependencies: (keyof T)[],
   context: ResolverContext,
+  requestedDependencies: (keyof T)[],
   options?: { required: false },
 ): T extends PackDependencies ? Partial<T> : Partial<PackDependencies>;
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function extractDependencies<T extends PackDependencies>(
-  requestedDependencies: (keyof T)[],
   context: ResolverContext,
+  requestedDependencies: (keyof T)[],
   options = { required: true },
 ) {
   const packedDependencies = extractAllDependencies<T>(context);

@@ -57,7 +57,7 @@ export const mirageRootQueryResolver: Resolver = function (parent, args, context
   const { mirageMapper, mirageServer } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
     mirageServer: MirageServer;
-  }>(['mirageMapper', 'mirageServer'], context, { required: false });
+  }>(context, ['mirageMapper', 'mirageServer'], { required: false });
 
   const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
 

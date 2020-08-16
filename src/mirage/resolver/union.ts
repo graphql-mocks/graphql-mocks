@@ -20,11 +20,11 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function (
 
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
-  }>(['graphqlSchema'], context);
+  }>(context, ['graphqlSchema']);
 
   const { mirageMapper } = extractDependencies<{
     mirageMapper: MirageGraphQLMapper;
-  }>(['mirageMapper'], context, { required: false });
+  }>(context, ['mirageMapper'], { required: false });
 
   const unionTypes = unionType.getTypes();
   const parentModelName = modelNameToTypeName(obj?.modelName);
