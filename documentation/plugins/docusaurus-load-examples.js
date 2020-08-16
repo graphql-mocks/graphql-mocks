@@ -70,6 +70,7 @@ module.exports = function (context, options) {
 
     configureWebpack(config, isServer, utils) {
       const { getBabelLoader, getCacheLoader } = utils;
+      const { rehypePlugins, remarkPlugins } = options;
       const pluginCacheDir = path.resolve(config.resolve.alias['@generated'], 'docusaurus-load-examples');
 
       return {
@@ -88,6 +89,10 @@ module.exports = function (context, options) {
                 getBabelLoader(isServer),
                 {
                   loader: require.resolve('@docusaurus/mdx-loader'),
+                  options: {
+                    remarkPlugins,
+                    rehypePlugins,
+                  },
                 },
               ].filter(Boolean),
             },

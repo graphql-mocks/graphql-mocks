@@ -13,7 +13,7 @@
     "@docusaurus/core": "^2.0.0-alpha.58",
     "@docusaurus/preset-classic": "^2.0.0-alpha.58",
     "classnames": "^2.2.6",
-    "graphiql": "^1.0.3",
+    "graphiql": "0.17.5",
     "graphql-mocks": "../lib",
     "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
