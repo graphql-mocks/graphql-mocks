@@ -53,7 +53,7 @@ export function embed({
         continue;
       }
 
-      const [type, field] = getTypeAndFieldDefinitions([typeName, fieldName], schema);
+      const [type, field] = getTypeAndFieldDefinitions(schema, [typeName, fieldName]);
 
       const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
         type,
