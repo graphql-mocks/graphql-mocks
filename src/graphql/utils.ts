@@ -23,7 +23,7 @@ import { ResolverMap, ResolvableType, ResolvableField, ResolverContext } from '.
 import { FieldReference } from '../resolver-map/reference/field-reference';
 import { PackOptions } from '../pack/types';
 
-export function attachTypeResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
+export function attachTypeResolversToSchema(schema: GraphQLSchema, resolverMap: ResolverMap): void {
   for (const typeName in resolverMap) {
     const type = schema.getType(typeName);
 
@@ -40,7 +40,7 @@ export function attachTypeResolversToSchema(resolverMap: ResolverMap, schema: Gr
   }
 }
 
-export function attachFieldResolverstoSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
+export function attachFieldResolversToSchema(schema: GraphQLSchema, resolverMap: ResolverMap): void {
   for (const typeName in resolverMap) {
     const type = schema.getType(typeName);
 
@@ -49,15 +49,20 @@ export function attachFieldResolverstoSchema(resolverMap: ResolverMap, schema: G
     }
 
     for (const fieldName in resolverMap[typeName]) {
+      const resolver = resolverMap[typeName][fieldName];
       const fieldMap = type.getFields();
-      fieldMap[fieldName].resolve = resolverMap[typeName][fieldName];
+      const fieldNames = Object.keys(fieldMap);
+
+      if (typeof resolver === 'function' && fieldNames.includes(fieldName)) {
+        fieldMap[fieldName].resolve = resolver;
+      }
     }
   }
 }
 
-export function attachResolversToSchema(resolverMap: ResolverMap, schema: GraphQLSchema): void {
-  attachTypeResolversToSchema(resolverMap, schema);
-  attachFieldResolverstoSchema(resolverMap, schema);
+export function attachResolversToSchema(schema: GraphQLSchema, resolverMap: ResolverMap): void {
+  attachTypeResolversToSchema(schema, resolverMap);
+  attachFieldResolversToSchema(schema, resolverMap);
 }
 
 type unwrappedType =
