@@ -2,42 +2,52 @@ import { mirageInterfaceResolver } from '../../../../src/mirage/resolver/interfa
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
-import { Model, Server } from 'miragejs';
+import { Model, Server, ModelInstance } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/interface', function () {
-  let schema: GraphQLSchema | undefined;
-  const animalInterface = { name: 'Animal' };
-
-  const mirageServer = new Server({
-    models: {
-      cat: Model.extend({}),
-      dog: Model.extend({}),
-      fishy: Model.extend({}),
-      bird: Model.extend({}),
-    },
-  });
-
-  const fishyParent = mirageServer.create('fishy', {
-    id: '1',
-    name: 'Tench',
-    type: 'vertebrates',
-    isFreshwater: true,
-  });
-
-  const catModel = mirageServer.create('cat', {
-    id: '1',
-    type: 'vertebrates',
-    breed: 'birman',
-  });
-
-  const dogModel = mirageServer.create('dog', {
-    id: '1',
-    type: 'vertebrates',
-    breed: 'husky',
-  });
+  let schema: GraphQLSchema;
+  let mockAnimalInterface: GraphQLInterfaceType;
+  let mirageServer: Server;
+  let fishyParent: ModelInstance;
+  let catModel: ModelInstance;
+  let dogModel: ModelInstance;
 
   beforeEach(() => {
+    mockAnimalInterface = new GraphQLInterfaceType({
+      name: 'Animal',
+      fields: [] as never,
+    });
+
+    mirageServer = new Server({
+      models: {
+        animal: Model.extend({}),
+        cat: Model.extend({}),
+        dog: Model.extend({}),
+        fishy: Model.extend({}),
+        bird: Model.extend({}),
+      },
+    });
+
+    fishyParent = mirageServer.create('fishy', {
+      id: '1',
+      name: 'Tench',
+      type: 'vertebrates',
+      isFreshwater: true,
+    });
+
+    catModel = mirageServer.create('cat', {
+      id: '1',
+      type: 'vertebrates',
+      breed: 'birman',
+    });
+
+    dogModel = mirageServer.create('dog', {
+      id: '1',
+      type: 'vertebrates',
+      breed: 'husky',
+    });
+
     schema = buildSchema(`
       interface Animal {
         type: String!
@@ -61,21 +71,13 @@ describe('mirage/resolvers/interface', function () {
     `);
   });
 
-  afterEach(() => {
-    schema = undefined;
-  });
-
   it('resolves an interface to a type by model name', async function () {
     const context = {
       __testUseFindInCommon: false,
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
-    const resolvedType = mirageInterfaceResolver(
-      dogModel,
-      context,
-      {} as GraphQLResolveInfo,
-      animalInterface as GraphQLInterfaceType,
-    );
+
+    const resolvedType = mirageInterfaceResolver(dogModel, context, {} as GraphQLResolveInfo, mockAnimalInterface);
     expect(resolvedType).to.equal('Dog');
   });
 
@@ -87,23 +89,13 @@ describe('mirage/resolvers/interface', function () {
       pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
     };
 
-    const resolvedType = mirageInterfaceResolver(
-      catModel,
-      context,
-      {} as GraphQLResolveInfo,
-      animalInterface as GraphQLInterfaceType,
-    );
+    const resolvedType = mirageInterfaceResolver(catModel, context, {} as GraphQLResolveInfo, mockAnimalInterface);
     expect(resolvedType).to.equal('Feline');
   });
 
   it('resolves an interface to a type by most matching fields', async function () {
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-    const resolvedType = mirageInterfaceResolver(
-      fishyParent,
-      context,
-      {} as GraphQLResolveInfo,
-      animalInterface as GraphQLInterfaceType,
-    );
+    const resolvedType = mirageInterfaceResolver(fishyParent, context, {} as GraphQLResolveInfo, mockAnimalInterface);
     expect(resolvedType).to.equal('Fish');
   });
 
@@ -111,15 +103,19 @@ describe('mirage/resolvers/interface', function () {
     // create a model that is not in the interface and not mapped
     // to a type in the interface either
     const birdNotInGraphQL = mirageServer.create('bird');
-
     const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
+
     expect(() =>
-      mirageInterfaceResolver(
-        birdNotInGraphQL,
-        context,
-        {} as GraphQLResolveInfo,
-        animalInterface as GraphQLInterfaceType,
-      ),
+      mirageInterfaceResolver(birdNotInGraphQL, context, {} as GraphQLResolveInfo, mockAnimalInterface),
     ).to.throw(/Unable to find a matching type for resolving the interface type "Animal"/);
+  });
+
+  it('throws an error when a model of the same name as the interface is used', () => {
+    const animal = mirageServer.create('animal');
+    const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
+
+    expect(() => mirageInterfaceResolver(animal, context, {} as GraphQLResolveInfo, mockAnimalInterface)).to.throw(
+      /Unable to find a matching type for resolving the interface type "Animal"/,
+    );
   });
 });

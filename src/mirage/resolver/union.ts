@@ -26,20 +26,28 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function mirag
     mirageMapper: MirageGraphQLMapper;
   }>(context, ['mirageMapper'], { required: false });
 
-  const unionTypes = unionType.getTypes();
+  const typesInUnion = unionType.getTypes();
+  const typeNamesInUnion = typesInUnion.map((type) => type.name);
+
   const parentModelName = convertModelNameToTypeName(obj?.modelName);
   let matchingFieldsCandidate;
   let matchingFieldsCandidateError;
 
   try {
-    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(obj, unionTypes) : undefined;
+    matchingFieldsCandidate = useFindInCommon ? findMostInCommon(obj, typesInUnion) : undefined;
   } catch (error) {
     matchingFieldsCandidateError = error;
   }
 
   const mappedModelName = mirageMapper && parentModelName && mirageMapper.findMatchForModel(parentModelName);
-  const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
-  const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
+  const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean) as string[];
+
+  const match = candidates.find((candidateName) => {
+    const candidate = graphqlSchema.getType(candidateName);
+    if (!candidate || !candidate?.name) return false;
+
+    return typeNamesInUnion.includes(candidate.name);
+  });
 
   if (!match) {
     const triedCandidates = candidates.map((c) => `*  ${c}`);
@@ -51,6 +59,12 @@ export const mirageUnionResolver: GraphQLTypeResolver<any, any> = function mirag
 
     const message = [
       `Unable to find a matching type for resolving the union type "${unionType.name}"`,
+
+      `This union must resolve to one of:`,
+      ...typesInUnion,
+
+      ' ',
+
       'Checked on types:',
       ...triedCandidates,
       matchingFieldsError,

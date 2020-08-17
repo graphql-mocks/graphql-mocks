@@ -22,6 +22,7 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function m
   }>(context, ['mirageMapper'], { required: false });
 
   const typesUsingInterface: GraphQLObjectType[] = graphqlSchema.getPossibleTypes(interfaceType) as GraphQLObjectType[];
+  const typeNamesUsingInterface: string[] = typesUsingInterface.map((type) => type.name);
 
   const parentModelName = convertModelNameToTypeName(object?.modelName);
 
@@ -34,11 +35,18 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function m
   }
 
   const mappedModelName = mirageMapper && parentModelName ? mirageMapper.findMatchForModel(parentModelName) : undefined;
-  const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean);
-  const match = candidates.find((candidate) => graphqlSchema.getType(candidate as string));
+  const candidates = [mappedModelName, parentModelName, matchingFieldsCandidate].filter(Boolean) as string[];
+
+  const match = candidates.find((candidateName) => {
+    const candidate = graphqlSchema.getType(candidateName);
+    if (!candidate || !candidate?.name) return false;
+
+    return typeNamesUsingInterface.includes(candidate.name);
+  });
 
   if (!match) {
     const checkedCandidates = candidates.map((c) => ` * ${c}`);
+    const possibleCandidates = typesUsingInterface.map((type) => ` * ${type.name}`);
 
     let matchingFieldsErrorMessage = null;
     if (matchingFieldsCandidateError) {
@@ -47,9 +55,17 @@ export const mirageInterfaceResolver: GraphQLTypeResolver<any, any> = function m
 
     const message = [
       `Unable to find a matching type for resolving the interface type "${interfaceType.name}".`,
+
+      `This interface must resolve to one of:`,
+      ...possibleCandidates,
+
+      ' ',
+
       'Checked on types:',
       ...checkedCandidates,
+
       matchingFieldsErrorMessage,
+
       `Manually handle with a Type Resolver by adding the resolver at ["${interfaceType.name}", "__resolveType"] to the resolver map used by the \`GraphQLHandler\` instance or \`pack\`.`,
     ]
       .filter(Boolean)
