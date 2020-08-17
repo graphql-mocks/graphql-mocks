@@ -1,6 +1,6 @@
 {
   "name": "graphql-mocks",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Tools for setting up graphql test resolvers",
   "main": ".index.js",
   "scripts": {
