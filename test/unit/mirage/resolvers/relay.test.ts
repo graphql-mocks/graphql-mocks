@@ -1,10 +1,17 @@
 import { mirageObjectResolver } from '../../../../src/mirage/resolver/object';
 import { expect } from 'chai';
-import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLResolveInfo, GraphQLSchema } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/relay', function () {
+  let graphqlSchema: GraphQLSchema;
+  let graphqlTypes: {
+    Query: GraphQLObjectType;
+    SpellConnection: GraphQLObjectType;
+    Sourcerer: GraphQLObjectType;
+  };
+
   let mirageServer: Server;
   let mirageMapper: MirageGraphQLMapper;
   let resolverContext: Record<string, unknown>;
@@ -16,50 +23,50 @@ describe('mirage/relay', function () {
   let morsmordreSpell: ModelInstance;
   let allSpells: ModelInstance[];
 
-  const graphqlSchema = buildSchema(`
-    schema {
-      query: Query
-    }
-
-    type Query {
-      allSpells: SpellConnection!
-    }
-
-    type Sourcerer {
-      spells: SpellConnection!
-    }
-
-    type Spell {
-      id: ID!
-      incantation: String!
-      isEvil: Boolean!
-    }
-
-    type SpellConnection {
-      edges: [SpellEdge!]!
-      pageInfo: SpellPageInfo!
-    }
-
-    type SpellEdge {
-      cursor: String!
-      node: Spell!
-    }
-
-    type SpellPageInfo {
-      startCursor: String!
-      endCursor: String!
-      hasNextPage: Boolean!
-      hasPreviousPage: Boolean!
-    }
-  `);
-
-  const graphqlTypes = {
-    Query: graphqlSchema.getType('Query') as GraphQLObjectType,
-    SpellConnection: graphqlSchema.getType('SpellConnection') as GraphQLObjectType,
-    Sourcerer: graphqlSchema.getType('Sourcerer') as GraphQLObjectType,
-  };
-
   beforeEach(function () {
+    graphqlSchema = buildSchema(`
+      schema {
+        query: Query
+      }
+
+      type Query {
+        allSpells: SpellConnection!
+      }
+
+      type Sourcerer {
+        spells: SpellConnection!
+      }
+
+      type Spell {
+        id: ID!
+        incantation: String!
+        isEvil: Boolean!
+      }
+
+      type SpellConnection {
+        edges: [SpellEdge!]!
+        pageInfo: SpellPageInfo!
+      }
+
+      type SpellEdge {
+        cursor: String!
+        node: Spell!
+      }
+
+      type SpellPageInfo {
+        startCursor: String!
+        endCursor: String!
+        hasNextPage: Boolean!
+        hasPreviousPage: Boolean!
+      }
+    `);
+
+    graphqlTypes = {
+      Query: graphqlSchema.getType('Query') as GraphQLObjectType,
+      SpellConnection: graphqlSchema.getType('SpellConnection') as GraphQLObjectType,
+      Sourcerer: graphqlSchema.getType('Sourcerer') as GraphQLObjectType,
+    };
+
     const Sourcerer = Model.extend({
       spells: hasMany('spell'),
     });

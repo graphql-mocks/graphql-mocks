@@ -3,6 +3,7 @@ import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo, G
 import { expect } from 'chai';
 import { Model, Server, ModelInstance } from 'miragejs';
 import { MirageGraphQLMapper, mirageAbstractTypeResolver } from '../../../../src/mirage';
+import { ResolverInfo } from '../../../../src/types';
 
 describe('mirage/resolvers/abstract', function () {
   const mockGraphQLInfo = {} as GraphQLResolveInfo;
@@ -10,36 +11,41 @@ describe('mirage/resolvers/abstract', function () {
   context('union types', function () {
     let schema: GraphQLSchema | undefined;
     let animalUnionType: GraphQLUnionType;
-
-    const mirageServer = new Server({
-      models: {
-        cat: Model.extend({}),
-        dog: Model.extend({}),
-        fishy: Model.extend({}),
-        bird: Model.extend({}),
-      },
-    });
-
-    const resolverInfo = mockGraphQLInfo;
-
-    const dogModel = mirageServer.create('dog', {
-      id: '1',
-      breed: 'yellow lab',
-      knowsTricks: true,
-    });
-
-    const catModel = mirageServer.create('cat', {
-      id: '1',
-      breed: 'ginger tabby tomcat',
-      likesNaps: true,
-    });
-
-    const fishyModel = mirageServer.create('fishy', {
-      id: '1',
-      isFreshwater: false,
-    });
+    let mirageServer: Server;
+    let resolverInfo: ResolverInfo;
+    let dogModel: ModelInstance;
+    let catModel: ModelInstance;
+    let fishyModel: ModelInstance;
 
     beforeEach(function () {
+      mirageServer = new Server({
+        models: {
+          cat: Model.extend({}),
+          dog: Model.extend({}),
+          fishy: Model.extend({}),
+          bird: Model.extend({}),
+        },
+      });
+
+      resolverInfo = mockGraphQLInfo;
+
+      dogModel = mirageServer.create('dog', {
+        id: '1',
+        breed: 'yellow lab',
+        knowsTricks: true,
+      });
+
+      catModel = mirageServer.create('cat', {
+        id: '1',
+        breed: 'ginger tabby tomcat',
+        likesNaps: true,
+      });
+
+      fishyModel = mirageServer.create('fishy', {
+        id: '1',
+        isFreshwater: false,
+      });
+
       schema = buildSchema(`
         union Animal = Dog | Feline | Fish
 

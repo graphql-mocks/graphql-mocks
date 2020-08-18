@@ -1,33 +1,37 @@
 import { expect } from 'chai';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import { expand, expandTarget, TargetReference } from '../../../../src/resolver-map/reference/target-reference';
 
 describe('resolver-map/reference/target-reference', function () {
-  const schema = buildSchema(`
-    schema {
-      query: Query
-    }
+  let schema: GraphQLSchema;
 
-    type Query {
-      person: Person!
-      locations: [Location!]!
-    }
+  beforeEach(function () {
+    schema = buildSchema(`
+      schema {
+        query: Query
+      }
 
-    type Pet {
-      name: String!
-    }
+      type Query {
+        person: Person!
+        locations: [Location!]!
+      }
 
-    type Location {
-      city: String!
-      street: String!
-    }
+      type Pet {
+        name: String!
+      }
 
-    type Person {
-      name: String!
-      location: Location!
-      pet: Pet!
-    }
-  `);
+      type Location {
+        city: String!
+        street: String!
+      }
+
+      type Person {
+        name: String!
+        location: Location!
+        pet: Pet!
+      }
+    `);
+  });
 
   describe('#expandTarget', function () {
     it('expands all types and fields', function () {

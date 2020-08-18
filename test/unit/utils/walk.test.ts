@@ -1,35 +1,39 @@
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { FieldReference } from '../../../src/resolver-map/reference/field-reference';
 import { walk, WalkSource } from '../../../src/utils/walk';
 
 describe('utils/walk', function () {
-  const graphqlSchema = buildSchema(`
-    schema {
-      query: Query
-    }
+  let graphqlSchema: GraphQLSchema;
 
-    type Query {
-      person: Person!
-      locations: [Location!]!
-    }
+  beforeEach(function () {
+    graphqlSchema = buildSchema(`
+      schema {
+        query: Query
+      }
 
-    type Pet {
-      name: String!
-    }
+      type Query {
+        person: Person!
+        locations: [Location!]!
+      }
 
-    type Location {
-      city: String!
-      street: String!
-    }
+      type Pet {
+        name: String!
+      }
 
-    type Person {
-      name: String!
-      location: Location!
-      pet: Pet!
-    }
-  `);
+      type Location {
+        city: String!
+        street: String!
+      }
+
+      type Person {
+        name: String!
+        location: Location!
+        pet: Pet!
+      }
+    `);
+  });
 
   const callbackArgs = (spy: SinonSpy): FieldReference[] => spy.getCalls().map((call) => call.args[0]);
 

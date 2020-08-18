@@ -6,18 +6,19 @@ import { Model, Server, belongsTo } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/object', function () {
-  let schema: GraphQLSchema | undefined;
-
-  const mirageServer = new Server({
-    models: {
-      user: Model.extend({
-        favoriteMovie: belongsTo('movie'),
-      }),
-      movie: Model.extend({}),
-    },
-  });
+  let mirageServer: Server;
+  let schema: GraphQLSchema;
 
   beforeEach(function () {
+    mirageServer = new Server({
+      models: {
+        user: Model.extend({
+          favoriteMovie: belongsTo('movie'),
+        }),
+        movie: Model.extend({}),
+      },
+    });
+
     schema = buildSchema(`
       type User {
         name: String!
@@ -29,10 +30,6 @@ describe('mirage/resolvers/object', function () {
         name: String!
       }
     `);
-  });
-
-  afterEach(function () {
-    schema = undefined;
   });
 
   it('resolves a simple scalar field from a parent', async function () {

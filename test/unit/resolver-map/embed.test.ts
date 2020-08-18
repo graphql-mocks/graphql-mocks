@@ -3,27 +3,31 @@ import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { ResolverWrapper, Resolver } from '../../../src/types';
 import { generatePackOptions } from '../../mocks';
-import { GraphQLResolveInfo, buildSchema } from 'graphql';
+import { GraphQLResolveInfo, buildSchema, GraphQLSchema } from 'graphql';
 
 describe('resolver-map/embed', function () {
-  const schema = buildSchema(`
-    schema {
-      query: Query
-    }
+  let schema: GraphQLSchema;
 
-    type Query {
-      person: Person!
-    }
+  beforeEach(function () {
+    schema = buildSchema(`
+      schema {
+        query: Query
+      }
 
-    type Pet {
-      name: String!
-    }
+      type Query {
+        person: Person!
+      }
 
-    type Person {
-      name: String!
-      pet: Pet!
-    }
-  `);
+      type Pet {
+        name: String!
+      }
+
+      type Person {
+        name: String!
+        pet: Pet!
+      }
+    `);
+  });
 
   it('can embed a resolver on multiple targets', async function () {
     const resolver = spy();

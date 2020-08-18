@@ -3,16 +3,18 @@ import { unique, difference, fieldExistsInResolverMap } from '../../../../src/re
 
 describe('resolver-map/reference/field-reference', function () {
   describe('#unique', function () {
-    expect(
-      unique([
+    it('can unique on redundant field references', function () {
+      expect(
+        unique([
+          ['Query', 'field'],
+          ['Query', 'otherField'],
+          ['Query', 'field'],
+        ]),
+      ).to.deep.equal([
         ['Query', 'field'],
         ['Query', 'otherField'],
-        ['Query', 'field'],
-      ]),
-    ).to.deep.equal([
-      ['Query', 'field'],
-      ['Query', 'otherField'],
-    ]);
+      ]);
+    });
   });
 
   describe('#difference', function () {

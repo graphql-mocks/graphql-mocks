@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { extractDependencies, extractAllDependencies } from '../../../src/resolver/extract-dependencies';
 import { generatePackOptions } from '../../mocks';
+import { ResolverContext } from '../../../src/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const generateMocksContextWithDependencies = (dependencies: any): any => {
@@ -17,12 +18,16 @@ Either:
  * Use { required : false } as the third argument to \`extractDependencies\` and allow for these to be optional dependencies`;
 
 describe('resolvers/extract-dependencies', function () {
-  const mockContext = generateMocksContextWithDependencies({
-    test: 'hello world',
-    otherDependency: 'guten tag',
+  let mockContext: ResolverContext;
+
+  beforeEach(function () {
+    mockContext = generateMocksContextWithDependencies({
+      test: 'hello world',
+      otherDependency: 'guten tag',
+    });
   });
 
-  describe('#extractAllDependencies', function () {
+  context('#extractAllDependencies', function () {
     it('pulls the dependencies hash from context and returns it', function () {
       expect(extractAllDependencies(mockContext)).to.deep.equal({
         test: 'hello world',
@@ -35,15 +40,15 @@ describe('resolvers/extract-dependencies', function () {
     });
   });
 
-  describe('#extractDependencies', function () {
+  context('#extractDependencies', function () {
     it('extracts a dependency when a dependency list is specified', function () {
       expect(extractDependencies(mockContext, ['test'])).to.deep.equal({
         test: 'hello world',
       });
     });
 
-    describe('when dependencies do not exist', function () {
-      describe('and the required option is set to true', function () {
+    context('when dependencies do not exist', function () {
+      context('and the required option is set to true', function () {
         it('by default, throws if a dependency does not exist', function () {
           expect(() => extractDependencies(mockContext, ['does not exist'])).to.throw(missingRequiredDependencyError);
         });
@@ -55,7 +60,7 @@ describe('resolvers/extract-dependencies', function () {
         });
       });
 
-      describe('and the required option is set to false', function () {
+      context('and the required option is set to false', function () {
         it('returns an object where the result is undefined', function () {
           const dependencies = extractDependencies(mockContext, ['does not exist'], { required: false });
           expect(dependencies).to.have.property('does not exist');
@@ -64,7 +69,7 @@ describe('resolvers/extract-dependencies', function () {
       });
     });
 
-    describe('type tests', function () {
+    context('type tests', function () {
       type Person = {
         name?: string | undefined;
       };
@@ -73,13 +78,17 @@ describe('resolvers/extract-dependencies', function () {
         person: Person;
       };
 
-      const dependencies: Dependencies = {
-        person: { name: 'Homer' },
-      };
+      let dependencies: Dependencies;
 
-      const mockContext = generateMocksContextWithDependencies(dependencies);
+      beforeEach(function () {
+        dependencies = {
+          person: { name: 'Homer' },
+        };
 
-      describe('with type definitions', function () {
+        mockContext = generateMocksContextWithDependencies(dependencies);
+      });
+
+      context('with type definitions', function () {
         it('type is passed through and no nullish check is required', function () {
           const result = extractDependencies<Dependencies>(mockContext, ['person'], { required: true });
           expect(result.person.name).to.equal(
