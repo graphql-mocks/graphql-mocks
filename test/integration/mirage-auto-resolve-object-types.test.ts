@@ -29,7 +29,7 @@ describe('integration/mirage-auto-resolve-types', function () {
   `;
   };
 
-  beforeEach(() => {
+  beforeEach(function () {
     mirageServer = new Server({
       models: {
         person: Model.extend({
@@ -42,18 +42,18 @@ describe('integration/mirage-auto-resolve-types', function () {
     mirageMapper = new MirageGraphQLMapper();
   });
 
-  afterEach(() => {
+  afterEach(function () {
     (mirageServer as any) = null;
   });
 
-  describe('scalar types', () => {
-    beforeEach(() => {
+  describe('scalar types', function () {
+    beforeEach(function () {
       mirageServer.schema.create<any, any, any>('person', {
         name: 'Grace Hopper',
       });
     });
 
-    it('returns a scalar from a model attr', async () => {
+    it('returns a scalar from a model attr', async function () {
       const handler = new GraphQLHandler({
         middlewares: [patchAutoFieldResolvers()],
         dependencies: {
@@ -81,7 +81,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       });
     });
 
-    it('returns a scalar from a field filter', async () => {
+    it('returns a scalar from a field filter', async function () {
       mirageMapper.addFieldFilter(['Person', 'name'], () => 'Person Name Override');
 
       const handler = new GraphQLHandler({
@@ -113,11 +113,11 @@ describe('integration/mirage-auto-resolve-types', function () {
     });
   });
 
-  describe('list types', () => {
+  describe('list types', function () {
     let rootPerson: any;
     let friendsOfPerson: any;
 
-    beforeEach(() => {
+    beforeEach(function () {
       mirageServer.schema.create<any, any, any>('person', {
         name: 'Will not be included in `friends` relationship, therefore should not show up in query results',
       });
@@ -143,7 +143,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       });
     });
 
-    it('returns a collection of relationships from a model', async () => {
+    it('returns a collection of relationships from a model', async function () {
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
 
       const handler = new GraphQLHandler({
@@ -193,7 +193,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       });
     });
 
-    it('returns a filtered collection of relationships from a model using a field filter', async () => {
+    it('returns a filtered collection of relationships from a model using a field filter', async function () {
       mirageMapper
         .addFieldFilter(['Query', 'person'], () => rootPerson)
         .addFieldFilter(['Person', 'friends'], (models) => {
@@ -246,8 +246,8 @@ describe('integration/mirage-auto-resolve-types', function () {
     });
   });
 
-  describe('object types', () => {
-    it('returns a single type from a model relationship', async () => {
+  describe('object types', function () {
+    it('returns a single type from a model relationship', async function () {
       const bestFriend = mirageServer.schema.create<any, any, any>('person', {
         name: 'Travis',
       });
@@ -294,7 +294,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       });
     });
 
-    it('returns a single object from a model', async () => {
+    it('returns a single object from a model', async function () {
       const bestFriend = mirageServer.schema.create<any, any, any>('person', {
         name: 'Travis',
       });

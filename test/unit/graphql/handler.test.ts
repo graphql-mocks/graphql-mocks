@@ -20,7 +20,7 @@ describe('graphql/hander', function () {
   let handler: GraphQLHandler;
   let resolverMap: ResolverMap;
 
-  beforeEach(() => {
+  beforeEach(function () {
     resolverMap = {
       Query: {
         hello: (): string => 'Hello world!',

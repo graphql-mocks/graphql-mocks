@@ -33,8 +33,8 @@ describe('utils/walk', function () {
 
   const callbackArgs = (spy: SinonSpy): FieldReference[] => spy.getCalls().map((call) => call.args[0]);
 
-  describe('WalkSource.GRAPHQL_SCHEMA', () => {
-    it('walks a graphql schema by default', async () => {
+  describe('WalkSource.GRAPHQL_SCHEMA', function () {
+    it('walks a graphql schema by default', async function () {
       const callbackSpy = spy();
       await walk({ graphqlSchema }, callbackSpy);
       const args = callbackArgs(callbackSpy);
@@ -53,7 +53,7 @@ describe('utils/walk', function () {
       );
     });
 
-    it('walks a graphql schema when specified', async () => {
+    it('walks a graphql schema when specified', async function () {
       const callbackSpy = spy();
       await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA }, callbackSpy);
       const args = callbackArgs(callbackSpy);
@@ -72,7 +72,7 @@ describe('utils/walk', function () {
       );
     });
 
-    it('filters down on include target', async () => {
+    it('filters down on include target', async function () {
       const callbackSpy = spy();
       await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA, include: ['Query', '*'] }, callbackSpy);
       const args = callbackArgs(callbackSpy);
@@ -84,7 +84,7 @@ describe('utils/walk', function () {
     });
   });
 
-  describe('WalkSource.RESOLVER_MAP', () => {
+  describe('WalkSource.RESOLVER_MAP', function () {
     const resolverMap = {
       Query: {
         person: (): string => 'noop',
@@ -98,7 +98,7 @@ describe('utils/walk', function () {
       },
     };
 
-    it('walks a resolver map when specified', async () => {
+    it('walks a resolver map when specified', async function () {
       const callbackSpy = spy();
       await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap }, callbackSpy);
       const args = callbackArgs(callbackSpy);
@@ -113,7 +113,7 @@ describe('utils/walk', function () {
       );
     });
 
-    it('walks a resolver map filtered by include target', async () => {
+    it('walks a resolver map filtered by include target', async function () {
       const callbackSpy = spy();
 
       await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap, include: ['Query', '*'] }, callbackSpy);
@@ -125,7 +125,7 @@ describe('utils/walk', function () {
       ]);
     });
 
-    it('does not walk the resolver map for fields not in the schema', async () => {
+    it('does not walk the resolver map for fields not in the schema', async function () {
       const callbackSpy = spy();
 
       const resolverMapWithExtraField = {
@@ -158,7 +158,7 @@ describe('utils/walk', function () {
       );
     });
 
-    it('throws an error if a resolver map source is expected but a resolver map is not passed in', async () => {
+    it('throws an error if a resolver map source is expected but a resolver map is not passed in', async function () {
       let error;
 
       try {

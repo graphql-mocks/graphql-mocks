@@ -39,7 +39,7 @@ describe('mirage/resolvers/abstract', function () {
       isFreshwater: false,
     });
 
-    beforeEach(() => {
+    beforeEach(function () {
       schema = buildSchema(`
         union Animal = Dog | Feline | Fish
 
@@ -86,7 +86,7 @@ describe('mirage/resolvers/abstract', function () {
       expect(resolvedType).to.equal('Fish');
     });
 
-    it('throws an error when an union cannot be found', () => {
+    it('throws an error when an union cannot be found', function () {
       const birdNotInGraphQL = mirageServer.create('bird');
 
       const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
@@ -104,7 +104,7 @@ describe('mirage/resolvers/abstract', function () {
     let catModel: ModelInstance;
     let dogModel: ModelInstance;
 
-    beforeEach(() => {
+    beforeEach(function () {
       mirageServer = new Server({
         models: {
           animal: Model.extend({}),
@@ -191,7 +191,7 @@ describe('mirage/resolvers/abstract', function () {
       expect(resolvedType).to.equal('Fish');
     });
 
-    it('throws an error when an interface cannot be found', () => {
+    it('throws an error when an interface cannot be found', function () {
       // create a model that is not in the interface and not mapped
       // to a type in the interface either
       const birdNotInGraphQL = mirageServer.create('bird');
@@ -212,7 +212,7 @@ describe('mirage/resolvers/abstract', function () {
     let animalUnion: GraphQLUnionType;
     let mockContext: unknown;
 
-    beforeEach(() => {
+    beforeEach(function () {
       mirageServer = new Server({
         models: {
           bird: Model.extend({}),
@@ -242,14 +242,14 @@ describe('mirage/resolvers/abstract', function () {
       mockContext = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     });
 
-    it('throws an error with details specific to resolving a mirage model object', () => {
+    it('throws an error with details specific to resolving a mirage model object', function () {
       const unmatchableModel = mirageServer.create('bird');
       expect(() => mirageAbstractTypeResolver(unmatchableModel, mockContext, mockGraphQLInfo, animalUnion)).to.throw(
         /Received model "Bird" which did not match one of the possible types above./,
       );
     });
 
-    it('throws an error when cannot descriminate based on fields passed in', () => {
+    it('throws an error when cannot descriminate based on fields passed in', function () {
       // all animals have a name field so this is not enough
       // to descriminate the type on
       const unknownAnimal = { name: 'Cody' };

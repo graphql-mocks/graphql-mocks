@@ -45,7 +45,7 @@ describe('integration/mirage-relay', function () {
   let mirageMapper: MirageGraphQLMapper;
   let handler: GraphQLHandler;
 
-  beforeEach(async () => {
+  beforeEach(async function () {
     mirageServer = new Server({
       models: {
         person: Model.extend({
@@ -86,14 +86,14 @@ describe('integration/mirage-relay', function () {
     });
   });
 
-  afterEach(() => {
+  afterEach(function () {
     (mirageServer as any) = null;
     (mirageMapper as any) = null;
     (handler as any) = null;
   });
 
-  describe('root query relay pagination', () => {
-    it('automatically relay paginates with all models for a given type', async () => {
+  describe('root query relay pagination', function () {
+    it('automatically relay paginates with all models for a given type', async function () {
       const result = await handler.query(`{
         people {
           edges {
@@ -155,7 +155,7 @@ describe('integration/mirage-relay', function () {
       });
     });
 
-    it('relay paginates on the root query type using a field filter', async () => {
+    it('relay paginates on the root query type using a field filter', async function () {
       mirageMapper.addFieldFilter(['Query', 'people'], (results) =>
         results.filter((result: any) => result.name === 'Princess Leia' || result.name === 'Greedo'),
       );
@@ -201,8 +201,8 @@ describe('integration/mirage-relay', function () {
     });
   });
 
-  describe('field query relay pagination', () => {
-    it('automatically relay paginates all models from a relationship', async () => {
+  describe('field query relay pagination', function () {
+    it('automatically relay paginates all models from a relationship', async function () {
       const result = await handler.query(`{
         person {
           name
@@ -263,7 +263,7 @@ describe('integration/mirage-relay', function () {
       });
     });
 
-    it('relay paginates models from a relationship using a field filter', async () => {
+    it('relay paginates models from a relationship using a field filter', async function () {
       mirageMapper.addFieldFilter(['Person', 'friends'], (results) =>
         results.filter((result) => result.name === 'R2-D2'),
       );

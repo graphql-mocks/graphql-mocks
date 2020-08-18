@@ -15,7 +15,7 @@ describe('resolver/wrap', function () {
   let internalWrapperSpy: SinonSpy;
   let resolverWrapper: SinonSpy;
 
-  beforeEach(() => {
+  beforeEach(function () {
     resolverWrapperOptions = {
       packOptions: generatePackOptions(),
       type: userObjectType,

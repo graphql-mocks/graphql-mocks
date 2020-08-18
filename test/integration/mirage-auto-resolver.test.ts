@@ -388,7 +388,7 @@ describe('integration/mirage-auto-resolver', function () {
     ]);
   });
 
-  it('can resolve non-null types', async () => {
+  it('can resolve non-null types', async function () {
     const query = `query {
       allPersons {
         name
@@ -413,7 +413,7 @@ describe('integration/mirage-auto-resolver', function () {
     });
   });
 
-  it('can resolve null types', async () => {
+  it('can resolve null types', async function () {
     const query = `query {
       allPersons {
         name
@@ -438,8 +438,8 @@ describe('integration/mirage-auto-resolver', function () {
     });
   });
 
-  context('Relay Connections', () => {
-    it('can resolve a root-level relay connection (via static resolver with helpers)', async () => {
+  context('Relay Connections', function () {
+    it('can resolve a root-level relay connection (via static resolver with helpers)', async function () {
       const query = `query {
         allPersonsPaginated(first: 2) {
           edges {
@@ -482,7 +482,7 @@ describe('integration/mirage-auto-resolver', function () {
       });
     });
 
-    it('can resolve a type relay connection', async () => {
+    it('can resolve a type relay connection', async function () {
       const query = `query {
         allPersons {
           id
@@ -521,7 +521,7 @@ describe('integration/mirage-auto-resolver', function () {
     });
   });
 
-  context('Middleware Options', () => {
+  context('Middleware Options', function () {
     const allPersonsQuery = `
       {
         allPersons {
@@ -530,8 +530,8 @@ describe('integration/mirage-auto-resolver', function () {
       }
     `;
 
-    context('with Query.allPersons included', () => {
-      beforeEach(async () => {
+    context('with Query.allPersons included', function () {
+      beforeEach(async function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
@@ -546,7 +546,7 @@ describe('integration/mirage-auto-resolver', function () {
         });
       });
 
-      it('can query on the auto-resolvers patched in by in the `include` option', async () => {
+      it('can query on the auto-resolvers patched in by in the `include` option', async function () {
         expect(await graphQLHandler.query(allPersonsQuery)).to.deep.equal({
           data: {
             allPersons: [
@@ -568,8 +568,8 @@ describe('integration/mirage-auto-resolver', function () {
       });
     });
 
-    context('with Query.allPersons excluded', () => {
-      beforeEach(async () => {
+    context('with Query.allPersons excluded', function () {
+      beforeEach(async function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
@@ -584,7 +584,7 @@ describe('integration/mirage-auto-resolver', function () {
         });
       });
 
-      it('can not query on excluded auto-resolvers ', async () => {
+      it('can not query on excluded auto-resolvers ', async function () {
         expect((await graphQLHandler.query(allPersonsQuery))?.errors?.[0]?.message).to.include(
           'Cannot return null for non-nullable field Query.allPersons',
         );

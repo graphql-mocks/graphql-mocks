@@ -8,11 +8,11 @@ import { GraphQLResolveInfo } from 'graphql';
 describe('log/wrapper', function () {
   let logStub: SinonStub;
 
-  beforeEach(() => {
+  beforeEach(function () {
     logStub = stub<Console, 'log'>(console, 'log');
   });
 
-  afterEach(() => {
+  afterEach(function () {
     logStub.restore();
   });
 

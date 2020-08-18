@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { unique, difference, fieldExistsInResolverMap } from '../../../../src/resolver-map/reference/field-reference';
 
-describe('resolver-map/reference/field-reference', () => {
-  describe('#unique', () => {
+describe('resolver-map/reference/field-reference', function () {
+  describe('#unique', function () {
     expect(
       unique([
         ['Query', 'field'],
@@ -15,8 +15,8 @@ describe('resolver-map/reference/field-reference', () => {
     ]);
   });
 
-  describe('#difference', () => {
-    it('removes the second set from the first set', () => {
+  describe('#difference', function () {
+    it('removes the second set from the first set', function () {
       expect(
         difference(
           [
@@ -29,18 +29,18 @@ describe('resolver-map/reference/field-reference', () => {
     });
   });
 
-  describe('#isfieldReferenceInResolverMap', () => {
+  describe('#isfieldReferenceInResolverMap', function () {
     const resolverMap = {
       Query: {
         field: (): string => 'noop',
       },
     };
 
-    it('returns true when a field exists in a resolver map', () => {
+    it('returns true when a field exists in a resolver map', function () {
       expect(fieldExistsInResolverMap(resolverMap, ['Query', 'field'])).to.be.true;
     });
 
-    it('returns false when a field does not exist in a resolver map', () => {
+    it('returns false when a field does not exist in a resolver map', function () {
       expect(fieldExistsInResolverMap(resolverMap, ['Query', 'nonInMap'])).to.be.false;
     });
   });

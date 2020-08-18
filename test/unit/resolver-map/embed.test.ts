@@ -5,7 +5,7 @@ import { ResolverWrapper, Resolver } from '../../../src/types';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema } from 'graphql';
 
-describe('resolver-map/embed', () => {
+describe('resolver-map/embed', function () {
   const schema = buildSchema(`
     schema {
       query: Query
@@ -25,7 +25,7 @@ describe('resolver-map/embed', () => {
     }
   `);
 
-  it('can embed a resolver on multiple targets', async () => {
+  it('can embed a resolver on multiple targets', async function () {
     const resolver = spy();
     const embeddedMiddleware = embed({
       resolver,
@@ -44,7 +44,7 @@ describe('resolver-map/embed', () => {
     expect(embeddedResolverMap.Person.pet).to.be.a('function');
   });
 
-  it('throws an error when trying to replace an existing resolver when { replace: false }', async () => {
+  it('throws an error when trying to replace an existing resolver when { replace: false }', async function () {
     const originalPersonNameResolver = spy();
 
     const resolverMap = {
@@ -81,7 +81,7 @@ describe('resolver-map/embed', () => {
     }
   });
 
-  it('can replace an existing resolver with resolver wrappers at a specific target', async () => {
+  it('can replace an existing resolver with resolver wrappers at a specific target', async function () {
     const originalPersonNameResolver = spy();
 
     const resolverMap = {
@@ -129,7 +129,7 @@ describe('resolver-map/embed', () => {
     expect((wrappedResolver as any).called).to.be.true;
   });
 
-  it('it can embed a new resolver with wrappers on a specific target', async () => {
+  it('it can embed a new resolver with wrappers on a specific target', async function () {
     const resolver = spy();
     const resolverWrapper: ResolverWrapper = spy(
       async (resolver) => (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<Resolver> =>
@@ -160,7 +160,7 @@ describe('resolver-map/embed', () => {
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
 
-  it('it can embed wrappers around an existing target', async () => {
+  it('it can embed wrappers around an existing target', async function () {
     const nameFieldResolver = spy();
     const resolverWrapper: ResolverWrapper = spy(async (resolver) => (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -194,7 +194,7 @@ describe('resolver-map/embed', () => {
     expect((resolverWrapper as SinonSpy).called).to.equal(true);
   });
 
-  it('quietly does nothing if a resolver is not given, nor is on the resolver map', async () => {
+  it('quietly does nothing if a resolver is not given, nor is on the resolver map', async function () {
     const resolverWrapper: ResolverWrapper = spy();
     // empty resolver map with no resolver for Person.name
     const resolverMap = {};

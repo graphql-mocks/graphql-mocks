@@ -17,7 +17,7 @@ describe('mirage/resolvers/object', function () {
     },
   });
 
-  beforeEach(() => {
+  beforeEach(function () {
     schema = buildSchema(`
       type User {
         name: String!
@@ -31,7 +31,7 @@ describe('mirage/resolvers/object', function () {
     `);
   });
 
-  afterEach(() => {
+  afterEach(function () {
     schema = undefined;
   });
 
@@ -104,7 +104,7 @@ describe('mirage/resolvers/object', function () {
     expect(result.name).to.equal('Star Wars: A New Hope');
   });
 
-  it('throws an error when a nullish result is returned for a non-null field', () => {
+  it('throws an error when a nullish result is returned for a non-null field', function () {
     const user = mirageServer.create('user', {
       id: '1',
     });
@@ -124,7 +124,7 @@ describe('mirage/resolvers/object', function () {
     );
   });
 
-  it('throws an error when the parent passed in is not an object', () => {
+  it('throws an error when the parent passed in is not an object', function () {
     const context = {
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };

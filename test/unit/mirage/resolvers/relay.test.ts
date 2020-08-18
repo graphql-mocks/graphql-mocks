@@ -4,7 +4,7 @@ import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
 import { Model, Server, hasMany, ModelInstance, Registry } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage';
 
-describe('mirage/relay', () => {
+describe('mirage/relay', function () {
   let mirageServer: Server;
   let mirageMapper: MirageGraphQLMapper;
   let resolverContext: Record<string, unknown>;
@@ -59,7 +59,7 @@ describe('mirage/relay', () => {
     Sourcerer: graphqlSchema.getType('Sourcerer') as GraphQLObjectType,
   };
 
-  beforeEach(() => {
+  beforeEach(function () {
     const Sourcerer = Model.extend({
       spells: hasMany('spell'),
     });
@@ -130,7 +130,7 @@ describe('mirage/relay', () => {
     };
   });
 
-  it('resolves relay connections', async () => {
+  it('resolves relay connections', async function () {
     const args = {
       first: 2,
     };
@@ -149,7 +149,7 @@ describe('mirage/relay', () => {
     expect(result.pageInfo.hasPreviousPage).to.equal(false);
   });
 
-  it('can return the entire result set as a single page', async () => {
+  it('can return the entire result set as a single page', async function () {
     const args = {
       first: allSpells.length,
     };
@@ -171,8 +171,8 @@ describe('mirage/relay', () => {
     expect(result.pageInfo.hasPreviousPage).to.equal(false);
   });
 
-  describe('first/after', () => {
-    it('can return the a page in the middle of the total result set', async () => {
+  describe('first/after', function () {
+    it('can return the a page in the middle of the total result set', async function () {
       const args = {
         first: 2,
         after: 'model:spell(2)',
@@ -192,7 +192,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(true);
     });
 
-    it('can return the last page in a result set', async () => {
+    it('can return the last page in a result set', async function () {
       const args = {
         first: 2,
         after: 'model:spell(3)',
@@ -212,7 +212,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(true);
     });
 
-    it('can return the first page in a result set', async () => {
+    it('can return the first page in a result set', async function () {
       const args = {
         first: 2,
       };
@@ -231,7 +231,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(false);
     });
 
-    it('can return an empty edges for an out-of-bounds result set', async () => {
+    it('can return an empty edges for an out-of-bounds result set', async function () {
       const args = {
         first: 1,
         after: 'model:spell(5)',
@@ -250,7 +250,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.endCursor).to.equal(null);
     });
 
-    it('throws an error when a specified after cursor does not exist', async () => {
+    it('throws an error when a specified after cursor does not exist', async function () {
       const args = {
         first: 1,
         after: 'ANARCHY',
@@ -270,7 +270,7 @@ describe('mirage/relay', () => {
       expect(e.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
-    it('throws an error when first is less than 0', async () => {
+    it('throws an error when first is less than 0', async function () {
       const args = {
         first: -1,
       };
@@ -290,8 +290,8 @@ describe('mirage/relay', () => {
     });
   });
 
-  describe('last/before', () => {
-    it('can return the a page in the middle of the total result set', async () => {
+  describe('last/before', function () {
+    it('can return the a page in the middle of the total result set', async function () {
       const args = {
         last: 2,
         before: 'model:spell(5)',
@@ -311,7 +311,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(true);
     });
 
-    it('can return the last page in a result set', async () => {
+    it('can return the last page in a result set', async function () {
       const args = {
         last: 2,
       };
@@ -330,7 +330,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(true);
     });
 
-    it('can return the first page in a result set', async () => {
+    it('can return the first page in a result set', async function () {
       const args = {
         last: 2,
         before: 'model:spell(3)',
@@ -350,7 +350,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.hasPreviousPage).to.equal(false);
     });
 
-    it('can return an empty edges for an out-of-bounds result set', async () => {
+    it('can return an empty edges for an out-of-bounds result set', async function () {
       const args = {
         last: 1,
         before: 'model:spell(1)',
@@ -369,7 +369,7 @@ describe('mirage/relay', () => {
       expect(result.pageInfo.endCursor).to.equal(null);
     });
 
-    it('throws an error when a specified before cursor does not exist', async () => {
+    it('throws an error when a specified before cursor does not exist', async function () {
       const args = {
         last: 1,
         before: 'ANARCHY',
@@ -389,7 +389,7 @@ describe('mirage/relay', () => {
       expect(error.message).to.contain("ANARCHY doesn't appear to be a valid edge");
     });
 
-    it('throws an error when last is less than 0', async () => {
+    it('throws an error when last is less than 0', async function () {
       const args = {
         last: -1,
       };
@@ -409,16 +409,16 @@ describe('mirage/relay', () => {
     });
   });
 
-  describe('mapping from graphql -> mirage', () => {
-    describe('with a previously resolved parent provided', () => {
-      beforeEach(() => {
+  describe('mapping from graphql -> mirage', function () {
+    describe('with a previously resolved parent provided', function () {
+      beforeEach(function () {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         sourcererParent = mirageServer.schema.create<any, any, any>('sourcerer', {
           spells: [abertoSpell, abraSpell],
         });
       });
 
-      it('can use mapping to pull correct fields', async () => {
+      it('can use mapping to pull correct fields', async function () {
         // this occurs when a mapping is  found for the graphql field
         // and is used to find the corresponding mirage model and attr name
         const mappedGraphQLField = 'paginatedSpells';
@@ -436,7 +436,7 @@ describe('mirage/relay', () => {
         expect(result.edges[1].node).to.deep.equal(abraSpell);
       });
 
-      it('can fallback to a matching graphql field name <-> mirage attr name', async () => {
+      it('can fallback to a matching graphql field name <-> mirage attr name', async function () {
         // this occurs when a mapping is not found but the field being resolved
         // matches the same name as the name as the attr on the model in mirage
 

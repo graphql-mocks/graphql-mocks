@@ -2,9 +2,9 @@ module.exports = {
   parser: "@typescript-eslint/parser",
 
   extends: [
-    "plugin:mocha/recommended",
     "plugin:@typescript-eslint/recommended",
     "eslint:recommended",
+    "plugin:mocha/recommended",
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
   ],

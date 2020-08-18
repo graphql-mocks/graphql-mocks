@@ -15,7 +15,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mirageServer: Server;
 
-  beforeEach(() => {
+  beforeEach(function () {
     mirageServer = new Server({
       models: {
         person: Model.extend({}),
@@ -23,11 +23,11 @@ describe('integration/mirage-auto-resolve-root-query', function () {
     });
   });
 
-  afterEach(() => {
+  afterEach(function () {
     (mirageServer as any) = null;
   });
 
-  describe('scalar types', () => {
+  describe('scalar types', function () {
     it('can return a scalar using a filter field', async function () {
       const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personName'], () => 'Grace Hopper');
 
@@ -114,8 +114,8 @@ describe('integration/mirage-auto-resolve-root-query', function () {
   });
 
   // plural case
-  describe('list type of object types', () => {
-    beforeEach(() => {
+  describe('list type of object types', function () {
+    beforeEach(function () {
       mirageServer.schema.create<any, any, any>('person', {
         name: 'wilma',
       });
@@ -253,7 +253,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
   });
 
   // singular case
-  describe('singular object type', () => {
+  describe('singular object type', function () {
     const graphqlSchema = `
       schema {
         query: Query
@@ -369,8 +369,8 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
     });
 
-    describe('when multiple models exist', () => {
-      beforeEach(() => {
+    describe('when multiple models exist', function () {
+      beforeEach(function () {
         mirageServer = new Server({
           models: {
             person: Model.extend({}),
@@ -409,7 +409,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         );
       });
 
-      describe('when a field filter exists', () => {
+      describe('when a field filter exists', function () {
         it('uses singular result from field filter', async function () {
           const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], (models) => {
             return models[0];

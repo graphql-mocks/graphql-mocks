@@ -7,7 +7,7 @@ import { ResolverMap } from '../../../../src/types';
 describe('mirage/middleware/patch-auto-unions-interfaces', function () {
   let schema: GraphQLSchema | undefined;
 
-  beforeEach(() => {
+  beforeEach(function () {
     schema = buildSchema(`
       union Salutation = Hello | GutenTag
 
@@ -35,7 +35,7 @@ describe('mirage/middleware/patch-auto-unions-interfaces', function () {
     `);
   });
 
-  afterEach(() => {
+  afterEach(function () {
     schema = undefined;
   });
 

@@ -4,17 +4,17 @@ import { MirageGraphQLMapper } from '../../../../src/mirage/mapper/mapper';
 describe('mirage/mapper/mapper', function () {
   let mapper: MirageGraphQLMapper;
 
-  beforeEach(() => {
+  beforeEach(function () {
     mapper = new MirageGraphQLMapper();
   });
 
-  context('addFieldMapping', () => {
-    it('adds associated Type/Model mapping', () => {
+  context('addFieldMapping', function () {
+    it('adds associated Type/Model mapping', function () {
       mapper.addFieldMapping(['Type', 'field'], ['Model', 'attr']);
       expect(mapper.typeMappings[0]).to.deep.equal({ graphql: 'Type', mirage: 'Model' });
     });
 
-    it('ignores Type/Model mapping when they are the same name', () => {
+    it('ignores Type/Model mapping when they are the same name', function () {
       mapper.addFieldMapping(['Type', 'field'], ['Type', 'attr']);
       expect(mapper.typeMappings.length).to.equal(0);
     });
