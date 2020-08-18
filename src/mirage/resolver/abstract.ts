@@ -60,11 +60,13 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
     if (modelName) {
       mirageModelMessage =
         `Received model "${modelName}" which did not match one of the possible types above. ` +
-        `If "${modelName}" represents of the possible types, fix the model name ` +
-        `or use a MirageGraphQLMapper instance with a type mapping. ` +
+        `If "${modelName}" represents one of the possible types, fix the model name ` +
+        `or use a MirageGraphQLMapper instance with a type mapping ["TypeName", "${modelName}"]. ` +
+        `\n\n` +
         `If "${modelName}" is the abstract type "${abstractType.name}", consider ` +
         `only creating models for discrete types and using { polymorphic: true } ` +
-        `for the relationships that represent "${abstractType.name}"`;
+        `for the relationships that represent "${abstractType.name}. See the the Mirage JS section` +
+        `of the docs at www.graphql-mocks.com for examples.`;
     }
 
     const lastResortMessage =
