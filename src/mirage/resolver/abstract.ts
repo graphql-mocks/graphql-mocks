@@ -100,7 +100,6 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
       .filter(Boolean)
       .join('\n');
 
-    debugger;
     throw new Error(message);
   }
 

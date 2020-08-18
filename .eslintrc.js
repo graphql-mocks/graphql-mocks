@@ -2,9 +2,11 @@ module.exports = {
   parser: "@typescript-eslint/parser",
 
   extends: [
+    "plugin:mocha/recommended",
     "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
     "prettier/@typescript-eslint",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
   ],
 
   parserOptions: {
@@ -12,6 +14,8 @@ module.exports = {
     sourceType: "module"
   },
 
+  plugins: ["mocha"],
+
   rules: {
-  }
+  },
 };
