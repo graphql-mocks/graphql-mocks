@@ -10,7 +10,7 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
   _info,
   abstractType: GraphQLAbstractType,
 ) {
-  const useFindInCommon = '__testUseFindInCommon' in context ? context.__testUseFindInCommon : true;
+  const useFindInCommon = '__useFindInCommon' in context ? context.__useFindInCommon : true;
 
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;

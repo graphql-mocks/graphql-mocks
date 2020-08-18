@@ -69,7 +69,7 @@ describe('mirage/resolvers/abstract', function () {
 
     it('resolves an union to a type by model name', async function () {
       const context = {
-        __testUseFindInCommon: false,
+        __useFindInCommon: false,
         pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
       };
       const resolvedType = mirageAbstractTypeResolver(dogModel, context, resolverInfo, animalUnionType);
@@ -79,7 +79,7 @@ describe('mirage/resolvers/abstract', function () {
     it('resolves an union to a type by mapper', async function () {
       const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
       const context = {
-        __testUseFindInCommon: false,
+        __useFindInCommon: false,
         pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
       };
       const resolvedType = mirageAbstractTypeResolver(catModel, context, resolverInfo, animalUnionType);
@@ -167,7 +167,7 @@ describe('mirage/resolvers/abstract', function () {
 
     it('resolves an interface to a type by model name', async function () {
       const context = {
-        __testUseFindInCommon: false,
+        __useFindInCommon: false,
         pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
       };
 
@@ -179,7 +179,7 @@ describe('mirage/resolvers/abstract', function () {
       const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
 
       const context = {
-        __testUseFindInCommon: false,
+        __useFindInCommon: false,
         pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
       };
 
@@ -189,7 +189,7 @@ describe('mirage/resolvers/abstract', function () {
 
     it('resolves an interface to a type by most matching fields', async function () {
       const context = {
-        __testUseFindInCommon: true,
+        __useFindInCommon: true,
         pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
       };
 
