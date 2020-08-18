@@ -3,9 +3,9 @@ import sinon from 'sinon';
 import { wrapResolver } from '../../../src/resolver/wrap';
 import { embedPackOptionsWrapper } from '../../../src/pack/utils';
 
-describe('pack/utils', () => {
-  describe('#embedPackOptionsWrapper', () => {
-    it('creates a wrapped function with embedded packOptions', async () => {
+describe('pack/utils', function () {
+  describe('#embedPackOptionsWrapper', function () {
+    it('creates a wrapped function with embedded packOptions', async function () {
       const resolver = sinon.spy();
 
       const wrappedResolver = await wrapResolver(resolver, [embedPackOptionsWrapper], {

@@ -9,7 +9,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
   let resolverMap: ResolverMap;
   let schema: GraphQLSchema;
 
-  beforeEach(() => {
+  beforeEach(function () {
     resolverMap = {
       Query: {
         hello: sinon.spy(),
@@ -69,7 +69,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     `);
   });
 
-  afterEach(() => {
+  afterEach(function () {
     (resolverMap as unknown) = undefined;
     (schema as unknown) = undefined;
   });

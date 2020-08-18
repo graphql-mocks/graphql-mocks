@@ -9,7 +9,7 @@ describe('mirage/route-handler', function () {
   let graphqlSchema: string;
   let resolverMap: ResolverMap;
 
-  beforeEach(() => {
+  beforeEach(function () {
     graphqlSchema = `
       schema {
         query: Query

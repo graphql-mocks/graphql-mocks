@@ -4,8 +4,8 @@ import { ResolverMapMiddleware, ResolverMap } from '../../../src/types';
 import sinon from 'sinon';
 import { pack } from '../../../src/pack';
 
-describe('pack/pack', () => {
-  it('reduces a set of resolvers', async () => {
+describe('pack/pack', function () {
+  it('reduces a set of resolvers', async function () {
     const graphqlSchema = buildSchema(`
       type Type {
         field: String!
@@ -33,7 +33,7 @@ describe('pack/pack', () => {
     expect(wrappedResolvers.OtherType).to.equal(undefined, 'type without a field resolver remains untouched');
   });
 
-  it('includes the packOptions in resolver context by default', async () => {
+  it('includes the packOptions in resolver context by default', async function () {
     const graphqlSchema = buildSchema(`type Query {
       hello: String!
     }`);

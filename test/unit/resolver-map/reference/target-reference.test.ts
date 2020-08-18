@@ -1,36 +1,40 @@
 import { expect } from 'chai';
-import { buildSchema } from 'graphql';
+import { buildSchema, GraphQLSchema } from 'graphql';
 import { expand, expandTarget, TargetReference } from '../../../../src/resolver-map/reference/target-reference';
 
-describe('resolver-map/reference/target-reference', () => {
-  const schema = buildSchema(`
-    schema {
-      query: Query
-    }
+describe('resolver-map/reference/target-reference', function () {
+  let schema: GraphQLSchema;
 
-    type Query {
-      person: Person!
-      locations: [Location!]!
-    }
+  beforeEach(function () {
+    schema = buildSchema(`
+      schema {
+        query: Query
+      }
 
-    type Pet {
-      name: String!
-    }
+      type Query {
+        person: Person!
+        locations: [Location!]!
+      }
 
-    type Location {
-      city: String!
-      street: String!
-    }
+      type Pet {
+        name: String!
+      }
 
-    type Person {
-      name: String!
-      location: Location!
-      pet: Pet!
-    }
-  `);
+      type Location {
+        city: String!
+        street: String!
+      }
 
-  describe('#expandTarget', () => {
-    it('expands all types and fields', () => {
+      type Person {
+        name: String!
+        location: Location!
+        pet: Pet!
+      }
+    `);
+  });
+
+  describe('#expandTarget', function () {
+    it('expands all types and fields', function () {
       expect((expandTarget(schema, ['*', '*']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Query', 'person'],
@@ -45,7 +49,7 @@ describe('resolver-map/reference/target-reference', () => {
       );
     });
 
-    it('expands all types filtered on specific field', () => {
+    it('expands all types filtered on specific field', function () {
       expect((expandTarget(schema, ['*', 'name']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Person', 'name'],
@@ -54,7 +58,7 @@ describe('resolver-map/reference/target-reference', () => {
       );
     });
 
-    it('expands all fields filtered on specific type', () => {
+    it('expands all fields filtered on specific type', function () {
       expect((expandTarget(schema, ['Person', '*']) as TargetReference[]).sort()).to.deep.equal(
         [
           ['Person', 'name'],
@@ -64,15 +68,15 @@ describe('resolver-map/reference/target-reference', () => {
       );
     });
 
-    it('expands on filtered type and name', () => {
+    it('expands on filtered type and name', function () {
       expect(expandTarget(schema, ['Person', 'name'])).to.deep.equal([['Person', 'name']]);
     });
 
-    it('expands to an empty array when the target does not exist in the schema', () => {
+    it('expands to an empty array when the target does not exist in the schema', function () {
       expect(expandTarget(schema, ['Alien', 'homePlanet'])).to.deep.equal([]);
     });
 
-    it('throws an error when a target reference is not valid', () => {
+    it('throws an error when a target reference is not valid', function () {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => expandTarget(schema, [10010101 as any, 1010101 as any])).to.throw(
         'Expected a target reference like ([ "type" , "field" ]) got [10010101,1010101',
@@ -80,15 +84,15 @@ describe('resolver-map/reference/target-reference', () => {
     });
   });
 
-  describe('#expand', () => {
-    it('can expand a single target reference', () => {
+  describe('#expand', function () {
+    it('can expand a single target reference', function () {
       expect(expand(schema, ['Query', '*'])).to.deep.equal([
         ['Query', 'person'],
         ['Query', 'locations'],
       ]);
     });
 
-    it('can expand several target references', () => {
+    it('can expand several target references', function () {
       expect(
         expand(schema, [
           ['Query', '*'],
@@ -103,7 +107,7 @@ describe('resolver-map/reference/target-reference', () => {
       ]);
     });
 
-    it('dedupes field references', () => {
+    it('dedupes field references', function () {
       expect(
         expand(schema, [
           ['Query', '*'],
@@ -115,7 +119,7 @@ describe('resolver-map/reference/target-reference', () => {
       ]);
     });
 
-    it('throws an error when a non-target is not passed in', () => {
+    it('throws an error when a non-target is not passed in', function () {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => expand(schema, 'HELLO World' as any)).to.throw(
         '`expand` was unable to find a target reference or list of target references passed in, got: "HELLO World"',

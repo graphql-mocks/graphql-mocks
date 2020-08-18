@@ -8,7 +8,7 @@ import { GraphQLHandler } from '../../src/graphql';
 describe('integration/mirage-static-resolvers', function () {
   let handler: GraphQLHandler;
 
-  beforeEach(async () => {
+  beforeEach(async function () {
     mirageServer.db.loadData(defaultScenario);
 
     handler = new GraphQLHandler({
@@ -21,7 +21,7 @@ describe('integration/mirage-static-resolvers', function () {
     });
   });
 
-  afterEach(() => {
+  afterEach(function () {
     mirageServer.db.emptyData();
   });
 

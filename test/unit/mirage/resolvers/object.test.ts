@@ -6,18 +6,19 @@ import { Model, Server, belongsTo } from 'miragejs';
 import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/object', function () {
-  let schema: GraphQLSchema | undefined;
+  let mirageServer: Server;
+  let schema: GraphQLSchema;
 
-  const mirageServer = new Server({
-    models: {
-      user: Model.extend({
-        favoriteMovie: belongsTo('movie'),
-      }),
-      movie: Model.extend({}),
-    },
-  });
+  beforeEach(function () {
+    mirageServer = new Server({
+      models: {
+        user: Model.extend({
+          favoriteMovie: belongsTo('movie'),
+        }),
+        movie: Model.extend({}),
+      },
+    });
 
-  beforeEach(() => {
     schema = buildSchema(`
       type User {
         name: String!
@@ -29,10 +30,6 @@ describe('mirage/resolvers/object', function () {
         name: String!
       }
     `);
-  });
-
-  afterEach(() => {
-    schema = undefined;
   });
 
   it('resolves a simple scalar field from a parent', async function () {
@@ -104,7 +101,7 @@ describe('mirage/resolvers/object', function () {
     expect(result.name).to.equal('Star Wars: A New Hope');
   });
 
-  it('throws an error when a nullish result is returned for a non-null field', () => {
+  it('throws an error when a nullish result is returned for a non-null field', function () {
     const user = mirageServer.create('user', {
       id: '1',
     });
@@ -124,7 +121,7 @@ describe('mirage/resolvers/object', function () {
     );
   });
 
-  it('throws an error when the parent passed in is not an object', () => {
+  it('throws an error when the parent passed in is not an object', function () {
     const context = {
       pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
     };

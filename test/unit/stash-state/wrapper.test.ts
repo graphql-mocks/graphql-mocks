@@ -4,8 +4,8 @@ import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 
-describe('stash-state/wrapper', () => {
-  it('saves stashes on a result object', async () => {
+describe('stash-state/wrapper', function () {
+  it('saves stashes on a result object', async function () {
     const resolverReturn = {};
     const initialResolver = sinon.spy(() => resolverReturn);
     const resolverMap: ResolverMap = {};
