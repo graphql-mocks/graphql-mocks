@@ -11,7 +11,7 @@ function toPascalCase(string: string): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {
+export function findTypeWithFieldsMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {
   let matchedTypes: GraphQLObjectType[] = [];
   let matchedFieldCount = 0;
 
@@ -33,7 +33,7 @@ export function findMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]
   if (matchedTypes.length > 1) {
     const matchingTypeNames = matchedTypes.map((type) => type.name).join(', ');
     const matchedFields = parentFields.map((field) => `"${field}"`).join(', ');
-    const errorMessage = `Multiple types matched (${matchingTypeNames}) the fields: ${matchedFields}.`;
+    const errorMessage = `Multiple types matched (${matchingTypeNames}) against the fields from the object passed in: ${matchedFields}.`;
     throw new Error(errorMessage);
   }
 

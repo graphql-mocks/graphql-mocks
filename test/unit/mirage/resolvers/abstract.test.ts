@@ -1,51 +1,45 @@
+import { Model, Server } from 'miragejs';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
-import { Model, Server, ModelInstance } from 'miragejs';
 import { MirageGraphQLMapper, mirageAbstractTypeResolver } from '../../../../src/mirage';
-import { ResolverInfo } from '../../../../src/types';
+import { ResolverInfo, ResolverContext } from '../../../../src/types';
+import { PackOptions } from '../../../../src/pack/types';
+
+function generateContext(packOptions: PackOptions, options?: { useFindInCommon?: boolean }): ResolverContext {
+  // important we turn this off for most tests and only
+  // allow it to be turned on explicitly
+  const useFindInCommon = options?.useFindInCommon || false;
+
+  const context = {
+    __useFindInCommon: useFindInCommon,
+    pack: packOptions,
+  };
+
+  return context;
+}
 
 describe('mirage/resolvers/abstract', function () {
-  const mockGraphQLInfo = {} as GraphQLResolveInfo;
+  let mockResolverInfo: ResolverInfo;
+  let mirageServer: Server;
+
+  beforeEach(function () {
+    mockResolverInfo = {} as GraphQLResolveInfo;
+
+    // the majority of tests use a mismatched "Doggy" Mirage JS Model
+    // against a GraphQL "Dog" Type
+    mirageServer = new Server({
+      models: {
+        doggy: Model.extend({}),
+      },
+    });
+  });
 
   context('union types', function () {
     let schema: GraphQLSchema | undefined;
     let animalUnionType: GraphQLUnionType;
-    let mirageServer: Server;
-    let resolverInfo: ResolverInfo;
-    let dogModel: ModelInstance;
-    let catModel: ModelInstance;
-    let fishyModel: ModelInstance;
 
     beforeEach(function () {
-      mirageServer = new Server({
-        models: {
-          cat: Model.extend({}),
-          dog: Model.extend({}),
-          fishy: Model.extend({}),
-          bird: Model.extend({}),
-        },
-      });
-
-      resolverInfo = mockGraphQLInfo;
-
-      dogModel = mirageServer.create('dog', {
-        id: '1',
-        breed: 'yellow lab',
-        knowsTricks: true,
-      });
-
-      catModel = mirageServer.create('cat', {
-        id: '1',
-        breed: 'ginger tabby tomcat',
-        likesNaps: true,
-      });
-
-      fishyModel = mirageServer.create('fishy', {
-        id: '1',
-        isFreshwater: false,
-      });
-
       schema = buildSchema(`
         union Animal = Dog | Feline | Fish
 
@@ -67,36 +61,81 @@ describe('mirage/resolvers/abstract', function () {
       animalUnionType = schema.getType('Animal') as GraphQLUnionType;
     });
 
-    it('resolves an union to a type by model name', async function () {
-      const context = {
-        __useFindInCommon: false,
-        pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-      };
-      const resolvedType = mirageAbstractTypeResolver(dogModel, context, resolverInfo, animalUnionType);
+    it('resolves a union by model name', async function () {
+      const mirageServer = new Server({
+        models: {
+          dog: Model.extend({}),
+        },
+      });
+
+      const dogModel = mirageServer.create('dog');
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
-    it('resolves an union to a type by mapper', async function () {
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
-      const context = {
-        __useFindInCommon: false,
-        pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
-      };
-      const resolvedType = mirageAbstractTypeResolver(catModel, context, resolverInfo, animalUnionType);
-      expect(resolvedType).to.equal('Feline');
+    it('resolves a union by mapper', async function () {
+      const doggyModel = mirageServer.create('doggy');
+      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
+      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      expect(resolvedType).to.equal('Dog');
     });
 
-    it('resolves an union to a type by most matching fields', async function () {
-      const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-      const resolvedType = mirageAbstractTypeResolver(fishyModel, context, resolverInfo, animalUnionType);
-      expect(resolvedType).to.equal('Fish');
+    it('resolves a union by most matching fields in common on a model', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doggyModel = mirageServer.create<any, any, any>('doggy', {
+        breed: 'Golden Retriever',
+        knowsTricks: true,
+      });
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }), {
+        useFindInCommon: true,
+      });
+
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves a union by most matching fields in common on a POJO', async function () {
+      const doggy = {
+        breed: 'Golden Retriever',
+        knowsTricks: true,
+      };
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }), {
+        useFindInCommon: true,
+      });
+
+      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves a union by the __typename on the model', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doggyModel = mirageServer.create<any, any, any>('doggy', {
+        __typename: 'Dog',
+      });
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves a union by the __typename on a POJO', async function () {
+      const doggy = {
+        __typename: 'Dog',
+      };
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
+      expect(resolvedType).to.equal('Dog');
     });
 
     it('throws an error when an union cannot be found', function () {
-      const birdNotInGraphQL = mirageServer.create('bird');
-
-      const context = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
-      expect(() => mirageAbstractTypeResolver(birdNotInGraphQL, context, resolverInfo, animalUnionType)).to.throw(
+      const doggyModel = mirageServer.create('doggy');
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      expect(() => mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType)).to.throw(
         /Unable to find a matching type for resolving for UnionType type "Animal"./,
       );
     });
@@ -105,41 +144,8 @@ describe('mirage/resolvers/abstract', function () {
   context('interface types', function () {
     let schema: GraphQLSchema;
     let animalInterfaceType: GraphQLInterfaceType;
-    let mirageServer: Server;
-    let fishyParent: ModelInstance;
-    let catModel: ModelInstance;
-    let dogModel: ModelInstance;
 
     beforeEach(function () {
-      mirageServer = new Server({
-        models: {
-          animal: Model.extend({}),
-          cat: Model.extend({}),
-          dog: Model.extend({}),
-          fishy: Model.extend({}),
-          bird: Model.extend({}),
-        },
-      });
-
-      fishyParent = mirageServer.create('fishy', {
-        id: '1',
-        name: 'Tench',
-        type: 'vertebrates',
-        isFreshwater: true,
-      });
-
-      catModel = mirageServer.create('cat', {
-        id: '1',
-        type: 'vertebrates',
-        breed: 'birman',
-      });
-
-      dogModel = mirageServer.create('dog', {
-        id: '1',
-        type: 'vertebrates',
-        breed: 'husky',
-      });
-
       schema = buildSchema(`
         interface Animal {
           type: String!
@@ -147,12 +153,11 @@ describe('mirage/resolvers/abstract', function () {
 
         type Dog implements Animal {
           type: String!
-          breed: String!
+          knowsTricks: Boolean!
         }
 
         type Feline implements Animal {
           type: String!
-          breed: String!
         }
 
         type Fish implements Animal {
@@ -166,49 +171,85 @@ describe('mirage/resolvers/abstract', function () {
     });
 
     it('resolves an interface to a type by model name', async function () {
-      const context = {
-        __useFindInCommon: false,
-        pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-      };
+      const mirageServer = new Server({
+        models: {
+          dog: Model.extend({}),
+        },
+      });
 
-      const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockGraphQLInfo, animalInterfaceType);
+      const dogModel = mirageServer.create('dog');
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
     it('resolves an interface to a type by mapper', async function () {
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Feline', 'Cat');
-
-      const context = {
-        __useFindInCommon: false,
-        pack: generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }),
-      };
-
-      const resolvedType = mirageAbstractTypeResolver(catModel, context, mockGraphQLInfo, animalInterfaceType);
-      expect(resolvedType).to.equal('Feline');
+      const doggyModel = mirageServer.create('doggy');
+      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
+      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      expect(resolvedType).to.equal('Dog');
     });
 
-    it('resolves an interface to a type by most matching fields', async function () {
-      const context = {
-        __useFindInCommon: true,
-        pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+    it('resolves an interface to a type by __typename on a model', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doggyModel = mirageServer.create<any, any, any>('doggy', {
+        __typename: 'Dog',
+      });
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves an interface to a type by __typename on a POJO', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doggy = {
+        __typename: 'Dog',
       };
 
-      const resolvedType = mirageAbstractTypeResolver(fishyParent, context, mockGraphQLInfo, animalInterfaceType);
-      expect(resolvedType).to.equal('Fish');
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+
+      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves an interface to a type by most fields in common on a model', async function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const doggyModel = mirageServer.create<any, any, any>('doggy', {
+        type: 'Golden Retriever',
+        knowsTricks: true,
+      });
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }), {
+        useFindInCommon: true,
+      });
+
+      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      expect(resolvedType).to.equal('Dog');
+    });
+
+    it('resolves an interface to a type by most fields in common on a POJO', async function () {
+      const doggy = {
+        type: 'Golden Retriever',
+        knowsTricks: true,
+      };
+
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }), {
+        useFindInCommon: true,
+      });
+
+      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
+      expect(resolvedType).to.equal('Dog');
     });
 
     it('throws an error when an interface cannot be found', function () {
-      // create a model that is not in the interface and not mapped
-      // to a type in the interface either
-      const birdNotInGraphQL = mirageServer.create('bird');
+      const doggyModel = mirageServer.create('doggy');
+      const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
-      const context = {
-        pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-      };
-
-      expect(() =>
-        mirageAbstractTypeResolver(birdNotInGraphQL, context, mockGraphQLInfo, animalInterfaceType),
-      ).to.throw(/Unable to find a matching type for resolving for InterfaceType type "Animal"/);
+      expect(() => mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType)).to.throw(
+        /Unable to find a matching type for resolving for InterfaceType type "Animal"/,
+      );
     });
   });
 
@@ -216,7 +257,6 @@ describe('mirage/resolvers/abstract', function () {
     let schema: GraphQLSchema;
     let mirageServer: Server;
     let animalUnion: GraphQLUnionType;
-    let mockContext: unknown;
 
     beforeEach(function () {
       mirageServer = new Server({
@@ -245,23 +285,14 @@ describe('mirage/resolvers/abstract', function () {
       `);
 
       animalUnion = schema.getType('Animal') as GraphQLUnionType;
-      mockContext = { pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }) };
     });
 
     it('throws an error with details specific to resolving a mirage model object', function () {
       const unmatchableModel = mirageServer.create('bird');
-      expect(() => mirageAbstractTypeResolver(unmatchableModel, mockContext, mockGraphQLInfo, animalUnion)).to.throw(
+      const mockContext = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
+
+      expect(() => mirageAbstractTypeResolver(unmatchableModel, mockContext, mockResolverInfo, animalUnion)).to.throw(
         /Received model "Bird" which did not match one of the possible types above./,
-      );
-    });
-
-    it('throws an error when cannot descriminate based on fields passed in', function () {
-      // all animals have a name field so this is not enough
-      // to descriminate the type on
-      const unknownAnimal = { name: 'Cody' };
-
-      expect(() => mirageAbstractTypeResolver(unknownAnimal, mockContext, mockGraphQLInfo, animalUnion)).to.throw(
-        /Tried to automatically find type based on matching fields. Multiple types matched \(Dog, Cat, Fish\) the fields: "name"/,
       );
     });
   });
