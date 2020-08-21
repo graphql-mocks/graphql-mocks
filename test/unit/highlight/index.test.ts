@@ -46,6 +46,30 @@ describe.only('highlight', function () {
     expect(h1).to.not.equal(h2);
   });
 
+  it('can perform an include operation', function () {
+    const h1 = new Highlight(schema, ['Query']);
+    const h2 = h1.include(() => [['Person', 'name']]);
+    expect(h2.references).to.deep.equal(['Query', ['Person', 'name']]);
+  });
+
+  it('can perform an exclude operation', function () {
+    const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+    const h2 = h1.exclude(() => ['Cat']);
+    expect(h2.references).to.deep.equal(['Person', ['Person', 'name']]);
+  });
+
+  it('can perform a filter operation', function () {
+    const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+    const h2 = h1.filter(() => ['Cat', 'Animal']);
+    expect(h2.references).to.deep.equal(['Cat']);
+  });
+
+  it('throws an error when created with an invalid type reference', function () {
+    expect(() => new Highlight(schema, ['BlahNotInSchema'])).to.throw(
+      /Type Reference "BlahNotInSchema" could not be found in the GraphQLSchema/,
+    );
+  });
+
   it('#include', function () {
     expect(include(['Query'], [['Person', 'name']])).to.deep.equal(['Query', ['Person', 'name']]);
   });
