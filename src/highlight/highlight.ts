@@ -1,9 +1,10 @@
 import { GraphQLSchema } from 'graphql';
 import clone from 'lodash.clonedeep';
-import { include } from './operations/include';
-import { exclude } from './operations/exclude';
-import { filter } from './operations/filter';
+import { include } from './operation/include';
+import { exclude } from './operation/exclude';
+import { filter } from './operation/filter';
 import { ValidationError, validate } from './utils/validate';
+import { Highlighter, Reference, ReferencesOperation } from './types';
 
 export class Highlight {
   schema: GraphQLSchema;
@@ -41,7 +42,7 @@ export class Highlight {
     const references = clone(this.references);
 
     const updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
-      const highlighted = highlighter(schema, references);
+      const highlighted = highlighter.mark(schema, references);
       return operation(references, highlighted);
     }, references);
 

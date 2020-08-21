@@ -1,3 +1,10 @@
+import { GraphQLSchema } from 'graphql';
+import { Reference } from '../types';
+import { isTypeReference } from './is-type-reference';
+import { isFieldReference } from './is-field-reference';
+import { typeForReference } from './type-for-reference';
+import { fieldForReference } from './field-for-reference';
+
 export function validate(schema: GraphQLSchema, reference: Reference): Error | null {
   const referenceAsJSON = JSON.stringify(reference);
 
