@@ -1,19 +1,13 @@
 import { GraphQLSchema } from 'graphql';
-import merge from 'lodash.merge';
-import difference from 'lodash.difference';
-import mergeWith from 'lodash.mergewith';
+import differenceWith from 'lodash.differencewith';
 import { isArray } from 'util';
 
 type Reference = TypeReference | FieldReference;
 type FieldReference = [string, string];
 type TypeReference = string;
 
-interface HighlightMap {
-  [typeName: string]: string[] | null;
-}
-
 interface Highlighter {
-  (schema: GraphQLSchema, highlighted: HighlightMap): HighlightMap;
+  (schema: GraphQLSchema, highlighted: Reference[]): Reference[];
 }
 
 interface HighlighterFactory {
@@ -39,58 +33,44 @@ export type GraphQLNamedType =
 
 */
 
-export function include(source: HighlightMap, update: HighlightMap): HighlightMap {
-  return mergeWith(source, update, (left, right) => {
-    if (isArray(left) || isArray(right)) {
-      left = left ?? [];
-      right = right ?? [];
-
-      return [...left, ...right];
-    }
-
-    return null;
-  });
+export function equal(a: Reference, b: Reference): boolean {
+  return a === b || (isArray(a) && isArray(b) && a[0] === b[0] && a[1] === b[1]);
 }
 
-export function exclude(source: HighlightMap, update: HighlightMap): HighlightMap {
-  return mergeWith(source, update, (sourceValue, updateValue, key, object, source) => {
-    // subtracting a null type reference removes the
-    // type from the source
-    if (updateValue === null) {
-      console.log('here');
-      delete sourceValue[key];
-    }
+export function include(source: Reference[], update: Reference[]): Reference[] {
+  return [...source, ...update];
+}
 
-    if (isArray(sourceValue)) {
-      updateValue = updateValue ?? [];
+export function exclude(source: Reference[], update: Reference[]): Reference[] {
+  return differenceWith(source, update, equal);
+}
 
-      return difference(sourceValue, updateValue);
-    }
-
-    return null;
+export function filter(source: Reference[], update: Reference[]): Reference[] {
+  return source.filter((reference) => {
+    return Boolean(update.find((updateRef) => equal(updateRef, reference)));
   });
 }
 
 export class Highlight {
   schema: GraphQLSchema;
-  map: HighlightMap;
+  references: Reference[];
 
-  constructor(schema: GraphQLSchema, map?: HighlightMap) {
+  constructor(schema: GraphQLSchema, references?: Reference[]) {
     // this.validate(map);
     this.schema = schema;
-    this.map = map ?? {};
+    this.references = references ?? [];
   }
 
   include(...highlighters: Highlighter[]): Highlight {
     const schema = this.schema;
-    const map = this.map;
+    const map = this.references;
 
-    const combined = highlighters.reduce((map: HighlightMap, highlighter: Highlighter) => {
-      const newMap = highlighter(schema, map);
+    const combined = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
+      const newMap = highlighter(schema, references);
       // const errors = this.validate(newMap);
       // if (errors.length) throw new Error(errors.map(error => error.message).join(', '));
 
-      return include(map, newMap);
+      return include(references, newMap);
     }, map);
 
     return new Highlight(schema, combined);
@@ -101,10 +81,6 @@ export class Highlight {
   // }
 
   // filter() {
-
-  // }
-
-  // get references() {
 
   // }
 

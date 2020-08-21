@@ -1,4 +1,4 @@
-import { Highlight, include, exclude } from '../../../src/highlight/index';
+import { Highlight, include, exclude, filter } from '../../../src/highlight/index';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 
@@ -41,126 +41,24 @@ describe.only('highlight', function () {
 
   it('creates a new instance on include', function () {
     const h1 = new Highlight(schema);
-    const h2 = h1.include(() => ({
-      Person: ['name'],
-    }));
+    const h2 = h1.include(() => []);
 
     expect(h1).to.not.equal(h2);
   });
 
-  context('#include', function () {
-    it('ignores a null field merging with a field name list', function () {
-      const source = {
-        Person: ['name'],
-      };
-
-      const update = {
-        Person: null,
-      };
-
-      expect(include(source, update)).to.deep.equal({
-        Person: ['name'],
-      });
-    });
-
-    it('can merge lists on the same field name', function () {
-      const source = {
-        Person: ['name'],
-      };
-
-      const update = {
-        Person: ['age'],
-      };
-
-      expect(include(source, update)).to.deep.equal({
-        Person: ['name', 'age'],
-      });
-    });
-
-    it('can merge separate named object with fields', function () {
-      const source = {
-        Person: ['name'],
-      };
-
-      const update = {
-        Cat: ['type'],
-      };
-
-      expect(include(source, update)).to.deep.equal({
-        Person: ['name'],
-        Cat: ['type'],
-      });
-    });
-
-    it('can merge separate named objects with null', function () {
-      const source = {
-        Person: null,
-      };
-
-      const update = {
-        Cat: null,
-      };
-
-      expect(include(source, update)).to.deep.equal({
-        Person: null,
-        Cat: null,
-      });
-    });
+  it('#include', function () {
+    expect(include(['Query'], [['Person', 'name']])).to.deep.equal(['Query', ['Person', 'name']]);
   });
 
-  context('#exclude', function () {
-    it('can remove a value from a field list', function () {
-      const source = {
-        Person: ['name', 'age'],
-      };
+  it('#exclude', function () {
+    expect(
+      exclude(['Person', ['Person', 'name'], 'Cat', ['Person', 'age']], [['Person', 'name'], 'Cat']),
+    ).to.deep.equal(['Person', ['Person', 'age']]);
+  });
 
-      const update = {
-        Person: ['name'],
-      };
-
-      expect(exclude(source, update)).to.deep.equal({
-        Person: ['age'],
-      });
-    });
-
-    it('removes the type when updated by a null-type reference', function () {
-      const source = {
-        Person: ['name', 'age'],
-      };
-
-      const update = {
-        Person: null,
-      };
-
-      expect(exclude(source, update), 'it removes the type reference').to.deep.equal({});
-    });
-
-    it('ignores removing a field list from a null', function () {
-      const source = {
-        Person: null,
-      };
-
-      const update = {
-        Person: ['name', 'age'],
-      };
-
-      expect(exclude(source, update)).to.deep.equal({
-        Person: null,
-      });
-    });
-
-    it('can remove a type entirely', function () {
-      const source = {
-        Person: null,
-      };
-
-      const update = {
-        Person: ['name', 'age'],
-      };
-
-      expect(exclude(source, update)).to.deep.equal({
-        Person: null,
-      });
-    });
+  it('#filter', function () {
+    expect(
+      filter(['Person', 'Pet', ['Person', 'name'], ['Person', 'age']], ['Pet', ['Person', 'name'], 'Bird']),
+    ).to.deep.equal(['Pet', ['Person', 'name']]);
   });
 });
