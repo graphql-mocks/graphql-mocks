@@ -1,4 +1,4 @@
-import { Highlight, include, exclude, filter } from '../../../src/highlight/index';
+import { Highlight } from '../../../src/highlight/highlight';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 
@@ -33,7 +33,7 @@ const schema = buildSchema(`
   union FourLeggedAnimal = Cat | Dog
 `);
 
-describe.only('highlight', function () {
+describe('highlight', function () {
   it('accepts a schema', function () {
     const h = new Highlight(schema);
     expect(h.schema).to.equal(schema);
