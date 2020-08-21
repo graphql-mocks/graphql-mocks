@@ -69,20 +69,4 @@ describe('highlight', function () {
       /Type Reference "BlahNotInSchema" could not be found in the GraphQLSchema/,
     );
   });
-
-  it('#include', function () {
-    expect(include(['Query'], [['Person', 'name']])).to.deep.equal(['Query', ['Person', 'name']]);
-  });
-
-  it('#exclude', function () {
-    expect(
-      exclude(['Person', ['Person', 'name'], 'Cat', ['Person', 'age']], [['Person', 'name'], 'Cat']),
-    ).to.deep.equal(['Person', ['Person', 'age']]);
-  });
-
-  it('#filter', function () {
-    expect(
-      filter(['Person', 'Pet', ['Person', 'name'], ['Person', 'age']], ['Pet', ['Person', 'name'], 'Bird']),
-    ).to.deep.equal(['Pet', ['Person', 'name']]);
-  });
 });
