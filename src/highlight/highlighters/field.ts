@@ -35,6 +35,7 @@ export class FieldHighlighter implements Highlighter {
       const allTypes = Object.values(schema.getTypeMap());
 
       const expanded = (allTypes
+        .filter((type) => !type.name.startsWith('__'))
         .map((type: GraphQLNamedType) => {
           const hasFields = type && 'getFields' in type;
           return hasFields ? this.expandTarget(schema, [type.name, fieldTarget]) : undefined;
@@ -51,8 +52,11 @@ export class FieldHighlighter implements Highlighter {
         `Type ${type.name} does not have fields. Fields highlighter can only operate on types with fields`,
       );
 
-    const fieldNames = fieldTarget === HIGHLIGHT_ALL ? Object.keys(type.getFields()) : [fieldTarget];
-    const fieldReferences = fieldNames.map((fieldName) => [type.name, fieldName]) as FieldReference[];
+    const fields = type.getFields();
+    const fieldNames = fieldTarget === HIGHLIGHT_ALL ? Object.keys(fields) : [fieldTarget];
+    const fieldReferences = fieldNames
+      .filter((fieldName) => Object.keys(fields).includes(fieldName))
+      .map((fieldName) => [type.name, fieldName]) as FieldReference[];
     return fieldReferences;
   }
 }

@@ -24,6 +24,7 @@
     "lodash.differencewith": "^4.5.0",
     "lodash.flattendepth": "^4.7.0",
     "lodash.intersection": "^4.4.0",
+    "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "lodash.mergewith": "^4.6.2"
   },
@@ -39,6 +40,7 @@
     "@types/lodash.differencewith": "^4.5.6",
     "@types/lodash.flattendepth": "^4.7.6",
     "@types/lodash.intersection": "^4.4.6",
+    "@types/lodash.isequal": "^4.5.5",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.mergewith": "^4.6.6",
     "@types/mocha": "^7.0.2",

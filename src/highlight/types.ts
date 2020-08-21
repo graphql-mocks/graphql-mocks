@@ -5,7 +5,7 @@ export type FieldReference = [string, string];
 export type TypeReference = string;
 
 export interface Highlighter {
-  mark(schema: GraphQLSchema, current: Reference[]): Reference[];
+  mark(schema: GraphQLSchema): Reference[];
 }
 
 export interface HighlighterFactory {
