@@ -5,6 +5,7 @@ import { exclude } from './operation/exclude';
 import { filter } from './operation/filter';
 import { ValidationError, validate } from './utils/validate';
 import { Highlighter, Reference, ReferencesOperation } from './types';
+import { convertHighlightersOrReferencesToHighlighters } from './utils/convert-highlighters-or-references-to-highlighters';
 
 export class Highlight {
   schema: GraphQLSchema;
@@ -17,20 +18,23 @@ export class Highlight {
     this.references = references;
   }
 
-  include(...highlighters: Highlighter[]): Highlight {
+  include(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = include;
+    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
     return this.new(newReferences);
   }
 
-  exclude(...highlighters: Highlighter[]): Highlight {
+  exclude(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = exclude;
+    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
     return this.new(newReferences);
   }
 
-  filter(...highlighters: Highlighter[]): Highlight {
+  filter(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = filter;
+    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
     return this.new(newReferences);
   }

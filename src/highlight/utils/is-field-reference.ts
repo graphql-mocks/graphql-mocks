@@ -1,7 +1,6 @@
-import { Reference } from '../types';
-import { FieldReference } from '../../../lib/resolver-map/reference/field-reference';
+import { FieldReference } from '../types';
 
-export function isFieldReference(reference: Reference): reference is FieldReference {
+export function isFieldReference(reference: unknown): reference is FieldReference {
   return (
     Array.isArray(reference) &&
     reference.length === 2 &&
