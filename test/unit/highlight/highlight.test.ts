@@ -1,4 +1,5 @@
-import { Highlight } from '../../../src/highlight/highlight';
+import { Highlight, h } from '../../../src/highlight/highlight';
+import { field } from '../../../src/highlight/highlighter/field';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 
@@ -80,5 +81,38 @@ describe('highlight', function () {
 
     expect(h1).to.not.equal(h2);
     expect(h1.references).to.deep.equal(h2.references);
+  });
+
+  context('#h functional shorthand', function () {
+    it('produces an Highlight instance', function () {
+      const fromInstance = new Highlight(schema, ['Cat']);
+      const fromFunction = h(schema, ['Cat']);
+      expect(fromInstance.schema).to.equal(fromFunction.schema);
+      expect(fromInstance.references).to.deep.equal(fromFunction.references);
+    });
+  });
+
+  context('highlighters', function () {
+    it('can use highlighters', function () {
+      const h = new Highlight(schema);
+      const queryPersonHighlighter = field(['Query', 'person']);
+      const personNameHighlighter = field(['Person', 'name']);
+
+      // start with 2 highlighted fields
+      h.include(queryPersonHighlighter, personNameHighlighter);
+
+      expect(h.references).to.deep.equal([
+        ['Query', 'person'],
+        ['Person', 'name'],
+      ]);
+
+      // filter on one of them
+      h.filter(queryPersonHighlighter);
+      expect(h.references).to.deep.equal([['Query', 'person']]);
+
+      // exclude the last highlight
+      h.exclude(queryPersonHighlighter);
+      expect(h.references).to.deep.equal([]);
+    });
   });
 });

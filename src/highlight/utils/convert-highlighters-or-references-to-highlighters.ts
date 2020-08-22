@@ -2,7 +2,7 @@ import { Highlighter, Reference } from '../types';
 import { isTypeReference } from './is-type-reference';
 import { isFieldReference } from './is-field-reference';
 import { isHighlighter } from './is-highlighter';
-import { reference as referenceHighlighter } from '../highlighters/reference';
+import { reference as referenceHighlighter } from '../highlighter/reference';
 
 export function convertHighlightersOrReferencesToHighlighters(
   highlightersOrReferences: (Highlighter | Reference)[],
