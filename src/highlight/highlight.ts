@@ -74,3 +74,7 @@ export class Highlight {
     return new Highlight(this.schema, references);
   }
 }
+
+export function h(schema: GraphQLSchema, references?: Reference[]): Highlight {
+  return new Highlight(schema, references);
+}
