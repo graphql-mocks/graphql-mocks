@@ -12,12 +12,6 @@ export class Highlight {
   schema: GraphQLSchema;
   references: Reference[];
 
-  get instances(): { types: ReferenceMap } {
-    const schema = this.schema;
-    const map = buildReferenceMap(schema, this.references);
-    return { types: map };
-  }
-
   constructor(schema: GraphQLSchema, references?: Reference[]) {
     this.schema = schema;
     references = references ?? [];
@@ -25,25 +19,34 @@ export class Highlight {
     this.references = references;
   }
 
+  get instances(): { types: ReferenceMap } {
+    const schema = this.schema;
+    const map = buildReferenceMap(schema, this.references);
+    return { types: map };
+  }
+
   include(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = include;
     const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
-    return this.new(newReferences);
+    this.references = newReferences;
+    return this;
   }
 
   exclude(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = exclude;
     const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
-    return this.new(newReferences);
+    this.references = newReferences;
+    return this;
   }
 
   filter(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = filter;
     const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
-    return this.new(newReferences);
+    this.references = newReferences;
+    return this;
   }
 
   applyHighlighters(operation: ReferencesOperation, highlighters: Highlighter[]): Reference[] {
@@ -70,8 +73,8 @@ export class Highlight {
     throw new ValidationError(errors);
   }
 
-  new(references: Reference[]): Highlight {
-    return new Highlight(this.schema, references);
+  clone(): Highlight {
+    return new Highlight(this.schema, this.references);
   }
 }
 
