@@ -1,18 +1,11 @@
-import { TargetReference, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
+import { Highlight } from '../highlight/highlight';
+import { Reference } from '../highlight/types';
 
-type FlexibleTargetOption = TargetReference | TargetReference[];
+export type highlightCallback = (h: Highlight) => void;
 
-/**
- * For common high-level middlwares that support targets (include, exclude, and replace)
- */
-export interface TargetableMiddlewareOptions {
-  include?: FlexibleTargetOption;
-  exclude?: FlexibleTargetOption;
+export type CoercibleHighlight = Highlight | Reference[] | highlightCallback;
+
+export interface HighlightableMiddlewareOptions {
+  highlight?: Highlight | Reference | highlightCallback;
   replace?: boolean;
 }
-
-export const defaultTargetableOptions: TargetableMiddlewareOptions = {
-  include: [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
-  exclude: [],
-  replace: false,
-};
