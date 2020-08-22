@@ -1,8 +1,12 @@
 import { GraphQLSchema } from 'graphql';
+import { fieldForReference } from './utils/field-for-reference';
+import { typeForReference } from './utils/type-for-reference';
 
 export type Reference = TypeReference | FieldReference;
 export type FieldReference = [string, string];
 export type TypeReference = string;
+
+export const HIGHLIGHT_ALL = '*';
 
 export interface Highlighter {
   mark(schema: GraphQLSchema): Reference[];
@@ -17,4 +21,11 @@ export interface ReferencesOperation {
   (source: Reference[], change: Reference[]): Reference[];
 }
 
-export const HIGHLIGHT_ALL = '*';
+export type ReferenceMap = {
+  [typeName: string]: {
+    type: NonNullable<ReturnType<typeof typeForReference>>;
+    fields?: {
+      [fieldName: string]: NonNullable<ReturnType<typeof fieldForReference>>;
+    };
+  };
+};

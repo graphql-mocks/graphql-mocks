@@ -4,12 +4,19 @@ import { include } from './operation/include';
 import { exclude } from './operation/exclude';
 import { filter } from './operation/filter';
 import { ValidationError, validate } from './utils/validate';
-import { Highlighter, Reference, ReferencesOperation } from './types';
+import { Highlighter, Reference, ReferencesOperation, ReferenceMap } from './types';
 import { convertHighlightersOrReferencesToHighlighters } from './utils/convert-highlighters-or-references-to-highlighters';
+import { buildReferenceMap } from './utils/build-reference-map';
 
 export class Highlight {
   schema: GraphQLSchema;
   references: Reference[];
+
+  get instances(): { types: ReferenceMap } {
+    const schema = this.schema;
+    const map = buildReferenceMap(schema, this.references);
+    return { types: map };
+  }
 
   constructor(schema: GraphQLSchema, references?: Reference[]) {
     this.schema = schema;
