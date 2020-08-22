@@ -1,8 +1,10 @@
 import { ResolverMap } from '../types';
 import { GraphQLSchema } from 'graphql';
-import { SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET, expand } from '../resolver-map/reference/target-reference';
-import { fieldExistsInResolverMap, FieldReference, difference } from '../resolver-map/reference/field-reference';
-import { TargetableMiddlewareOptions } from '../resolver-map/types';
+import { defaultHighlightCallback } from '../resolver-map/highlight-defaults';
+import { coerceHighlight } from '../resolver-map/utils';
+import { CoercibleHighlight } from '../resolver-map/types';
+import { fromResolverMap } from '../highlight/highlighter/from-resolver-map';
+import { Reference } from '../highlight/types';
 
 export enum WalkSource {
   GRAPHQL_SCHEMA = 'GRAPHQL_SCHEMA',
@@ -10,52 +12,57 @@ export enum WalkSource {
 }
 
 export type WalkOptions = {
+  graphqlSchema: GraphQLSchema;
   source?: WalkSource;
   resolverMap?: ResolverMap;
-  graphqlSchema: GraphQLSchema;
-} & TargetableMiddlewareOptions;
+  highlight?: CoercibleHighlight;
+};
 
-export type WalkCallback = (fieldReference: FieldReference) => void | Promise<void>;
+export type WalkCallback = (reference: Reference) => void | Promise<void>;
 
 export async function walk(options: WalkOptions, callback: WalkCallback): Promise<void> {
   options = {
-    include: [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
-    exclude: [],
     source: WalkSource.GRAPHQL_SCHEMA,
+    highlight: defaultHighlightCallback,
     ...options,
   };
 
-  const { include, exclude, graphqlSchema, source, resolverMap } = options;
+  const { graphqlSchema, source, resolverMap, highlight: coercibleHighlight } = options;
+
+  if (!coercibleHighlight) {
+    throw new Error(
+      `Must pass in a value for highlight, either an array of Field References, a Highlight ` +
+        `instance or a callback that accepts a Highlight instance`,
+    );
+  }
+
+  const highlight = coerceHighlight(graphqlSchema, coercibleHighlight);
+
+  if (!highlight) {
+    throw new Error(
+      `Unable to coerce highlight, got ${typeof coercibleHighlight}. Must be either an array of References, ` +
+        `a callback that receives a Highlight instance, or a Highlight instance`,
+    );
+  }
 
   if (!graphqlSchema) {
     throw new Error(`graphqlSchema is required for performing \`walk\`, got ${typeof graphqlSchema}`);
-  }
-
-  if (!include) {
-    throw new Error(`target is required for performing \`walk\`, got ${typeof include}`);
   }
 
   if (!callback) {
     throw new Error('A callback is required argument for the `walk` function');
   }
 
-  const includeFieldReferences = expand(graphqlSchema, include);
-  const excludeFieldReferences = expand(graphqlSchema, exclude ?? []);
-  let fieldReferences = difference(includeFieldReferences, excludeFieldReferences);
-
-  if (fieldReferences) {
+  if (highlight.references.length !== 0) {
     if (source === WalkSource.RESOLVER_MAP) {
       if (typeof resolverMap !== 'object') {
         throw new Error(`To walk on a resolver map it must be provided in the options, got ${typeof resolverMap}`);
       }
 
-      // filter field references based on what is available in Resolver Map
-      fieldReferences = fieldReferences.filter((fieldReference) =>
-        fieldExistsInResolverMap(resolverMap, fieldReference),
-      );
+      highlight.include(fromResolverMap(resolverMap));
     }
 
-    for (const reference of fieldReferences) {
+    for (const reference of highlight.references) {
       await callback(reference);
     }
   }
