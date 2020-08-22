@@ -7,6 +7,7 @@ import { ValidationError, validate } from './utils/validate';
 import { Highlighter, Reference, ReferencesOperation, ReferenceMap } from './types';
 import { convertHighlightersOrReferencesToHighlighters } from './utils/convert-highlighters-or-references-to-highlighters';
 import { buildReferenceMap } from './utils/build-reference-map';
+import { unique } from './utils/unique';
 
 export class Highlight {
   schema: GraphQLSchema;
@@ -55,11 +56,12 @@ export class Highlight {
     // all changes are implemented with a fresh copy of data
     const references = clone(this.references);
 
-    const updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
+    let updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
       const highlighted = highlighter.mark(schema);
       return operation(references, highlighted);
     }, references);
 
+    updated = unique(updated);
     this.validate(updated);
     return updated;
   }

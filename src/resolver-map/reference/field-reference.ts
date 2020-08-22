@@ -4,20 +4,6 @@ export type TypeName = string;
 export type FieldName = string;
 export type FieldReference = [TypeName, FieldName];
 
-export function unique(fieldReferences: FieldReference[]): FieldReference[] {
-  const unique: FieldReference[] = [];
-
-  fieldReferences.forEach(([typeName, fieldName]) => {
-    const match = unique.find(
-      ([uniqueTypeName, uniqueFieldName]) => typeName === uniqueTypeName && fieldName === uniqueFieldName,
-    );
-
-    if (!match) unique.push([typeName, fieldName]);
-  });
-
-  return unique;
-}
-
 export function difference(initialSet: FieldReference[], excludedSet: FieldReference[]): FieldReference[] {
   const result: FieldReference[] = [];
 
