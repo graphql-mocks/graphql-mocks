@@ -42,7 +42,7 @@ export class Highlight {
     const references = clone(this.references);
 
     const updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
-      const highlighted = highlighter.mark(schema, references);
+      const highlighted = highlighter.mark(schema);
       return operation(references, highlighted);
     }, references);
 

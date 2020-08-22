@@ -8,13 +8,14 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { HIGHLIGHT_ALL, HighlighterFactory, Highlighter, FieldReference } from '../types';
-import isEqual from 'lodash.isequal';
+import isEqualWith from 'lodash.isequalwith';
 
 function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
 }
 
 function getResolvableAST(resolveString: string): NamedTypeNode {
+  resolveString = resolveString.trim();
   // https://astexplorer.net/#/gist/94dd07476cd3fdfa4a8ada395022b330/21faa076d9e4b626f114e39c79db8556cfb852ae
   const node = parse(`
     type Noop {
@@ -26,7 +27,6 @@ function getResolvableAST(resolveString: string): NamedTypeNode {
   const fieldNode: FieldDefinitionNode = objectNode?.fields?.[0] as FieldDefinitionNode;
   return fieldNode.type as NamedTypeNode;
 }
-
 export class ResolvesToHighlighter implements Highlighter {
   targets: string[];
 
@@ -51,7 +51,7 @@ export class ResolvesToHighlighter implements Highlighter {
     return astTargets.map((astTarget) => ResolvesToHighlighter.expandTarget(schema, astTarget)).reduce(concat, []);
   }
 
-  static expandTarget(schema: GraphQLSchema, astTarget: NamedTypeNode): FieldReference[] {
+  static expandTarget(schema: GraphQLSchema, targetAST: NamedTypeNode): FieldReference[] {
     const types = Object.values(schema.getTypeMap());
     const fieldReferences = types
       .filter(isObjectType)
@@ -59,8 +59,13 @@ export class ResolvesToHighlighter implements Highlighter {
         const fields = Object.values(type.getFields());
 
         const fieldReferences = fields.reduce((fieldReferences: FieldReference[], field) => {
-          const fieldReturnAst = field.astNode?.type;
-          if (isEqual(fieldReturnAst, astTarget)) {
+          const fieldReturnAST = field.astNode?.type as NamedTypeNode;
+          const equalAST = isEqualWith([fieldReturnAST], [targetAST], function (_left, _right, key) {
+            if (key === 'loc') return true;
+            return undefined;
+          });
+
+          if (equalAST) {
             fieldReferences.push([type.name, field.name]);
           }
 
@@ -75,18 +80,20 @@ export class ResolvesToHighlighter implements Highlighter {
   }
 
   static allFieldResolvables(schema: GraphQLSchema): FieldReference[] {
-    const allResolvableFieldReferences = Object.values(schema.getTypeMap)
+    const allResolvableFieldReferences = Object.values(schema.getTypeMap())
       .filter(isObjectType)
+      .filter((type) => !type.name.startsWith('__'))
       .map((type) => {
-        const fields = Object.keys(type.getFields());
-        return fields.map((fieldName) => [type.name, fieldName]) as FieldReference[];
+        const fields = Object.values(type.getFields());
+        return fields.map((field) => 'resolve' in field && [type.name, field.name]);
       })
-      .reduce(concat, []);
+      .reduce(concat, [])
+      .filter(Boolean) as FieldReference[];
 
     return allResolvableFieldReferences;
   }
 }
 
-export const returns: HighlighterFactory = function type(...returnTargets: string[]) {
+export const resolvesTo: HighlighterFactory = function type(...returnTargets: string[]) {
   return new ResolvesToHighlighter(returnTargets);
 };

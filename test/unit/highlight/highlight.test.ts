@@ -22,7 +22,7 @@ const schema = buildSchema(`
 
   type Cat implements Animal {
     type: String!
-    hasWhiskers: Boolean!
+    hasHair: Boolean!
   }
 
   type Dog implements Animal {
@@ -41,26 +41,26 @@ describe('highlight', function () {
 
   it('creates a new instance on include', function () {
     const h1 = new Highlight(schema);
-    const h2 = h1.include(() => []);
+    const h2 = h1.include({ mark: () => [] });
 
     expect(h1).to.not.equal(h2);
   });
 
   it('can perform an include operation', function () {
     const h1 = new Highlight(schema, ['Query']);
-    const h2 = h1.include(() => [['Person', 'name']]);
+    const h2 = h1.include({ mark: () => [['Person', 'name']] });
     expect(h2.references).to.deep.equal(['Query', ['Person', 'name']]);
   });
 
   it('can perform an exclude operation', function () {
     const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
-    const h2 = h1.exclude(() => ['Cat']);
+    const h2 = h1.exclude({ mark: () => ['Cat'] });
     expect(h2.references).to.deep.equal(['Person', ['Person', 'name']]);
   });
 
   it('can perform a filter operation', function () {
     const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
-    const h2 = h1.filter(() => ['Cat', 'Animal']);
+    const h2 = h1.filter({ mark: () => ['Cat', 'Animal'] });
     expect(h2.references).to.deep.equal(['Cat']);
   });
 

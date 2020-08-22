@@ -24,7 +24,7 @@ const schema = buildSchema(`
   type Cat implements Animal {
     name: String!
     type: String!
-    hasWhiskers: Boolean!
+    hasHair: Boolean!
     owner: Person!
   }
 
@@ -48,7 +48,7 @@ describe('highlight/highlighter/field', function () {
       ['Animal', 'type'],
       ['Cat', 'name'],
       ['Cat', 'type'],
-      ['Cat', 'hasWhiskers'],
+      ['Cat', 'hasHair'],
       ['Cat', 'owner'],
       ['Dog', 'name'],
       ['Dog', 'type'],
@@ -58,12 +58,12 @@ describe('highlight/highlighter/field', function () {
   });
 
   it('creates field references', function () {
-    expect(field(['Cat', 'hasWhiskers']).mark(schema)).to.deep.equal([['Cat', 'hasWhiskers']]);
+    expect(field(['Cat', 'hasHair']).mark(schema)).to.deep.equal([['Cat', 'hasHair']]);
   });
 
   it('creates field references from multiple entries', function () {
-    expect(field(['Cat', 'hasWhiskers'], ['Dog', 'knowsTricks']).mark(schema)).to.deep.equal([
-      ['Cat', 'hasWhiskers'],
+    expect(field(['Cat', 'hasHair'], ['Dog', 'knowsTricks']).mark(schema)).to.deep.equal([
+      ['Cat', 'hasHair'],
       ['Dog', 'knowsTricks'],
     ]);
   });
@@ -90,6 +90,24 @@ describe('highlight/highlighter/field', function () {
       ['Animal', 'name'],
       ['Cat', 'name'],
       ['Dog', 'name'],
+    ]);
+  });
+
+  it('can use HIGHLIGHT_ALL for type and fields to highlight everything with a field', function () {
+    expect(field(['*', '*']).mark(schema)).to.deep.equal([
+      ['Query', 'person'],
+      ['Person', 'name'],
+      ['Person', 'age'],
+      ['Animal', 'name'],
+      ['Animal', 'type'],
+      ['Cat', 'name'],
+      ['Cat', 'type'],
+      ['Cat', 'hasHair'],
+      ['Cat', 'owner'],
+      ['Dog', 'name'],
+      ['Dog', 'type'],
+      ['Dog', 'knowsTricks'],
+      ['Dog', 'owner'],
     ]);
   });
 });
