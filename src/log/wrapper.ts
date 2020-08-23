@@ -1,8 +1,13 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { FieldResolverWrapper } from '../types';
+import { FieldWrapperFunction } from '../types';
 
-export const logWrapper: FieldResolverWrapper = async function logWrapper(originalResolver, wrapperDetails) {
+export const logWrapper: FieldWrapperFunction = async function logWrapper(originalResolver, wrapperDetails) {
   const { type, field } = wrapperDetails;
+
+  if (!type || !field) {
+    return originalResolver;
+  }
+
   const typeName = type.name;
   const fieldName = field.name;
 

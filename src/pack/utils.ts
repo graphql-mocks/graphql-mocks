@@ -1,8 +1,8 @@
-import { ResolverContext, FieldResolver, TypeResolver } from '../types';
+import { ResolverContext, FieldResolver, TypeResolver, WrapperFor } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
-import { createWrapper, WrapperFor } from '../resolver/create-wrapper';
-import { isObjectType, isAbstractType } from 'graphql';
+import { createWrapper } from '../resolver/create-wrapper';
+import { isObjectType, isAbstractType, GraphQLType } from 'graphql';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
@@ -25,22 +25,30 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
   return context;
 }
 
-export const embedPackOptions = createWrapper(
+export function isTypeResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is TypeResolver {
+  return Boolean(isObjectType(type) && resolver);
+}
+
+export function isFieldResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is FieldResolver {
+  return Boolean(isAbstractType(type) && resolver);
+}
+
+export const embedPackOptionsWrapper = createWrapper(
   'embed-pack-options',
   WrapperFor.ANY,
-  async (resolver, options): Promise<TypeResolver | FieldResolver> => {
+  async (resolver, options) => {
     const { type } = options;
 
-    if (isObjectType(type)) {
+    if (isFieldResolver(type, resolver)) {
       const fieldResolver: FieldResolver = (parent, args, context, info) => {
         context = embedPackOptionsInContext(context, options.packOptions);
-        return (resolver as FieldResolver)(parent, args, context, info);
+        return resolver(parent, args, context, info);
       };
 
       return fieldResolver;
     }
 
-    if (isAbstractType(type)) {
+    if (isTypeResolver(type, resolver)) {
       const typeResolver: TypeResolver = (value, context, info, abstractType) => {
         context = embedPackOptionsInContext(context, options.packOptions);
         return (resolver as TypeResolver)(value, context, info, abstractType);

@@ -42,7 +42,7 @@ export type FieldWrapperFunction = (
 export type GenericWrapperFunction = (
   resolver: FieldResolver | TypeResolver,
   options: WrapperOptionsBase,
-) => Promise<FieldResolver | TypeResolver>;
+) => FieldResolver | TypeResolver | Promise<FieldResolver | TypeResolver>;
 
 export enum WrapperFor {
   TYPE = 'TYPE',

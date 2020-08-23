@@ -30,7 +30,6 @@ export function embed({
     }
 
     const highlight = coerceHighlight(schema, coercibleHighlight as CoercibleHighlight);
-    // highlight.include();
     const references = highlight.references;
 
     for (const reference of references) {
@@ -58,14 +57,16 @@ export function embed({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let field: GraphQLField<any, any> | undefined;
       if (isTypeReference(reference)) {
-        const type = highlight.instances.types[reference];
+        const type = highlight.instances.types[reference].type;
 
         if (!isAbstractType(type)) {
-          throw new Error(`Tried to embed a Type Resolver, expected a Union or Interface type in schema for ${type}`);
+          throw new Error(
+            `Tried to embed a Type Resolver, expected a Union or Interface type in schema for ${type.name}`,
+          );
         }
       } else if (isFieldReference(reference)) {
         const [typeName, fieldName] = reference;
-        const type = highlight.instances.types[typeName];
+        const type = highlight.instances.types[typeName].type;
         assertObjectType(type);
 
         if (!type) {
