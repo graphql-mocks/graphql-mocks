@@ -1,6 +1,6 @@
 import { Server as MirageServer } from 'miragejs';
 import { isScalarType } from 'graphql';
-import { Resolver } from '../../types';
+import { FieldResolver } from '../../types';
 import { MirageGraphQLMapper } from '../mapper/mapper';
 import { relayPaginateNodes } from '../../relay/utils';
 import { cleanRelayConnectionName, mirageCursorForNode } from './utils';
@@ -51,7 +51,7 @@ any): RootQueryResolverMatch {
   };
 }
 
-export const mirageRootQueryResolver: Resolver = function mirageRootQueryResolver(parent, args, context, info) {
+export const mirageRootQueryResolver: FieldResolver = function mirageRootQueryResolver(parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
   const { mirageMapper, mirageServer } = extractDependencies<{

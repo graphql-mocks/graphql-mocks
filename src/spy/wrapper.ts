@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
-import { ResolverWrapper } from '../types';
+import { FieldResolverWrapper } from '../types';
 
-export const spyWrapper: ResolverWrapper = async function spyWrapper(originalResolver, wrapperDetails) {
+export const spyWrapper: FieldResolverWrapper = async function spyWrapper(originalResolver, wrapperDetails) {
   const { type, field } = wrapperDetails;
   const typeName = type.name;
   const fieldName = field.name;

@@ -4,9 +4,8 @@ import {
   GraphQLFieldResolver,
   GraphQLObjectType,
   GraphQLField,
-  GraphQLUnionType,
-  GraphQLInterfaceType,
   GraphQLTypeResolver,
+  GraphQLAbstractType,
 } from 'graphql';
 
 import { PackOptions } from './pack/types';
@@ -20,7 +19,8 @@ type ManagedContext = {
 };
 
 export type Primitive = string | boolean | number;
-export type Resolver = GraphQLFieldResolver<any, any>;
+export type FieldResolver = GraphQLFieldResolver<any, any>;
+export type TypeResolver = GraphQLTypeResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
 export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];
 export type ResolverContext = ManagedContext;
@@ -28,25 +28,31 @@ export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions
 
-export type ResolverWrapper = (resolver: Resolver, options: ResolverWrapperOptions) => Resolver | Promise<Resolver>;
+export type FieldResolverWrapper = (
+  resolver: FieldResolver,
+  options: FieldResolverWrapperOptions,
+) => FieldResolver | Promise<FieldResolver>;
 
-export type PatchResolverWrapper = (
-  options: ResolverWrapperOptions,
-) => Resolver | undefined | Promise<Resolver | undefined>;
+export type TypeResolverWrapper = (
+  resolver: TypeResolver,
+  options: TypeResolverWrapperOptions,
+) => TypeResolver | Promise<TypeResolver>;
 
-// A resolvable type is a type that has a "field" that can be resolved by a resolver function
-export type ResolvableType = GraphQLObjectType | GraphQLUnionType | GraphQLInterfaceType;
-
-export type ResolvableField = GraphQLField<any, any, any>;
-
-export type ResolverWrapperOptions = {
+export type BaseResolverWrapperOptions = {
   resolverMap: ResolverMap;
-  type: ResolvableType;
-  field: ResolvableField;
   packOptions: PackOptions;
 };
 
-export type ResolverMap<TFieldResolver = Resolver, TTypeResolver = GraphQLTypeResolver<any, any>> = {
+export type FieldResolverWrapperOptions = BaseResolverWrapperOptions & {
+  type: GraphQLObjectType;
+  field: GraphQLField<any, any>;
+};
+
+export type TypeResolverWrapperOptions = BaseResolverWrapperOptions & {
+  type: GraphQLAbstractType;
+};
+
+export type ResolverMap<TFieldResolver = FieldResolver, TTypeResolver = TypeResolver> = {
   [typeName: string]: {
     [fieldName: string]: TFieldResolver;
   } & { __resolveType?: TTypeResolver }; // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`

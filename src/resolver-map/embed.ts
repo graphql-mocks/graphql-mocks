@@ -1,21 +1,21 @@
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
-import { Resolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap } from '../types';
-import { expand, SPECIAL_TYPE_TARGET, SPECIAL_FIELD_TARGET } from './reference/target-reference';
-import { difference } from './reference/field-reference';
-import { getTypeAndFieldDefinitions } from '../graphql/utils';
-import { TargetableMiddlewareOptions } from './types';
+import { FieldResolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap, TypeResolver } from '../types';
 import { embedPackOptionsWrapper } from '../pack/utils';
 import { addResolverToMap } from './add-resolver';
+import { HighlightableMiddlewareOptions, CoercibleHighlight } from './types';
+import { defaultHighlightCallback } from './highlight-defaults';
+import { coerceHighlight, resolverForReference } from './utils';
+import { isTypeReference } from '../highlight/utils/is-type-reference';
+import { isFieldReference } from '../highlight/utils/is-field-reference';
 
 export type EmbedOptions = {
   wrappers?: ResolverWrapper[];
-  resolver?: Resolver;
-} & TargetableMiddlewareOptions;
+  resolver?: FieldResolver | TypeResolver;
+} & HighlightableMiddlewareOptions;
 
 export function embed({
-  include = [SPECIAL_TYPE_TARGET.ALL_TYPES, SPECIAL_FIELD_TARGET.ALL_FIELDS],
-  exclude = [],
+  highlight: coercibleHighlight = defaultHighlightCallback,
   wrappers = [],
   resolver: resolverToApply,
   replace: replaceOption = false,
@@ -29,23 +29,24 @@ export function embed({
       );
     }
 
-    const includedFieldReferences = expand(schema, include) ?? [];
-    const excludedFieldReferences = expand(schema, exclude) ?? [];
-    const fieldReferences = difference(includedFieldReferences, excludedFieldReferences);
+    const highlight = coerceHighlight(schema, coercibleHighlight as CoercibleHighlight);
+    // highlight.include();
+    const references = highlight.references;
 
-    for (const [typeName, fieldName] of fieldReferences) {
+    for (const reference of references) {
       // these MUST be kept in the local iteration
-      // as to not replace the global values
+      // as to not replace the default option values
       let shouldReplace = replaceOption;
       let resolver = resolverToApply;
 
       if (typeof resolver !== 'function') {
-        resolver = resolverMap[typeName]?.[fieldName] as Resolver;
+        const existingResolver = resolverForReference(resolverMap, reference);
 
         // we are using the existing resolver to wrap and to put it back
         // in the resolver map. we will need to replace the original
         // with the wrapped
         shouldReplace = true;
+        resolver = existingResolver;
       }
 
       // No resolver in the Resolver Map; continue.
@@ -53,7 +54,34 @@ export function embed({
         continue;
       }
 
-      const [type, field] = getTypeAndFieldDefinitions(schema, [typeName, fieldName]);
+      let type;
+      let field: GraphQLField<any, any> | undefined;
+      if (isTypeReference(reference)) {
+        const type = highlight.instances.types[reference];
+
+        if (!isAbstractType(type)) {
+          throw new Error(`Tried to embed a Type Resolver, expected a Union or Interface type in schema for ${type}`);
+        }
+      } else if (isFieldReference(reference)) {
+        const [typeName, fieldName] = reference;
+        const type = highlight.instances.types[typeName];
+        assertObjectType(type);
+
+        if (!type) {
+          throw new Error(`Tried to embed a Field Resolver, expected Type ${typeName} to exist in the schema`);
+        }
+
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        field = highlight.instances.types[typeName]?.fields?.[fieldName] as GraphQLField<any, any>;
+
+        if (!field) {
+          throw new Error(
+            `Tried to embed a Field Resolver, expected Field ["${typeName}", "${fieldName}"] to exist in the schema`,
+          );
+        }
+      } else {
+        throw new Error(`reference ${reference} could not be resolved to a Type Reference or Field Reference`);
+      }
 
       const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
         type,
@@ -64,7 +92,8 @@ export function embed({
 
       addResolverToMap({
         resolverMap,
-        fieldReference: [typeName, fieldName],
+        graphqlSchema: schema,
+        reference,
         resolver: wrappedResolver,
         replace: shouldReplace,
       });

@@ -1,7 +1,8 @@
 import { ModelInstance } from 'miragejs';
-import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
-import { TypeName, FieldReference } from '../resolver-map/reference/field-reference';
+import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, FieldResolver } from '../types';
 import { RouteHandler } from 'miragejs/server';
+import { TypeReference } from '../highlight/types';
+import { FieldReference } from '../../lib/resolver-map/reference/field-reference';
 
 type AutoFieldResolverType = 'OBJECT' | 'ROOT_TYPE';
 
@@ -10,7 +11,7 @@ export type AttrName = string;
 export type MirageAttrReference = [ModelName, AttrName];
 
 export type TypeMap = {
-  graphql: TypeName;
+  graphql: TypeReference;
   mirage: ModelName;
 };
 
@@ -22,10 +23,10 @@ export type FieldMap = {
 export type FieldFilterResolver = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   results: any[],
-  parent: Parameters<Resolver>[0],
-  args: Parameters<Resolver>[1],
-  context: Parameters<Resolver>[2],
-  info: Parameters<Resolver>[3],
+  parent: Parameters<FieldResolver>[0],
+  args: Parameters<FieldResolver>[1],
+  context: Parameters<FieldResolver>[2],
+  info: Parameters<FieldResolver>[3],
 ) => any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export type FieldFilterMap = {

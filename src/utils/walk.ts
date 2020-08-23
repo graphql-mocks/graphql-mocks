@@ -38,13 +38,6 @@ export async function walk(options: WalkOptions, callback: WalkCallback): Promis
 
   const highlight = coerceHighlight(graphqlSchema, coercibleHighlight);
 
-  if (!highlight) {
-    throw new Error(
-      `Unable to coerce highlight, got ${typeof coercibleHighlight}. Must be either an array of References, ` +
-        `a callback that receives a Highlight instance, or a Highlight instance`,
-    );
-  }
-
   if (!graphqlSchema) {
     throw new Error(`graphqlSchema is required for performing \`walk\`, got ${typeof graphqlSchema}`);
   }

@@ -1,4 +1,4 @@
-import { ResolverWrapper, Resolver } from '../types';
+import { FieldResolver, FieldResolverWrapper } from '../types';
 import { GraphQLResolveInfo } from 'graphql';
 
 type ResolverStash = {
@@ -18,9 +18,9 @@ export function stashFor(ref: {
   return ref && ref[stashKey];
 }
 
-export const stashStateWrapper: ResolverWrapper = async function stashStateWrapper(
+export const stashStateWrapper: FieldResolverWrapper = async function stashStateWrapper(
   originalResolver,
-): Promise<Resolver> {
+): Promise<FieldResolver> {
   return (parent, args, context, info): unknown => {
     const result = originalResolver(parent, args, context, info);
 

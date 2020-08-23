@@ -4,8 +4,7 @@ import { mirageObjectResolver } from '../resolver/object';
 import { ResolverMapMiddleware, ResolverMap } from '../../types';
 import { walk } from '../../utils/walk';
 import { isRootQueryType, isRootMutationType, isInternalType } from '../../graphql/utils';
-import { resolverExistsInResolverMap } from '../../resolver-map/utils';
-import { TargetableMiddlewareOptions, defaultTargetableOptions } from '../../resolver-map/types';
+import { referenceExistsInResolverMap } from '../../resolver-map/utils';
 import { PackOptions } from '../../pack/types';
 import { addResolverToMap } from '../../resolver-map';
 
@@ -37,7 +36,7 @@ export function patchAutoFieldResolvers(
         const isRootQuery = isRootQueryType(graphqlSchema, typeName);
         const isRootMutation = isRootMutationType(graphqlSchema, typeName);
 
-        if (resolverExistsInResolverMap(resolverMap, fieldReference)) {
+        if (referenceExistsInResolverMap(resolverMap, fieldReference)) {
           return;
         }
 
