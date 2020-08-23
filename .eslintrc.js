@@ -22,6 +22,7 @@ module.exports = {
   plugins: ['mocha'],
 
   rules: {
-    'mocha/no-hooks-for-single-case': 'off'
+    'mocha/no-hooks-for-single-case': 'off',
+    'no-dupe-class-members': 'off',
   },
 };

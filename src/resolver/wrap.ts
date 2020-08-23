@@ -1,12 +1,20 @@
-import { FieldResolver, TypeResolver } from '../types';
+import {
+  FieldResolver,
+  TypeResolver,
+  TypeWrapperFunction,
+  FieldWrapperFunction,
+  Wrapper,
+  WrapperOptionsBase,
+} from '../types';
 
 export async function wrapResolver(
   resolver: TypeResolver | FieldResolver,
-  wrappers: ResolverWrapper[],
-  wrapperOptions: ResolverWrapperOptions,
+  wrappers: (TypeWrapperFunction | FieldWrapperFunction | Wrapper)[],
+  wrapperOptions: WrapperOptionsBase,
 ): Promise<FieldResolver | TypeResolver> {
   wrappers = [...wrappers];
-  const wrapper = wrappers.shift();
+  let wrapper = wrappers.shift();
+  wrapper = wrapper && typeof wrapper.wrap === 'function' ? wrapper.wrap : wrapper;
 
   if (!wrapper) {
     return resolver;

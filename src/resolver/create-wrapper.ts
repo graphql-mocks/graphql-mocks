@@ -1,14 +1,13 @@
-import { GraphQLObjectType, GraphQLField, isObjectType, isAbstractType } from 'graphql';
+/* eslint-disable prettier/prettier */
+import { GraphQLObjectType, GraphQLField, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
 import {
   FieldResolver,
-  ResolverWrapperOptions,
+  FieldWrapperFunction,
+  TypeWrapperFunction,
+  TypeResolver,
   Wrapper,
-  FieldWrapper,
-  TypeWrapper,
-  FieldResolverWrapperOptions,
-  TypeResolverWrapperOptions,
+  WrapperOptionsBase,
 } from '../types';
-import { TypeResolver } from 'graphql/utilities/buildASTSchema';
 
 enum WrapperFor {
   TYPE = 'TYPE',
@@ -16,25 +15,63 @@ enum WrapperFor {
   '*' = '*',
 }
 
-class Handler {
+export type FieldResolverWrapperOptions = WrapperOptionsBase & {
+  type: GraphQLObjectType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  field: GraphQLField<any, any>;
+};
+
+export type TypeResolverWrapperOptions = WrapperOptionsBase & {
+  type: GraphQLAbstractType;
+  field?: undefined;
+};
+
+function hasFieldResolverPackage(
+  type: GraphQLType,
+  pkg: {
+    resolver: FieldResolver | TypeResolver;
+    wrapper: FieldWrapperFunction | TypeWrapperFunction;
+    options: WrapperOptionsBase;
+  },
+): pkg is { resolver: FieldResolver; wrapper: FieldWrapperFunction; options: FieldResolverWrapperOptions } {
+  return Boolean(isObjectType(type) && pkg);
+}
+
+function hasTypeResolverPackage(
+  type: GraphQLType,
+  pkg: {
+    resolver: FieldResolver | TypeResolver;
+    wrapper: FieldWrapperFunction | TypeWrapperFunction;
+    options: WrapperOptionsBase;
+  },
+): pkg is { resolver: TypeResolver; wrapper: TypeWrapperFunction; options: TypeResolverWrapperOptions } {
+  return Boolean(isAbstractType(type) && pkg);
+}
+
+class NamedWrapper implements Wrapper {
   name: string;
-  wrapper: Wrapper;
+  wrapper: FieldWrapperFunction | TypeWrapperFunction;
   wrapperFor: WrapperFor;
 
-  constructor(name: string, wrapper: Wrapper, wrapperFor: WrapperFor = WrapperFor['*']) {
+  constructor(name: string, wrapperFn: FieldWrapperFunction | TypeWrapperFunction, wrapperFor: WrapperFor = WrapperFor['*']) {
     this.name = name;
-    this.wrapper = wrapper;
+    this.wrapper = wrapperFn;
     this.wrapperFor = wrapperFor;
   }
 
-  async wrap(
-    resolver: FieldResolver | TypeResolver,
-    options: ResolverWrapperOptions,
-  ): Promise<FieldResolver | TypeResolver> {
+  async wrap(resolver: TypeResolver, options: WrapperOptionsBase): Promise<TypeResolver>;
+  async wrap(resolver: FieldResolver, options: WrapperOptionsBase): Promise<FieldResolver>;
+  async wrap(resolver: FieldResolver | TypeResolver, options: WrapperOptionsBase | FieldResolverWrapperOptions): Promise<FieldResolver | TypeResolver>;
+  async wrap(resolver: FieldResolver | TypeResolver, options: WrapperOptionsBase | FieldResolverWrapperOptions): Promise<FieldResolver | TypeResolver> {
+    const { type, field } = options;
     const wrapper = this.wrapper;
     const wrapperFor = this.wrapperFor;
 
-    if (isObjectType(options.type) && options.field && wrapperFor === WrapperFor.FIELD) {
+    // for use with type guards `hasFieldResolverPackage` and `hasTypeResolverPackage`
+    const wrapperPkg = { resolver, wrapper, options };
+
+    if (hasFieldResolverPackage(type, wrapperPkg) && field && wrapperFor === WrapperFor.FIELD) {
+      const { wrapper, resolver, options } = wrapperPkg;
       const expandedOptions: FieldResolverWrapperOptions = {
         ...options,
         type: options.type as GraphQLObjectType,
@@ -42,29 +79,32 @@ class Handler {
         field: options.field as GraphQLField<any, any>,
       };
 
-      return (wrapper as FieldWrapper)(resolver as FieldResolver, expandedOptions);
-    } else if (isAbstractType(options.type) && !options.field && wrapperFor === WrapperFor.FIELD) {
+      return wrapper(resolver, expandedOptions);
+    } else if (hasTypeResolverPackage(type, wrapperPkg) && !field && wrapperFor === WrapperFor.TYPE) {
+      const { wrapper, resolver, options } = wrapperPkg;
       const expandedOptions: TypeResolverWrapperOptions = {
         ...options,
-        type: options.type,
+        type: type as GraphQLAbstractType,
         field: undefined,
       };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (wrapper as any)(resolver, expandedOptions);
+      return wrapper(resolver, expandedOptions);
     } else if (wrapperFor === WrapperFor['*']) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return (wrapper as any)(resolver, options);
     }
 
-    return resolver;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return resolver as any;
   }
 }
 
-// eslint-disable-next-line prettier/prettier
-export function createWrapper(name: string, wrapperFor: WrapperFor.TYPE, wrapper: TypeWrapper): Handler;
-// eslint-disable-next-line prettier/prettier
-export function createWrapper(name: string, wrapperFor: WrapperFor.FIELD, wrapper: FieldWrapper): Handler;
-export function createWrapper(name: string, wrapperFor: WrapperFor, wrapper: Wrapper): Handler {
-  return new Handler(name, wrapper, wrapperFor);
+export function createWrapper(name: string, wrapperFor: WrapperFor.TYPE, wrapperFn: TypeWrapperFunction): NamedWrapper;
+export function createWrapper(name: string, wrapperFor: WrapperFor.FIELD, wrapperFn: FieldWrapperFunction): NamedWrapper;
+export function createWrapper(
+  name: string,
+  wrapperFor: WrapperFor = WrapperFor['*'],
+  wrapperFn: FieldWrapperFunction | TypeWrapperFunction,
+): NamedWrapper {
+  return new NamedWrapper(name, wrapperFn, wrapperFor);
 }
