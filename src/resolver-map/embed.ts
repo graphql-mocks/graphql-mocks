@@ -1,16 +1,16 @@
 import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
-import { FieldResolver, ResolverWrapper, ResolverMapMiddleware, ResolverMap, TypeResolver } from '../types';
-import { embedPackOptionsWrapper } from '../pack/utils';
+import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Wrapper } from '../types';
 import { addResolverToMap } from './add-resolver';
 import { HighlightableMiddlewareOptions, CoercibleHighlight } from './types';
 import { defaultHighlightCallback } from './highlight-defaults';
 import { coerceHighlight, resolverForReference } from './utils';
 import { isTypeReference } from '../highlight/utils/is-type-reference';
 import { isFieldReference } from '../highlight/utils/is-field-reference';
+import { embedPackOptionsWrapper } from '../pack';
 
 export type EmbedOptions = {
-  wrappers?: ResolverWrapper[];
+  wrappers?: Wrapper[];
   resolver?: FieldResolver | TypeResolver;
 } & HighlightableMiddlewareOptions;
 
@@ -55,6 +55,7 @@ export function embed({
       }
 
       let type;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let field: GraphQLField<any, any> | undefined;
       if (isTypeReference(reference)) {
         const type = highlight.instances.types[reference];
@@ -79,12 +80,15 @@ export function embed({
             `Tried to embed a Field Resolver, expected Field ["${typeName}", "${fieldName}"] to exist in the schema`,
           );
         }
-      } else {
-        throw new Error(`reference ${reference} could not be resolved to a Type Reference or Field Reference`);
+      }
+
+      if (!type) {
+        throw new Error(`reference ${reference} could not be resolved to a type or field`);
       }
 
       const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
         type,
+        schema,
         field,
         resolverMap,
         packOptions,

@@ -29,22 +29,35 @@ export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions
 
-export type TypeWrapperFunction = (resolver: TypeResolver, options: WrapperOptionsBase) => TypeResolver;
-export type FieldWrapperFunction = (resolver: FieldResolver, options: WrapperOptionsBase) => FieldResolver;
+export type TypeWrapperFunction = (
+  resolver: TypeResolver,
+  options: WrapperOptionsBase,
+) => TypeResolver | Promise<TypeResolver>;
 
-export interface Wrapper {
-  wrap: (resolver: FieldResolver | TypeResolver, options: WrapperOptionsBase) => Promise<FieldResolver | TypeResolver>;
+export type FieldWrapperFunction = (
+  resolver: FieldResolver,
+  options: WrapperOptionsBase,
+) => FieldResolver | Promise<FieldResolver>;
+
+export type GenericWrapperFunction = (
+  resolver: FieldResolver | TypeResolver,
+  options: WrapperOptionsBase,
+) => Promise<FieldResolver | TypeResolver>;
+
+export enum WrapperFor {
+  TYPE = 'TYPE',
+  FIELD = 'FIELD',
+  ANY = 'ANY',
+}
+export interface NamedWrapper {
+  name: string;
+  wrap: GenericWrapperFunction;
+  wrapperFor: WrapperFor;
 }
 
-export type WrapperOptionsBase = {
-  schema: GraphQLSchema;
-  resolverMap: ResolverMap;
-  packOptions: PackOptions;
-  type: GraphQLObjectType | GraphQLAbstractType;
-  field?: GraphQLField<any, any>;
-};
+export type Wrapper = GenericWrapperFunction | NamedWrapper;
 
-type ResolverWrapperOptions = {
+export type WrapperOptionsBase = {
   schema: GraphQLSchema;
   resolverMap: ResolverMap;
   packOptions: PackOptions;

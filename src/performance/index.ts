@@ -1,1 +1,0 @@
-export { performanceWrapper } from './wrapper';

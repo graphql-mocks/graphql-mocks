@@ -1,19 +1,20 @@
-/* eslint-disable prettier/prettier */
-import { GraphQLObjectType, GraphQLField, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLField,
+  isObjectType,
+  isAbstractType,
+  GraphQLType,
+  GraphQLAbstractType,
+} from 'graphql';
 import {
   FieldResolver,
   FieldWrapperFunction,
   TypeWrapperFunction,
   TypeResolver,
-  Wrapper,
+  NamedWrapper,
   WrapperOptionsBase,
+  GenericWrapperFunction,
 } from '../types';
-
-enum WrapperFor {
-  TYPE = 'TYPE',
-  FIELD = 'FIELD',
-  '*' = '*',
-}
 
 export type FieldResolverWrapperOptions = WrapperOptionsBase & {
   type: GraphQLObjectType;
@@ -30,7 +31,7 @@ function hasFieldResolverPackage(
   type: GraphQLType,
   pkg: {
     resolver: FieldResolver | TypeResolver;
-    wrapper: FieldWrapperFunction | TypeWrapperFunction;
+    wrapper: GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
     options: WrapperOptionsBase;
   },
 ): pkg is { resolver: FieldResolver; wrapper: FieldWrapperFunction; options: FieldResolverWrapperOptions } {
@@ -41,19 +42,23 @@ function hasTypeResolverPackage(
   type: GraphQLType,
   pkg: {
     resolver: FieldResolver | TypeResolver;
-    wrapper: FieldWrapperFunction | TypeWrapperFunction;
+    wrapper: GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
     options: WrapperOptionsBase;
   },
 ): pkg is { resolver: TypeResolver; wrapper: TypeWrapperFunction; options: TypeResolverWrapperOptions } {
   return Boolean(isAbstractType(type) && pkg);
 }
 
-class NamedWrapper implements Wrapper {
+class InternalNamedWrapper implements NamedWrapper {
   name: string;
-  wrapper: FieldWrapperFunction | TypeWrapperFunction;
+  wrapper: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction;
   wrapperFor: WrapperFor;
 
-  constructor(name: string, wrapperFn: FieldWrapperFunction | TypeWrapperFunction, wrapperFor: WrapperFor = WrapperFor['*']) {
+  constructor(
+    name: string,
+    wrapperFn: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction,
+    wrapperFor: WrapperFor,
+  ) {
     this.name = name;
     this.wrapper = wrapperFn;
     this.wrapperFor = wrapperFor;
@@ -61,8 +66,14 @@ class NamedWrapper implements Wrapper {
 
   async wrap(resolver: TypeResolver, options: WrapperOptionsBase): Promise<TypeResolver>;
   async wrap(resolver: FieldResolver, options: WrapperOptionsBase): Promise<FieldResolver>;
-  async wrap(resolver: FieldResolver | TypeResolver, options: WrapperOptionsBase | FieldResolverWrapperOptions): Promise<FieldResolver | TypeResolver>;
-  async wrap(resolver: FieldResolver | TypeResolver, options: WrapperOptionsBase | FieldResolverWrapperOptions): Promise<FieldResolver | TypeResolver> {
+  async wrap(
+    resolver: FieldResolver | TypeResolver,
+    options: WrapperOptionsBase | FieldResolverWrapperOptions,
+  ): Promise<FieldResolver | TypeResolver>;
+  async wrap(
+    resolver: FieldResolver | TypeResolver,
+    options: WrapperOptionsBase | FieldResolverWrapperOptions,
+  ): Promise<FieldResolver | TypeResolver> {
     const { type, field } = options;
     const wrapper = this.wrapper;
     const wrapperFor = this.wrapperFor;
@@ -89,22 +100,29 @@ class NamedWrapper implements Wrapper {
       };
 
       return wrapper(resolver, expandedOptions);
-    } else if (wrapperFor === WrapperFor['*']) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (wrapper as any)(resolver, options);
+    } else if (wrapperFor === WrapperFor.ANY) {
+      return (wrapper as GenericWrapperFunction)(resolver, options);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return resolver as any;
+    return resolver as FieldResolver;
   }
 }
 
-export function createWrapper(name: string, wrapperFor: WrapperFor.TYPE, wrapperFn: TypeWrapperFunction): NamedWrapper;
-export function createWrapper(name: string, wrapperFor: WrapperFor.FIELD, wrapperFn: FieldWrapperFunction): NamedWrapper;
 export function createWrapper(
   name: string,
-  wrapperFor: WrapperFor = WrapperFor['*'],
-  wrapperFn: FieldWrapperFunction | TypeWrapperFunction,
+  wrapperFor: WrapperFor.FIELD,
+  wrapperFn: FieldWrapperFunction,
+): NamedWrapper;
+export function createWrapper(name: string, wrapperFor: WrapperFor.TYPE, wrapperFn: TypeWrapperFunction): NamedWrapper;
+export function createWrapper(
+  name: string,
+  wrapperFor: WrapperFor.ANY,
+  wrapperFn: GenericWrapperFunction,
+): NamedWrapper;
+export function createWrapper(
+  name: string,
+  wrapperFor: WrapperFor,
+  wrapperFn: GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction,
 ): NamedWrapper {
-  return new NamedWrapper(name, wrapperFn, wrapperFor);
+  return new InternalNamedWrapper(name, wrapperFn, wrapperFor);
 }

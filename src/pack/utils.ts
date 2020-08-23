@@ -1,7 +1,8 @@
-import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, FieldResolver, TypeResolver } from '../types';
+import { ResolverContext, FieldResolver, TypeResolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
-import { FieldResolverWrapperOptions } from '../../src/types';
+import { createWrapper, WrapperFor } from '../resolver/create-wrapper';
+import { isObjectType, isAbstractType } from 'graphql';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
@@ -24,32 +25,30 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
   return context;
 }
 
-export async function embedPackOptionsFieldResolverWrapper(
-  resolver: FieldResolver,
-  options: FieldResolverWrapperOptions,
-) {
-  return (
-    parent: ResolverParent,
-    args: ResolverArgs,
-    context: ResolverContext,
-    info: ResolverInfo,
-  ): Promise<unknown> => {
-    context = embedPackOptionsInContext(context, options.packOptions);
-    return resolver(parent, args, context, info);
-  };
-}
+export const embedPackOptions = createWrapper(
+  'embed-pack-options',
+  WrapperFor.ANY,
+  async (resolver, options): Promise<TypeResolver | FieldResolver> => {
+    const { type } = options;
 
-export async function embedPackOptionsTypeResolverWrapper(
-  resolver: FieldResolver,
-  options: FieldResolverWrapperOptions,
-) {
-  return (
-    parent: ResolverParent,
-    args: ResolverArgs,
-    context: ResolverContext,
-    info: ResolverInfo,
-  ): Promise<unknown> => {
-    context = embedPackOptionsInContext(context, options.packOptions);
-    return resolver(parent, args, context, info);
-  };
-}
+    if (isObjectType(type)) {
+      const fieldResolver: FieldResolver = (parent, args, context, info) => {
+        context = embedPackOptionsInContext(context, options.packOptions);
+        return (resolver as FieldResolver)(parent, args, context, info);
+      };
+
+      return fieldResolver;
+    }
+
+    if (isAbstractType(type)) {
+      const typeResolver: TypeResolver = (value, context, info, abstractType) => {
+        context = embedPackOptionsInContext(context, options.packOptions);
+        return (resolver as TypeResolver)(value, context, info, abstractType);
+      };
+
+      return typeResolver;
+    }
+
+    return resolver;
+  },
+);
