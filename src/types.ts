@@ -6,6 +6,7 @@ import {
   GraphQLField,
   GraphQLTypeResolver,
   GraphQLAbstractType,
+  GraphQLSchema,
 } from 'graphql';
 
 import { PackOptions } from './pack/types';
@@ -28,28 +29,34 @@ export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions
 
-export type FieldResolverWrapper = (
-  resolver: FieldResolver,
-  options: FieldResolverWrapperOptions,
-) => FieldResolver | Promise<FieldResolver>;
+export type TypeWrapper = (resolver: TypeResolver, options: TypeResolverWrapperOptions) => TypeResolver;
+export type FieldWrapper = (resolver: FieldResolver, options: FieldResolverWrapperOptions) => FieldResolver;
+export type Wrapper = TypeWrapper | FieldWrapper;
 
-export type TypeResolverWrapper = (
-  resolver: TypeResolver,
-  options: TypeResolverWrapperOptions,
-) => TypeResolver | Promise<TypeResolver>;
-
-export type BaseResolverWrapperOptions = {
+export type WrapperOptions = {
+  schema: GraphQLSchema;
   resolverMap: ResolverMap;
   packOptions: PackOptions;
+  type: GraphQLObjectType | GraphQLAbstractType;
+  field?: GraphQLField<any, any>;
 };
 
-export type FieldResolverWrapperOptions = BaseResolverWrapperOptions & {
+export type ResolverWrapperOptions = {
+  schema: GraphQLSchema;
+  resolverMap: ResolverMap;
+  packOptions: PackOptions;
+  type: GraphQLObjectType;
+  field?: GraphQLField<any, any>;
+};
+
+export type FieldResolverWrapperOptions = WrapperOptions & {
   type: GraphQLObjectType;
   field: GraphQLField<any, any>;
 };
 
-export type TypeResolverWrapperOptions = BaseResolverWrapperOptions & {
+export type TypeResolverWrapperOptions = WrapperOptions & {
   type: GraphQLAbstractType;
+  field?: undefined;
 };
 
 export type ResolverMap<TFieldResolver = FieldResolver, TTypeResolver = TypeResolver> = {
