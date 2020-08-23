@@ -29,6 +29,6 @@ export class InterfaceHighlighter implements Highlighter {
   }
 }
 
-export const interface_: HighlighterFactory = function type(...interfaceNames: string[]) {
+export const interfaces: HighlighterFactory = function type(...interfaceNames: string[]) {
   return new InterfaceHighlighter(interfaceNames);
 };

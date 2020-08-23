@@ -535,7 +535,7 @@ describe('integration/mirage-auto-resolver', function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
-              include: ['Query', 'allPersons'],
+              highlight: ['Query', 'allPersons'],
             }),
           ],
           dependencies: {
@@ -573,7 +573,7 @@ describe('integration/mirage-auto-resolver', function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
-              exclude: ['Query', 'allPersons'],
+              highlight: (h) => h.exclude(['Query', 'allPersons']),
             }),
           ],
           dependencies: {

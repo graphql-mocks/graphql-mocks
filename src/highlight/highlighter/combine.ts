@@ -1,8 +1,9 @@
 import { Highlighter, Reference } from '../types';
 
-export function combine(...referenceLists: Reference[][]): Highlighter {
+export function combine(...highlighters: Highlighter[]): Highlighter {
   return {
-    mark(): Reference[] {
+    mark(schema): Reference[] {
+      const referenceLists: Reference[][] = highlighters.map((highlighter) => highlighter.mark(schema));
       return ([] as Reference[]).concat(...referenceLists);
     },
   };

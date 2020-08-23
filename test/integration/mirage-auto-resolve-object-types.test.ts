@@ -3,14 +3,14 @@
 
 import { Model, Server, hasMany, belongsTo } from 'miragejs';
 import { expect } from 'chai';
-import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
+import { patchAutoResolvers } from '../../src/mirage/middleware/patch-auto-resolvers';
 import { GraphQLHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper/mapper';
 
-// patchAutoFieldResolvers middleware covers both auto-resolving of
+// patchAutoResolvers middleware covers both auto-resolving of
 // root queries and graphql object types. This test focuses on the
 // feature of auto-resolving fields on graphql object types, provided
-// by patchAutoFieldResolvers
+// by patchAutoResolvers
 describe('integration/mirage-auto-resolve-types', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mirageServer: Server;
@@ -55,7 +55,7 @@ describe('integration/mirage-auto-resolve-types', function () {
 
     it('returns a scalar from a model attr', async function () {
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageServer,
           graphqlSchema: createSchemaString(`
@@ -85,7 +85,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       mirageMapper.addFieldFilter(['Person', 'name'], () => 'Person Name Override');
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -147,7 +147,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -202,7 +202,7 @@ describe('integration/mirage-auto-resolve-types', function () {
         });
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -260,7 +260,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -312,7 +312,7 @@ describe('integration/mirage-auto-resolve-types', function () {
       mirageMapper.addFieldFilter(['Person', 'bestFriend'], () => bestFriendOverride);
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [patchAutoResolvers()],
         dependencies: {
           mirageMapper,
           mirageServer,

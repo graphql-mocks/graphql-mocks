@@ -46,7 +46,7 @@ export function resolverForReference(
 
 export function coerceHighlight(schema: GraphQLSchema, coercible: CoercibleHighlight): Highlight {
   if (coercible instanceof Highlight) return coercible;
-  if (Array.isArray(coercible)) return new Highlight(schema).include(reference(coercible));
+  if (Array.isArray(coercible)) return new Highlight(schema).include(reference(...coercible));
 
   if (typeof coercible === 'function') {
     const h = new Highlight(schema);
