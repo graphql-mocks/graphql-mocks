@@ -57,9 +57,13 @@ class InternalNamedWrapper implements NamedWrapper {
 
   constructor(
     name: string,
-    wrapperFn: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction,
     wrapperFor: WrapperFor,
+    wrapperFn: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction,
   ) {
+    if (typeof name !== 'string') {
+      throw new Error('Specify a string for the name argument for createWrapper');
+    }
+
     this.name = name;
     this.wrapper = wrapperFn;
     this.wrapperFor = wrapperFor;
@@ -120,5 +124,5 @@ export function createWrapper<K extends WrapperFor>(
   wrapperFor: K,
   wrapperFn: WrapperFn[K],
 ): NamedWrapper {
-  return new InternalNamedWrapper(name, wrapperFn, wrapperFor);
+  return new InternalNamedWrapper(name, wrapperFor, wrapperFn);
 }

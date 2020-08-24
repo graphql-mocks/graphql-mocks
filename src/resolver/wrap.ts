@@ -34,7 +34,7 @@ export async function wrapResolver(
       throw new Error(`Wrapper "${wrapperName}" is for TYPE resolvers and can't wrap ["${wrapperOptions.type.name}"].`);
     }
 
-    wrapper = wrapper.wrap;
+    wrapper = wrapper.wrap.bind(wrapper);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
