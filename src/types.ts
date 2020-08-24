@@ -55,7 +55,7 @@ export interface NamedWrapper {
   wrapperFor: WrapperFor;
 }
 
-export type Wrapper = GenericWrapperFunction | NamedWrapper;
+export type Wrapper = GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction | NamedWrapper;
 
 export type WrapperOptionsBase = {
   schema: GraphQLSchema;
@@ -65,10 +65,11 @@ export type WrapperOptionsBase = {
   field?: GraphQLField<any, any>;
 };
 
+// the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
 export type ResolverMap<TFieldResolver = FieldResolver, TTypeResolver = TypeResolver> = {
   [typeName: string]: {
     [fieldName: string]: TFieldResolver;
-  } & { __resolveType?: TTypeResolver }; // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
+  } & { __resolveType?: TTypeResolver };
 };
 
 export type ResolverMapMiddleware = (map: ResolverMap, packOptions: PackOptions) => ResolverMap | Promise<ResolverMap>;

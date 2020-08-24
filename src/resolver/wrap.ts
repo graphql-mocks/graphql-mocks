@@ -37,7 +37,8 @@ export async function wrapResolver(
     wrapper = wrapper.wrap;
   }
 
-  const wrappedResolver = await wrapper(resolver, wrapperOptions);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const wrappedResolver = await wrapper(resolver as any, wrapperOptions);
 
   if (typeof wrappedResolver !== 'function') {
     throw new Error(

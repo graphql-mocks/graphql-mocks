@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
-import { ResolverWrapper, Resolver } from '../../../src/types';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema, GraphQLSchema } from 'graphql';
+import { Wrapper, FieldResolver } from '../../../src/types';
 
 describe('resolver-map/embed', function () {
   let schema: GraphQLSchema;
@@ -31,9 +31,10 @@ describe('resolver-map/embed', function () {
 
   it('can embed a resolver on multiple targets', async function () {
     const resolver = spy();
+
     const embeddedMiddleware = embed({
       resolver,
-      include: ['*', '*'],
+      highlight: ['*', '*'],
     });
 
     const emptyResolverMap = {};
@@ -57,8 +58,8 @@ describe('resolver-map/embed', function () {
       },
     };
 
-    let wrappedResolver;
-    const resolverWrapper: ResolverWrapper = async (resolver) => {
+    let wrappedResolver: FieldResolver;
+    const resolverWrapper: Wrapper = async (resolver: FieldResolver) => {
       wrappedResolver = spy(resolver);
       return wrappedResolver;
     };
@@ -66,7 +67,7 @@ describe('resolver-map/embed', function () {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = embed({
-      include: ['Person', 'name'],
+      highlight: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
     });
@@ -94,8 +95,9 @@ describe('resolver-map/embed', function () {
       },
     };
 
-    let wrappedResolver;
-    const resolverWrapper: ResolverWrapper = async (resolver) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let wrappedResolver: any;
+    const resolverWrapper: Wrapper = async (resolver: FieldResolver) => {
       wrappedResolver = spy(resolver);
       return wrappedResolver;
     };
@@ -103,7 +105,7 @@ describe('resolver-map/embed', function () {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = await embed({
-      include: ['Person', 'name'],
+      highlight: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
       replace: true,
@@ -135,13 +137,17 @@ describe('resolver-map/embed', function () {
 
   it('it can embed a new resolver with wrappers on a specific target', async function () {
     const resolver = spy();
-    const resolverWrapper: ResolverWrapper = spy(
-      async (resolver) => (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<Resolver> =>
-        resolver(parent, args, context, info),
+    const resolverWrapper: Wrapper = spy(
+      async (resolver) => (
+        parent: unknown,
+        args: unknown,
+        context: unknown,
+        info: unknown,
+      ): ReturnType<FieldResolver> => resolver(parent, args, context, info),
     );
 
     const embeddedMiddleware = embed({
-      include: ['Person', 'name'],
+      highlight: ['Person', 'name'],
       wrappers: [resolverWrapper],
       resolver,
     });
@@ -166,16 +172,16 @@ describe('resolver-map/embed', function () {
 
   it('it can embed wrappers around an existing target', async function () {
     const nameFieldResolver = spy();
-    const resolverWrapper: ResolverWrapper = spy(async (resolver) => (
+    const resolverWrapper: Wrapper = spy(async (resolver) => (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       parent: any,
       args: Record<string, unknown>,
       context: Record<string, unknown>,
       info: GraphQLResolveInfo,
-    ): Resolver => resolver(parent, args, context, info));
+    ): FieldResolver => resolver(parent, args, context, info));
 
     const embeddedResolverMapMiddleware = embed({
-      include: ['Person', 'name'],
+      highlight: ['Person', 'name'],
       wrappers: [resolverWrapper],
     });
 
@@ -199,11 +205,11 @@ describe('resolver-map/embed', function () {
   });
 
   it('quietly does nothing if a resolver is not given, nor is on the resolver map', async function () {
-    const resolverWrapper: ResolverWrapper = spy();
+    const resolverWrapper: Wrapper = spy();
     // empty resolver map with no resolver for Person.name
     const resolverMap = {};
     const embeddedMiddleware = embed({
-      include: ['Person', 'name'],
+      highlight: ['Person', 'name'],
       wrappers: [resolverWrapper],
     });
 

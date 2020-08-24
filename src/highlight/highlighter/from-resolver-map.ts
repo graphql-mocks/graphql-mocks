@@ -6,6 +6,10 @@ class FromResolverMapHighlighter implements Highlighter {
   resolverMap: ResolverMap;
 
   constructor(resolverMap: ResolverMap) {
+    if (typeof resolverMap !== 'object') {
+      throw new Error(`Pass a resolver map for the fromResolverMap highlighter, got typeof ${resolverMap}`);
+    }
+
     this.resolverMap = resolverMap;
   }
 

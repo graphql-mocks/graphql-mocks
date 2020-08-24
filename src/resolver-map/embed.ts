@@ -84,7 +84,7 @@ export function embed({
       }
 
       if (!type) {
-        throw new Error(`reference ${reference} could not be resolved to a type or field`);
+        throw new Error(`reference ${JSON.stringify(reference)} could not be resolved to a type or field`);
       }
 
       const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {

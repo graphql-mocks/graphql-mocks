@@ -1,4 +1,4 @@
-import { patchAutoTypeResolvers } from '../../../../src/mirage/middleware/patch-auto-type-resolvers';
+import { patchAutoResolvers } from '../../../../src/mirage/middleware/patch-auto-resolvers';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema } from 'graphql';
@@ -44,7 +44,7 @@ describe('mirage/middleware/patch-auto-unions-interfaces', function () {
     expect(resolverMap?.Salutation?.__resolveType).to.not.exist;
     expect(resolverMap?.Animal?.__resolveType).to.not.exist;
 
-    const wrappedResolvers = patchAutoTypeResolvers(
+    const wrappedResolvers = await patchAutoResolvers()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -63,10 +63,11 @@ describe('mirage/middleware/patch-auto-unions-interfaces', function () {
       },
     };
 
-    const wrappedResolvers = patchAutoTypeResolvers(
+    const wrappedResolvers = await patchAutoResolvers()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
+
     expect(wrappedResolvers).to.deep.equal(resolverMap);
   });
 });

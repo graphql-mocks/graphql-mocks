@@ -1,4 +1,4 @@
-import { patchAutoFieldResolvers } from '../../../../src/mirage/middleware/patch-auto-field-resolvers';
+import { patchAutoResolvers } from '../../../../src/mirage/middleware/patch-auto-resolvers';
 import { ResolverMap } from '../../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
@@ -79,7 +79,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrappedResolvers = await patchAutoFieldResolvers()(
+    const wrappedResolvers = await patchAutoResolvers()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
@@ -87,20 +87,5 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     expect(wrappedResolvers?.Spell.incantation).to.exist;
     expect(wrappedResolvers?.Potion.name).to.exist;
     expect(wrappedResolvers?.Potion.ingredients).to.exist;
-  });
-
-  it('skips missing root query and mutation field resolvers', async function () {
-    expect(resolverMap?.Query.spells).to.not.exist;
-    expect(resolverMap?.Query.potions).to.not.exist;
-    expect(resolverMap?.Mutation?.addSpell).to.not.exist;
-
-    const wrappedResolvers = await patchAutoFieldResolvers()(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
-
-    expect(wrappedResolvers?.Query.spells).to.exist;
-    expect(wrappedResolvers?.Query.potions).to.exist;
-    expect(wrappedResolvers?.Mutation?.addSpell).to.not.exist;
   });
 });

@@ -12,11 +12,16 @@ import { walk } from '../../utils';
 import { addResolverToMap } from '../../resolver-map';
 import { mirageAbstractTypeResolver } from '../resolver/abstract';
 import { mirageRootQueryResolver, mirageObjectResolver } from '..';
+import { fromResolverMap } from '../../highlight/highlighter/from-resolver-map';
 
 export function patchAutoResolvers(options?: HighlightableMiddlewareOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? defaultHighlightCallback);
+
+    if (!options?.replace) {
+      highlight.exclude(fromResolverMap(resolverMap));
+    }
 
     const rootQueryHighlight = highlight.clone().filter(field(['Query', '*']));
     await walk(graphqlSchema, rootQueryHighlight, ({ reference }) => {
@@ -29,7 +34,11 @@ export function patchAutoResolvers(options?: HighlightableMiddlewareOptions): Re
       });
     });
 
-    const fieldResolvableHighlight = highlight.clone().filter(resolvesTo());
+    const fieldResolvableHighlight = highlight
+      .clone()
+      .exclude(...rootQueryHighlight.references)
+      .filter(resolvesTo());
+
     await walk(graphqlSchema, fieldResolvableHighlight, ({ reference }) => {
       addResolverToMap({
         graphqlSchema,

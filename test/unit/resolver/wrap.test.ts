@@ -2,11 +2,11 @@ import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { wrapResolver } from '../../../src/resolver/wrap';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
-import { ResolverWrapper, ResolverWrapperOptions, Resolver } from '../../../src/types';
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLSchema } from 'graphql';
+import { WrapperOptionsBase, FieldResolver, FieldWrapperFunction } from '../../../src/types';
 
 describe('resolver/wrap', function () {
-  let resolverWrapperOptions: ResolverWrapperOptions;
+  let resolverWrapperOptions: WrapperOptionsBase;
   const parent = {};
   const args = {};
   const info = {};
@@ -17,6 +17,7 @@ describe('resolver/wrap', function () {
 
   beforeEach(function () {
     resolverWrapperOptions = {
+      schema: {} as GraphQLSchema,
       packOptions: generatePackOptions(),
       type: userObjectType,
       field: userObjectNameField,
@@ -26,7 +27,7 @@ describe('resolver/wrap', function () {
     resolver = spy();
     internalWrapperSpy = spy();
     resolverWrapper = spy(
-      (resolver /*, _options*/): Resolver => {
+      (resolver /*, _options*/): FieldResolver => {
         return (parent, args, context, info): ReturnType<typeof resolver> => {
           internalWrapperSpy();
           return resolver(parent, args, context, info);
@@ -36,12 +37,16 @@ describe('resolver/wrap', function () {
   });
 
   it('can wrap a resolver function', async function () {
-    const wrappedResolver = await wrapResolver(resolver, [resolverWrapper as ResolverWrapper], resolverWrapperOptions);
+    const wrappedResolver = await wrapResolver(
+      resolver,
+      [resolverWrapper as FieldWrapperFunction],
+      resolverWrapperOptions,
+    );
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.firstCall.args).to.deep.equal([resolver, resolverWrapperOptions]);
 
     expect(internalWrapperSpy.called).to.be.false;
-    wrappedResolver(parent, args, context, info as GraphQLResolveInfo);
+    wrappedResolver(parent, args, context, info as any);
     expect(internalWrapperSpy.called).to.be.true;
     expect(resolver.called).to.be.true;
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
@@ -51,12 +56,12 @@ describe('resolver/wrap', function () {
     const wrappedResolver = await wrapResolver(
       resolver,
       // using the same resolverWrapper twice
-      [resolverWrapper as ResolverWrapper, resolverWrapper as ResolverWrapper],
+      [resolverWrapper as FieldWrapperFunction, resolverWrapper as FieldWrapperFunction],
       resolverWrapperOptions,
     );
     expect(resolverWrapper.callCount).to.equal(2);
     expect(internalWrapperSpy.called).to.be.false;
-    wrappedResolver(parent, args, context, info as GraphQLResolveInfo);
+    wrappedResolver(parent, args, context, info as any);
     expect(internalWrapperSpy.callCount).to.equal(2);
     expect(resolver.callCount).to.equal(1);
     expect(resolver.firstCall.args).to.deep.equal([parent, args, info, context]);
@@ -69,7 +74,7 @@ describe('resolver/wrap', function () {
       await wrapResolver(
         resolver,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [(): any => ('resolver wrapper returning a string' as unknown) as Resolver],
+        [(): any => ('resolver wrapper returning a string' as unknown) as FieldResolver],
         resolverWrapperOptions,
       );
     } catch (e) {

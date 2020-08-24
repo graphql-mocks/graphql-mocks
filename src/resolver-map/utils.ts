@@ -9,12 +9,12 @@ import { reference } from '../highlight/highlighter/reference';
 
 export function referenceExistsInResolverMap(resolverMap: ResolverMap, reference: Reference): boolean {
   if (isTypeReference(reference)) {
-    return typeof resolverMap[reference].__resolveType === 'function';
+    return typeof resolverMap?.[reference]?.__resolveType === 'function';
   }
 
   if (isFieldReference(reference)) {
     const [typeName, fieldName] = reference;
-    return typeof resolverMap[typeName]?.[fieldName] === 'function';
+    return typeof resolverMap?.[typeName]?.[fieldName] === 'function';
   }
 
   return false;
@@ -31,7 +31,7 @@ export function resolverForReference(
   reference: Reference,
 ): TypeResolver | FieldResolver | undefined {
   if (isTypeReference(reference)) {
-    const resolver = resolverMap[reference].__resolveType;
+    const resolver = resolverMap[reference]?.__resolveType;
     return resolver ? (resolver as TypeResolver) : undefined;
   }
 

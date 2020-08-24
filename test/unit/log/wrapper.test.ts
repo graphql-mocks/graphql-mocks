@@ -1,9 +1,9 @@
 import { logWrapper } from '../../../src/log/wrapper';
-import { ResolverMap, Resolver } from '../../../src/types';
+import { ResolverMap, FieldResolver } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLSchema } from 'graphql';
 
 describe('log/wrapper', function () {
   let logStub: SinonStub;
@@ -17,8 +17,9 @@ describe('log/wrapper', function () {
   });
 
   it('logs details around calling resolvers', async function () {
-    const initialResolver = (() => ({ 'the result': 'has been returned' })) as Resolver;
+    const initialResolver = (() => ({ 'the result': 'has been returned' })) as FieldResolver;
     const wrappedResolver = await logWrapper(initialResolver, {
+      schema: ({} as unknown) as GraphQLSchema,
       resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,

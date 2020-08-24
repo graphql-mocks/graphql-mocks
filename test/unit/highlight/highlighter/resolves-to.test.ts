@@ -1,6 +1,6 @@
-import { resolvesTo } from '../../../../src/highlight/highlighters/resolves-to';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
+import { resolvesTo } from '../../../../src/highlight/highlighter/resolves-to';
 
 const schema = buildSchema(`
   schema {
