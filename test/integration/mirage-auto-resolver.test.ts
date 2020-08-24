@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { patchAutoResolvers, MirageGraphQLMapper } from '../../src/mirage/';
+import { patchAutoResolvers } from '../../src/mirage/middleware/patch-auto-resolvers';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { ResolverMap } from '../../src/types';
 import { GraphQLHandler } from '../../src/graphql';
+import { MirageGraphQLMapper } from '../../src/mirage';
 
 describe('integration/mirage-auto-resolver', function () {
   let graphQLHandler: GraphQLHandler;
@@ -535,7 +536,7 @@ describe('integration/mirage-auto-resolver', function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
             patchAutoResolvers({
-              highlight: ['Query', 'allPersons'],
+              highlight: [['Query', 'allPersons']],
             }),
           ],
           dependencies: {

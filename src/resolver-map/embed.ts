@@ -56,7 +56,7 @@ export function embed({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let field: GraphQLField<any, any> | undefined;
       if (isTypeReference(reference)) {
-        const type = highlight.instances.types[reference].type;
+        type = highlight.instances.types[reference].type;
 
         if (!isAbstractType(type)) {
           throw new Error(

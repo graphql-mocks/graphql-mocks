@@ -5,6 +5,11 @@ import { walk, WalkCallback } from '../../../src/utils/walk';
 import { h, Highlight } from '../../../src/highlight/highlight';
 import { Reference } from '../../../src/highlight/types';
 import { field } from '../../../src/highlight/highlighter/field';
+import { resolvesTo } from '../../../src/highlight/highlighter/resolves-to';
+
+function getCallbackReferences(spy: SinonSpy): Reference[] {
+  return spy.getCalls().map((call) => (call.args as Parameters<WalkCallback>)[0].reference);
+}
 
 describe('utils/walk', function () {
   let graphqlSchema: GraphQLSchema;
@@ -37,41 +42,36 @@ describe('utils/walk', function () {
       }
     `);
 
-    highlight = h(graphqlSchema);
+    highlight = h(graphqlSchema).include(resolvesTo());
   });
 
-  const getCallbackReferences = (spy: SinonSpy): Reference[] =>
-    spy.getCalls().map((call) => (call.args as Parameters<WalkCallback>)[0].reference);
+  it('walks references from a highlight', async function () {
+    const callbackSpy = spy();
+    await walk(graphqlSchema, highlight, callbackSpy);
+    const references = getCallbackReferences(callbackSpy);
 
-  describe('WalkSource.GRAPHQL_SCHEMA', function () {
-    it('walks a graphql', async function () {
-      const callbackSpy = spy();
-      await walk(graphqlSchema, highlight, callbackSpy);
-      const references = getCallbackReferences(callbackSpy);
-
-      expect(references.sort()).to.deep.equal(
-        [
-          ['Query', 'person'],
-          ['Query', 'locations'],
-          ['Person', 'name'],
-          ['Person', 'location'],
-          ['Person', 'pet'],
-          ['Location', 'city'],
-          ['Location', 'street'],
-          ['Pet', 'name'],
-        ].sort(),
-      );
-    });
-
-    it('filters down on include target', async function () {
-      const callbackSpy = spy();
-      await walk(graphqlSchema, highlight.filter(field(['Query', '*'])), callbackSpy);
-      const references = getCallbackReferences(callbackSpy);
-
-      expect(references).to.deep.equal([
+    expect(references.sort()).to.deep.equal(
+      [
         ['Query', 'person'],
         ['Query', 'locations'],
-      ]);
-    });
+        ['Person', 'name'],
+        ['Person', 'location'],
+        ['Person', 'pet'],
+        ['Location', 'city'],
+        ['Location', 'street'],
+        ['Pet', 'name'],
+      ].sort(),
+    );
+  });
+
+  it('can walk references from a filtered highlight', async function () {
+    const callbackSpy = spy();
+    await walk(graphqlSchema, highlight.filter(field(['Query', '*'])), callbackSpy);
+    const references = getCallbackReferences(callbackSpy);
+
+    expect(references).to.deep.equal([
+      ['Query', 'person'],
+      ['Query', 'locations'],
+    ]);
   });
 });

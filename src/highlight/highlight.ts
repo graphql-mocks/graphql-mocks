@@ -12,12 +12,14 @@ import { unique } from './utils/unique';
 export class Highlight {
   schema: GraphQLSchema;
   references: Reference[];
+  errors: Error[];
 
   constructor(schema: GraphQLSchema, references?: Reference[]) {
     this.schema = schema;
     references = references ?? [];
     this.validate(references);
     this.references = references;
+    this.errors = [];
   }
 
   get instances(): { types: ReferenceMap } {
@@ -30,6 +32,7 @@ export class Highlight {
     const operation = include;
     const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
+    this.validate(newReferences);
     this.references = newReferences;
     return this;
   }
@@ -38,6 +41,7 @@ export class Highlight {
     const operation = exclude;
     const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
     const newReferences = this.applyHighlighters(operation, highlighters);
+    this.validate(newReferences);
     this.references = newReferences;
     return this;
   }
@@ -50,33 +54,54 @@ export class Highlight {
     return this;
   }
 
-  applyHighlighters(operation: ReferencesOperation, highlighters: Highlighter[]): Reference[] {
+  check(...highlightersOrReferences: (Highlighter | Reference)[]): Error[] {
+    const schema = this.schema;
+    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
+
+    return highlighters
+      .reduce((references: Reference[], highlighter: Highlighter) => {
+        const highlightedReferences = highlighter.mark(schema);
+        return [...references, ...highlightedReferences];
+      }, [])
+      .map((reference) => validate(this.schema, reference))
+      .filter(Boolean) as Error[];
+  }
+
+  clone(): Highlight {
+    return new Highlight(this.schema, this.references);
+  }
+
+  protected applyHighlighters(operation: ReferencesOperation, highlighters: Highlighter[]): Reference[] {
     const schema = this.schema;
 
     // all changes are implemented with a fresh copy of data
     const references = clone(this.references);
 
     let updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
-      const highlighted = highlighter.mark(schema);
-      return operation(references, highlighted);
+      let highlightedReferences;
+
+      try {
+        highlightedReferences = highlighter.mark(schema);
+      } catch (error) {
+        this.errors.push(error);
+      } finally {
+        highlightedReferences = highlightedReferences || [];
+      }
+
+      return operation(references, highlightedReferences);
     }, references);
 
     updated = unique(updated);
-    this.validate(updated);
     return updated;
   }
 
-  validate(references: Reference[]): void {
+  protected validate(references: Reference[]): void {
     const errors = references.map((reference) => validate(this.schema, reference)).filter(Boolean) as Error[];
     if (errors.length === 0) {
       return;
     }
 
     throw new ValidationError(errors);
-  }
-
-  clone(): Highlight {
-    return new Highlight(this.schema, this.references);
   }
 }
 
