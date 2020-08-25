@@ -17,7 +17,7 @@ export async function wrapResolver(
     return resolver;
   }
 
-  let wrapperName = wrapper.name;
+  let wrapperName = wrapper.name || 'UNNAMED';
 
   if (isNamedWrapper(wrapper)) {
     const namedWrapper = wrapper;

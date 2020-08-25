@@ -80,9 +80,9 @@ describe('resolver/wrap', function () {
     } catch (e) {
       error = e;
     } finally {
-      expect(error?.message).to.equal(`Wrapper: () => 'resolver wrapper returning a string'
-
-This wrapper did not return a function, got string.`);
+      expect(error?.message).to.equal(
+        `Wrapper "UNNAMED" was not a function or did not have a wrap method, got string.`,
+      );
     }
   });
 });
