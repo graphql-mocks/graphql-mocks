@@ -4,6 +4,7 @@ import { embed } from '../../../src/resolver-map/embed';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema, GraphQLSchema } from 'graphql';
 import { Wrapper, FieldResolver } from '../../../src/types';
+import { field } from '../../../src/highlight/highlighter/field';
 
 describe('resolver-map/embed', function () {
   let schema: GraphQLSchema;
@@ -34,7 +35,7 @@ describe('resolver-map/embed', function () {
 
     const embeddedMiddleware = embed({
       resolver,
-      highlight: ['*', '*'],
+      highlight: (h) => h.include(field(['*', '*'])),
     });
 
     const emptyResolverMap = {};
@@ -67,7 +68,7 @@ describe('resolver-map/embed', function () {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = embed({
-      highlight: ['Person', 'name'],
+      highlight: [['Person', 'name']],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
     });
@@ -80,8 +81,8 @@ describe('resolver-map/embed', function () {
     } catch (e) {
       error = e;
     } finally {
-      expect(error?.message).to.equal(
-        'Cannot add resolver to resolver map at ["Person", "name"] when replace is set to false',
+      expect(error?.message).to.contain(
+        'Tried to add a new resolver via `embed` at ["Person","name"] but a resolver already exists there.',
       );
     }
   });
@@ -105,7 +106,7 @@ describe('resolver-map/embed', function () {
     const replacedPersonNameResolver = spy();
 
     const embeddedMiddlware = await embed({
-      highlight: ['Person', 'name'],
+      highlight: [['Person', 'name']],
       wrappers: [resolverWrapper],
       resolver: replacedPersonNameResolver,
       replace: true,
@@ -147,7 +148,7 @@ describe('resolver-map/embed', function () {
     );
 
     const embeddedMiddleware = embed({
-      highlight: ['Person', 'name'],
+      highlight: [['Person', 'name']],
       wrappers: [resolverWrapper],
       resolver,
     });
@@ -181,7 +182,7 @@ describe('resolver-map/embed', function () {
     ): FieldResolver => resolver(parent, args, context, info));
 
     const embeddedResolverMapMiddleware = embed({
-      highlight: ['Person', 'name'],
+      highlight: [['Person', 'name']],
       wrappers: [resolverWrapper],
     });
 
@@ -209,7 +210,7 @@ describe('resolver-map/embed', function () {
     // empty resolver map with no resolver for Person.name
     const resolverMap = {};
     const embeddedMiddleware = embed({
-      highlight: ['Person', 'name'],
+      highlight: [['Person', 'name']],
       wrappers: [resolverWrapper],
     });
 

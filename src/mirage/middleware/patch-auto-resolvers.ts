@@ -19,7 +19,7 @@ export function patchAutoResolvers(options?: HighlightableMiddlewareOptions): Re
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? defaultHighlightCallback);
 
-    // In no case do we want to fill the Mutation resolvers
+    // In no case do we want to add Mutation resolvers
     highlight.exclude(['Mutation', '*']);
 
     // If we can't replace resolvers, exclude the ones that exist in the resolver map

@@ -8,6 +8,10 @@ import { coerceHighlight, resolverForReference } from './utils';
 import { isTypeReference } from '../highlight/utils/is-type-reference';
 import { isFieldReference } from '../highlight/utils/is-field-reference';
 import { embedPackOptionsWrapper } from '../pack';
+import { combine } from '../highlight/highlighter/combine';
+import { resolvesTo } from '../highlight/highlighter/resolves-to';
+import { union } from '../highlight/highlighter/union';
+import { interfaces } from '../highlight/highlighter/interface';
 
 export type EmbedOptions = {
   wrappers?: Wrapper[];
@@ -15,9 +19,9 @@ export type EmbedOptions = {
 } & HighlightableMiddlewareOptions;
 
 export function embed({
+  resolver: resolverOption,
   highlight: coercibleHighlight = defaultHighlightCallback,
   wrappers = [],
-  resolver: resolverToApply,
   replace: replaceOption = false,
 }: EmbedOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
@@ -29,26 +33,34 @@ export function embed({
       );
     }
 
-    const highlight = coerceHighlight(schema, coercibleHighlight);
-    const references = highlight.references;
+    const highlight = coerceHighlight(schema, coercibleHighlight).clone();
+    highlight.filter(combine(resolvesTo(), union(), interfaces()));
 
-    for (const reference of references) {
+    for (const reference of highlight.references) {
+      const existingResolver = resolverForReference(resolverMap, reference);
       // these MUST be kept in the local iteration
       // as to not replace the default option values
       let shouldReplace = replaceOption;
-      let resolver = resolverToApply;
-      if (typeof resolver !== 'function') {
-        const existingResolver = resolverForReference(resolverMap, reference);
+      let resolverToEmbed = resolverOption;
 
+      if (resolverToEmbed && existingResolver && !shouldReplace) {
+        const prettyReference = JSON.stringify(reference);
+        throw new Error(
+          `Tried to add a new resolver via \`embed\` at ${prettyReference} but a resolver already ` +
+            `exists there. If this was intended use the \`replace\` option to replace the existing resolver.`,
+        );
+      }
+
+      if (typeof resolverToEmbed !== 'function') {
         // we are using the existing resolver to wrap and to put it back
         // in the resolver map. we will need to replace the original
         // with the wrapped
         shouldReplace = true;
-        resolver = existingResolver;
+        resolverToEmbed = existingResolver;
       }
 
-      // No resolver in the Resolver Map; continue.
-      if (!resolver) {
+      // no resolver to operate on; skip.
+      if (!resolverToEmbed) {
         continue;
       }
 
@@ -84,7 +96,7 @@ export function embed({
         );
       }
 
-      const wrappedResolver = await wrapResolver(resolver, [...wrappers, embedPackOptionsWrapper], {
+      const wrappedResolver = await wrapResolver(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
         type,
         schema,
         field,
