@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { wrapResolver } from '../../../src/resolver/wrap';
 import { embedPackOptionsWrapper } from '../../../src/pack/utils';
+import { GraphQLObjectType } from 'graphql';
 
 describe('pack/utils', function () {
   describe('#embedPackOptionsWrapper', function () {
@@ -10,6 +11,10 @@ describe('pack/utils', function () {
 
       const wrappedResolver = await wrapResolver(resolver, [embedPackOptionsWrapper], {
         resolverMap: {},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        schema: {} as any,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        type: new GraphQLObjectType({ name: 'Query', fields: [] as any }),
         packOptions: {
           state: {},
           dependencies: {
@@ -17,7 +22,7 @@ describe('pack/utils', function () {
           },
         },
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any);
+      });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       wrappedResolver(null, { arg: '' }, { existing: 'other-existing-context' }, {} as any);

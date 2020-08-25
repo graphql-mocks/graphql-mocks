@@ -26,11 +26,11 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
 }
 
 export function isTypeResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is TypeResolver {
-  return Boolean(isObjectType(type) && resolver);
+  return Boolean(isAbstractType(type) && resolver);
 }
 
 export function isFieldResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is FieldResolver {
-  return Boolean(isAbstractType(type) && resolver);
+  return Boolean(isObjectType(type) && resolver);
 }
 
 export const embedPackOptionsWrapper = createWrapper(
