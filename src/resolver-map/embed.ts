@@ -1,10 +1,10 @@
 import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType, isObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Wrapper } from '../types';
-import { addResolverToMap } from './add-resolver';
+import { addResolverToMap } from './utils/add-resolver';
 import { HighlightableMiddlewareOptions } from './types';
-import { defaultHighlightCallback } from './highlight-defaults';
-import { coerceHighlight, resolverForReference } from './utils';
+import { highlightAllCallback } from './utils/highlight-all-callback';
+import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import { isTypeReference } from '../highlight/utils/is-type-reference';
 import { isFieldReference } from '../highlight/utils/is-field-reference';
 import { embedPackOptionsWrapper } from '../pack';
@@ -12,6 +12,7 @@ import { combine } from '../highlight/highlighter/combine';
 import { resolvesTo } from '../highlight/highlighter/resolves-to';
 import { union } from '../highlight/highlighter/union';
 import { interfaces } from '../highlight/highlighter/interface';
+import { getResolver } from './utils/get-resolver';
 
 export type EmbedOptions = {
   wrappers?: Wrapper[];
@@ -20,7 +21,7 @@ export type EmbedOptions = {
 
 export function embed({
   resolver: resolverOption,
-  highlight: coercibleHighlight = defaultHighlightCallback,
+  highlight: coercibleHighlight = highlightAllCallback,
   wrappers = [],
   replace: replaceOption = false,
 }: EmbedOptions): ResolverMapMiddleware {
@@ -37,7 +38,7 @@ export function embed({
     highlight.filter(combine(resolvesTo(), union(), interfaces()));
 
     for (const reference of highlight.references) {
-      const existingResolver = resolverForReference(resolverMap, reference);
+      const existingResolver = getResolver(resolverMap, reference);
       // these MUST be kept in the local iteration
       // as to not replace the default option values
       let shouldReplace = replaceOption;

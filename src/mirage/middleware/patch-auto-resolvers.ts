@@ -1,7 +1,7 @@
 import { ResolverMapMiddleware, ResolverMap } from '../../types';
 import { HighlightableMiddlewareOptions } from '../../resolver-map/types';
-import { defaultHighlightCallback } from '../../resolver-map/highlight-defaults';
-import { coerceHighlight } from '../../resolver-map/utils';
+import { highlightAllCallback } from '../../resolver-map/utils/highlight-all-callback';
+import { coerceHighlight } from '../../highlight/utils/coerce-highlight';
 import { resolvesTo } from '../../highlight/highlighter/resolves-to';
 import { field } from '../../highlight/highlighter/field';
 import { combine } from '../../highlight/highlighter/combine';
@@ -17,7 +17,7 @@ import { fromResolverMap } from '../../highlight/highlighter/from-resolver-map';
 export function patchAutoResolvers(options?: HighlightableMiddlewareOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
-    const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? defaultHighlightCallback);
+    const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);
 
     // In no case do we want to add Mutation resolvers
     highlight.exclude(['Mutation', '*']);

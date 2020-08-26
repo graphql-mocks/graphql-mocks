@@ -1,6 +1,8 @@
 import { GraphQLSchema } from 'graphql';
 import { fieldForReference } from './utils/field-for-reference';
 import { typeForReference } from './utils/type-for-reference';
+import { Highlight } from './highlight';
+import { highlightCallback } from '../resolver-map/types';
 
 export type Reference = TypeReference | FieldReference;
 export type FieldReference = [string, string];
@@ -29,3 +31,5 @@ export type ReferenceMap = {
     };
   };
 };
+
+export type CoercibleHighlight = Highlight | Reference[] | highlightCallback;

@@ -1,8 +1,7 @@
 import { ModelInstance } from 'miragejs';
 import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, FieldResolver } from '../types';
 import { RouteHandler } from 'miragejs/server';
-import { TypeReference } from '../highlight/types';
-import { FieldReference } from '../../lib/resolver-map/reference/field-reference';
+import { TypeReference, FieldReference } from '../highlight/types';
 
 type AutoFieldResolverType = 'OBJECT' | 'ROOT_TYPE';
 

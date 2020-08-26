@@ -1,2 +1,2 @@
 export { embed } from './embed';
-export { addResolverToMap } from './add-resolver';
+export { addResolverToMap } from './utils/add-resolver';

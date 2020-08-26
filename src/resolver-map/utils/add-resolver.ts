@@ -1,8 +1,8 @@
-import { ResolverMap, FieldResolver, TypeResolver } from '../types';
-import { Reference } from '../highlight/types';
-import { isTypeReference } from '../highlight/utils/is-type-reference';
-import { isFieldReference } from '../highlight/utils/is-field-reference';
-import { instanceForReference } from '../highlight/utils/instance-for-reference';
+import { ResolverMap, FieldResolver, TypeResolver } from '../../types';
+import { Reference } from '../../highlight/types';
+import { isTypeReference } from '../../highlight/utils/is-type-reference';
+import { isFieldReference } from '../../highlight/utils/is-field-reference';
+import { instanceForReference } from '../../highlight/utils/instance-for-reference';
 import { isAbstractType, GraphQLSchema, GraphQLField, GraphQLObjectType, isObjectType } from 'graphql';
 
 export function addResolverToMap({

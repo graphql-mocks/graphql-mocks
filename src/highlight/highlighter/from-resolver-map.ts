@@ -1,6 +1,5 @@
-import { Highlighter, Reference, HighlighterFactory, TypeReference } from '../types';
+import { Highlighter, Reference, HighlighterFactory, TypeReference, FieldReference } from '../types';
 import { ResolverMap } from '../../types';
-import { FieldReference } from '../../../lib/resolver-map/reference/field-reference';
 
 class FromResolverMapHighlighter implements Highlighter {
   resolverMap: ResolverMap;

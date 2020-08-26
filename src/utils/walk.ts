@@ -1,9 +1,8 @@
 import { GraphQLSchema, GraphQLNamedType, GraphQLField, GraphQLInputField } from 'graphql';
-import { Reference } from '../highlight/types';
+import { Reference, CoercibleHighlight } from '../highlight/types';
 import { typeForReference } from '../highlight/utils/type-for-reference';
 import { fieldForReference } from '../highlight/utils/field-for-reference';
-import { CoercibleHighlight } from '../resolver-map/types';
-import { coerceHighlight } from '../resolver-map/utils';
+import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 
 export type WalkCallback = (options: {
   reference: Reference;
