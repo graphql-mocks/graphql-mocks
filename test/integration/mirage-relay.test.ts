@@ -3,7 +3,7 @@
 
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
-import { patchAutoResolvers } from '../../src/mirage/middleware/patch-auto-resolvers';
+import { mirageMiddleware } from '../../src/mirage';
 import { MirageGraphQLMapper } from '../../src/mirage';
 import { GraphQLHandler } from '../../src/graphql';
 
@@ -77,7 +77,7 @@ describe('integration/mirage-relay', function () {
     mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
 
     handler = new GraphQLHandler({
-      middlewares: [patchAutoResolvers()],
+      middlewares: [mirageMiddleware()],
       dependencies: {
         mirageServer,
         mirageMapper,

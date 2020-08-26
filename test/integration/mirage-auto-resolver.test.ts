@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { patchAutoResolvers } from '../../src/mirage/middleware/patch-auto-resolvers';
+import { mirageMiddleware } from '../../src/mirage';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
@@ -30,7 +30,7 @@ describe('integration/mirage-auto-resolver', function () {
 
     graphQLHandler = new GraphQLHandler({
       resolverMap: defaultResolvers,
-      middlewares: [patchAutoResolvers()],
+      middlewares: [mirageMiddleware()],
       dependencies: {
         mirageMapper,
         mirageServer,
@@ -535,7 +535,7 @@ describe('integration/mirage-auto-resolver', function () {
       beforeEach(async function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
-            patchAutoResolvers({
+            mirageMiddleware({
               highlight: [['Query', 'allPersons']],
             }),
           ],
@@ -573,7 +573,7 @@ describe('integration/mirage-auto-resolver', function () {
       beforeEach(async function () {
         graphQLHandler = new GraphQLHandler({
           middlewares: [
-            patchAutoResolvers({
+            mirageMiddleware({
               highlight: (h) => h.exclude(['Query', 'allPersons']),
             }),
           ],

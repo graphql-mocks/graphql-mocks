@@ -5,7 +5,7 @@ import { exclude } from './operation/exclude';
 import { filter } from './operation/filter';
 import { ValidationError, validate } from './utils/validate';
 import { Highlighter, Reference, ReferencesOperation, ReferenceMap } from './types';
-import { convertHighlightersOrReferencesToHighlighters } from './utils/convert-highlighters-or-references-to-highlighters';
+import { convertHighlighterOrReferenceToHighlighter } from './utils/convert-highlighter-or-reference-to-highlighter';
 import { buildReferenceMap } from './utils/build-reference-map';
 import { unique } from './utils/unique';
 
@@ -30,7 +30,10 @@ export class Highlight {
 
   include(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = include;
-    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
+    const highlighters = highlightersOrReferences
+      .map(convertHighlighterOrReferenceToHighlighter)
+      .filter(Boolean) as Highlighter[];
+
     const newReferences = this.applyHighlighters(operation, highlighters);
     this.validate(newReferences);
     this.references = newReferences;
@@ -39,7 +42,10 @@ export class Highlight {
 
   exclude(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = exclude;
-    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
+    const highlighters = highlightersOrReferences
+      .map(convertHighlighterOrReferenceToHighlighter)
+      .filter(Boolean) as Highlighter[];
+
     const newReferences = this.applyHighlighters(operation, highlighters);
     this.validate(newReferences);
     this.references = newReferences;
@@ -48,7 +54,10 @@ export class Highlight {
 
   filter(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
     const operation = filter;
-    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
+    const highlighters = highlightersOrReferences
+      .map(convertHighlighterOrReferenceToHighlighter)
+      .filter(Boolean) as Highlighter[];
+
     const newReferences = this.applyHighlighters(operation, highlighters);
     this.references = newReferences;
     return this;
@@ -56,7 +65,9 @@ export class Highlight {
 
   check(...highlightersOrReferences: (Highlighter | Reference)[]): Error[] {
     const schema = this.schema;
-    const highlighters = convertHighlightersOrReferencesToHighlighters(highlightersOrReferences);
+    const highlighters = highlightersOrReferences
+      .map(convertHighlighterOrReferenceToHighlighter)
+      .filter(Boolean) as Highlighter[];
 
     return highlighters
       .reduce((references: Reference[], highlighter: Highlighter) => {

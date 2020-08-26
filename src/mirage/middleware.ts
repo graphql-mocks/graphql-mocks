@@ -1,20 +1,20 @@
-import { ResolverMapMiddleware, ResolverMap } from '../../types';
-import { HighlightableMiddlewareOptions } from '../../resolver-map/types';
-import { highlightAllCallback } from '../../resolver-map/utils/highlight-all-callback';
-import { coerceHighlight } from '../../highlight/utils/coerce-highlight';
-import { resolvesTo } from '../../highlight/highlighter/resolves-to';
-import { field } from '../../highlight/highlighter/field';
-import { combine } from '../../highlight/highlighter/combine';
+import { ResolverMapMiddleware, ResolverMap } from '../types';
+import { HighlightableMiddlewareOptions } from '../resolver-map/types';
+import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
+import { coerceHighlight } from '../highlight/utils/coerce-highlight';
+import { resolvesTo } from '../highlight/highlighter/resolves-to';
+import { field } from '../highlight/highlighter/field';
+import { combine } from '../highlight/highlighter/combine';
 import { GraphQLSchema } from 'graphql';
-import { interfaces } from '../../highlight/highlighter/interface';
-import { union } from '../../highlight/highlighter/union';
-import { walk } from '../../utils';
-import { addResolverToMap } from '../../resolver-map';
-import { mirageAbstractTypeResolver } from '../resolver/abstract';
-import { mirageRootQueryResolver, mirageObjectResolver } from '..';
-import { fromResolverMap } from '../../highlight/highlighter/from-resolver-map';
+import { interfaces } from '../highlight/highlighter/interface';
+import { union } from '../highlight/highlighter/union';
+import { walk } from '../utils';
+import { addResolverToMap } from '../resolver-map';
+import { mirageAbstractTypeResolver } from './resolver/abstract';
+import { mirageRootQueryResolver, mirageObjectResolver } from '.';
+import { fromResolverMap } from '../highlight/highlighter/from-resolver-map';
 
-export function patchAutoResolvers(options?: HighlightableMiddlewareOptions): ResolverMapMiddleware {
+export function mirageMiddleware(options?: HighlightableMiddlewareOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);

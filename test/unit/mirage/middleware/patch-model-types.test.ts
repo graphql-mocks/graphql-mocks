@@ -1,4 +1,4 @@
-import { patchAutoResolvers } from '../../../../src/mirage/middleware/patch-auto-resolvers';
+import { mirageMiddleware } from '../../../../src/mirage';
 import { ResolverMap } from '../../../../src/types';
 import { expect } from 'chai';
 import { generatePackOptions } from '../../../mocks';
@@ -79,7 +79,7 @@ describe('mirage/middleware/patch-auto-field-resolvers', function () {
     expect(resolverMap?.Potion?.name).to.not.exist;
     expect(resolverMap?.Potion?.ingredients).to.not.exist;
 
-    const wrappedResolvers = await patchAutoResolvers()(
+    const wrappedResolvers = await mirageMiddleware()(
       resolverMap,
       generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     );
