@@ -1,7 +1,7 @@
 import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType, isObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Wrapper } from '../types';
-import { addResolverToMap } from './utils/add-resolver';
+import { setResolver } from './utils/set-resolver';
 import { HighlightableMiddlewareOptions } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
@@ -105,11 +105,8 @@ export function embed({
         packOptions,
       });
 
-      addResolverToMap({
-        resolverMap,
+      setResolver(resolverMap, reference, wrappedResolver, {
         graphqlSchema: schema,
-        reference,
-        resolver: wrappedResolver,
         replace: shouldReplace,
       });
     }

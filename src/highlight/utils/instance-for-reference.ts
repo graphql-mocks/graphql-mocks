@@ -1,4 +1,11 @@
-import { GraphQLSchema, GraphQLNamedType, isInputObjectType, isObjectType } from 'graphql';
+import {
+  GraphQLSchema,
+  GraphQLNamedType,
+  isInputObjectType,
+  isObjectType,
+  GraphQLInputField,
+  GraphQLField,
+} from 'graphql';
 import { Reference, FieldReference, TypeReference } from '../types';
 import { isTypeReference } from './is-type-reference';
 import { typeForReference } from './type-for-reference';
@@ -6,18 +13,18 @@ import { isFieldReference } from './is-field-reference';
 import { fieldForReference } from './field-for-reference';
 
 export function instanceForReference(schema: GraphQLSchema, reference: TypeReference): GraphQLNamedType | undefined;
-export function instanceForReference<T>(
+export function instanceForReference(
   schema: GraphQLSchema,
   reference: FieldReference,
-): [unknown, unknown] | undefined;
+): [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined;
 export function instanceForReference(
   schema: GraphQLSchema,
   reference: Reference,
-): GraphQLNamedType | [unknown, unknown] | undefined;
-export function instanceForReference<T>(
+): GraphQLNamedType | [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined;
+export function instanceForReference(
   schema: GraphQLSchema,
   reference: Reference,
-): GraphQLNamedType | [unknown, unknown] | undefined {
+): GraphQLNamedType | [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined {
   if (isTypeReference(reference)) {
     return typeForReference(schema, reference);
   }
@@ -31,7 +38,7 @@ export function instanceForReference<T>(
       return [type, field];
     }
 
-    if (isInputObjectType(type)) {
+    if (isInputObjectType(type) && field) {
       return [type, field];
     }
   }

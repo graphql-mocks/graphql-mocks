@@ -9,7 +9,7 @@ import { GraphQLSchema } from 'graphql';
 import { interfaces } from '../highlight/highlighter/interface';
 import { union } from '../highlight/highlighter/union';
 import { walk } from '../utils';
-import { addResolverToMap } from '../resolver-map';
+import { setResolver } from '../resolver-map';
 import { mirageAbstractTypeResolver } from './resolver/abstract';
 import { mirageRootQueryResolver, mirageObjectResolver } from '.';
 import { fromResolverMap } from '../highlight/highlighter/from-resolver-map';
@@ -29,11 +29,8 @@ export function mirageMiddleware(options?: HighlightableMiddlewareOptions): Reso
 
     const rootQueryHighlight = highlight.clone().filter(field(['Query', '*']));
     await walk(graphqlSchema, rootQueryHighlight, ({ reference }) => {
-      addResolverToMap({
+      setResolver(resolverMap, reference, mirageRootQueryResolver, {
         graphqlSchema,
-        reference,
-        resolverMap,
-        resolver: mirageRootQueryResolver,
         replace: options?.replace,
       });
     });
@@ -44,22 +41,16 @@ export function mirageMiddleware(options?: HighlightableMiddlewareOptions): Reso
       .filter(resolvesTo());
 
     await walk(graphqlSchema, fieldResolvableHighlight, ({ reference }) => {
-      addResolverToMap({
+      setResolver(resolverMap, reference, mirageObjectResolver, {
         graphqlSchema,
-        reference,
-        resolverMap,
-        resolver: mirageObjectResolver,
         replace: options?.replace,
       });
     });
 
     const typeResolvableHighlight = highlight.clone().filter(combine(union(), interfaces()));
     await walk(graphqlSchema, typeResolvableHighlight, ({ reference }) => {
-      addResolverToMap({
+      setResolver(resolverMap, reference, mirageAbstractTypeResolver, {
         graphqlSchema,
-        reference,
-        resolverMap,
-        resolver: mirageAbstractTypeResolver,
         replace: options?.replace,
       });
     });
