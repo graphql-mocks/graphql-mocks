@@ -9,7 +9,6 @@ import { convertHighlighterOrReferenceToHighlighter } from './utils/convert-high
 import { buildReferenceMap } from './utils/build-reference-map';
 import { unique } from './utils/unique';
 import { isFieldReference } from './utils/is-field-reference';
-import { typeForReference } from './utils/type-for-reference';
 import { isTypeReference } from './utils/is-type-reference';
 
 export class Highlight {
@@ -77,13 +76,20 @@ export class Highlight {
         const highlightedReferences = highlighter.mark(schema);
         return operation(references, highlightedReferences);
       }, references)
-      .filter(function filterInternal(reference) {
+      .filter(function filterInternalGraphQLTypes(reference) {
+        let type;
+
         if (isFieldReference(reference)) {
-          return reference[0].startsWith('__');
+          type = reference[0];
         }
 
         if (isTypeReference(reference)) {
-          return reference.startsWith('__');
+          type = reference;
+        }
+
+        if (type) {
+          const internalScalars = ['String', 'Boolean'];
+          return !type.startsWith('__') && !internalScalars.includes(type);
         }
 
         return true;

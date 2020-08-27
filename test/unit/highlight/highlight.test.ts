@@ -78,6 +78,11 @@ describe('highlight', function () {
     expect(h1).to.not.equal(h2);
   });
 
+  it('filters out internal types by default', function () {
+    const h = new Highlight(schema).include('__Schema', 'String', 'Boolean');
+    expect(h.references.length).to.equal(0);
+  });
+
   context('#h functional shorthand', function () {
     it('produces an Highlight instance', function () {
       const fromInstance = new Highlight(schema, ['Cat']);
