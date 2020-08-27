@@ -2,7 +2,7 @@ import { GraphQLSchema } from 'graphql';
 import { Reference } from '../types';
 import { isTypeReference } from './is-type-reference';
 import { isFieldReference } from './is-field-reference';
-import { typeForReference } from './type-for-reference';
+import { getTypeForReference } from './get-type-for-reference';
 import { getFieldForReference } from './get-field-for-reference';
 
 export function validate(schema: GraphQLSchema, reference: Reference): Error | null {
@@ -14,7 +14,7 @@ export function validate(schema: GraphQLSchema, reference: Reference): Error | n
     );
   }
 
-  if (isTypeReference(reference) && !typeForReference(schema, reference)) {
+  if (isTypeReference(reference) && !getTypeForReference(schema, reference)) {
     return new Error(`Type Reference ${referenceAsJSON} could not be found in the GraphQLSchema`);
   }
 

@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
 import { getFieldForReference } from './utils/get-field-for-reference';
-import { typeForReference } from './utils/type-for-reference';
+import { getTypeForReference } from './utils/get-type-for-reference';
 import { Highlight } from './highlight';
 import { HighlightCallback } from '../resolver-map/types';
 
@@ -25,7 +25,7 @@ export interface ReferencesOperation {
 
 export type ReferenceMap = {
   [typeName: string]: {
-    type: NonNullable<ReturnType<typeof typeForReference>>;
+    type: NonNullable<ReturnType<typeof getTypeForReference>>;
     fields?: {
       [fieldName: string]: NonNullable<ReturnType<typeof getFieldForReference>>;
     };

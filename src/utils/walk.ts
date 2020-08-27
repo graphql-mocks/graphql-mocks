@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLNamedType, GraphQLField, GraphQLInputField } from 'graphql';
 import { Reference, CoercibleHighlight } from '../highlight/types';
-import { typeForReference } from '../highlight/utils/type-for-reference';
+import { getTypeForReference } from '../highlight/utils/get-type-for-reference';
 import { getFieldForReference } from '../highlight/utils/get-field-for-reference';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 
@@ -19,7 +19,7 @@ export async function walk(
   const highlight = coerceHighlight(graphqlSchema, coercibleHighlight);
 
   for (const reference of highlight.references) {
-    const type = typeForReference(graphqlSchema, reference);
+    const type = getTypeForReference(graphqlSchema, reference);
     const field = getFieldForReference(graphqlSchema, reference);
 
     if (!type) {

@@ -2,7 +2,7 @@ import { ResolverMap, FieldResolver, TypeResolver } from '../../types';
 import { Reference } from '../../highlight/types';
 import { isTypeReference } from '../../highlight/utils/is-type-reference';
 import { isFieldReference } from '../../highlight/utils/is-field-reference';
-import { getInstanceForReference } from '../../highlight/utils/instance-for-reference';
+import { getInstanceForReference } from '../../highlight/utils/get-instance-for-reference';
 import { isAbstractType, GraphQLSchema, isObjectType } from 'graphql';
 import { getResolver } from './get-resolver';
 import { isReference } from '../../highlight/utils/is-reference';

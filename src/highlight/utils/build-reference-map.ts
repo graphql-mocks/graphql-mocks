@@ -1,6 +1,6 @@
 import { Reference, ReferenceMap } from '../types';
 import { isTypeReference } from './is-type-reference';
-import { typeForReference } from './type-for-reference';
+import { getTypeForReference } from './get-type-for-reference';
 import { isFieldReference } from './is-field-reference';
 import { getFieldForReference } from './get-field-for-reference';
 import { GraphQLField, GraphQLInputField, GraphQLSchema } from 'graphql';
@@ -10,7 +10,7 @@ export function buildReferenceMap(schema: GraphQLSchema, references: Reference[]
 
   references
     .filter(isTypeReference)
-    .map((typeReference) => typeForReference(schema, typeReference))
+    .map((typeReference) => getTypeForReference(schema, typeReference))
     .forEach((type) => {
       if (type) {
         map[type.name] = {
@@ -30,7 +30,7 @@ export function buildReferenceMap(schema: GraphQLSchema, references: Reference[]
     .forEach(([typeName, field]) => {
       if (field) {
         map[typeName] = map[typeName] || {};
-        const type = typeForReference(schema, typeName);
+        const type = getTypeForReference(schema, typeName);
         if (type) {
           map[typeName].type = type;
         }
