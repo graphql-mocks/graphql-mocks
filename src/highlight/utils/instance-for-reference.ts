@@ -10,7 +10,7 @@ import { Reference, FieldReference, TypeReference } from '../types';
 import { isTypeReference } from './is-type-reference';
 import { typeForReference } from './type-for-reference';
 import { isFieldReference } from './is-field-reference';
-import { fieldForReference } from './field-for-reference';
+import { getFieldForReference } from './get-field-for-reference';
 
 export function instanceForReference(schema: GraphQLSchema, reference: TypeReference): GraphQLNamedType | undefined;
 export function instanceForReference(
@@ -32,7 +32,7 @@ export function instanceForReference(
   if (isFieldReference(reference)) {
     const [typeName, fieldName] = reference;
     const type = typeForReference(schema, typeName);
-    const field = fieldForReference(schema, [typeName, fieldName]);
+    const field = getFieldForReference(schema, [typeName, fieldName]);
 
     if (isObjectType(type) && field) {
       return [type, field];

@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLField, GraphQLInputField } from 'graphql';
 import { Reference } from '../types';
 
-export function fieldForReference(
+export function getFieldForReference(
   schema: GraphQLSchema,
   reference: Reference,
 ): GraphQLField<unknown, unknown> | GraphQLInputField | undefined {

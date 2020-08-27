@@ -1,7 +1,7 @@
 import { GraphQLSchema, GraphQLNamedType, GraphQLField, GraphQLInputField } from 'graphql';
 import { Reference, CoercibleHighlight } from '../highlight/types';
 import { typeForReference } from '../highlight/utils/type-for-reference';
-import { fieldForReference } from '../highlight/utils/field-for-reference';
+import { getFieldForReference } from '../highlight/utils/get-field-for-reference';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 
 export type WalkCallback = (options: {
@@ -20,7 +20,7 @@ export async function walk(
 
   for (const reference of highlight.references) {
     const type = typeForReference(graphqlSchema, reference);
-    const field = fieldForReference(graphqlSchema, reference);
+    const field = getFieldForReference(graphqlSchema, reference);
 
     if (!type) {
       continue;

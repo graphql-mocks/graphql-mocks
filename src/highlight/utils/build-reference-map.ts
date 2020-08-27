@@ -2,7 +2,7 @@ import { Reference, ReferenceMap } from '../types';
 import { isTypeReference } from './is-type-reference';
 import { typeForReference } from './type-for-reference';
 import { isFieldReference } from './is-field-reference';
-import { fieldForReference } from './field-for-reference';
+import { getFieldForReference } from './get-field-for-reference';
 import { GraphQLField, GraphQLInputField, GraphQLSchema } from 'graphql';
 
 export function buildReferenceMap(schema: GraphQLSchema, references: Reference[]): ReferenceMap {
@@ -22,7 +22,7 @@ export function buildReferenceMap(schema: GraphQLSchema, references: Reference[]
   references
     .filter(isFieldReference)
     .map(([typeName, fieldName]) => {
-      return [typeName, fieldForReference(schema, [typeName, fieldName])] as [
+      return [typeName, getFieldForReference(schema, [typeName, fieldName])] as [
         string,
         GraphQLField<unknown, unknown> | GraphQLInputField | undefined,
       ];
