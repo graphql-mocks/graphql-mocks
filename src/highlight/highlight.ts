@@ -8,6 +8,9 @@ import { Highlighter, Reference, ReferencesOperation, ReferenceMap } from './typ
 import { convertHighlighterOrReferenceToHighlighter } from './utils/convert-highlighter-or-reference-to-highlighter';
 import { buildReferenceMap } from './utils/build-reference-map';
 import { unique } from './utils/unique';
+import { isFieldReference } from './utils/is-field-reference';
+import { typeForReference } from './utils/type-for-reference';
+import { isTypeReference } from './utils/is-type-reference';
 
 export class Highlight {
   schema: GraphQLSchema;
@@ -69,10 +72,22 @@ export class Highlight {
     // all changes are implemented with a fresh copy of data
     const references = clone(this.references);
 
-    let updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
-      const highlightedReferences = highlighter.mark(schema);
-      return operation(references, highlightedReferences);
-    }, references);
+    let updated = highlighters
+      .reduce((references: Reference[], highlighter: Highlighter) => {
+        const highlightedReferences = highlighter.mark(schema);
+        return operation(references, highlightedReferences);
+      }, references)
+      .filter(function filterInternal(reference) {
+        if (isFieldReference(reference)) {
+          return reference[0].startsWith('__');
+        }
+
+        if (isTypeReference(reference)) {
+          return reference.startsWith('__');
+        }
+
+        return true;
+      });
 
     updated = unique(updated);
     return updated;
