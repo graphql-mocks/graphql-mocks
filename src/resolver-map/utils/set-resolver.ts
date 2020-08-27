@@ -2,7 +2,7 @@ import { ResolverMap, FieldResolver, TypeResolver } from '../../types';
 import { Reference } from '../../highlight/types';
 import { isTypeReference } from '../../highlight/utils/is-type-reference';
 import { isFieldReference } from '../../highlight/utils/is-field-reference';
-import { instanceForReference } from '../../highlight/utils/instance-for-reference';
+import { getInstanceForReference } from '../../highlight/utils/instance-for-reference';
 import { isAbstractType, GraphQLSchema, isObjectType } from 'graphql';
 import { getResolver } from './get-resolver';
 import { isReference } from '../../highlight/utils/is-reference';
@@ -34,7 +34,7 @@ export function setResolver(
 
   // Do additional safety checks if a graphqlSchema is provided
   if (graphqlSchema) {
-    const instance = instanceForReference(graphqlSchema, reference);
+    const instance = getInstanceForReference(graphqlSchema, reference);
 
     if (!instance) {
       throw new Error(`Expected to find reference ${reference} in schema`);

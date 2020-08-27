@@ -12,16 +12,16 @@ import { typeForReference } from './type-for-reference';
 import { isFieldReference } from './is-field-reference';
 import { getFieldForReference } from './get-field-for-reference';
 
-export function instanceForReference(schema: GraphQLSchema, reference: TypeReference): GraphQLNamedType | undefined;
-export function instanceForReference(
+export function getInstanceForReference(schema: GraphQLSchema, reference: TypeReference): GraphQLNamedType | undefined;
+export function getInstanceForReference(
   schema: GraphQLSchema,
   reference: FieldReference,
 ): [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined;
-export function instanceForReference(
+export function getInstanceForReference(
   schema: GraphQLSchema,
   reference: Reference,
 ): GraphQLNamedType | [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined;
-export function instanceForReference(
+export function getInstanceForReference(
   schema: GraphQLSchema,
   reference: Reference,
 ): GraphQLNamedType | [GraphQLNamedType, GraphQLField<any, any> | GraphQLInputField] | undefined {
