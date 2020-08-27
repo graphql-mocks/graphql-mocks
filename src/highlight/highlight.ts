@@ -12,14 +12,12 @@ import { unique } from './utils/unique';
 export class Highlight {
   schema: GraphQLSchema;
   references: Reference[];
-  errors: Error[];
 
   constructor(schema: GraphQLSchema, references?: Reference[]) {
     this.schema = schema;
     references = references ?? [];
     this.validate(references);
     this.references = references;
-    this.errors = [];
   }
 
   get instances(): { types: ReferenceMap } {
@@ -61,21 +59,6 @@ export class Highlight {
     return this.clone(newReferences);
   }
 
-  check(...highlightersOrReferences: (Highlighter | Reference)[]): Error[] {
-    const schema = this.schema;
-    const highlighters = highlightersOrReferences
-      .map(convertHighlighterOrReferenceToHighlighter)
-      .filter(Boolean) as Highlighter[];
-
-    return highlighters
-      .reduce((references: Reference[], highlighter: Highlighter) => {
-        const highlightedReferences = highlighter.mark(schema);
-        return [...references, ...highlightedReferences];
-      }, [])
-      .map((reference) => validate(this.schema, reference))
-      .filter(Boolean) as Error[];
-  }
-
   protected clone(references: Reference[]): Highlight {
     return new Highlight(this.schema, references);
   }
@@ -87,16 +70,7 @@ export class Highlight {
     const references = clone(this.references);
 
     let updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
-      let highlightedReferences;
-
-      try {
-        highlightedReferences = highlighter.mark(schema);
-      } catch (error) {
-        this.errors.push(error);
-      } finally {
-        highlightedReferences = highlightedReferences || [];
-      }
-
+      const highlightedReferences = highlighter.mark(schema);
       return operation(references, highlightedReferences);
     }, references);
 

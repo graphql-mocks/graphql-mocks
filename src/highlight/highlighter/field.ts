@@ -49,11 +49,7 @@ export class FieldHighlighter implements Highlighter {
     }
 
     const type = schema.getType(typeTarget);
-    if (!type?.name) throw new Error(`Could not find ${typeTarget} in schema`);
-    if (!('getFields' in type))
-      throw new Error(
-        `Type ${type.name} does not have fields. Fields highlighter can only operate on types with fields`,
-      );
+    if (!type?.name || !('getFields' in type)) return [];
 
     const fields = type.getFields();
     const fieldNames = fieldTarget === HIGHLIGHT_ALL ? Object.keys(fields) : [fieldTarget];
