@@ -36,8 +36,7 @@ export class Highlight {
 
     const newReferences = this.applyHighlighters(operation, highlighters);
     this.validate(newReferences);
-    this.references = newReferences;
-    return this;
+    return this.clone(newReferences);
   }
 
   exclude(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
@@ -48,8 +47,7 @@ export class Highlight {
 
     const newReferences = this.applyHighlighters(operation, highlighters);
     this.validate(newReferences);
-    this.references = newReferences;
-    return this;
+    return this.clone(newReferences);
   }
 
   filter(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
@@ -59,8 +57,8 @@ export class Highlight {
       .filter(Boolean) as Highlighter[];
 
     const newReferences = this.applyHighlighters(operation, highlighters);
-    this.references = newReferences;
-    return this;
+    this.validate(newReferences);
+    return this.clone(newReferences);
   }
 
   check(...highlightersOrReferences: (Highlighter | Reference)[]): Error[] {
@@ -78,8 +76,8 @@ export class Highlight {
       .filter(Boolean) as Error[];
   }
 
-  clone(): Highlight {
-    return new Highlight(this.schema, this.references);
+  protected clone(references: Reference[]): Highlight {
+    return new Highlight(this.schema, references);
   }
 
   protected applyHighlighters(operation: ReferencesOperation, highlighters: Highlighter[]): Reference[] {

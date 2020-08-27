@@ -1,8 +1,8 @@
 import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType, isObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
-import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Wrapper } from '../types';
+import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver } from '../types';
 import { setResolver } from './utils/set-resolver';
-import { HighlightableMiddlewareOptions } from './types';
+import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import { isTypeReference } from '../highlight/utils/is-type-reference';
@@ -15,9 +15,10 @@ import { interfaces } from '../highlight/highlighter/interface';
 import { getResolver } from './utils/get-resolver';
 
 export type EmbedOptions = {
-  wrappers?: Wrapper[];
   resolver?: FieldResolver | TypeResolver;
-} & HighlightableMiddlewareOptions;
+} & ReplaceableResolverOption &
+  HighlightableOption &
+  WrappableOption;
 
 export function embed({
   resolver: resolverOption,
@@ -34,8 +35,7 @@ export function embed({
       );
     }
 
-    const highlight = coerceHighlight(schema, coercibleHighlight).clone();
-    highlight.filter(combine(resolvesTo(), union(), interfaces()));
+    const highlight = coerceHighlight(schema, coercibleHighlight).filter(combine(resolvesTo(), union(), interfaces()));
 
     for (const reference of highlight.references) {
       const existingResolver = getResolver(resolverMap, reference);

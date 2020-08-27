@@ -1,5 +1,5 @@
 import { ResolverMapMiddleware, ResolverMap } from '../types';
-import { HighlightableMiddlewareOptions } from '../resolver-map/types';
+import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
 import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import { resolvesTo } from '../highlight/highlighter/resolves-to';
@@ -14,20 +14,20 @@ import { mirageAbstractTypeResolver } from './resolver/abstract';
 import { mirageRootQueryResolver, mirageObjectResolver } from '.';
 import { fromResolverMap } from '../highlight/highlighter/from-resolver-map';
 
-export function mirageMiddleware(options?: HighlightableMiddlewareOptions): ResolverMapMiddleware {
+export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
-    const highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);
+    let highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);
 
     // In no case do we want to add Mutation resolvers
-    highlight.exclude(['Mutation', '*']);
+    highlight = highlight.exclude(['Mutation', '*']);
 
     // If we can't replace resolvers, exclude the ones that exist in the resolver map
     if (!options?.replace) {
-      highlight.exclude(fromResolverMap(resolverMap));
+      highlight = highlight.exclude(fromResolverMap(resolverMap));
     }
 
-    const rootQueryHighlight = highlight.clone().filter(field(['Query', '*']));
+    const rootQueryHighlight = highlight.filter(field(['Query', '*']));
     await walk(graphqlSchema, rootQueryHighlight, ({ reference }) => {
       setResolver(resolverMap, reference, mirageRootQueryResolver, {
         graphqlSchema,
@@ -35,11 +35,7 @@ export function mirageMiddleware(options?: HighlightableMiddlewareOptions): Reso
       });
     });
 
-    const fieldResolvableHighlight = highlight
-      .clone()
-      .exclude(...rootQueryHighlight.references)
-      .filter(resolvesTo());
-
+    const fieldResolvableHighlight = highlight.exclude(...rootQueryHighlight.references).filter(resolvesTo());
     await walk(graphqlSchema, fieldResolvableHighlight, ({ reference }) => {
       setResolver(resolverMap, reference, mirageObjectResolver, {
         graphqlSchema,
@@ -47,7 +43,7 @@ export function mirageMiddleware(options?: HighlightableMiddlewareOptions): Reso
       });
     });
 
-    const typeResolvableHighlight = highlight.clone().filter(combine(union(), interfaces()));
+    const typeResolvableHighlight = highlight.filter(combine(union(), interfaces()));
     await walk(graphqlSchema, typeResolvableHighlight, ({ reference }) => {
       setResolver(resolverMap, reference, mirageAbstractTypeResolver, {
         graphqlSchema,

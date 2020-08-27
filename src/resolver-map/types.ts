@@ -1,9 +1,17 @@
 import { Highlight } from '../highlight/highlight';
 import { Reference } from '../highlight/types';
+import { Wrapper } from '../types';
 
-export type highlightCallback = (h: Highlight) => void;
+export type HighlightCallback = (h: Highlight) => Highlight;
 
-export interface HighlightableMiddlewareOptions {
-  highlight?: Highlight | Reference[] | highlightCallback;
+export interface ReplaceableResolverOption {
   replace?: boolean;
+}
+
+export interface HighlightableOption {
+  highlight?: Highlight | Reference[] | HighlightCallback;
+}
+
+export interface WrappableOption {
+  wrappers?: Wrapper[];
 }

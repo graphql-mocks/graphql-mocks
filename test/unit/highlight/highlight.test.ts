@@ -65,22 +65,17 @@ describe('highlight', function () {
   });
 
   it('can generate a Reference Map', function () {
-    const h = new Highlight(schema);
-    h.include('Cat', ['Cat', 'hasHair'], 'Animal');
+    const h = new Highlight(schema).include('Cat', ['Cat', 'hasHair'], 'Animal');
     expect(h.instances.types.Cat?.type.name).to.equal('Cat');
     expect(h.instances.types.Cat?.fields?.hasHair.name).to.equal('hasHair');
     expect(Object.keys(h.instances.types).length, 'only two types (Cat, Animal) to be captured').to.equal(2);
     expect(Object.keys(h.instances.types.Cat.fields ?? {}).length, 'only one field captured for Cat').to.equal(1);
   });
 
-  it('can make a copy via #clone', function () {
+  it('creates an instance copy on an operation', function () {
     const h1 = new Highlight(schema);
-    h1.include('Cat');
-
-    const h2 = h1.clone();
-
+    const h2 = h1.include('Cat');
     expect(h1).to.not.equal(h2);
-    expect(h1.references).to.deep.equal(h2.references);
   });
 
   context('#h functional shorthand', function () {
@@ -94,12 +89,11 @@ describe('highlight', function () {
 
   context('highlighters', function () {
     it('can use highlighters', function () {
-      const h = new Highlight(schema);
       const queryPersonHighlighter = field(['Query', 'person']);
       const personNameHighlighter = field(['Person', 'name']);
 
       // start with 2 highlighted fields
-      h.include(queryPersonHighlighter, personNameHighlighter);
+      let h = new Highlight(schema).include(queryPersonHighlighter, personNameHighlighter);
 
       expect(h.references).to.deep.equal([
         ['Query', 'person'],
@@ -107,11 +101,11 @@ describe('highlight', function () {
       ]);
 
       // filter on one of them
-      h.filter(queryPersonHighlighter);
+      h = h.filter(queryPersonHighlighter);
       expect(h.references).to.deep.equal([['Query', 'person']]);
 
       // exclude the last highlight
-      h.exclude(queryPersonHighlighter);
+      h = h.exclude(queryPersonHighlighter);
       expect(h.references).to.deep.equal([]);
     });
   });
