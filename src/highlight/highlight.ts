@@ -11,6 +11,8 @@ import { unique } from './utils/unique';
 import { isFieldReference } from './utils/is-field-reference';
 import { isTypeReference } from './utils/is-type-reference';
 
+const INTERNAL_SCALARS = ['Int', 'Float', 'String', 'Boolean', 'ID'];
+
 export class Highlight {
   schema: GraphQLSchema;
   references: Reference[];
@@ -88,8 +90,7 @@ export class Highlight {
         }
 
         if (type) {
-          const internalScalars = ['String', 'Boolean'];
-          return !type.startsWith('__') && !internalScalars.includes(type);
+          return !type.startsWith('__') && !INTERNAL_SCALARS.includes(type);
         }
 
         return true;

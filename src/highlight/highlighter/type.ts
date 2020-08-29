@@ -26,13 +26,13 @@ export class TypeHighlighter implements Highlighter {
 
     const queryTypeName = schema.getQueryType()?.name;
     if (queryTypeName && targets.includes(ROOT_QUERY)) {
-      targets = targets.filter((target) => target === ROOT_QUERY);
+      targets = targets.filter((target) => target !== ROOT_QUERY);
       targets.push(queryTypeName);
     }
 
     const mutationTypeName = schema.getMutationType()?.name;
     if (mutationTypeName && targets.includes(ROOT_MUTATION)) {
-      targets = targets.filter((target) => target === ROOT_MUTATION);
+      targets = targets.filter((target) => target !== ROOT_MUTATION);
       targets.push(mutationTypeName);
     }
 
