@@ -13,7 +13,6 @@ import {
 
 export type FieldResolverWrapperOptions = WrapperOptionsBase & {
   type: GraphQLObjectType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ObjectField;
 };
 
@@ -85,7 +84,6 @@ class InternalNamedWrapper implements NamedWrapper {
       const expandedOptions: FieldResolverWrapperOptions = {
         ...options,
         type: options.type as GraphQLObjectType,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         field: options.field as ObjectField,
       };
 

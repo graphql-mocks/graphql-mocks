@@ -1,23 +1,28 @@
 import { GraphQLSchema, GraphQLNamedType, GraphQLInputField } from 'graphql';
-import { Reference, CoercibleHighlight } from '../highlight/types';
+import { Reference } from '../highlight/types';
 import { ObjectField } from '../types';
-import { coerceHighlight, getTypeForReference, getFieldForReference } from '../highlight/utils';
+import { getTypeForReference, getFieldForReference } from '../highlight/utils';
 
 export type WalkCallback = (options: {
   reference: Reference;
   type: GraphQLNamedType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field?: ObjectField | GraphQLInputField;
 }) => void | Promise<void>;
 
 export async function walk(
   graphqlSchema: GraphQLSchema,
-  coercibleHighlight: CoercibleHighlight,
+  references: Reference[],
   callback: WalkCallback,
 ): Promise<void> {
-  const highlight = coerceHighlight(graphqlSchema, coercibleHighlight);
+  for (const reference of references) {
+    if (!Array.isArray(references)) {
+      throw new Error(`Expected an array of references, got ${typeof references}`);
+    }
 
-  for (const reference of highlight.references) {
+    if (typeof callback !== 'function') {
+      throw new Error(`Expected callback to be a function, got ${typeof callback}`);
+    }
+
     const type = getTypeForReference(graphqlSchema, reference);
     const field = getFieldForReference(graphqlSchema, reference);
 

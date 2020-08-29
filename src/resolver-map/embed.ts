@@ -60,7 +60,6 @@ export function embed({
       }
 
       let type;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let field: ObjectField | undefined;
       if (isTypeReference(reference)) {
         type = highlight.instances.types[reference].type;
@@ -75,7 +74,6 @@ export function embed({
         type = highlight.instances.types[typeName].type;
         assertObjectType(type);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         field = highlight.instances.types[typeName]?.fields?.[fieldName] as ObjectField;
 
         if (!field) {

@@ -2,7 +2,7 @@ import { buildSchema, GraphQLSchema } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { walk, WalkCallback } from '../../../src/utils/walk';
-import { hi, Highlight, resolvesTo, field } from '../../../src/highlight';
+import { hi, Highlight, resolvesTo } from '../../../src/highlight';
 import { Reference } from '../../../src/highlight/types';
 
 function getCallbackReferences(spy: SinonSpy): Reference[] {
@@ -45,7 +45,7 @@ describe('utils/walk', function () {
 
   it('walks references from a highlight', async function () {
     const callbackSpy = spy();
-    await walk(graphqlSchema, highlight, callbackSpy);
+    await walk(graphqlSchema, highlight.references, callbackSpy);
     const references = getCallbackReferences(callbackSpy);
 
     expect(references.sort()).to.deep.equal(
@@ -60,16 +60,5 @@ describe('utils/walk', function () {
         ['Pet', 'name'],
       ].sort(),
     );
-  });
-
-  it('can walk references from a filtered highlight', async function () {
-    const callbackSpy = spy();
-    await walk(graphqlSchema, highlight.filter(field(['Query', '*'])), callbackSpy);
-    const references = getCallbackReferences(callbackSpy);
-
-    expect(references).to.deep.equal([
-      ['Query', 'person'],
-      ['Query', 'locations'],
-    ]);
   });
 });

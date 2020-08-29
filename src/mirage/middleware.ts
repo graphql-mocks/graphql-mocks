@@ -22,7 +22,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
     }
 
     const rootQueryHighlight = highlight.filter(field(['Query', '*']));
-    await walk(graphqlSchema, rootQueryHighlight, ({ reference }) => {
+    await walk(graphqlSchema, rootQueryHighlight.references, ({ reference }) => {
       setResolver(resolverMap, reference, mirageRootQueryResolver, {
         graphqlSchema,
         replace: options?.replace,
@@ -30,7 +30,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
     });
 
     const fieldResolvableHighlight = highlight.exclude(...rootQueryHighlight.references).filter(resolvesTo());
-    await walk(graphqlSchema, fieldResolvableHighlight, ({ reference }) => {
+    await walk(graphqlSchema, fieldResolvableHighlight.references, ({ reference }) => {
       setResolver(resolverMap, reference, mirageObjectResolver, {
         graphqlSchema,
         replace: options?.replace,
@@ -38,7 +38,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
     });
 
     const typeResolvableHighlight = highlight.filter(combine(union(), interfaces()));
-    await walk(graphqlSchema, typeResolvableHighlight, ({ reference }) => {
+    await walk(graphqlSchema, typeResolvableHighlight.references, ({ reference }) => {
       setResolver(resolverMap, reference, mirageAbstractTypeResolver, {
         graphqlSchema,
         replace: options?.replace,
