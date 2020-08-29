@@ -1,5 +1,5 @@
 import { GraphQLSchema, isAbstractType, assertObjectType, isObjectType } from 'graphql';
-import { wrapResolver } from '../resolver/wrap';
+import { wrap } from '../resolver/wrap';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, ObjectField } from '../types';
 import { setResolver } from './utils/set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
@@ -91,7 +91,7 @@ export function embed({
         );
       }
 
-      const wrappedResolver = await wrapResolver(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
+      const wrappedResolver = await wrap(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
         type,
         schema,
         field,

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { wrapResolver } from '../../../src/resolver/wrap';
+import { wrap } from '../../../src/resolver/wrap';
 import { embedPackOptionsWrapper } from '../../../src/pack/utils';
 import { GraphQLObjectType } from 'graphql';
 
@@ -9,7 +9,7 @@ describe('pack/utils', function () {
     it('creates a wrapped function with embedded packOptions', async function () {
       const resolver = sinon.spy();
 
-      const wrappedResolver = await wrapResolver(resolver, [embedPackOptionsWrapper], {
+      const wrappedResolver = await wrap(resolver, [embedPackOptionsWrapper], {
         resolverMap: {},
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         schema: {} as any,

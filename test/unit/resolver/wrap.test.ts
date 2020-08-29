@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { wrapResolver } from '../../../src/resolver/wrap';
+import { wrap } from '../../../src/resolver/wrap';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 import { GraphQLSchema } from 'graphql';
 import { WrapperOptionsBase, FieldResolver, FieldWrapperFunction } from '../../../src/types';
@@ -37,11 +37,7 @@ describe('resolver/wrap', function () {
   });
 
   it('can wrap a resolver function', async function () {
-    const wrappedResolver = await wrapResolver(
-      resolver,
-      [resolverWrapper as FieldWrapperFunction],
-      resolverWrapperOptions,
-    );
+    const wrappedResolver = await wrap(resolver, [resolverWrapper as FieldWrapperFunction], resolverWrapperOptions);
     expect(resolverWrapper.called).to.be.true;
     expect(resolverWrapper.firstCall.args).to.deep.equal([resolver, resolverWrapperOptions]);
 
@@ -54,7 +50,7 @@ describe('resolver/wrap', function () {
   });
 
   it('can wrap a resolver function with multiple resolver wrappers', async function () {
-    const wrappedResolver = await wrapResolver(
+    const wrappedResolver = await wrap(
       resolver,
       // using the same resolverWrapper twice
       [resolverWrapper as FieldWrapperFunction, resolverWrapper as FieldWrapperFunction],
@@ -73,7 +69,7 @@ describe('resolver/wrap', function () {
     let error: Error | null = null;
 
     try {
-      await wrapResolver(
+      await wrap(
         resolver,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         [(): any => ('resolver wrapper returning a string' as unknown) as FieldResolver],

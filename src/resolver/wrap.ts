@@ -5,7 +5,7 @@ function isNamedWrapper(wrapper: Wrapper): wrapper is NamedWrapper {
   return wrapper && 'name' in wrapper && 'wrap' in wrapper;
 }
 
-export async function wrapResolver(
+export async function wrap(
   resolver: TypeResolver | FieldResolver,
   wrappers: Wrapper[],
   wrapperOptions: WrapperOptionsBase,
@@ -50,5 +50,5 @@ export async function wrapResolver(
     );
   }
 
-  return wrapResolver(wrappedResolver, wrappers, wrapperOptions);
+  return wrap(wrappedResolver, wrappers, wrapperOptions);
 }
