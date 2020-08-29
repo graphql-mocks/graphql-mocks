@@ -1,2 +1,3 @@
 export { extractDependencies, extractAllDependencies } from './extract-dependencies';
-export { wrap as wrapResolver } from './wrap';
+export { wrap } from './wrap';
+export { createWrapper } from './create-wrapper';
