@@ -12,7 +12,7 @@ export const pack: Packer = async function pack(
 ) {
   middlewares = [...middlewares, embed({ wrappers: [embedPackOptionsWrapper] })];
 
-  // make an intial copy
+  // make an initial copy
   let wrappedMap = cloneDeep(initialResolversMap);
   packOptions = normalizePackOptions(packOptions);
 

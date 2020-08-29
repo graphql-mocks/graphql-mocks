@@ -13,6 +13,10 @@ export async function wrapResolver(
   wrappers = [...wrappers];
   let wrapper = wrappers.shift();
 
+  if (typeof resolver !== 'function') {
+    throw new Error(`Resolver for wrapResolver must be a function, got ${typeof resolver}`);
+  }
+
   if (!wrapper) {
     return resolver;
   }
