@@ -1,8 +1,8 @@
 import { GraphQLSchema } from 'graphql';
 import { TypeReference, HIGHLIGHT_ALL, HighlighterFactory, Highlighter } from '../types';
 
-export const ROOT_QUERY_TYPES = '<ROOT_QUERY_TYPE>';
-export const ROOT_MUTATION_TYPES = '<ROOT_MUTATION_TYPE>';
+export const ROOT_QUERY = '<ROOT_QUERY_TYPE>';
+export const ROOT_MUTATION = '<ROOT_MUTATION_TYPE>';
 export class TypeHighlighter implements Highlighter {
   targets: string[];
 
@@ -22,6 +22,18 @@ export class TypeHighlighter implements Highlighter {
     if (targets.includes(HIGHLIGHT_ALL)) {
       const allTypeNames = Object.keys(schema.getTypeMap());
       return allTypeNames;
+    }
+
+    const queryTypeName = schema.getQueryType()?.name;
+    if (queryTypeName && targets.includes(ROOT_QUERY)) {
+      targets = targets.filter((target) => target === ROOT_QUERY);
+      targets.push(queryTypeName);
+    }
+
+    const mutationTypeName = schema.getMutationType()?.name;
+    if (mutationTypeName && targets.includes(ROOT_MUTATION)) {
+      targets = targets.filter((target) => target === ROOT_MUTATION);
+      targets.push(mutationTypeName);
     }
 
     return targets;

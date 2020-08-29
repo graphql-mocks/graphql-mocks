@@ -1,12 +1,12 @@
 import { GraphQLSchema, GraphQLNamedType } from 'graphql';
 import { FieldReference, HighlighterFactory, Highlighter, HIGHLIGHT_ALL } from '../types';
-import { ROOT_QUERY_TYPES, ROOT_MUTATION_TYPES } from './type';
+import { ROOT_QUERY, ROOT_MUTATION } from './type';
 
 function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
 }
 
-export { HIGHLIGHT_ALL, ROOT_QUERY_TYPES, ROOT_MUTATION_TYPES };
+export { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION };
 
 export class FieldHighlighter implements Highlighter {
   targets: [string, string][];
@@ -48,14 +48,30 @@ export class FieldHighlighter implements Highlighter {
       return expanded;
     }
 
-    const type = schema.getType(typeTarget);
-    if (!type?.name || !('getFields' in type)) return [];
+    let type = schema.getType(typeTarget);
+
+    if (typeTarget === ROOT_QUERY) {
+      type = schema.getQueryType();
+    }
+
+    if (typeTarget === ROOT_MUTATION) {
+      type = schema.getMutationType();
+    }
+
+    if (!type || !type?.name || !('getFields' in type)) {
+      return [];
+    }
 
     const fields = type.getFields();
     const fieldNames = fieldTarget === HIGHLIGHT_ALL ? Object.keys(fields) : [fieldTarget];
+
     const fieldReferences = fieldNames
       .filter((fieldName) => Object.keys(fields).includes(fieldName))
-      .map((fieldName) => [type.name, fieldName]) as FieldReference[];
+      .map((fieldName) => {
+        return type?.name && fieldName ? [type.name, fieldName] : undefined;
+      })
+      .filter(Boolean) as FieldReference[];
+
     return fieldReferences;
   }
 }
