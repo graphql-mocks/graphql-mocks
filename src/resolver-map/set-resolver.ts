@@ -1,8 +1,8 @@
-import { ResolverMap, FieldResolver, TypeResolver } from '../../types';
-import { Reference } from '../../highlight/types';
+import { ResolverMap, FieldResolver, TypeResolver } from '../types';
+import { Reference } from '../highlight/types';
 import { isAbstractType, GraphQLSchema, isObjectType } from 'graphql';
 import { getResolver } from './get-resolver';
-import { isReference, isFieldReference, getInstanceForReference, isTypeReference } from '../../highlight/utils';
+import { isReference, isFieldReference, getInstanceForReference, isTypeReference } from '../highlight/utils';
 
 export function setResolver(
   resolverMap: ResolverMap,

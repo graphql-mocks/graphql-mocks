@@ -1,6 +1,6 @@
-import { ResolverMap, FieldResolver, TypeResolver } from '../../types';
-import { TypeReference, Reference, FieldReference } from '../../highlight/types';
-import { isTypeReference, isFieldReference } from '../../highlight/utils';
+import { ResolverMap, FieldResolver, TypeResolver } from '../types';
+import { TypeReference, Reference, FieldReference } from '../highlight/types';
+import { isTypeReference, isFieldReference } from '../highlight/utils';
 
 export function getResolver(resolverMap: ResolverMap, reference: FieldReference): FieldResolver | undefined;
 export function getResolver(resolverMap: ResolverMap, reference: TypeReference): TypeResolver | undefined;

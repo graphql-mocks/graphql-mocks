@@ -1,11 +1,11 @@
 import { GraphQLSchema, isAbstractType, assertObjectType, isObjectType } from 'graphql';
 import { wrap } from '../resolver/wrap';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, ObjectField } from '../types';
-import { setResolver } from './utils/set-resolver';
+import { setResolver } from './set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
 import { embedPackOptionsWrapper } from '../pack';
-import { getResolver } from './utils/get-resolver';
+import { getResolver } from './get-resolver';
 import { coerceHighlight, isTypeReference, isFieldReference } from '../highlight/utils';
 import { interfaces, combine, resolvesTo, union } from '../highlight';
 
