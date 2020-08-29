@@ -5,16 +5,14 @@ class FromResolverMapHighlighter implements Highlighter {
   resolverMap: ResolverMap;
 
   constructor(resolverMap: ResolverMap) {
-    if (typeof resolverMap !== 'object') {
-      throw new Error(`Pass a resolver map for the fromResolverMap highlighter, got typeof ${resolverMap}`);
-    }
-
     this.resolverMap = resolverMap;
   }
 
   mark(): Reference[] {
     const references: Reference[] = [];
     const resolverMap = this.resolverMap;
+
+    if (typeof resolverMap !== 'object') return [];
 
     for (const typeName in resolverMap) {
       references.push(typeName as TypeReference);

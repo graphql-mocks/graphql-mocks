@@ -24,16 +24,19 @@ export class TypeHighlighter implements Highlighter {
       return allTypeNames;
     }
 
+    const hasSpecialQueryTarget = targets.includes(ROOT_QUERY);
+    const hasSpecialMutationTarget = targets.includes(ROOT_MUTATION);
+    console.log(hasSpecialMutationTarget);
+    targets = targets.filter((target) => target !== ROOT_QUERY && target !== ROOT_MUTATION);
+
     const queryTypeName = schema.getQueryType()?.name;
-    if (queryTypeName && targets.includes(ROOT_QUERY)) {
-      targets = targets.filter((target) => target !== ROOT_QUERY);
+    if (queryTypeName && hasSpecialQueryTarget) {
       targets.push(queryTypeName);
     }
 
-    const mutationTypeName = schema.getMutationType()?.name;
-    if (mutationTypeName && targets.includes(ROOT_MUTATION)) {
-      targets = targets.filter((target) => target !== ROOT_MUTATION);
-      targets.push(mutationTypeName);
+    const queryMutationName = schema.getMutationType()?.name;
+    if (queryMutationName && hasSpecialMutationTarget) {
+      targets.push(queryMutationName);
     }
 
     return targets;
