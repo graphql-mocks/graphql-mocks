@@ -96,4 +96,14 @@ describe('highlight/highlighter/resolves-to', function () {
     const result = resolvesTo('[Person!]!').mark(schema);
     expect(result).to.deep.equal([['Person', 'friends']]);
   });
+
+  it('ignores entries it cannot find', function () {
+    const result = resolvesTo('Noop').mark(schema);
+    expect(result).to.deep.equal([]);
+  });
+
+  it('ignores unparsable syntax for what can resolve to a field', function () {
+    const result = resolvesTo('$*& {}').mark(schema);
+    expect(result).to.deep.equal([]);
+  });
 });

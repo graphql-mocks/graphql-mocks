@@ -14,14 +14,19 @@ function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
 }
 
-function getResolvableAST(resolveString: string): NamedTypeNode {
+function getResolvableAST(resolveString: string): NamedTypeNode | undefined {
   resolveString = resolveString.trim();
-  // https://astexplorer.net/#/gist/94dd07476cd3fdfa4a8ada395022b330/21faa076d9e4b626f114e39c79db8556cfb852ae
-  const node = parse(`
+  let node;
+  try {
+    // https://astexplorer.net/#/gist/94dd07476cd3fdfa4a8ada395022b330/21faa076d9e4b626f114e39c79db8556cfb852ae
+    node = parse(`
     type Noop {
       noop: ${resolveString}
     }
   `);
+  } catch {
+    return undefined;
+  }
 
   const objectNode: ObjectTypeDefinitionNode = node.definitions[0] as ObjectTypeDefinitionNode;
   const fieldNode: FieldDefinitionNode = objectNode?.fields?.[0] as FieldDefinitionNode;
@@ -47,7 +52,7 @@ export class ResolvesToHighlighter implements Highlighter {
       return ResolvesToHighlighter.allFieldResolvables(schema);
     }
 
-    const astTargets = targets.map(getResolvableAST);
+    const astTargets = targets.map(getResolvableAST).filter(Boolean) as NamedTypeNode[];
     return astTargets.map((astTarget) => ResolvesToHighlighter.expandTarget(schema, astTarget)).reduce(concat, []);
   }
 

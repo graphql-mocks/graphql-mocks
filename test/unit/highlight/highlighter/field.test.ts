@@ -1,6 +1,6 @@
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
-import { field } from '../../../../src/highlight/highlighter/field';
+import { field, HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/field';
 
 const schema = buildSchema(`
   schema {
@@ -68,8 +68,20 @@ describe('highlight/highlighter/field', function () {
     ]);
   });
 
+  it('ignores invalid fields specified', function () {
+    expect(field(['Cat', 'notAValidField'], ['Dog', 'knowsTricks']).mark(schema)).to.deep.equal([
+      ['Dog', 'knowsTricks'],
+    ]);
+  });
+
+  it('ignores invalid types specified', function () {
+    expect(field(['NotAValidType', 'hasHair'], ['Dog', 'knowsTricks']).mark(schema)).to.deep.equal([
+      ['Dog', 'knowsTricks'],
+    ]);
+  });
+
   it('creates field references from HIGHLIGHT_ALL for type name', function () {
-    expect(field(['Dog', '*']).mark(schema)).to.deep.equal([
+    expect(field(['Dog', HIGHLIGHT_ALL]).mark(schema)).to.deep.equal([
       ['Dog', 'name'],
       ['Dog', 'type'],
       ['Dog', 'knowsTricks'],
@@ -78,14 +90,14 @@ describe('highlight/highlighter/field', function () {
   });
 
   it('creates field references from HIGHLIGHT_ALL for field name', function () {
-    expect(field(['*', 'owner']).mark(schema)).to.deep.equal([
+    expect(field([HIGHLIGHT_ALL, 'owner']).mark(schema)).to.deep.equal([
       ['Cat', 'owner'],
       ['Dog', 'owner'],
     ]);
   });
 
   it('includes a mix of object types and interfaces with HIGHLIGHT_ALL for field name', function () {
-    expect(field(['*', 'name']).mark(schema)).to.deep.equal([
+    expect(field([HIGHLIGHT_ALL, 'name']).mark(schema)).to.deep.equal([
       ['Person', 'name'],
       ['Animal', 'name'],
       ['Cat', 'name'],
@@ -94,7 +106,7 @@ describe('highlight/highlighter/field', function () {
   });
 
   it('can use HIGHLIGHT_ALL for type and fields to highlight everything with a field', function () {
-    expect(field(['*', '*']).mark(schema)).to.deep.equal([
+    expect(field([HIGHLIGHT_ALL, HIGHLIGHT_ALL]).mark(schema)).to.deep.equal([
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],

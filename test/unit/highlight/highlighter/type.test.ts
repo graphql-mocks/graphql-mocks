@@ -88,6 +88,11 @@ describe('highlight/highlighter/type', function () {
     expect(highlights).to.deep.equal(['Query', 'Person', 'DogNames']);
   });
 
+  it('ignores specified types that do not exist', function () {
+    const highlights = type('Query', 'NotInSchema', 'Person', 'DogNames').mark(schema).filter(isNotInternal);
+    expect(highlights).to.deep.equal(['Query', 'Person', 'DogNames']);
+  });
+
   it('highlights the root query type with the ROOT_QUERY export', function () {
     const highlights = type(ROOT_QUERY).mark(schema).filter(isNotInternal);
     expect(highlights).to.deep.equal(['Query']);

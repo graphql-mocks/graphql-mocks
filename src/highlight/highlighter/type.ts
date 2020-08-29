@@ -19,8 +19,8 @@ export class TypeHighlighter implements Highlighter {
   }
 
   static expandTargets(schema: GraphQLSchema, targets: string[]): TypeReference[] {
+    const allTypeNames = Object.keys(schema.getTypeMap());
     if (targets.includes(HIGHLIGHT_ALL)) {
-      const allTypeNames = Object.keys(schema.getTypeMap());
       return allTypeNames;
     }
 
@@ -39,7 +39,7 @@ export class TypeHighlighter implements Highlighter {
       targets.push(queryMutationName);
     }
 
-    return targets;
+    return targets.filter((target) => allTypeNames.includes(target));
   }
 }
 
