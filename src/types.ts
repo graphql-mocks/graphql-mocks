@@ -19,8 +19,8 @@ type ManagedContext = {
   pack?: PackOptions;
 };
 
-export type Primitive = string | boolean | number;
 export type FieldResolver = GraphQLFieldResolver<any, any>;
+export type ObjectField = GraphQLField<any, any>;
 export type TypeResolver = GraphQLTypeResolver<any, any>;
 export type ResolverParent = Parameters<GraphQLFieldResolver<any, any>>[0];
 export type ResolverArgs = Parameters<GraphQLFieldResolver<any, any>>[1];

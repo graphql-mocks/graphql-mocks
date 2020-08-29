@@ -46,6 +46,7 @@ describe('resolver/wrap', function () {
     expect(resolverWrapper.firstCall.args).to.deep.equal([resolver, resolverWrapperOptions]);
 
     expect(internalWrapperSpy.called).to.be.false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wrappedResolver(parent, args, context, info as any);
     expect(internalWrapperSpy.called).to.be.true;
     expect(resolver.called).to.be.true;
@@ -61,6 +62,7 @@ describe('resolver/wrap', function () {
     );
     expect(resolverWrapper.callCount).to.equal(2);
     expect(internalWrapperSpy.called).to.be.false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wrappedResolver(parent, args, context, info as any);
     expect(internalWrapperSpy.callCount).to.equal(2);
     expect(resolver.callCount).to.equal(1);

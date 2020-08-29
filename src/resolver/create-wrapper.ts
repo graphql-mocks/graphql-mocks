@@ -1,11 +1,4 @@
-import {
-  GraphQLObjectType,
-  GraphQLField,
-  isObjectType,
-  isAbstractType,
-  GraphQLType,
-  GraphQLAbstractType,
-} from 'graphql';
+import { GraphQLObjectType, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
 import {
   FieldResolver,
   FieldWrapperFunction,
@@ -15,12 +8,13 @@ import {
   WrapperOptionsBase,
   GenericWrapperFunction,
   WrapperFor,
+  ObjectField,
 } from '../types';
 
 export type FieldResolverWrapperOptions = WrapperOptionsBase & {
   type: GraphQLObjectType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: GraphQLField<any, any>;
+  field: ObjectField;
 };
 
 export type TypeResolverWrapperOptions = WrapperOptionsBase & {
@@ -92,7 +86,7 @@ class InternalNamedWrapper implements NamedWrapper {
         ...options,
         type: options.type as GraphQLObjectType,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        field: options.field as GraphQLField<any, any>,
+        field: options.field as ObjectField,
       };
 
       return wrapper(resolver, expandedOptions);

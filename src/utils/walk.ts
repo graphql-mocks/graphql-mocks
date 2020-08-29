@@ -1,14 +1,13 @@
-import { GraphQLSchema, GraphQLNamedType, GraphQLField, GraphQLInputField } from 'graphql';
+import { GraphQLSchema, GraphQLNamedType, GraphQLInputField } from 'graphql';
 import { Reference, CoercibleHighlight } from '../highlight/types';
-import { getTypeForReference } from '../highlight/utils/get-type-for-reference';
-import { getFieldForReference } from '../highlight/utils/get-field-for-reference';
-import { coerceHighlight } from '../highlight/utils/coerce-highlight';
+import { ObjectField } from '../types';
+import { coerceHighlight, getTypeForReference, getFieldForReference } from '../highlight/utils';
 
 export type WalkCallback = (options: {
   reference: Reference;
   type: GraphQLNamedType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field?: GraphQLField<any, any> | GraphQLInputField;
+  field?: ObjectField | GraphQLInputField;
 }) => void | Promise<void>;
 
 export async function walk(

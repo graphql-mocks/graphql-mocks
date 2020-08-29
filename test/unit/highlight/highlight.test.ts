@@ -1,4 +1,4 @@
-import { Highlight, h } from '../../../src/highlight/highlight';
+import { Highlight, hi } from '../../../src/highlight/highlight';
 import { field } from '../../../src/highlight/highlighter/field';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
@@ -86,7 +86,7 @@ describe('highlight', function () {
   context('#h functional shorthand', function () {
     it('produces an Highlight instance', function () {
       const fromInstance = new Highlight(schema, ['Cat']);
-      const fromFunction = h(schema, ['Cat']);
+      const fromFunction = hi(schema, ['Cat']);
       expect(fromInstance.schema).to.equal(fromFunction.schema);
       expect(fromInstance.references).to.deep.equal(fromFunction.references);
     });

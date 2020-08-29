@@ -1,18 +1,13 @@
-import { GraphQLSchema, isAbstractType, GraphQLField, assertObjectType, isObjectType } from 'graphql';
+import { GraphQLSchema, isAbstractType, assertObjectType, isObjectType } from 'graphql';
 import { wrapResolver } from '../resolver/wrap';
-import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver } from '../types';
+import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, ObjectField } from '../types';
 import { setResolver } from './utils/set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
-import { coerceHighlight } from '../highlight/utils/coerce-highlight';
-import { isTypeReference } from '../highlight/utils/is-type-reference';
-import { isFieldReference } from '../highlight/utils/is-field-reference';
 import { embedPackOptionsWrapper } from '../pack';
-import { combine } from '../highlight/highlighter/combine';
-import { resolvesTo } from '../highlight/highlighter/resolves-to';
-import { union } from '../highlight/highlighter/union';
-import { interfaces } from '../highlight/highlighter/interface';
 import { getResolver } from './utils/get-resolver';
+import { coerceHighlight, isTypeReference, isFieldReference } from '../highlight/utils';
+import { interfaces, combine, resolvesTo, union } from '../highlight';
 
 export type EmbedOptions = {
   resolver?: FieldResolver | TypeResolver;
@@ -36,7 +31,6 @@ export function embed({
     }
 
     const highlight = coerceHighlight(schema, coercibleHighlight).filter(combine(resolvesTo(), union(), interfaces()));
-
     for (const reference of highlight.references) {
       const existingResolver = getResolver(resolverMap, reference);
       // these MUST be kept in the local iteration
@@ -67,7 +61,7 @@ export function embed({
 
       let type;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let field: GraphQLField<any, any> | undefined;
+      let field: ObjectField | undefined;
       if (isTypeReference(reference)) {
         type = highlight.instances.types[reference].type;
 
@@ -82,7 +76,7 @@ export function embed({
         assertObjectType(type);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        field = highlight.instances.types[typeName]?.fields?.[fieldName] as GraphQLField<any, any>;
+        field = highlight.instances.types[typeName]?.fields?.[fieldName] as ObjectField;
 
         if (!field) {
           throw new Error(

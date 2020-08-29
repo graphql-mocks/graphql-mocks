@@ -1,0 +1,10 @@
+export { coerceHighlight } from './coerce-highlight';
+export { getFieldForReference } from './get-field-for-reference';
+export { getInstanceForReference } from './get-instance-for-reference';
+export { getTypeForReference } from './get-type-for-reference';
+export { isEqual } from './is-equal';
+export { isFieldReference } from './is-field-reference';
+export { isHighlighter } from './is-highlighter';
+export { isReference } from './is-reference';
+export { isTypeReference } from './is-type-reference';
+export { unique } from './unique';

@@ -2,10 +2,8 @@ import { buildSchema, GraphQLSchema } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { walk, WalkCallback } from '../../../src/utils/walk';
-import { h, Highlight } from '../../../src/highlight/highlight';
+import { hi, Highlight, resolvesTo, field } from '../../../src/highlight';
 import { Reference } from '../../../src/highlight/types';
-import { field } from '../../../src/highlight/highlighter/field';
-import { resolvesTo } from '../../../src/highlight/highlighter/resolves-to';
 
 function getCallbackReferences(spy: SinonSpy): Reference[] {
   return spy.getCalls().map((call) => (call.args as Parameters<WalkCallback>)[0].reference);
@@ -42,7 +40,7 @@ describe('utils/walk', function () {
       }
     `);
 
-    highlight = h(graphqlSchema).include(resolvesTo());
+    highlight = hi(graphqlSchema).include(resolvesTo());
   });
 
   it('walks references from a highlight', async function () {

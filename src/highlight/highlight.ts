@@ -109,6 +109,6 @@ export class Highlight {
   }
 }
 
-export function h(schema: GraphQLSchema, references?: Reference[]): Highlight {
+export function hi(schema: GraphQLSchema, references?: Reference[]): Highlight {
   return new Highlight(schema, references);
 }

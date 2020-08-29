@@ -1,18 +1,12 @@
+import { GraphQLSchema } from 'graphql';
 import { ResolverMapMiddleware, ResolverMap } from '../types';
 import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
 import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
-import { coerceHighlight } from '../highlight/utils/coerce-highlight';
-import { resolvesTo } from '../highlight/highlighter/resolves-to';
-import { field } from '../highlight/highlighter/field';
-import { combine } from '../highlight/highlighter/combine';
-import { GraphQLSchema } from 'graphql';
-import { interfaces } from '../highlight/highlighter/interface';
-import { union } from '../highlight/highlighter/union';
 import { walk } from '../utils';
 import { setResolver } from '../resolver-map';
-import { mirageAbstractTypeResolver } from './resolver/abstract';
-import { mirageRootQueryResolver, mirageObjectResolver } from '.';
-import { fromResolverMap } from '../highlight/highlighter/from-resolver-map';
+import { mirageRootQueryResolver, mirageObjectResolver, mirageAbstractTypeResolver } from '.';
+import { field, resolvesTo, combine, union, fromResolverMap, interfaces } from '../highlight';
+import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 
 export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
