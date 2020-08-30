@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { generatePackOptions } from '../../mocks';
-import { GraphQLResolveInfo, buildSchema, GraphQLSchema } from 'graphql';
-import { Wrapper, FieldResolver, ResolverMap } from '../../../src/types';
+import { GraphQLResolveInfo, buildSchema, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
+import { Wrapper, FieldResolver, ResolverMap, TypeResolver } from '../../../src/types';
 import { field } from '../../../src/highlight/highlighter/field';
 import { hi } from '../../../src/highlight';
 import { PackOptions } from '../../../src/pack/types';
@@ -31,6 +31,14 @@ describe('resolver-map/embed', function () {
       type Person {
         name: String!
         pet: Pet!
+      }
+
+      interface Sortable {
+        position: Int
+      }
+
+      interface Nameable {
+        name: String
       }
     `);
 
@@ -189,6 +197,27 @@ describe('resolver-map/embed', function () {
       expect(resolverToEmbed.called).to.equal(true);
       expect((resolverWrapper as SinonSpy).called).to.equal(true);
     });
+
+    it('can embed a type resolver', async function () {
+      const embeddedMiddleware = embed({
+        resolver: resolverToEmbed as TypeResolver,
+        highlight: ['Nameable', 'Sortable'],
+      });
+
+      const embededResolverMap = await embeddedMiddleware(resolverMap, packOptions);
+
+      expect(embededResolverMap.Nameable?.__resolveType).to.exist;
+      expect(embededResolverMap.Sortable?.__resolveType).to.exist;
+
+      // for typescript
+      if (typeof embededResolverMap.Nameable?.__resolveType !== 'function') {
+        throw new Error('hey, this resolver function should exist so I can call it...');
+      }
+
+      expect(resolverToEmbed.called).to.equal(false);
+      embededResolverMap.Nameable?.__resolveType({}, {}, {} as GraphQLResolveInfo, {} as GraphQLInterfaceType);
+      expect(resolverToEmbed.called).to.equal(true);
+    });
   });
 
   context('wrapping an existing resolver', function () {
@@ -214,10 +243,7 @@ describe('resolver-map/embed', function () {
       };
 
       expect((resolverWrapper as SinonSpy).called).to.equal(false);
-      const embededResolverMap = await embeddedResolverMapMiddleware(
-        resolverMap,
-        generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-      );
+      const embededResolverMap = await embeddedResolverMapMiddleware(resolverMap, packOptions);
       expect((resolverWrapper as SinonSpy).called).to.equal(true);
 
       expect(nameFieldResolver.called).to.equal(false);
@@ -235,12 +261,34 @@ describe('resolver-map/embed', function () {
         wrappers: [resolverWrapper],
       });
 
-      const embededResolverMap = await embeddedMiddleware(
-        resolverMap,
-        generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-      );
+      const embededResolverMap = await embeddedMiddleware(resolverMap, packOptions);
 
       expect(embededResolverMap).to.deep.equal({});
+    });
+
+    it('can wrap an existing type resolver', async function () {
+      const existingTypeResolverSpy = spy();
+      resolverMap.Nameable = {
+        __resolveType: existingTypeResolverSpy,
+      };
+
+      const resolverWrapperSpy: Wrapper & SinonSpy = spy((resolver) => resolver);
+      const embeddedMiddleware = embed({
+        wrappers: [resolverWrapperSpy],
+        highlight: ['Nameable', 'Sortable'],
+      });
+
+      const embededResolverMap = await embeddedMiddleware(resolverMap, packOptions);
+
+      // for typescript
+      if (typeof embededResolverMap.Nameable?.__resolveType !== 'function') {
+        throw new Error('hey, this resolver function should exist so I can call it...');
+      }
+
+      expect(existingTypeResolverSpy.called).to.equal(false);
+      embededResolverMap.Nameable?.__resolveType({}, {}, {} as GraphQLResolveInfo, {} as GraphQLInterfaceType);
+      expect(existingTypeResolverSpy.called, 'the original type resolver is called').to.equal(true);
+      expect(resolverWrapperSpy.called, 'the wrapper around the original type resolver is called').to.equal(true);
     });
   });
 

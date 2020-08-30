@@ -20,7 +20,7 @@ describe('resolver-map/set-resolver', function () {
     expect(resolverMap?.Person?.name).to.equal(sampleResolver);
   });
 
-  it('can set a test resolver on a map by reference', function () {
+  it('can set a type resolver on a map by reference', function () {
     setResolver(resolverMap, 'PersonUnion', sampleResolver);
     expect(resolverMap?.PersonUnion?.__resolveType).to.equal(sampleResolver);
   });
