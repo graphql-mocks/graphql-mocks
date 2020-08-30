@@ -1,5 +1,5 @@
 import { ResolverMap, FieldResolver, TypeResolver } from '../types';
-import { Reference } from '../highlight/types';
+import { Reference, TypeReference } from '../highlight/types';
 import { isAbstractType, GraphQLSchema, isObjectType } from 'graphql';
 import { getResolver } from './get-resolver';
 import { isReference, isFieldReference, getInstanceForReference, isTypeReference } from '../highlight/utils';
@@ -8,8 +8,9 @@ export function setResolver(
   resolverMap: ResolverMap,
   reference: Reference,
   resolver: FieldResolver | TypeResolver,
-  options: { graphqlSchema?: GraphQLSchema; replace?: boolean },
+  options?: { graphqlSchema?: GraphQLSchema; replace?: boolean },
 ): ResolverMap {
+  options = options ?? {};
   const { graphqlSchema } = options;
   const replace = options.replace ?? false;
 
@@ -27,7 +28,7 @@ export function setResolver(
 
   const insertPosition = isFieldReference(reference)
     ? { type: reference[0], field: reference[1] }
-    : { type: reference, field: '__resolveType' };
+    : { type: reference as TypeReference, field: '__resolveType' };
 
   // Do additional safety checks if a graphqlSchema is provided
   if (graphqlSchema) {
@@ -42,7 +43,7 @@ export function setResolver(
     }
 
     if (isFieldReference(reference) && Array.isArray(instance) && !isObjectType(instance[0])) {
-      throw new Error(`Expected reference ${reference} to have a GraphQLObject type`);
+      throw new Error(`Expected reference ${reference} to reference a GraphQLObject type with field ${reference[1]}`);
     }
   }
 
