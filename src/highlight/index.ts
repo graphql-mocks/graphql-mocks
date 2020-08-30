@@ -8,4 +8,4 @@ export { resolvesTo } from './highlighter/resolves-to';
 export { type } from './highlighter/type';
 export { union } from './highlighter/union';
 
-export { HIGHLIGHT_ALL } from './highlighter/constants';
+export { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from './highlighter/constants';

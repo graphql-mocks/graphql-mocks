@@ -1,7 +1,7 @@
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
-import { type, ROOT_QUERY, ROOT_MUTATION } from '../../../../src/highlight/highlighter/type';
-import { HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/constants';
+import { type } from '../../../../src/highlight/highlighter/type';
+import { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from '../../../../src/highlight/highlighter/constants';
 
 const schema = buildSchema(`
   schema {

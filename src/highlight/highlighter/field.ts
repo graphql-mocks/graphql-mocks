@@ -1,13 +1,10 @@
 import { GraphQLSchema, GraphQLNamedType } from 'graphql';
 import { FieldReference, HighlighterFactory, Highlighter } from '../types';
-import { ROOT_QUERY, ROOT_MUTATION } from './type';
-import { HIGHLIGHT_ALL } from './constants';
+import { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from './constants';
 
 function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
 }
-
-export { ROOT_QUERY, ROOT_MUTATION };
 
 export class FieldHighlighter implements Highlighter {
   targets: [string, string][];

@@ -1,9 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { TypeReference, HighlighterFactory, Highlighter } from '../types';
-import { HIGHLIGHT_ALL } from './constants';
+import { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from './constants';
 
-export const ROOT_QUERY = '<ROOT_QUERY_TYPE>';
-export const ROOT_MUTATION = '<ROOT_MUTATION_TYPE>';
 export class TypeHighlighter implements Highlighter {
   targets: string[];
 
