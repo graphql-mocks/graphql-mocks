@@ -8,8 +8,6 @@ export type Reference = TypeReference | FieldReference;
 export type FieldReference = [string, string];
 export type TypeReference = string;
 
-export const HIGHLIGHT_ALL = '*';
-
 export interface Highlighter {
   mark(schema: GraphQLSchema): Reference[];
 }

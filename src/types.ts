@@ -55,7 +55,7 @@ export interface NamedWrapper {
   wrapperFor: WrapperFor;
 }
 
-export type Wrapper = GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction | NamedWrapper;
+export type Wrapper = NamedWrapper | GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
 
 export type WrapperOptionsBase = {
   schema: GraphQLSchema;

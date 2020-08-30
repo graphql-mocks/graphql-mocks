@@ -1,6 +1,7 @@
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
-import { field, HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/field';
+import { field } from '../../../../src/highlight/highlighter/field';
+import { HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/constants';
 
 const schema = buildSchema(`
   schema {

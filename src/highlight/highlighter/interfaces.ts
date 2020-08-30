@@ -1,5 +1,6 @@
 import { GraphQLSchema, isInterfaceType } from 'graphql';
-import { TypeReference, HIGHLIGHT_ALL, HighlighterFactory, Highlighter } from '../types';
+import { TypeReference, HighlighterFactory, Highlighter } from '../types';
+import { HIGHLIGHT_ALL } from './constants';
 
 export class InterfaceHighlighter implements Highlighter {
   targets: string[];

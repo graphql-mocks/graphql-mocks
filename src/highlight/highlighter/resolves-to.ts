@@ -7,8 +7,9 @@ import {
   NamedTypeNode,
   GraphQLObjectType,
 } from 'graphql';
-import { HIGHLIGHT_ALL, HighlighterFactory, Highlighter, FieldReference } from '../types';
+import { HighlighterFactory, Highlighter, FieldReference } from '../types';
 import isEqualWith from 'lodash.isequalwith';
+import { HIGHLIGHT_ALL } from './constants';
 
 function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
