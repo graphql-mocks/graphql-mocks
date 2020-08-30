@@ -2,6 +2,8 @@ import { Highlight, hi } from '../../../src/highlight/highlight';
 import { field } from '../../../src/highlight/highlighter/field';
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
+import { Reference } from '../../../src/highlight/types';
+import { reference } from '../../../src/highlight/highlighter/reference';
 
 const schema = buildSchema(`
   schema {
@@ -40,22 +42,53 @@ describe('highlight', function () {
     expect(h.schema).to.equal(schema);
   });
 
-  it('can perform an include operation', function () {
-    const h1 = new Highlight(schema, ['Query']);
-    const h2 = h1.include(['Person', 'name']);
-    expect(h2.references).to.deep.equal(['Query', ['Person', 'name']]);
+  context('include operations', function () {
+    it('can perform an include operation', function () {
+      const h1 = new Highlight(schema, ['Query']);
+      const h2 = h1.include(['Person', 'name']);
+      expect(h2.references).to.deep.equal(['Query', ['Person', 'name']]);
+    });
+
+    it('can perform multiple include operations', function () {
+      const source = new Highlight(schema, ['Query']);
+      const firstAddition = 'Dog';
+      const secondAddition: Reference = ['Person', 'age'];
+      expect(source.include(firstAddition, secondAddition).references).to.deep.equal([
+        'Query',
+        'Dog',
+        ['Person', 'age'],
+      ]);
+    });
   });
 
-  it('can perform an exclude operation', function () {
-    const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
-    const h2 = h1.exclude('Person', 'Cat');
-    expect(h2.references).to.deep.equal([['Person', 'name']]);
+  context('exclude operations', function () {
+    it('can perform an exclude operation', function () {
+      const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+      const h2 = h1.exclude('Person', 'Cat');
+      expect(h2.references).to.deep.equal([['Person', 'name']]);
+    });
+
+    it('can perform multiple exclude operations', function () {
+      const source = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+      const firstFilter = 'Cat';
+      const secondFilter = 'Person';
+      expect(source.exclude(firstFilter, secondFilter).references).to.deep.equal([['Person', 'name']]);
+    });
   });
 
-  it('can perform a filter operation', function () {
-    const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
-    const h2 = h1.filter('Cat');
-    expect(h2.references).to.deep.equal(['Cat']);
+  context('filter operations', function () {
+    it('can perform a filter operation', function () {
+      const h1 = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+      const h2 = h1.filter('Cat');
+      expect(h2.references).to.deep.equal(['Cat']);
+    });
+
+    it('can perform multiple filter operations', function () {
+      const source = new Highlight(schema, ['Person', 'Cat', ['Person', 'name']]);
+      const firstFilter = reference('Person', 'Cat');
+      const secondFilter = reference('Cat');
+      expect(source.filter(firstFilter, secondFilter).references).to.deep.equal(['Cat']);
+    });
   });
 
   it('throws an error when created with an invalid type reference', function () {
@@ -73,13 +106,18 @@ describe('highlight', function () {
   });
 
   it('creates an instance copy on an operation', function () {
-    const h1 = new Highlight(schema);
-    const h2 = h1.include('Cat');
-    expect(h1).to.not.equal(h2);
+    const source = new Highlight(schema);
+    const h1 = source.include('Cat');
+    const h2 = source.exclude('Cat');
+    const h3 = source.filter('Cat');
+
+    expect(h1).to.not.equal(source);
+    expect(h2).to.not.equal(source);
+    expect(h3).to.not.equal(source);
   });
 
   it('filters out internal types by default', function () {
-    const h = new Highlight(schema).include('__Schema', 'String', 'Boolean');
+    const h = new Highlight(schema).include('__Schema', 'String', 'Boolean', 'Int', 'Float', 'ID');
     expect(h.references.length).to.equal(0);
   });
 

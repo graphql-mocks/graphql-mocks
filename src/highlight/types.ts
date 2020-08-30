@@ -12,9 +12,9 @@ export interface Highlighter {
   mark(schema: GraphQLSchema): Reference[];
 }
 
-export interface HighlighterFactory {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (...options: any[]): Highlighter;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface HighlighterFactory<T extends any[] = any[]> {
+  (...options: T): Highlighter;
 }
 
 export interface ReferencesOperation {
