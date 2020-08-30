@@ -5,11 +5,11 @@ function isNamedWrapper(wrapper: Wrapper): wrapper is NamedWrapper {
   return wrapper && 'name' in wrapper && 'wrap' in wrapper;
 }
 
-export async function wrap(
-  resolver: TypeResolver | FieldResolver,
+export async function wrap<K extends TypeResolver | FieldResolver>(
+  resolver: K,
   wrappers: Wrapper[],
   wrapperOptions: WrapperOptionsBase,
-): Promise<FieldResolver | TypeResolver> {
+): Promise<K> {
   wrappers = [...wrappers];
   let wrapper = wrappers.shift();
 
@@ -50,5 +50,5 @@ export async function wrap(
     );
   }
 
-  return wrap(wrappedResolver, wrappers, wrapperOptions);
+  return wrap(wrappedResolver, wrappers, wrapperOptions) as Promise<K>;
 }

@@ -3,13 +3,14 @@ import sinon from 'sinon';
 import { wrap } from '../../../src/resolver/wrap';
 import { embedPackOptionsWrapper } from '../../../src/pack/utils';
 import { GraphQLObjectType } from 'graphql';
+import { FieldResolver } from '../../../src/types';
 
 describe('pack/utils', function () {
   describe('#embedPackOptionsWrapper', function () {
     it('creates a wrapped function with embedded packOptions', async function () {
       const resolver = sinon.spy();
 
-      const wrappedResolver = await wrap(resolver, [embedPackOptionsWrapper], {
+      const wrappedResolver = await wrap(resolver as FieldResolver, [embedPackOptionsWrapper], {
         resolverMap: {},
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         schema: {} as any,
@@ -21,7 +22,6 @@ describe('pack/utils', function () {
             dependency: 'here-is-a-dependency',
           },
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
