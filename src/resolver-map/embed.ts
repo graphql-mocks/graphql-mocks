@@ -1,4 +1,4 @@
-import { GraphQLSchema, isAbstractType, assertObjectType, isObjectType } from 'graphql';
+import { GraphQLSchema, isSchema, GraphQLNamedType, isAbstractType, isObjectType } from 'graphql';
 import { wrap } from '../resolver/wrap';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, ObjectField } from '../types';
 import { setResolver } from './set-resolver';
@@ -6,7 +6,7 @@ import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from 
 import { highlightAllCallback } from './utils/highlight-all-callback';
 import { embedPackOptionsWrapper } from '../pack';
 import { getResolver } from './get-resolver';
-import { coerceHighlight, isTypeReference, isFieldReference } from '../highlight/utils';
+import { coerceHighlight, isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
 import { interfaces, combine, resolvesTo, union } from '../highlight';
 
 export type EmbedOptions = {
@@ -24,10 +24,8 @@ export function embed({
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
-    if (!schema) {
-      throw new Error(
-        `"graphqlSchema" expected on packOptions.dependencies. Specify it on the dependencies of the \`pack\``,
-      );
+    if (!isSchema(schema)) {
+      throw new Error(`"graphqlSchema" is an expected dependency, got type ${typeof schema}`);
     }
 
     const highlight = coerceHighlight(schema, coercibleHighlight).filter(combine(resolvesTo(), union(), interfaces()));
@@ -59,28 +57,17 @@ export function embed({
         continue;
       }
 
-      let type;
+      let type: GraphQLNamedType | undefined;
       let field: ObjectField | undefined;
       if (isTypeReference(reference)) {
-        type = highlight.instances.types[reference].type;
+        const instance = getInstanceForReference(schema, reference);
+        type = instance;
+      }
 
-        if (!isAbstractType(type)) {
-          throw new Error(
-            `Tried to embed a Type Resolver, expected a Union or Interface type in schema for ${type.name}`,
-          );
-        }
-      } else if (isFieldReference(reference)) {
-        const [typeName, fieldName] = reference;
-        type = highlight.instances.types[typeName].type;
-        assertObjectType(type);
-
-        field = highlight.instances.types[typeName]?.fields?.[fieldName] as ObjectField;
-
-        if (!field) {
-          throw new Error(
-            `Tried to embed a Field Resolver, expected Field ["${typeName}", "${fieldName}"] to exist in the schema`,
-          );
-        }
+      if (isFieldReference(reference)) {
+        const instance = getInstanceForReference(schema, reference);
+        type = instance?.[0];
+        field = instance?.[1] as ObjectField;
       }
 
       if (!type || (!isObjectType(type) && !isAbstractType(type))) {
@@ -91,8 +78,8 @@ export function embed({
 
       const wrappedResolver = await wrap(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
         type,
-        schema,
         field,
+        schema,
         resolverMap,
         packOptions,
       });

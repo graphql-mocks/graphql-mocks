@@ -3,11 +3,16 @@ import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema, GraphQLSchema } from 'graphql';
-import { Wrapper, FieldResolver } from '../../../src/types';
+import { Wrapper, FieldResolver, ResolverMap } from '../../../src/types';
 import { field } from '../../../src/highlight/highlighter/field';
+import { hi } from '../../../src/highlight';
+import { PackOptions } from '../../../src/pack/types';
 
 describe('resolver-map/embed', function () {
   let schema: GraphQLSchema;
+  let resolverToEmbed: FieldResolver & SinonSpy;
+  let resolverMap: ResolverMap;
+  let packOptions: PackOptions;
 
   beforeEach(function () {
     schema = buildSchema(`
@@ -28,197 +33,234 @@ describe('resolver-map/embed', function () {
         pet: Pet!
       }
     `);
+
+    resolverToEmbed = spy();
+    resolverMap = {};
+    packOptions = generatePackOptions({ dependencies: { graphqlSchema: schema } });
   });
 
-  it('can embed a resolver on multiple targets', async function () {
-    const resolver = spy();
+  context('highlight', function () {
+    it('can use a highlight callback', async function () {
+      const embeddedMiddleware = embed({
+        resolver: resolverToEmbed,
+        highlight: (h) => h.include(field(['Person', '*'])),
+      });
 
-    const embeddedMiddleware = embed({
-      resolver,
-      highlight: (h) => h.include(field(['*', '*'])),
+      const embeddedResolverMap = await embeddedMiddleware(resolverMap, packOptions);
+
+      expect(embeddedResolverMap.Person.name).to.be.a('function');
+      expect(embeddedResolverMap.Person.pet).to.be.a('function');
+
+      expect(embeddedResolverMap.Query?.person).to.not.be.a('function');
+      expect(embeddedResolverMap.Pet?.name).to.not.be.a('function');
     });
 
-    const emptyResolverMap = {};
-    const embeddedResolverMap = await embeddedMiddleware(
-      emptyResolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
+    it('can use a highlight instance', async function () {
+      const highlight = hi(schema).include(field(['Person', '*']));
 
-    expect(embeddedResolverMap.Query.person).to.be.a('function');
-    expect(embeddedResolverMap.Pet.name).to.be.a('function');
-    expect(embeddedResolverMap.Person.name).to.be.a('function');
-    expect(embeddedResolverMap.Person.pet).to.be.a('function');
-  });
+      const embeddedMiddleware = embed({
+        resolver: resolverToEmbed,
+        highlight,
+      });
 
-  it('throws an error when trying to replace an existing resolver when { replace: false }', async function () {
-    const originalPersonNameResolver = spy();
+      const embeddedResolverMap = await embeddedMiddleware(resolverMap, packOptions);
 
-    const resolverMap = {
-      Person: {
-        name: originalPersonNameResolver,
-      },
-    };
+      expect(embeddedResolverMap.Person.name).to.be.a('function');
+      expect(embeddedResolverMap.Person.pet).to.be.a('function');
 
-    let wrappedResolver: FieldResolver;
-    const resolverWrapper: Wrapper = async (resolver: FieldResolver) => {
-      wrappedResolver = spy(resolver);
-      return wrappedResolver;
-    };
-
-    const replacedPersonNameResolver = spy();
-
-    const embeddedMiddlware = embed({
-      highlight: [['Person', 'name']],
-      wrappers: [resolverWrapper],
-      resolver: replacedPersonNameResolver,
+      expect(embeddedResolverMap.Query?.person).to.not.be.a('function');
+      expect(embeddedResolverMap.Pet?.name).to.not.be.a('function');
     });
 
-    expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
+    it('can use a reference', async function () {
+      const embeddedMiddleware = embed({
+        resolver: resolverToEmbed,
+        highlight: [['Person', 'name']],
+      });
 
-    let error: Error | null = null;
-    try {
-      await embeddedMiddlware(resolverMap, generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-    } catch (e) {
-      error = e;
-    } finally {
-      expect(error?.message).to.contain(
-        'Tried to add a new resolver via `embed` at ["Person","name"] but a resolver already exists there.',
-      );
-    }
+      const embeddedResolverMap = await embeddedMiddleware(resolverMap, packOptions);
+
+      expect(embeddedResolverMap.Person.name).to.be.a('function');
+
+      expect(embeddedResolverMap.Person?.pet).to.not.be.a('function');
+      expect(embeddedResolverMap.Query?.person).to.not.be.a('function');
+      expect(embeddedResolverMap.Pet?.name).to.not.be.a('function');
+    });
   });
 
-  it('can replace an existing resolver with resolver wrappers at a specific target', async function () {
-    const originalPersonNameResolver = spy();
+  context('embedding a new resolver', function () {
+    it('can embed a new resolver', async function () {
+      const embeddedMiddleware = embed({
+        resolver: resolverToEmbed,
+        highlight: (h) => h.include(field(['Person', '*'])),
+      });
 
-    const resolverMap = {
-      Person: {
-        name: originalPersonNameResolver,
-      },
-    };
+      const embeddedResolverMap = await embeddedMiddleware(resolverMap, packOptions);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let wrappedResolver: any;
-    const resolverWrapper: Wrapper = async (resolver: FieldResolver) => {
-      wrappedResolver = spy(resolver);
-      return wrappedResolver;
-    };
-
-    const replacedPersonNameResolver = spy();
-
-    const embeddedMiddlware = await embed({
-      highlight: [['Person', 'name']],
-      wrappers: [resolverWrapper],
-      resolver: replacedPersonNameResolver,
-      replace: true,
+      expect(embeddedResolverMap.Person.name).to.be.a('function');
+      expect(embeddedResolverMap.Person.pet).to.be.a('function');
+      expect(embeddedResolverMap.Query?.person).to.not.be.a('function');
+      expect(embeddedResolverMap.Pet?.name).to.not.be.a('function');
     });
 
-    expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
+    it('throws an error when trying to embed a new resolver where a resolver already exists and { replace: false }', async function () {
+      const originalPersonNameResolver = spy();
 
-    const embededResolverMap = await embeddedMiddlware(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
+      const resolverMap = {
+        Person: {
+          name: originalPersonNameResolver,
+        },
+      };
 
-    // make call on Person.name resolver making calls to wrappers as well
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    embededResolverMap.Person.name('parent', 'args' as any, 'context', 'info' as any);
+      const embeddedMiddlware = embed({
+        highlight: [['Person', 'name']],
+        resolver: resolverToEmbed,
+      });
 
-    // because it was swapped out with the `replace: true` it should not be
-    // on the resolver map
-    expect(originalPersonNameResolver.called).to.be.false;
-
-    // the `replacedPersonNameResolver` was swapped in for the Person.name
-    // place and it should have been called
-    expect(replacedPersonNameResolver.called).to.be.true;
-
-    // a wrapper was included and it should have also been called
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((wrappedResolver as any).called).to.be.true;
-  });
-
-  it('it can embed a new resolver with wrappers on a specific target', async function () {
-    const resolver = spy();
-    const resolverWrapper: Wrapper = spy(
-      async (resolver) => (
-        parent: unknown,
-        args: unknown,
-        context: unknown,
-        info: unknown,
-      ): ReturnType<FieldResolver> => resolver(parent, args, context, info),
-    );
-
-    const embeddedMiddleware = embed({
-      highlight: [['Person', 'name']],
-      wrappers: [resolverWrapper],
-      resolver,
+      let error: Error | null = null;
+      try {
+        await embeddedMiddlware(resolverMap, packOptions);
+      } catch (e) {
+        error = e;
+      } finally {
+        expect(error?.message).to.contain(
+          'Tried to add a new resolver via `embed` at ["Person","name"] but a resolver already exists there.',
+        );
+      }
     });
 
-    const resolverMap = {};
+    it('can replace an existing resolver with { replace: true }', async function () {
+      const originalPersonNameResolver = spy();
 
-    expect((resolverWrapper as SinonSpy).called).to.equal(false);
+      const resolverMap = {
+        Person: {
+          name: originalPersonNameResolver,
+        },
+      };
 
-    const embededResolverMap = await embeddedMiddleware(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
+      const embeddedMiddlware = await embed({
+        highlight: [['Person', 'name']],
+        resolver: resolverToEmbed,
+        replace: true,
+      });
 
-    expect((resolverWrapper as SinonSpy).called).to.equal(true);
+      expect(resolverMap.Person.name).to.equal(originalPersonNameResolver);
 
-    expect(embededResolverMap.Person.name).is.a('function', 'resolver is installed at specified path');
-    expect(resolver.called).to.equal(false);
-    embededResolverMap.Person.name({}, {}, {}, {} as GraphQLResolveInfo);
-    expect(resolver.called).to.equal(true);
-    expect((resolverWrapper as SinonSpy).called).to.equal(true);
-  });
+      const embededResolverMap = await embeddedMiddlware(resolverMap, packOptions);
 
-  it('it can embed wrappers around an existing target', async function () {
-    const nameFieldResolver = spy();
-    const resolverWrapper: Wrapper = spy(async (resolver) => (
+      // make call on Person.name resolver making calls to wrappers as well
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      parent: any,
-      args: Record<string, unknown>,
-      context: Record<string, unknown>,
-      info: GraphQLResolveInfo,
-    ): FieldResolver => resolver(parent, args, context, info));
+      embededResolverMap.Person.name('parent', 'args' as any, 'context', 'info' as any);
 
-    const embeddedResolverMapMiddleware = embed({
-      highlight: [['Person', 'name']],
-      wrappers: [resolverWrapper],
+      // because it was swapped out with the `replace: true` it should not be
+      // on the resolver map
+      expect(originalPersonNameResolver.called).to.be.false;
+
+      // the `replacedPersonNameResolver` was swapped in for the Person.name
+      // place and it should have been called
+      expect(resolverToEmbed.called).to.be.true;
     });
 
-    const resolverMap = {
-      Person: {
-        name: nameFieldResolver,
-      },
-    };
+    it('it can embed a new resolver with wrappers', async function () {
+      const resolverWrapper: Wrapper = spy(
+        async (resolver) => (
+          parent: unknown,
+          args: unknown,
+          context: unknown,
+          info: unknown,
+        ): ReturnType<FieldResolver> => resolver(parent, args, context, info),
+      );
 
-    expect((resolverWrapper as SinonSpy).called).to.equal(false);
-    const embededResolverMap = await embeddedResolverMapMiddleware(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
-    expect((resolverWrapper as SinonSpy).called).to.equal(true);
+      const embeddedMiddleware = embed({
+        highlight: [['Person', 'name']],
+        wrappers: [resolverWrapper],
+        resolver: resolverToEmbed,
+      });
 
-    expect(nameFieldResolver.called).to.equal(false);
-    embededResolverMap.Person.name({}, {}, {}, {} as GraphQLResolveInfo);
-    expect(nameFieldResolver.called).to.equal(true);
-    expect((resolverWrapper as SinonSpy).called).to.equal(true);
+      expect((resolverWrapper as SinonSpy).called).to.equal(false);
+
+      const embededResolverMap = await embeddedMiddleware(resolverMap, packOptions);
+
+      expect((resolverWrapper as SinonSpy).called).to.equal(true);
+
+      expect(embededResolverMap.Person.name).is.a('function', 'resolver is installed at specified path');
+      expect(resolverToEmbed.called).to.equal(false);
+      embededResolverMap.Person.name({}, {}, {}, {} as GraphQLResolveInfo);
+      expect(resolverToEmbed.called).to.equal(true);
+      expect((resolverWrapper as SinonSpy).called).to.equal(true);
+    });
   });
 
-  it('quietly does nothing if a resolver is not given, nor is on the resolver map', async function () {
-    const resolverWrapper: Wrapper = spy();
-    // empty resolver map with no resolver for Person.name
-    const resolverMap = {};
-    const embeddedMiddleware = embed({
-      highlight: [['Person', 'name']],
-      wrappers: [resolverWrapper],
+  context('wrapping an existing resolver', function () {
+    it('it can embed wrappers around existing resolvers', async function () {
+      const nameFieldResolver = spy();
+      const resolverWrapper: Wrapper = spy(async (resolver) => (
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        parent: any,
+        args: Record<string, unknown>,
+        context: Record<string, unknown>,
+        info: GraphQLResolveInfo,
+      ): FieldResolver => resolver(parent, args, context, info));
+
+      const embeddedResolverMapMiddleware = embed({
+        highlight: [['Person', 'name']],
+        wrappers: [resolverWrapper],
+      });
+
+      const resolverMap = {
+        Person: {
+          name: nameFieldResolver,
+        },
+      };
+
+      expect((resolverWrapper as SinonSpy).called).to.equal(false);
+      const embededResolverMap = await embeddedResolverMapMiddleware(
+        resolverMap,
+        generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      );
+      expect((resolverWrapper as SinonSpy).called).to.equal(true);
+
+      expect(nameFieldResolver.called).to.equal(false);
+      embededResolverMap.Person.name({}, {}, {}, {} as GraphQLResolveInfo);
+      expect(nameFieldResolver.called).to.equal(true);
+      expect((resolverWrapper as SinonSpy).called).to.equal(true);
     });
 
-    const embededResolverMap = await embeddedMiddleware(
-      resolverMap,
-      generatePackOptions({ dependencies: { graphqlSchema: schema } }),
-    );
+    it('quietly does nothing if there is no existing resolver to wrap', async function () {
+      const resolverWrapper: Wrapper = spy();
+      // empty resolver map with no resolver for Person.name
+      const resolverMap = {};
+      const embeddedMiddleware = embed({
+        highlight: [['Person', 'name']],
+        wrappers: [resolverWrapper],
+      });
 
-    expect(embededResolverMap).to.deep.equal({});
+      const embededResolverMap = await embeddedMiddleware(
+        resolverMap,
+        generatePackOptions({ dependencies: { graphqlSchema: schema } }),
+      );
+
+      expect(embededResolverMap).to.deep.equal({});
+    });
+  });
+
+  context('argument errors', function () {
+    it('throws if a valid graphql schema is not given', async function () {
+      const embeddedMiddleware = embed({
+        highlight: [['Person', 'name']],
+        resolver: resolverToEmbed,
+      });
+
+      packOptions.dependencies.graphqlSchema = 'NOT A GRAPHQL SCHEMA';
+
+      let error: Error | undefined;
+      try {
+        await embeddedMiddleware(resolverMap, packOptions);
+      } catch (e) {
+        error = e;
+      }
+
+      expect(error?.message).to.match(/"graphqlSchema" is an expected dependency, got type/);
+    });
   });
 });

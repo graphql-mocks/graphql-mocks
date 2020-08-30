@@ -62,7 +62,7 @@ export type WrapperOptionsBase = {
   resolverMap: ResolverMap;
   packOptions: PackOptions;
   type: GraphQLObjectType | GraphQLAbstractType;
-  field?: GraphQLField<any, any>;
+  field?: ObjectField;
 };
 
 // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
