@@ -1,15 +1,7 @@
 import { GraphQLObjectType, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
-import {
-  FieldResolver,
-  FieldWrapperFunction,
-  TypeWrapperFunction,
-  TypeResolver,
-  NamedWrapper,
-  WrapperOptionsBase,
-  GenericWrapperFunction,
-  WrapperFor,
-  ObjectField,
-} from '../types';
+import { FieldResolver, TypeResolver, WrapperOptionsBase, ObjectField } from '../types';
+import { WrapperFor } from './constant';
+import { GenericWrapperFunction, FieldWrapperFunction, TypeWrapperFunction, NamedWrapper } from './types';
 
 export type FieldResolverWrapperOptions = WrapperOptionsBase & {
   type: GraphQLObjectType;

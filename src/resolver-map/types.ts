@@ -1,6 +1,6 @@
 import { Highlight } from '../highlight/highlight';
 import { Reference } from '../highlight/types';
-import { Wrapper } from '../types';
+import { Wrapper } from '../resolver/types';
 
 export type HighlightCallback = (h: Highlight) => Highlight;
 

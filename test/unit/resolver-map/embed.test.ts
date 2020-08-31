@@ -3,10 +3,11 @@ import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { generatePackOptions } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
-import { Wrapper, FieldResolver, ResolverMap, TypeResolver } from '../../../src/types';
+import { FieldResolver, ResolverMap, TypeResolver } from '../../../src/types';
 import { field } from '../../../src/highlight/highlighter/field';
 import { hi } from '../../../src/highlight';
 import { PackOptions } from '../../../src/pack/types';
+import { Wrapper } from '../../../src/resolver/types';
 
 describe('resolver-map/embed', function () {
   let schema: GraphQLSchema;

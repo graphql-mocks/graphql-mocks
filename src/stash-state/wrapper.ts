@@ -1,5 +1,6 @@
-import { FieldResolver, FieldWrapperFunction } from '../types';
+import { FieldResolver } from '../types';
 import { GraphQLResolveInfo } from 'graphql';
+import { FieldWrapperFunction } from '../resolver/types';
 
 type ResolverStash = {
   parent: unknown;

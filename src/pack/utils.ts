@@ -1,8 +1,9 @@
-import { ResolverContext, FieldResolver, TypeResolver, WrapperFor } from '../types';
+import { ResolverContext, FieldResolver, TypeResolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
 import { createWrapper } from '../resolver/create-wrapper';
 import { isObjectType, isAbstractType, GraphQLType } from 'graphql';
+import { WrapperFor } from '../resolver/constant';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
