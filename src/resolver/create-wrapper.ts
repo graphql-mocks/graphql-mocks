@@ -1,24 +1,21 @@
 import { GraphQLObjectType, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
-import { FieldResolver, TypeResolver, WrapperOptionsBase, ObjectField } from '../types';
+import { FieldResolver, TypeResolver, BaseWrapperOptions, ObjectField } from '../types';
 import { WrapperFor } from './constant';
-import { GenericWrapperFunction, FieldWrapperFunction, TypeWrapperFunction, NamedWrapper } from './types';
-
-export type FieldResolverWrapperOptions = WrapperOptionsBase & {
-  type: GraphQLObjectType;
-  field: ObjectField;
-};
-
-export type TypeResolverWrapperOptions = WrapperOptionsBase & {
-  type: GraphQLAbstractType;
-  field?: undefined;
-};
+import {
+  GenericWrapperFunction,
+  FieldWrapperFunction,
+  TypeWrapperFunction,
+  NamedWrapper,
+  FieldResolverWrapperOptions,
+  TypeResolverWrapperOptions,
+} from './types';
 
 function hasFieldResolverPackage(
   type: GraphQLType,
   pkg: {
     resolver: FieldResolver | TypeResolver;
     wrapper: GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
-    options: WrapperOptionsBase;
+    options: BaseWrapperOptions;
   },
 ): pkg is { resolver: FieldResolver; wrapper: FieldWrapperFunction; options: FieldResolverWrapperOptions } {
   return Boolean(isObjectType(type) && pkg);
@@ -29,7 +26,7 @@ function hasTypeResolverPackage(
   pkg: {
     resolver: FieldResolver | TypeResolver;
     wrapper: GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
-    options: WrapperOptionsBase;
+    options: BaseWrapperOptions;
   },
 ): pkg is { resolver: TypeResolver; wrapper: TypeWrapperFunction; options: TypeResolverWrapperOptions } {
   return Boolean(isAbstractType(type) && pkg);
@@ -54,15 +51,15 @@ class InternalNamedWrapper implements NamedWrapper {
     this.wrapperFor = wrapperFor;
   }
 
-  async wrap(resolver: TypeResolver, options: WrapperOptionsBase): Promise<TypeResolver>;
-  async wrap(resolver: FieldResolver, options: WrapperOptionsBase): Promise<FieldResolver>;
+  async wrap(resolver: TypeResolver, options: TypeResolverWrapperOptions): Promise<TypeResolver>;
+  async wrap(resolver: FieldResolver, options: FieldResolverWrapperOptions): Promise<FieldResolver>;
   async wrap(
     resolver: FieldResolver | TypeResolver,
-    options: WrapperOptionsBase,
+    options: BaseWrapperOptions,
   ): Promise<FieldResolver | TypeResolver>;
   async wrap(
     resolver: FieldResolver | TypeResolver,
-    options: WrapperOptionsBase | FieldResolverWrapperOptions,
+    options: BaseWrapperOptions | FieldResolverWrapperOptions,
   ): Promise<FieldResolver | TypeResolver> {
     const { type, field } = options;
     const wrapper = this.wrapper;
@@ -93,7 +90,7 @@ class InternalNamedWrapper implements NamedWrapper {
       return (wrapper as GenericWrapperFunction)(resolver, options);
     }
 
-    return resolver as FieldResolver;
+    throw new Error('Exhausted possible wrapper types FIELD, TYPE, ANY');
   }
 }
 

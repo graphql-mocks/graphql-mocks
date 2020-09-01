@@ -1,19 +1,30 @@
-import { TypeResolver, WrapperOptionsBase, FieldResolver } from '../types';
+import { TypeResolver, BaseWrapperOptions, FieldResolver, ObjectField } from '../types';
 import { WrapperFor } from './constant';
+import { GraphQLObjectType, GraphQLAbstractType } from 'graphql';
+
+export type FieldResolverWrapperOptions = BaseWrapperOptions & {
+  type: GraphQLObjectType;
+  field: ObjectField;
+};
+
+export type TypeResolverWrapperOptions = BaseWrapperOptions & {
+  type: GraphQLAbstractType;
+  field?: undefined;
+};
 
 export type TypeWrapperFunction = (
   resolver: TypeResolver,
-  options: WrapperOptionsBase,
+  options: TypeResolverWrapperOptions,
 ) => TypeResolver | Promise<TypeResolver>;
 
 export type FieldWrapperFunction = (
   resolver: FieldResolver,
-  options: WrapperOptionsBase,
+  options: FieldResolverWrapperOptions,
 ) => FieldResolver | Promise<FieldResolver>;
 
 export type GenericWrapperFunction = (
   resolver: FieldResolver | TypeResolver,
-  options: WrapperOptionsBase,
+  options: BaseWrapperOptions,
 ) => FieldResolver | TypeResolver | Promise<FieldResolver | TypeResolver>;
 
 export interface NamedWrapper {

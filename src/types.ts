@@ -29,7 +29,7 @@ export type ResolverInfo = Parameters<GraphQLFieldResolver<any, any>>[3];
 
 // Library Abstractions
 
-export type WrapperOptionsBase = {
+export type BaseWrapperOptions = {
   schema: GraphQLSchema;
   resolverMap: ResolverMap;
   packOptions: PackOptions;

@@ -1,4 +1,4 @@
-import { FieldResolver, TypeResolver, WrapperOptionsBase } from '../types';
+import { FieldResolver, TypeResolver, BaseWrapperOptions } from '../types';
 import { isObjectType, isAbstractType } from 'graphql';
 import { Wrapper, NamedWrapper } from './types';
 import { WrapperFor } from './constant';
@@ -10,7 +10,7 @@ function isNamedWrapper(wrapper: Wrapper): wrapper is NamedWrapper {
 export async function wrap<K extends TypeResolver | FieldResolver>(
   resolver: K,
   wrappers: Wrapper[],
-  wrapperOptions: WrapperOptionsBase,
+  wrapperOptions: BaseWrapperOptions,
 ): Promise<K> {
   wrappers = [...wrappers];
   let wrapper = wrappers.shift();
@@ -44,7 +44,7 @@ export async function wrap<K extends TypeResolver | FieldResolver>(
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wrappedResolver = await wrapper(resolver as any, wrapperOptions);
+  const wrappedResolver = await wrapper(resolver as any, wrapperOptions as any);
 
   if (typeof wrappedResolver !== 'function') {
     throw new Error(
