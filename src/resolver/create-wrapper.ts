@@ -90,7 +90,7 @@ class InternalNamedWrapper implements NamedWrapper {
       return (wrapper as GenericWrapperFunction)(resolver, options);
     }
 
-    throw new Error('Exhausted possible wrapper types FIELD, TYPE, ANY');
+    return resolver;
   }
 }
 

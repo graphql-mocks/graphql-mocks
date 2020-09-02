@@ -5,7 +5,7 @@ import { spy } from 'sinon';
 import { nameableInterfaceType, userObjectType, userObjectNameField, schema } from '../../mocks';
 import { expect } from 'chai';
 import { TypeWrapperFunction, FieldWrapperFunction, GenericWrapperFunction } from '../../../src/resolver/types';
-import { GraphQLObjectType, GraphQLAbstractType } from 'graphql';
+import { GraphQLObjectType, GraphQLAbstractType, GraphQLResolveInfo, isInterfaceType } from 'graphql';
 
 function generateTypeWrapperOptions(wrapperFor: WrapperFor): BaseWrapperOptions {
   let type: GraphQLObjectType | GraphQLAbstractType | undefined = undefined;
@@ -64,12 +64,16 @@ describe('resolvers/create-wrapper', function () {
     expect(result).to.equal(wrapped);
   });
 
-  it('creates a named wrapper for any (type or field) resolver', async function () {
+  it('creates a named wrapper for any (type or field) resolver using a generic wrapper', async function () {
     let wrapped: FieldResolver | TypeResolver | undefined = undefined;
 
     const wrapperFn: GenericWrapperFunction = function (resolver) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      wrapped = (a: any, b: any, c: any, d: any): any => resolver(a, b, c, d);
+      wrapped = (a: unknown, b: unknown, c: unknown, d: unknown): ReturnType<typeof resolver> => {
+        if (isInterfaceType(d)) {
+          return (resolver as TypeResolver)(a, b, c as GraphQLResolveInfo, d);
+        }
+      };
+
       return wrapped;
     };
 
@@ -78,25 +82,18 @@ describe('resolvers/create-wrapper', function () {
     expect(result).to.equal(wrapped);
   });
 
-  it('throws if given incomplete wrapping context and options', async function () {
-    let wrapped: TypeResolver | undefined = undefined;
+  it('returns the original resolver if a match wrapper match is not found', async function () {
+    let wrappedInWrapper: TypeResolver | undefined = undefined;
 
     const wrapperFn: TypeWrapperFunction = function (resolver) {
-      wrapped = (a, b, c, d): any => resolver(a, b, c, d as any);
-      return wrapped;
+      wrappedInWrapper = (a, b, c, d): ReturnType<typeof resolver> => resolver(a, b, c, d);
+      return wrappedInWrapper;
     };
 
     const wrapper = createWrapper('my-type-wrapper', WrapperFor.TYPE, wrapperFn);
+    const wrapped = await wrapper.wrap(resolver, generateTypeWrapperOptions(WrapperFor.FIELD));
 
-    let error: Error | undefined = undefined;
-
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await wrapper.wrap(resolver, {} as any);
-    } catch (e) {
-      error = e;
-    }
-
-    expect(error?.message).to.equal('Exhausted possible wrapper types FIELD, TYPE, ANY');
+    expect(wrapped).to.not.equal(wrappedInWrapper);
+    expect(wrapped).to.equal(resolver);
   });
 });
