@@ -11,7 +11,7 @@ describe('stash-state/wrapper', function () {
     const initialResolver = sinon.spy(() => resolverReturn);
     const resolverMap: ResolverMap = {};
 
-    const wrappedResolver = await stashStateWrapper(initialResolver, {
+    const wrappedResolver = await stashStateWrapper.wrap(initialResolver, {
       schema: {} as GraphQLSchema,
       resolverMap,
       packOptions: generatePackOptions(),

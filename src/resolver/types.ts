@@ -1,6 +1,15 @@
-import { TypeResolver, BaseWrapperOptions, FieldResolver, ObjectField } from '../types';
+import { TypeResolver, FieldResolver, ObjectField, ResolverMap } from '../types';
 import { WrapperFor } from './constant';
-import { GraphQLObjectType, GraphQLAbstractType } from 'graphql';
+import { GraphQLObjectType, GraphQLAbstractType, GraphQLSchema } from 'graphql';
+import { PackOptions } from '../pack/types';
+
+export type BaseWrapperOptions = {
+  schema: GraphQLSchema;
+  resolverMap: ResolverMap;
+  packOptions: PackOptions;
+  type: GraphQLObjectType | GraphQLAbstractType;
+  field?: ObjectField;
+};
 
 export type FieldResolverWrapperOptions = BaseWrapperOptions & {
   type: GraphQLObjectType;

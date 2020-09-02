@@ -3,9 +3,9 @@ import { spy, SinonSpy } from 'sinon';
 import { wrap } from '../../../src/resolver/wrap';
 import { generatePackOptions, userObjectType, userObjectNameField, nameableInterfaceType } from '../../mocks';
 import { GraphQLSchema, GraphQLResolveInfo, GraphQLAbstractType } from 'graphql';
-import { BaseWrapperOptions, FieldResolver, TypeResolver } from '../../../src/types';
+import { FieldResolver, TypeResolver } from '../../../src/types';
 import { createWrapper } from '../../../src/resolver/create-wrapper';
-import { FieldWrapperFunction } from '../../../src/resolver/types';
+import { FieldWrapperFunction, BaseWrapperOptions } from '../../../src/resolver/types';
 import { WrapperFor } from '../../../src/resolver/constant';
 
 describe('resolver/wrap', function () {

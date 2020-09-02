@@ -1,10 +1,15 @@
 import { createWrapper } from '../../../src/resolver/create-wrapper';
 import { WrapperFor } from '../../../src/resolver/constant';
-import { TypeResolver, FieldResolver, BaseWrapperOptions, ObjectField } from '../../../src/types';
+import { TypeResolver, FieldResolver, ObjectField } from '../../../src/types';
 import { spy } from 'sinon';
 import { nameableInterfaceType, userObjectType, userObjectNameField, schema } from '../../mocks';
 import { expect } from 'chai';
-import { TypeWrapperFunction, FieldWrapperFunction, GenericWrapperFunction } from '../../../src/resolver/types';
+import {
+  TypeWrapperFunction,
+  FieldWrapperFunction,
+  GenericWrapperFunction,
+  BaseWrapperOptions,
+} from '../../../src/resolver/types';
 import { GraphQLObjectType, GraphQLAbstractType, GraphQLResolveInfo, isInterfaceType } from 'graphql';
 
 function generateTypeWrapperOptions(wrapperFor: WrapperFor): BaseWrapperOptions {

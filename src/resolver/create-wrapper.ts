@@ -1,5 +1,5 @@
 import { GraphQLObjectType, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
-import { FieldResolver, TypeResolver, BaseWrapperOptions, ObjectField } from '../types';
+import { FieldResolver, TypeResolver, ObjectField } from '../types';
 import { WrapperFor } from './constant';
 import {
   GenericWrapperFunction,
@@ -8,6 +8,7 @@ import {
   NamedWrapper,
   FieldResolverWrapperOptions,
   TypeResolverWrapperOptions,
+  BaseWrapperOptions,
 } from './types';
 
 function hasFieldResolverPackage(

@@ -1,6 +1,6 @@
-import { FieldResolver, TypeResolver, BaseWrapperOptions } from '../types';
+import { FieldResolver, TypeResolver } from '../types';
 import { isObjectType, isAbstractType } from 'graphql';
-import { Wrapper, NamedWrapper } from './types';
+import { Wrapper, NamedWrapper, BaseWrapperOptions } from './types';
 import { WrapperFor } from './constant';
 
 function isNamedWrapper(wrapper: Wrapper): wrapper is NamedWrapper {
