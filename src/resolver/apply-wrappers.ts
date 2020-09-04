@@ -7,7 +7,7 @@ function isNamedWrapper(wrapper: Wrapper): wrapper is NamedWrapper {
   return wrapper && 'name' in wrapper && 'wrap' in wrapper;
 }
 
-export async function wrap<K extends TypeResolver | FieldResolver>(
+export async function applyWrappers<K extends TypeResolver | FieldResolver>(
   resolver: K,
   wrappers: Wrapper[],
   wrapperOptions: BaseWrapperOptions,
@@ -52,5 +52,5 @@ export async function wrap<K extends TypeResolver | FieldResolver>(
     );
   }
 
-  return wrap(wrappedResolver, wrappers, wrapperOptions) as Promise<K>;
+  return applyWrappers(wrappedResolver, wrappers, wrapperOptions) as Promise<K>;
 }
