@@ -1,7 +1,11 @@
 import { spy } from 'sinon';
-import { FieldWrapperFunction } from '../resolver/types';
+import { createWrapper } from '../resolver';
+import { WrapperFor } from '../resolver/constant';
 
-export const spyWrapper: FieldWrapperFunction = async function spyWrapper(originalResolver, wrapperDetails) {
+export const spyWrapper = createWrapper('spy-wrapper', WrapperFor.FIELD, async function spyWrappercreate(
+  originalResolver,
+  wrapperDetails,
+) {
   const { type, field } = wrapperDetails;
 
   if (!type || !field) {
@@ -19,4 +23,4 @@ export const spyWrapper: FieldWrapperFunction = async function spyWrapper(origin
   packState.spies[typeName][fieldName] = resolverSpy;
 
   return resolverSpy;
-};
+});

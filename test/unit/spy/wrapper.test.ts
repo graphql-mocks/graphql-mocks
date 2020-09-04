@@ -11,18 +11,18 @@ describe('spy/wrapper', function () {
     const packOptions = generatePackOptions();
     const state = packOptions.state;
 
-    const wrappedResolver = await spyWrapper(initialResolver as FieldResolver, {
+    const wrappedResolver = (await spyWrapper.wrap(initialResolver as FieldResolver, {
       schema: {} as GraphQLSchema,
       resolverMap: {},
       type: userObjectType,
       field: userObjectNameField,
       packOptions: packOptions,
-    });
+    })) as FieldResolver;
 
     const resolverSpy = state.spies.User.name;
     expect(resolverSpy.called).to.equal(false);
 
-    wrappedResolver({}, {}, {}, {} as GraphQLResolveInfo);
+    wrappedResolver({}, {}, {}, ({} as unknown) as GraphQLResolveInfo);
     expect(resolverSpy.called).to.equal(true);
     expect(resolverSpy.firstCall.returnValue).to.equal(resolverReturnValue);
   });
