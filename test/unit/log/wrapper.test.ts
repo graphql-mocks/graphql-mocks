@@ -1,9 +1,9 @@
 import { logWrapper } from '../../../src/log/wrapper';
-import { ResolverMap, FieldResolver } from '../../../src/types';
+import { ResolverMap, FieldResolver, TypeResolver } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
-import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
-import { GraphQLResolveInfo, GraphQLSchema } from 'graphql';
+import { generatePackOptions, userObjectType, userObjectNameField, nameableInterfaceType } from '../../mocks';
+import { GraphQLResolveInfo, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
 
 describe('log/wrapper', function () {
   let logStub: SinonStub;
@@ -16,15 +16,16 @@ describe('log/wrapper', function () {
     logStub.restore();
   });
 
-  it('logs details around calling resolvers', async function () {
-    const initialResolver = (() => ({ 'the result': 'has been returned' })) as FieldResolver;
-    const wrappedResolver = await logWrapper(initialResolver, {
+  it('logs details around field resolvers', async function () {
+    const initialResolver = (): string => 'hello world';
+
+    const wrappedResolver = (await logWrapper.wrap(initialResolver, {
       schema: ({} as unknown) as GraphQLSchema,
       resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,
       packOptions: generatePackOptions(),
-    });
+    })) as FieldResolver;
 
     await wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, ({
       info: 'info',
@@ -35,7 +36,7 @@ describe('log/wrapper', function () {
       .map((call) => call.args[0])
       .join('\n');
 
-    expect(logCalls).to.equal(`--- resolver start for User.name---
+    expect(logCalls).to.equal(`--- START: field resolver on User.name ---
 
 parent:
 {
@@ -48,10 +49,45 @@ args:
 }
 
 result:
+"hello world"
+
+--- END: field resolver on User.name ---`);
+  });
+
+  it('logs details around type resolvers', async function () {
+    const initialResolver = (): string => 'hello world';
+
+    const wrappedResolver = (await logWrapper.wrap(initialResolver, {
+      schema: ({} as unknown) as GraphQLSchema,
+      resolverMap: {} as ResolverMap,
+      type: nameableInterfaceType,
+      packOptions: generatePackOptions(),
+    })) as TypeResolver;
+
+    await wrappedResolver(
+      { value: 'value' },
+      { context: 'context' },
+      ({ info: 'info' } as unknown) as GraphQLResolveInfo,
+      ({
+        abstractType: 'abstractType',
+      } as unknown) as GraphQLInterfaceType,
+    );
+
+    const logCalls = logStub
+      .getCalls()
+      .map((call) => call.args[0])
+      .join('\n');
+
+    expect(logCalls).to.equal(`--- START: type resolver on Nameable ---
+
+value:
 {
-  "the result": "has been returned"
+  "value": "value"
 }
 
---- resolver end for User.name---`);
+result:
+"hello world"
+
+--- END: type resolver on Nameable ---`);
   });
 });

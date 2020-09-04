@@ -1,52 +1,79 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { FieldWrapperFunction } from '../resolver/types';
+import { createWrapper } from '../resolver';
+import { WrapperFor } from '../resolver/constant';
+import { FieldResolver, TypeResolver } from '../types';
+import { isFieldResolver, isTypeResolver } from '../resolver/utils';
 
-export const logWrapper: FieldWrapperFunction = async function logWrapper(originalResolver, wrapperDetails) {
-  const { type, field } = wrapperDetails;
+export const logWrapper = createWrapper('log-wrapper', WrapperFor.ANY, async function (originalResolver, options) {
+  const { type, field } = options;
 
-  if (!type || !field) {
-    return originalResolver;
+  if (isFieldResolver(options.type, originalResolver)) {
+    const resolver: FieldResolver = async function (parent, args, context, info): Promise<unknown> {
+      /* eslint-enable @typescript-eslint/no-explicit-any */
+
+      const [parentOut, argsOut] = [parent, args].map((out) => {
+        try {
+          return JSON.stringify(out, null, 2);
+        } catch {
+          return 'Unable to JSON.stringify';
+        }
+      });
+
+      console.log(`--- START: field resolver on ${type.name}.${field?.name} ---`);
+      console.log('');
+
+      console.log(`parent:`);
+      console.log(parentOut);
+      console.log('');
+      console.log('args:');
+      console.log(argsOut);
+      console.log('');
+
+      const result = await (originalResolver as FieldResolver)(parent, args, context, info);
+      const resultOut = JSON.stringify(result, null, 2);
+
+      console.log('result:');
+      console.log(resultOut);
+
+      console.log('');
+      console.log(`--- END: field resolver on ${type.name}.${field?.name} ---`);
+
+      return result;
+    };
+
+    return resolver;
   }
 
-  const typeName = type.name;
-  const fieldName = field.name;
+  if (isTypeResolver(options.type, originalResolver)) {
+    const resolver: TypeResolver = async (value, context, info, abstractType) => {
+      const [valueOut] = [value].map((out) => {
+        try {
+          return JSON.stringify(out, null, 2);
+        } catch {
+          return 'Unable to JSON.stringify';
+        }
+      });
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  return async function (
-    parent: any,
-    args: Record<string, any>,
-    context: Record<string, any> | GraphQLResolveInfo,
-    info: any,
-  ): Promise<any> {
-    /* eslint-enable @typescript-eslint/no-explicit-any */
+      console.log(`--- START: type resolver on ${type.name} ---`);
+      console.log('');
 
-    const [parentOut, argsOut] = [parent, args].map((out) => {
-      try {
-        return JSON.stringify(out, null, 2);
-      } catch {
-        return 'Unable to JSON.stringify';
-      }
-    });
+      console.log('value:');
+      console.log(valueOut);
+      console.log('');
 
-    console.log(`--- resolver start for ${typeName}.${fieldName}---`);
-    console.log('');
+      const result = await (originalResolver as TypeResolver)(value, context, info, abstractType);
+      const resultOut = JSON.stringify(result, null, 2);
 
-    console.log(`parent:`);
-    console.log(parentOut);
-    console.log('');
-    console.log(`args:`);
-    console.log(argsOut);
-    console.log('');
+      console.log('result:');
+      console.log(resultOut);
 
-    const result = await originalResolver(parent, args, context, info);
-    const resultOut = JSON.stringify(result, null, 2);
+      console.log('');
+      console.log(`--- END: type resolver on ${type.name} ---`);
 
-    console.log(`result:`);
-    console.log(resultOut);
+      return result;
+    };
 
-    console.log('');
-    console.log(`--- resolver end for ${typeName}.${fieldName}---`);
+    return resolver;
+  }
 
-    return result;
-  };
-};
+  return originalResolver;
+});

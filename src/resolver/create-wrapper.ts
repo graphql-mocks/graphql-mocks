@@ -88,7 +88,8 @@ class InternalNamedWrapper implements NamedWrapper {
 
       return wrapper(resolver, expandedOptions);
     } else if (wrapperFor === WrapperFor.ANY) {
-      return (wrapper as GenericWrapperFunction)(resolver, options);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return wrapper(resolver as any, options as any);
     }
 
     return resolver;

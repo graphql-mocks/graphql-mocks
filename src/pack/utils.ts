@@ -2,8 +2,8 @@ import { ResolverContext, FieldResolver, TypeResolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
 import { createWrapper } from '../resolver/create-wrapper';
-import { isObjectType, isAbstractType, GraphQLType } from 'graphql';
 import { WrapperFor } from '../resolver/constant';
+import { isFieldResolver, isTypeResolver } from '../resolver/utils';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
@@ -24,14 +24,6 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
   };
 
   return context;
-}
-
-export function isTypeResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is TypeResolver {
-  return Boolean(isAbstractType(type) && resolver);
-}
-
-export function isFieldResolver(type: GraphQLType, resolver: FieldResolver | TypeResolver): resolver is FieldResolver {
-  return Boolean(isObjectType(type) && resolver);
 }
 
 export const embedPackOptionsWrapper = createWrapper(
