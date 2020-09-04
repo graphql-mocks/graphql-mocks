@@ -1,4 +1,4 @@
-import { buildSchema, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { walk, WalkCallback } from '../../../src/utils/walk';
@@ -44,9 +44,14 @@ describe('utils/walk', function () {
   });
 
   it('walks references from a highlight', async function () {
+    const queryType = graphqlSchema.getType('Query');
     const callbackSpy = spy();
     await walk(graphqlSchema, highlight.references, callbackSpy);
     const references = getCallbackReferences(callbackSpy);
+
+    const callbackOptionsCallArgs = (callbackSpy.firstCall.args as Parameters<WalkCallback>)[0];
+    expect(callbackOptionsCallArgs.type).to.equal(queryType);
+    expect(callbackOptionsCallArgs.field).to.equal((queryType as GraphQLObjectType).getFields()?.person);
 
     expect(references.sort()).to.deep.equal(
       [

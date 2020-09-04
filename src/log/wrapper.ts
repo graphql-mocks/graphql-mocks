@@ -8,8 +8,6 @@ export const logWrapper = createWrapper('log-wrapper', WrapperFor.ANY, async fun
 
   if (isFieldResolver(options.type, originalResolver)) {
     const resolver: FieldResolver = async function (parent, args, context, info): Promise<unknown> {
-      /* eslint-enable @typescript-eslint/no-explicit-any */
-
       const [parentOut, argsOut] = [parent, args].map((out) => {
         try {
           return JSON.stringify(out, null, 2);

@@ -18,7 +18,7 @@ export type FieldResolverWrapperOptions = BaseWrapperOptions & {
 
 export type TypeResolverWrapperOptions = BaseWrapperOptions & {
   type: GraphQLAbstractType;
-  field?: undefined;
+  field: undefined;
 };
 
 export type TypeWrapperFunction = (

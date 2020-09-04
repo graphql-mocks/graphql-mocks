@@ -46,7 +46,8 @@ describe('resolvers/create-wrapper', function () {
   it('creates a named wrapper for a type resolver', async function () {
     let wrapped: TypeResolver | undefined = undefined;
 
-    const wrapperFn: TypeWrapperFunction = function (resolver: TypeResolver) {
+    const wrapperFn: TypeWrapperFunction = function (resolver: TypeResolver, options) {
+      expect(options.field).to.be.undefined;
       wrapped = (a, b, c, d): ReturnType<TypeResolver> => resolver(a, b, c, d);
       return wrapped;
     };
@@ -59,7 +60,8 @@ describe('resolvers/create-wrapper', function () {
   it('creates a named wrapper for a field resolver', async function () {
     let wrapped: FieldResolver | undefined = undefined;
 
-    const wrapperFn: FieldWrapperFunction = function (resolver: FieldResolver) {
+    const wrapperFn: FieldWrapperFunction = function (resolver: FieldResolver, options) {
+      expect(options.field).to.exist;
       wrapped = (a, b, c, d): ReturnType<FieldResolver> => resolver(a, b, c, d);
       return wrapped;
     };
@@ -72,7 +74,8 @@ describe('resolvers/create-wrapper', function () {
   it('creates a named wrapper for any (type or field) resolver using a generic wrapper', async function () {
     let wrapped: FieldResolver | TypeResolver | undefined = undefined;
 
-    const wrapperFn: GenericWrapperFunction = function (resolver) {
+    const wrapperFn: GenericWrapperFunction = function (resolver, options) {
+      expect(options).to.exist;
       wrapped = (a: unknown, b: unknown, c: unknown, d: unknown): ReturnType<typeof resolver> => {
         if (isInterfaceType(d)) {
           return (resolver as TypeResolver)(a, b, c as GraphQLResolveInfo, d);
@@ -90,7 +93,8 @@ describe('resolvers/create-wrapper', function () {
   it('returns the original resolver if a match wrapper match is not found', async function () {
     let wrappedInWrapper: TypeResolver | undefined = undefined;
 
-    const wrapperFn: TypeWrapperFunction = function (resolver) {
+    const wrapperFn: TypeWrapperFunction = function (resolver, options) {
+      expect(options).to.exist;
       wrappedInWrapper = (a, b, c, d): ReturnType<typeof resolver> => resolver(a, b, c, d);
       return wrappedInWrapper;
     };
