@@ -1,7 +1,6 @@
 import { Server as MirageServer } from 'miragejs';
 import { isScalarType } from 'graphql';
 import { FieldResolver } from '../../types';
-import { MirageGraphQLMapper } from '../mapper/mapper';
 import { relayPaginateNodes } from '../../relay/utils';
 import { cleanRelayConnectionName, mirageCursorForNode } from './utils';
 import { extractDependencies } from '../../resolver/extract-dependencies';
@@ -12,18 +11,15 @@ import { RootQueryResolverMatch, AutoResolverErrorMeta } from '../types';
 
 function findMatchingModelsForType({
   type,
-  mirageMapper,
   mirageServer,
 }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
 any): RootQueryResolverMatch {
   type = unwrap(type);
-  const mappedModelName = mirageMapper && type.name && mirageMapper.findMatchForType(type.name);
 
   // model candidates are ordered in terms of preference:
-  // [0] A manual type mapping already exists
   // [1] A model exists for a relay type name
   // [2] The type's name itself exists as a model name
-  const modelNameCandidates = [mappedModelName, cleanRelayConnectionName(type.name), type.name].filter(Boolean);
+  const modelNameCandidates = [cleanRelayConnectionName(type.name), type.name].filter(Boolean);
 
   const matchedModelName = modelNameCandidates.find((candidate) => {
     try {
@@ -54,12 +50,9 @@ any): RootQueryResolverMatch {
 export const mirageRootQueryResolver: FieldResolver = function mirageRootQueryResolver(parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
-  const { mirageMapper, mirageServer } = extractDependencies<{
-    mirageMapper: MirageGraphQLMapper;
+  const { mirageServer } = extractDependencies<{
     mirageServer: MirageServer;
-  }>(context, ['mirageMapper', 'mirageServer'], { required: false });
-
-  const fieldFilter = mirageMapper?.findFieldFilter([parentType.name, fieldName]);
+  }>(context, ['mirageServer'], { required: false });
 
   const errorMeta: AutoResolverErrorMeta = {
     parent,
@@ -69,7 +62,7 @@ export const mirageRootQueryResolver: FieldResolver = function mirageRootQueryRe
     autoResolverType: 'ROOT_TYPE',
     isRelay: isRelayPaginated,
     usedFieldFilter: false,
-    hasFieldFilter: Boolean(fieldFilter),
+    hasFieldFilter: false,
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -79,7 +72,7 @@ export const mirageRootQueryResolver: FieldResolver = function mirageRootQueryRe
   // Root query types that return scalars cannot use mirage models
   // since models represent an object with attributes.
   // We have to throw an error and recommend a field filter (or resolver in map)
-  if (hasScalarInReturnType && !fieldFilter) {
+  if (hasScalarInReturnType) {
     throw new Error(
       `Scalars cannot be auto-resolved with mirage from the root query type. ${
         parentType.name
@@ -94,17 +87,12 @@ export const mirageRootQueryResolver: FieldResolver = function mirageRootQueryRe
     // * there is no parent on root query types
     // * we are querying for something non-scalar (so we can use mirage)
     // * we can use the mappings to assist in finding something from mirage
-    const match = findMatchingModelsForType({ type: returnType, mirageMapper, mirageServer });
+    const match = findMatchingModelsForType({ type: returnType, mirageServer });
     errorMeta.match = match;
     result = match.models;
   }
 
   try {
-    if (fieldFilter) {
-      result = fieldFilter(coerceToList(result) ?? [], parent, args, context, info);
-      errorMeta.usedFieldFilter = true;
-    }
-
     if (isRelayPaginated) {
       const nodes = coerceToList(result);
       return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);

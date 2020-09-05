@@ -4,7 +4,6 @@
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
 import { mirageMiddleware } from '../../src/mirage';
-import { MirageGraphQLMapper } from '../../src/mirage';
 import { GraphQLHandler } from '../../src/graphql';
 
 const schemaString = `
@@ -42,7 +41,6 @@ const schemaString = `
 
 describe('integration/mirage-relay', function () {
   let mirageServer: Server;
-  let mirageMapper: MirageGraphQLMapper;
   let handler: GraphQLHandler;
 
   beforeEach(async function () {
@@ -74,13 +72,15 @@ describe('integration/mirage-relay', function () {
       friends: rootFriends,
     });
 
-    mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => rootPerson);
-
     handler = new GraphQLHandler({
+      resolverMap: {
+        Query: {
+          person: (): unknown => rootPerson,
+        },
+      },
       middlewares: [mirageMiddleware()],
       dependencies: {
         mirageServer,
-        mirageMapper,
         graphqlSchema: schemaString,
       },
     });
@@ -88,7 +88,6 @@ describe('integration/mirage-relay', function () {
 
   afterEach(function () {
     (mirageServer as any) = null;
-    (mirageMapper as any) = null;
     (handler as any) = null;
   });
 
@@ -154,51 +153,6 @@ describe('integration/mirage-relay', function () {
         hasPreviousPage: false,
       });
     });
-
-    it('relay paginates on the root query type using a field filter', async function () {
-      mirageMapper.addFieldFilter(['Query', 'people'], (results) =>
-        results.filter((result: any) => result.name === 'Princess Leia' || result.name === 'Greedo'),
-      );
-
-      const result = await handler.query(`{
-        people {
-          edges {
-            cursor
-            node {
-              name
-            }
-          }
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
-          }
-        }
-      }`);
-
-      expect((result.data as any)?.people.edges).to.deep.equal([
-        {
-          cursor: 'model:person(2)',
-          node: {
-            name: 'Princess Leia',
-          },
-        },
-        {
-          cursor: 'model:person(4)',
-          node: {
-            name: 'Greedo',
-          },
-        },
-      ]);
-
-      expect((result.data as any)?.people.pageInfo).to.deep.equal({
-        startCursor: 'model:person(2)',
-        endCursor: 'model:person(4)',
-        hasNextPage: false,
-        hasPreviousPage: false,
-      });
-    });
   });
 
   describe('field query relay pagination', function () {
@@ -258,49 +212,6 @@ describe('integration/mirage-relay', function () {
       expect((result.data as any)?.person.friends.pageInfo).to.deep.equal({
         startCursor: 'model:person(1)',
         endCursor: 'model:person(4)',
-        hasNextPage: false,
-        hasPreviousPage: false,
-      });
-    });
-
-    it('relay paginates models from a relationship using a field filter', async function () {
-      mirageMapper.addFieldFilter(['Person', 'friends'], (results) =>
-        results.filter((result) => result.name === 'R2-D2'),
-      );
-
-      const result = await handler.query(`{
-        person {
-          name
-          friends {
-            edges {
-              cursor
-              node {
-                name
-              }
-            }
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-              startCursor
-              endCursor
-            }
-          }
-        }
-      }`);
-
-      expect((result.data as any)?.person.name).to.equal('Rooty');
-      expect((result.data as any)?.person.friends.edges).to.deep.equal([
-        {
-          cursor: 'model:person(3)',
-          node: {
-            name: 'R2-D2',
-          },
-        },
-      ]);
-
-      expect((result.data as any)?.person.friends.pageInfo).to.deep.equal({
-        startCursor: 'model:person(3)',
-        endCursor: 'model:person(3)',
         hasNextPage: false,
         hasPreviousPage: false,
       });

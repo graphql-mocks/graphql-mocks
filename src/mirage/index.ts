@@ -1,4 +1,3 @@
-export { MirageGraphQLMapper } from './mapper/mapper';
 export { createRouteHandler } from './route-handler';
 export { mirageMiddleware } from './middleware';
 export { mirageRootQueryResolver } from './resolver/root-query';

@@ -2,7 +2,7 @@ import { Model, Server } from 'miragejs';
 import { generatePackOptions } from '../../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
-import { MirageGraphQLMapper, mirageAbstractTypeResolver } from '../../../../src/mirage';
+import { mirageAbstractTypeResolver } from '../../../../src/mirage';
 import { ResolverInfo, ResolverContext } from '../../../../src/types';
 import { PackOptions } from '../../../../src/pack/types';
 
@@ -71,14 +71,6 @@ describe('mirage/resolvers/abstract', function () {
       const dogModel = mirageServer.create('dog');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
       const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalUnionType);
-      expect(resolvedType).to.equal('Dog');
-    });
-
-    it('resolves a union by mapper', async function () {
-      const doggyModel = mirageServer.create('doggy');
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
-      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -180,14 +172,6 @@ describe('mirage/resolvers/abstract', function () {
       const dogModel = mirageServer.create('dog');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
       const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalInterfaceType);
-      expect(resolvedType).to.equal('Dog');
-    });
-
-    it('resolves an interface to a type by mapper', async function () {
-      const doggyModel = mirageServer.create('doggy');
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
-      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 

@@ -1,9 +1,8 @@
 import { mirageObjectResolver } from '../../../../src/mirage/resolver/object';
-import { generatePackOptions, createEmptyMirageMapper } from '../../../mocks';
+import { generatePackOptions } from '../../../mocks';
 import { GraphQLSchema, buildSchema, GraphQLNonNull, GraphQLString, GraphQLResolveInfo } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server, belongsTo } from 'miragejs';
-import { MirageGraphQLMapper } from '../../../../src/mirage';
 
 describe('mirage/resolvers/object', function () {
   let mirageServer: Server;
@@ -39,7 +38,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
 
     const info = {
@@ -52,32 +51,6 @@ describe('mirage/resolvers/object', function () {
     expect(result).to.equal('George');
   });
 
-  it('resolves a field from a parent using a mapper', async function () {
-    const user = mirageServer.create('user', {
-      id: '1',
-      name: 'George',
-      foodPreference: 'Pizza',
-    });
-
-    const mirageMapper = new MirageGraphQLMapper().addFieldMapping(
-      ['User', 'favoriteFood'],
-      ['User', 'foodPreference'],
-    );
-
-    const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, mirageMapper } }),
-    };
-
-    const info = {
-      parentType: schema?.getType('User'),
-      fieldName: 'favoriteFood',
-      returnType: new GraphQLNonNull(GraphQLString),
-    };
-
-    const result = mirageObjectResolver(user, {}, context, info as GraphQLResolveInfo);
-    expect(result).to.equal('Pizza');
-  });
-
   it('resolves a mirage relationship field from a parent', async function () {
     const starwars = mirageServer.create('movie', { id: '1', name: 'Star Wars: A New Hope' });
     const user = mirageServer.create('user', {
@@ -87,7 +60,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
 
     const info = {
@@ -107,7 +80,7 @@ describe('mirage/resolvers/object', function () {
     });
 
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
 
     const info = {
@@ -123,7 +96,7 @@ describe('mirage/resolvers/object', function () {
 
   it('throws an error when the parent passed in is not an object', function () {
     const context = {
-      pack: generatePackOptions({ dependencies: { graphqlSchema: schema, graphqlMapper: createEmptyMirageMapper() } }),
+      pack: generatePackOptions({ dependencies: { graphqlSchema: schema } }),
     };
 
     const info = {

@@ -1,4 +1,4 @@
-import { AutoResolverErrorMeta, ObjectResolverMatch, RootQueryResolverMatch } from './types';
+import { AutoResolverErrorMeta, RootQueryResolverMatch } from './types';
 
 export class AutoResolverError extends Error {
   _message?: string;
@@ -18,22 +18,11 @@ export class AutoResolverError extends Error {
     const match = this.meta.match;
     const typeName = this.meta.info.parentType.name;
     const fieldName = this.meta.info.fieldName;
-    const usedFieldFilter = Boolean(this.meta.usedFieldFilter);
     const autoResolverType = this.meta.autoResolverType;
     const parentModelName = this.meta.parent?.model;
 
     // messages
     let matchMessage = '';
-    if (autoResolverType === 'OBJECT') {
-      const objectMatch = match as ObjectResolverMatch;
-
-      const matchMessages = [
-        objectMatch.matchedProperty ? `Matched on: ${objectMatch.matchedProperty}` : null,
-        `Field Candidates tried: ${objectMatch.fieldNameCandidates.join(', ')}`,
-      ];
-
-      matchMessage = matchMessages.filter(Boolean).join('\n');
-    }
 
     if (autoResolverType === 'ROOT_TYPE') {
       const rootMatch = match as RootQueryResolverMatch;
@@ -54,8 +43,6 @@ export class AutoResolverError extends Error {
       this._message,
       '\n** Additional Info **',
       matchMessage,
-      ' ',
-      `Used field filter on mirage mapper: ${usedFieldFilter};`,
       `Mirage parent: ${parentModelName ? this.meta.parent.toString() : 'false'}`,
       `Resolve as relay connection: ${this.meta.isRelay}`,
     ]
