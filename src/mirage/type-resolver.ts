@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, GraphQLObjectType } from 'graphql';
 import { findTypeWithFieldsMostInCommon, convertModelNameToTypeName } from './utils';
-import { extractDependencies } from '../../resolver/extract-dependencies';
+import { extractDependencies } from '../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const mirageTypeResolver: GraphQLTypeResolver<any, any> = function mirageUnionResolver(

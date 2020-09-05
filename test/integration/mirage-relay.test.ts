@@ -12,7 +12,7 @@ const schemaString = `
   }
 
   type Query {
-    people: PersonConnection!
+    people(first: Int, last: Int, before: String, after: String): PersonConnection!
     person: Person!
   }
 
@@ -35,7 +35,7 @@ const schemaString = `
 
   type Person {
     name: String!
-    friends: PersonConnection!
+    friends(first: Int, last: Int, before: String, after: String): PersonConnection!
   }
 `;
 

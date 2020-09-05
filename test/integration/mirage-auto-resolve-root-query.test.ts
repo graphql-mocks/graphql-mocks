@@ -97,32 +97,6 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       }
     `;
 
-    it('returns the only model when one exists', async function () {
-      mirageServer.schema.create<any, any, any>('person', {
-        name: 'fred',
-      });
-
-      const handler = new GraphQLHandler({
-        middlewares: [mirageMiddleware()],
-        dependencies: {
-          mirageServer,
-          graphqlSchema,
-        },
-      });
-
-      const result = await handler.query(`{
-          person {
-            name
-          }
-        }`);
-
-      expect(result).to.deep.equal({
-        data: {
-          person: { name: 'fred' },
-        },
-      });
-    });
-
     it('returns null when there are no models', async function () {
       const handler = new GraphQLHandler({
         middlewares: [mirageMiddleware()],
@@ -142,47 +116,6 @@ describe('integration/mirage-auto-resolve-root-query', function () {
         data: {
           person: null,
         },
-      });
-    });
-
-    describe('when multiple models exist', function () {
-      beforeEach(function () {
-        mirageServer = new Server({
-          models: {
-            person: Model.extend({}),
-          },
-        });
-
-        mirageServer.schema.create<any, any, any>('person', {
-          name: 'wilma',
-        });
-
-        mirageServer.schema.create<any, any, any>('person', {
-          name: 'betty',
-        });
-      });
-
-      it('when no field filter exists it throws an error', async function () {
-        const handler = new GraphQLHandler({
-          middlewares: [mirageMiddleware()],
-          dependencies: {
-            mirageServer,
-            graphqlSchema,
-          },
-        });
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result: any = await handler.query(`{
-          person {
-            name
-          }
-        }`);
-
-        expect(result.data?.person).to.equal(null);
-        expect(result.errors?.length).to.equal(1);
-        expect(result.errors[0].message).to.contain(
-          'Tried to a coerce singular result but got an array of more than one result.',
-        );
       });
     });
   });

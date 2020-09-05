@@ -382,7 +382,7 @@ describe('integration/mirage-auto-resolver', function () {
         });
       });
 
-      it('can query on the auto-resolvers patched in by in the `include` option', async function () {
+      it('can query on the auto-resolvers patched in by in the `highlight` option', async function () {
         expect(await graphQLHandler.query(allPersonsQuery)).to.deep.equal({
           data: {
             allPersons: [

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { Model, Server, hasMany, belongsTo } from 'miragejs';
+import { Model, Server, hasMany, belongsTo, ModelInstance } from 'miragejs';
 import { expect } from 'chai';
 import { mirageMiddleware } from '../../src/mirage';
 import { GraphQLHandler } from '../../src/graphql';
@@ -40,14 +40,20 @@ describe('integration/mirage-auto-resolve-types', function () {
   });
 
   describe('scalar types', function () {
+    let grace: ModelInstance;
     beforeEach(function () {
-      mirageServer.schema.create<any, any, any>('person', {
+      grace = mirageServer.schema.create<any, any, any>('person', {
         name: 'Grace Hopper',
       });
     });
 
     it('returns a scalar from a model attr', async function () {
       const handler = new GraphQLHandler({
+        resolverMap: {
+          Query: {
+            person: (): ModelInstance => grace,
+          },
+        },
         middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,

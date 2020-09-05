@@ -3,19 +3,9 @@ import { ResolverMapMiddleware, ResolverMap } from '../types';
 import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
 import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
 import { setResolver } from '../resolver-map';
-import { mirageRootQueryResolver, mirageObjectResolver, mirageTypeResolver } from '.';
+import { mirageFieldResolver, mirageTypeResolver } from '.';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
-import {
-  field,
-  resolvesTo,
-  combine,
-  union,
-  fromResolverMap,
-  interfaces,
-  ROOT_QUERY,
-  HIGHLIGHT_ALL,
-  ROOT_MUTATION,
-} from '../highlight';
+import { resolvesTo, combine, union, fromResolverMap, interfaces, HIGHLIGHT_ALL, ROOT_MUTATION } from '../highlight';
 import { walk } from '../highlight/utils/walk';
 
 export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
@@ -24,6 +14,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
     let highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);
 
     // In no case do we want to add Mutation resolvers
+    // these are best handled with custom resolvers
     highlight = highlight.exclude([ROOT_MUTATION, HIGHLIGHT_ALL]);
 
     // If we can't replace resolvers, exclude the ones that exist in the resolver map
@@ -31,17 +22,9 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
       highlight = highlight.exclude(fromResolverMap(resolverMap));
     }
 
-    const rootQueryHighlight = highlight.filter(field([ROOT_QUERY, HIGHLIGHT_ALL]));
-    await walk(graphqlSchema, rootQueryHighlight.references, ({ reference }) => {
-      setResolver(resolverMap, reference, mirageRootQueryResolver, {
-        graphqlSchema,
-        replace: options?.replace,
-      });
-    });
-
-    const fieldResolvableHighlight = highlight.exclude(...rootQueryHighlight.references).filter(resolvesTo());
+    const fieldResolvableHighlight = highlight.filter(resolvesTo());
     await walk(graphqlSchema, fieldResolvableHighlight.references, ({ reference }) => {
-      setResolver(resolverMap, reference, mirageObjectResolver, {
+      setResolver(resolverMap, reference, mirageFieldResolver, {
         graphqlSchema,
         replace: options?.replace,
       });

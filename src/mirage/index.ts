@@ -1,5 +1,4 @@
 export { createRouteHandler } from './route-handler';
 export { mirageMiddleware } from './middleware';
-export { mirageRootQueryResolver } from './resolver/root-query';
-export { mirageObjectResolver } from './resolver/object';
-export { mirageTypeResolver } from './resolver/type';
+export { mirageFieldResolver } from './field-resolver';
+export { mirageTypeResolver } from './type-resolver';

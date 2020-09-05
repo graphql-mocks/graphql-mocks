@@ -1,5 +1,6 @@
 import intersection from 'lodash.intersection';
 import { GraphQLObjectType } from 'graphql';
+import { Server } from 'miragejs/server';
 
 function toPascalCase(string: string): string {
   return `${string}`
@@ -44,11 +45,21 @@ export function convertModelNameToTypeName(modelName: 'string'): string | undefi
   return typeof modelName === 'string' ? toPascalCase(modelName.replace('-', '_')) : modelName;
 }
 
-export function cleanRelayConnectionName(name: string): string | undefined {
-  return name.endsWith('Connection') ? name.replace('Connection', '') : undefined;
+export function cleanRelayConnectionName(typeName: string): string | undefined {
+  return typeName.endsWith('Connection') ? typeName.replace('Connection', '') : undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mirageCursorForNode(node: any): string {
   return node.toString();
+}
+
+export function isValidModelName(mirageServer: Server, modelName: string): boolean {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return Boolean((mirageServer.schema as any).collectionForType(modelName));
+  } catch {
+    // nope; no match
+    return false;
+  }
 }
