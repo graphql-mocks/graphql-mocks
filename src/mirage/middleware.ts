@@ -3,7 +3,7 @@ import { ResolverMapMiddleware, ResolverMap } from '../types';
 import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
 import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
 import { setResolver } from '../resolver-map';
-import { mirageRootQueryResolver, mirageObjectResolver, mirageAbstractTypeResolver } from '.';
+import { mirageRootQueryResolver, mirageObjectResolver, mirageTypeResolver } from '.';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import {
   field,
@@ -49,7 +49,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
 
     const typeResolvableHighlight = highlight.filter(combine(union(), interfaces()));
     await walk(graphqlSchema, typeResolvableHighlight.references, ({ reference }) => {
-      setResolver(resolverMap, reference, mirageAbstractTypeResolver, {
+      setResolver(resolverMap, reference, mirageTypeResolver, {
         graphqlSchema,
         replace: options?.replace,
       });
