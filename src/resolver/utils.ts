@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo, isNonNullType, GraphQLType, isAbstractType, isObjectType } from 'graphql';
 import { hasListType } from '../graphql/utils';
-import { FieldResolver } from '../types';
-import { TypeResolver } from 'graphql/utilities/buildASTSchema';
+import { FieldResolver, TypeResolver } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function coerceSingular(subject: any): any {
