@@ -38,8 +38,7 @@ export function extractDependencies<T extends PackDependencies>(
   const missingRequiredDependencies: string[] = [];
 
   requestedDependencies.forEach((dependencyName) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dependency = (packedDependencies as any)[dependencyName];
+    const dependency = packedDependencies[dependencyName];
 
     if (options?.required && dependency == null) {
       missingRequiredDependencies.push(dependencyName.toString());

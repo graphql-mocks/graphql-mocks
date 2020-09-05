@@ -20,8 +20,14 @@
   "license": "ISC",
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
+    "lodash.difference": "^4.5.0",
+    "lodash.differencewith": "^4.5.0",
     "lodash.flattendepth": "^4.7.0",
-    "lodash.intersection": "^4.4.0"
+    "lodash.intersection": "^4.4.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isequalwith": "^4.4.0",
+    "lodash.merge": "^4.6.2",
+    "lodash.mergewith": "^4.6.2"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0",
@@ -31,8 +37,14 @@
     "@types/chai": "^4.2.7",
     "@types/inflected": "^1.1.29",
     "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.difference": "^4.5.6",
+    "@types/lodash.differencewith": "^4.5.6",
     "@types/lodash.flattendepth": "^4.7.6",
     "@types/lodash.intersection": "^4.4.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/lodash.isequalwith": "^4.4.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.mergewith": "^4.6.6",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.13.2",
     "@types/sinon": "^9.0.0",
@@ -50,6 +62,6 @@
     "prettier": "^2.0.5",
     "sinon": "^9.0.0",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.3"
+    "typescript": "3.9"
   }
 }

@@ -19,8 +19,7 @@ import {
   buildASTSchema,
   DocumentNode,
 } from 'graphql';
-import { ResolverMap, ResolvableType, ResolvableField, ResolverContext } from '../types';
-import { FieldReference } from '../resolver-map/reference/field-reference';
+import { ResolverMap, ResolverContext } from '../types';
 import { PackOptions } from '../pack/types';
 
 export function attachTypeResolversToSchema(schema: GraphQLSchema, resolverMap: ResolverMap): void {
@@ -114,32 +113,6 @@ export function isInternalType(type: GraphQLType | string): boolean {
  */
 export function hasListType(type: GraphQLType): boolean {
   return isListType(type) || (isNonNullType(type) && isListType(type.ofType));
-}
-
-export function getTypeAndFieldDefinitions(
-  schema: GraphQLSchema,
-  fieldReference: FieldReference,
-): [ResolvableType, ResolvableField] {
-  const [typeName, fieldName] = fieldReference;
-  const type = schema.getType(typeName);
-
-  if (!type) {
-    throw new Error(`Unable to find type "${typeName}" from schema`);
-  }
-
-  let field: ResolvableField;
-  if (isObjectType(type)) {
-    const fields = type.getFields();
-    field = fields[fieldName];
-  } else if (isAbstractType(type)) {
-    field = { name: '__resolveType' } as ResolvableField;
-  } else {
-    throw new Error(`Type "${typeName}" must be an a GraphQLObjectType, GraphQLUnionType, GraphQLInterfaceType`);
-  }
-
-  if (!field) throw new Error(`Field "${fieldName}" does not exist on type "${typeName}"`);
-
-  return [type, field];
 }
 
 export function copySchema(schema: GraphQLSchema): GraphQLSchema {

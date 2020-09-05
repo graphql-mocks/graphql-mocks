@@ -1,7 +1,9 @@
-import { ResolverParent, ResolverArgs, ResolverContext, ResolverInfo, Resolver } from '../types';
+import { ResolverContext, FieldResolver, TypeResolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
-import { ResolverWrapperOptions } from '../../src/types';
+import { createWrapper } from '../resolver/create-wrapper';
+import { WrapperFor } from '../resolver/constants';
+import { isFieldResolver, isTypeResolver } from '../resolver/utils';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
   const normalized = {
@@ -24,14 +26,30 @@ export function embedPackOptionsInContext(context: Record<string, unknown>, pack
   return context;
 }
 
-export async function embedPackOptionsWrapper(resolver: Resolver, options: ResolverWrapperOptions) {
-  return (
-    parent: ResolverParent,
-    args: ResolverArgs,
-    context: ResolverContext,
-    info: ResolverInfo,
-  ): Promise<unknown> => {
-    context = embedPackOptionsInContext(context, options.packOptions);
-    return resolver(parent, args, context, info);
-  };
-}
+export const embedPackOptionsWrapper = createWrapper(
+  'embed-pack-options',
+  WrapperFor.ANY,
+  async (resolver, options) => {
+    const { type } = options;
+
+    if (isFieldResolver(type, resolver)) {
+      const fieldResolver: FieldResolver = (parent, args, context, info) => {
+        context = embedPackOptionsInContext(context, options.packOptions);
+        return resolver(parent, args, context, info);
+      };
+
+      return fieldResolver;
+    }
+
+    if (isTypeResolver(type, resolver)) {
+      const typeResolver: TypeResolver = (value, context, info, abstractType) => {
+        context = embedPackOptionsInContext(context, options.packOptions);
+        return (resolver as TypeResolver)(value, context, info, abstractType);
+      };
+
+      return typeResolver;
+    }
+
+    return resolver;
+  },
+);

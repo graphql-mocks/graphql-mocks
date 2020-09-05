@@ -3,6 +3,7 @@ import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
+import { GraphQLSchema } from 'graphql';
 
 describe('stash-state/wrapper', function () {
   it('saves stashes on a result object', async function () {
@@ -10,7 +11,8 @@ describe('stash-state/wrapper', function () {
     const initialResolver = sinon.spy(() => resolverReturn);
     const resolverMap: ResolverMap = {};
 
-    const wrappedResolver = await stashStateWrapper(initialResolver, {
+    const wrappedResolver = await stashStateWrapper.wrap(initialResolver, {
+      schema: {} as GraphQLSchema,
       resolverMap,
       packOptions: generatePackOptions(),
       type: userObjectType,

@@ -1,2 +1,3 @@
 export { embed } from './embed';
-export { addResolverToMap } from './add-resolver';
+export { setResolver } from './set-resolver';
+export { getResolver } from './get-resolver';

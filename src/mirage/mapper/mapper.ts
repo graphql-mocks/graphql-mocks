@@ -1,13 +1,13 @@
-import { TypeName, FieldReference } from '../../resolver-map/reference/field-reference';
 import { FieldMap, FieldFilterMap, ModelName, MirageAttrReference, FieldFilterResolver, TypeMap } from '../types';
 import { assertValidTupleDef } from './utils';
+import { TypeReference, FieldReference } from '../../highlight/types';
 
 export class MirageGraphQLMapper {
   readonly typeMappings: TypeMap[] = [];
   readonly fieldMappings: FieldMap[] = [];
   readonly fieldFilterMappings: FieldFilterMap[] = [];
 
-  addTypeMapping(typeName: TypeName, modelName: ModelName): MirageGraphQLMapper {
+  addTypeMapping(typeName: TypeReference, modelName: ModelName): MirageGraphQLMapper {
     if (typeof typeName !== 'string') {
       throw new TypeError(`First argument must be a string representing the GraphQL type name, got ${typeof typeName}`);
     }
@@ -59,7 +59,7 @@ export class MirageGraphQLMapper {
     return this;
   }
 
-  findMatchForModel(modelNameToMatch: string): TypeName | undefined {
+  findMatchForModel(modelNameToMatch: string): TypeReference | undefined {
     const mappings = this.typeMappings;
 
     const match = mappings.find(({ mirage: modelName }) => {

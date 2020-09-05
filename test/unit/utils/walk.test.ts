@@ -1,11 +1,17 @@
-import { buildSchema, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { FieldReference } from '../../../src/resolver-map/reference/field-reference';
-import { walk, WalkSource } from '../../../src/utils/walk';
+import { hi, Highlight, resolvesTo } from '../../../src/highlight';
+import { Reference, WalkCallback } from '../../../src/highlight/types';
+import { walk } from '../../../src/highlight/utils';
+
+function getCallbackReferences(spy: SinonSpy): Reference[] {
+  return spy.getCalls().map((call) => (call.args as Parameters<WalkCallback>)[0].reference);
+}
 
 describe('utils/walk', function () {
   let graphqlSchema: GraphQLSchema;
+  let highlight: Highlight;
 
   beforeEach(function () {
     graphqlSchema = buildSchema(`
@@ -33,145 +39,31 @@ describe('utils/walk', function () {
         pet: Pet!
       }
     `);
+
+    highlight = hi(graphqlSchema).include(resolvesTo());
   });
 
-  const callbackArgs = (spy: SinonSpy): FieldReference[] => spy.getCalls().map((call) => call.args[0]);
+  it('walks references from a highlight', async function () {
+    const queryType = graphqlSchema.getType('Query');
+    const callbackSpy = spy();
+    await walk(graphqlSchema, highlight.references, callbackSpy);
+    const references = getCallbackReferences(callbackSpy);
 
-  describe('WalkSource.GRAPHQL_SCHEMA', function () {
-    it('walks a graphql schema by default', async function () {
-      const callbackSpy = spy();
-      await walk({ graphqlSchema }, callbackSpy);
-      const args = callbackArgs(callbackSpy);
+    const callbackOptionsCallArgs = (callbackSpy.firstCall.args as Parameters<WalkCallback>)[0];
+    expect(callbackOptionsCallArgs.type).to.equal(queryType);
+    expect(callbackOptionsCallArgs.field).to.equal((queryType as GraphQLObjectType).getFields()?.person);
 
-      expect(args.sort()).to.deep.equal(
-        [
-          ['Query', 'person'],
-          ['Query', 'locations'],
-          ['Person', 'name'],
-          ['Person', 'location'],
-          ['Person', 'pet'],
-          ['Location', 'city'],
-          ['Location', 'street'],
-          ['Pet', 'name'],
-        ].sort(),
-      );
-    });
-
-    it('walks a graphql schema when specified', async function () {
-      const callbackSpy = spy();
-      await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA }, callbackSpy);
-      const args = callbackArgs(callbackSpy);
-
-      expect(args.sort()).to.deep.equal(
-        [
-          ['Query', 'person'],
-          ['Query', 'locations'],
-          ['Person', 'name'],
-          ['Person', 'location'],
-          ['Person', 'pet'],
-          ['Location', 'city'],
-          ['Location', 'street'],
-          ['Pet', 'name'],
-        ].sort(),
-      );
-    });
-
-    it('filters down on include target', async function () {
-      const callbackSpy = spy();
-      await walk({ graphqlSchema, source: WalkSource.GRAPHQL_SCHEMA, include: ['Query', '*'] }, callbackSpy);
-      const args = callbackArgs(callbackSpy);
-
-      expect(args).to.deep.equal([
+    expect(references.sort()).to.deep.equal(
+      [
         ['Query', 'person'],
         ['Query', 'locations'],
-      ]);
-    });
-  });
-
-  describe('WalkSource.RESOLVER_MAP', function () {
-    const resolverMap = {
-      Query: {
-        person: (): string => 'noop',
-        locations: (): string => 'noop',
-      },
-      Person: {
-        location: (): string => 'noop',
-      },
-      Pet: {
-        name: (): string => 'noop',
-      },
-    };
-
-    it('walks a resolver map when specified', async function () {
-      const callbackSpy = spy();
-      await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap }, callbackSpy);
-      const args = callbackArgs(callbackSpy);
-
-      expect(args.sort()).to.deep.equal(
-        [
-          ['Query', 'person'],
-          ['Query', 'locations'],
-          ['Person', 'location'],
-          ['Pet', 'name'],
-        ].sort(),
-      );
-    });
-
-    it('walks a resolver map filtered by include target', async function () {
-      const callbackSpy = spy();
-
-      await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP, resolverMap, include: ['Query', '*'] }, callbackSpy);
-      const args = callbackArgs(callbackSpy);
-
-      expect(args).to.deep.equal([
-        ['Query', 'person'],
-        ['Query', 'locations'],
-      ]);
-    });
-
-    it('does not walk the resolver map for fields not in the schema', async function () {
-      const callbackSpy = spy();
-
-      const resolverMapWithExtraField = {
-        ...resolverMap,
-
-        Query: {
-          ...resolverMap.Query,
-          notInTheSchema: (): string => 'noop',
-        },
-      };
-
-      await walk(
-        {
-          graphqlSchema,
-          source: WalkSource.RESOLVER_MAP,
-          resolverMap: resolverMapWithExtraField,
-        },
-
-        callbackSpy,
-      );
-      const args = callbackArgs(callbackSpy);
-
-      expect(args.sort()).to.deep.equal(
-        [
-          ['Query', 'person'],
-          ['Query', 'locations'],
-          ['Person', 'location'],
-          ['Pet', 'name'],
-        ].sort(),
-      );
-    });
-
-    it('throws an error if a resolver map source is expected but a resolver map is not passed in', async function () {
-      let error;
-
-      try {
-        await walk({ graphqlSchema, source: WalkSource.RESOLVER_MAP }, spy());
-      } catch (e) {
-        error = e;
-      } finally {
-        expect(error.message).to.equal('To walk on a resolver map it must be provided in the options, got undefined');
-      }
-    });
+        ['Person', 'name'],
+        ['Person', 'location'],
+        ['Person', 'pet'],
+        ['Location', 'city'],
+        ['Location', 'street'],
+        ['Pet', 'name'],
+      ].sort(),
+    );
   });
 });

@@ -1,4 +1,4 @@
-import { buildSchema, GraphQLObjectType } from 'graphql';
+import { buildSchema, GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 import { PackOptions } from '../src/pack/types';
 import { MirageGraphQLMapper } from '../src/mirage';
 
@@ -23,12 +23,17 @@ export const schema = buildSchema(`
     user: User!
   }
 
-  type User {
+  type User implements Nameable{
+    name: String!
+  }
+
+  interface Nameable {
     name: String!
   }
 `);
 
 export const userObjectType = schema.getType('User') as GraphQLObjectType;
+export const nameableInterfaceType = schema.getType('Nameable') as GraphQLInterfaceType;
 export const userObjectFields = (userObjectType as GraphQLObjectType).getFields();
 export const userObjectNameField = userObjectFields['name'];
 

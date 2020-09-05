@@ -1,4 +1,4 @@
-import { Resolver, ResolverInfo, ResolverParent } from '../../types';
+import { FieldResolver, ResolverInfo, ResolverParent } from '../../types';
 import { MirageGraphQLMapper } from '../mapper/mapper';
 import { relayPaginateNodes } from '../../relay/utils';
 import { mirageCursorForNode } from './utils';
@@ -43,7 +43,7 @@ function findMatchingFieldForObjectParent({
   };
 }
 
-export const mirageObjectResolver: Resolver = function mirageObjectResolver(parent, args, context, info) {
+export const mirageObjectResolver: FieldResolver = function mirageObjectResolver(parent, args, context, info) {
   const { returnType, fieldName, parentType } = info;
   const isRelayPaginated = unwrap(returnType)?.name?.endsWith('Connection');
   const { mirageMapper } = extractDependencies<{ mirageMapper: MirageGraphQLMapper }>(context, ['mirageMapper'], {

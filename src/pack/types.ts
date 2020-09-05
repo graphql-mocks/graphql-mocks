@@ -3,7 +3,7 @@ import { ResolverMapMiddleware, ResolverMap } from '../types';
 type NonNullDependency = object | string | boolean | symbol | number;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type PackState = Record<any, any>;
+export type PackState = Record<string, any>;
 export type Packed = { resolverMap: ResolverMap; state: PackState };
 
 export type PackOptions = {

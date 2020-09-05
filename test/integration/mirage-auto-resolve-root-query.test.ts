@@ -3,14 +3,10 @@
 
 import { Model, Server } from 'miragejs';
 import { expect } from 'chai';
-import { patchAutoFieldResolvers } from '../../src/mirage/middleware/patch-auto-field-resolvers';
+import { mirageMiddleware } from '../../src/mirage';
 import { GraphQLHandler } from '../../src/graphql';
 import { MirageGraphQLMapper } from '../../src/mirage/mapper/mapper';
 
-// patchAutoFieldResolvers middleware covers both auto-resolving of
-// root queries and graphql object types. This test focuses on the
-// feature of auto-resolving fields on graphql root query type and its
-// fields, provided by patchAutoFieldResolvers
 describe('integration/mirage-auto-resolve-root-query', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mirageServer: Server;
@@ -32,7 +28,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'personName'], () => 'Grace Hopper');
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -62,7 +58,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       ]);
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -87,7 +83,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
     it('throws an error when a field filter is not provided', async function () {
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           graphqlSchema: `
@@ -150,7 +146,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
     it('by default returns an array of all models', async function () {
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           graphqlSchema,
@@ -176,7 +172,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           mirageMapper,
@@ -203,7 +199,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           mirageMapper,
@@ -230,7 +226,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           mirageMapper,
@@ -275,7 +271,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       });
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           graphqlSchema,
@@ -297,7 +293,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
     it('returns null when there are no models', async function () {
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           graphqlSchema,
@@ -321,7 +317,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => null);
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -348,7 +344,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
       }));
 
       const handler = new GraphQLHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageMapper,
           mirageServer,
@@ -388,7 +384,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
 
       it('when no field filter exists it throws an error', async function () {
         const handler = new GraphQLHandler({
-          middlewares: [patchAutoFieldResolvers()],
+          middlewares: [mirageMiddleware()],
           dependencies: {
             mirageServer,
             graphqlSchema,
@@ -416,7 +412,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           });
 
           const handler = new GraphQLHandler({
-            middlewares: [patchAutoFieldResolvers()],
+            middlewares: [mirageMiddleware()],
             dependencies: {
               mirageServer,
               graphqlSchema,
@@ -445,7 +441,7 @@ describe('integration/mirage-auto-resolve-root-query', function () {
           });
 
           const handler = new GraphQLHandler({
-            middlewares: [patchAutoFieldResolvers()],
+            middlewares: [mirageMiddleware()],
             dependencies: {
               mirageServer,
               graphqlSchema,

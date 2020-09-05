@@ -1,6 +1,6 @@
-import { Resolver } from '../../../../../src/types';
+import { FieldResolver } from '../../../../../src/types';
 
-const resolver: Resolver = function (parent /*, args, context, info*/) {
+const resolver: FieldResolver = function (parent /*, args, context, info*/) {
   return parent.friends.models;
 };
 
