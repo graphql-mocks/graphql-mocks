@@ -57,40 +57,26 @@ const isNotInternal = (typeName: unknown): boolean => {
 describe('highlight/highlighter/type', function () {
   it('highlights all types by default without arguments', function () {
     const highlights = type().mark(schema).filter(isNotInternal);
-    expect(highlights).to.deep.equal([
-      'Query',
-      'Person',
-      'Mutation',
-      'Animal',
-      'Cat',
-      'Dog',
-      'DogNames',
-      'FourLeggedAnimal',
-    ]);
+    expect(highlights.sort()).to.deep.equal(
+      ['Query', 'Person', 'Mutation', 'Animal', 'Cat', 'Dog', 'DogNames', 'FourLeggedAnimal'].sort(),
+    );
   });
 
   it('highlights all types by default when argument is HIGHLIGHT_ALL', function () {
     const highlights = type(HIGHLIGHT_ALL).mark(schema).filter(isNotInternal);
-    expect(highlights).to.deep.equal([
-      'Query',
-      'Person',
-      'Mutation',
-      'Animal',
-      'Cat',
-      'Dog',
-      'DogNames',
-      'FourLeggedAnimal',
-    ]);
+    expect(highlights.sort()).to.deep.equal(
+      ['Query', 'Person', 'Mutation', 'Animal', 'Cat', 'Dog', 'DogNames', 'FourLeggedAnimal'].sort(),
+    );
   });
 
   it('highlights multiple specified types', function () {
     const highlights = type('Query', 'Person', 'DogNames').mark(schema).filter(isNotInternal);
-    expect(highlights).to.deep.equal(['Query', 'Person', 'DogNames']);
+    expect(highlights.sort()).to.deep.equal(['Query', 'Person', 'DogNames'].sort());
   });
 
   it('ignores specified types that do not exist', function () {
     const highlights = type('Query', 'NotInSchema', 'Person', 'DogNames').mark(schema).filter(isNotInternal);
-    expect(highlights).to.deep.equal(['Query', 'Person', 'DogNames']);
+    expect(highlights.sort()).to.deep.equal(['Query', 'Person', 'DogNames'].sort());
   });
 
   it('highlights the root query type with the ROOT_QUERY export', function () {

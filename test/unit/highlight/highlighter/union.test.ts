@@ -44,11 +44,11 @@ const schema = buildSchema(`
 
 describe('highlight/highlighter/union', function () {
   it('highlights all unions by default when no arguments are passed in', function () {
-    expect(union().mark(schema)).to.deep.equal(['Pet', 'Wild', 'FourLegged', 'Winged']);
+    expect(union().mark(schema).sort()).to.deep.equal(['Pet', 'Wild', 'FourLegged', 'Winged'].sort());
   });
 
   it('highlights all unions when HIGHLIGHT_ALL argument is passed in', function () {
-    expect(union(HIGHLIGHT_ALL).mark(schema)).to.deep.equal(['Pet', 'Wild', 'FourLegged', 'Winged']);
+    expect(union(HIGHLIGHT_ALL).mark(schema).sort()).to.deep.equal(['Pet', 'Wild', 'FourLegged', 'Winged'].sort());
   });
 
   it('highlights unions specified by arguments', function () {
