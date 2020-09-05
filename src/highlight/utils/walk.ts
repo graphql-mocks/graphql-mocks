@@ -1,13 +1,6 @@
-import { GraphQLSchema, GraphQLNamedType, GraphQLInputField } from 'graphql';
-import { Reference } from '../highlight/types';
-import { ObjectField } from '../types';
-import { getTypeForReference, getFieldForReference } from '../highlight/utils';
-
-export type WalkCallback = (options: {
-  reference: Reference;
-  type: GraphQLNamedType;
-  field?: ObjectField | GraphQLInputField;
-}) => void | Promise<void>;
+import { GraphQLSchema } from 'graphql';
+import { Reference, WalkCallback } from '../types';
+import { getTypeForReference, getFieldForReference } from '.';
 
 export async function walk(
   graphqlSchema: GraphQLSchema,

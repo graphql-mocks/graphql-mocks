@@ -1,9 +1,9 @@
 import { buildSchema, GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
-import { walk, WalkCallback } from '../../../src/utils/walk';
 import { hi, Highlight, resolvesTo } from '../../../src/highlight';
-import { Reference } from '../../../src/highlight/types';
+import { Reference, WalkCallback } from '../../../src/highlight/types';
+import { walk } from '../../../src/highlight/utils';
 
 function getCallbackReferences(spy: SinonSpy): Reference[] {
   return spy.getCalls().map((call) => (call.args as Parameters<WalkCallback>)[0].reference);

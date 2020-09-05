@@ -6,7 +6,7 @@ import { GraphQLSchema, GraphQLResolveInfo, GraphQLAbstractType } from 'graphql'
 import { FieldResolver, TypeResolver } from '../../../src/types';
 import { createWrapper } from '../../../src/resolver/create-wrapper';
 import { FieldWrapperFunction, BaseWrapperOptions } from '../../../src/resolver/types';
-import { WrapperFor } from '../../../src/resolver/constant';
+import { WrapperFor } from '../../../src/resolver/constants';
 
 describe('resolver/wrap', function () {
   let resolverWrapperOptions: BaseWrapperOptions;

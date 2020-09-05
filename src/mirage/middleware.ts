@@ -2,7 +2,6 @@ import { GraphQLSchema } from 'graphql';
 import { ResolverMapMiddleware, ResolverMap } from '../types';
 import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
 import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
-import { walk } from '../utils';
 import { setResolver } from '../resolver-map';
 import { mirageRootQueryResolver, mirageObjectResolver, mirageAbstractTypeResolver } from '.';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
@@ -17,6 +16,7 @@ import {
   HIGHLIGHT_ALL,
   ROOT_MUTATION,
 } from '../highlight';
+import { walk } from '../highlight/utils/walk';
 
 export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {

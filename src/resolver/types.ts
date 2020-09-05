@@ -1,5 +1,5 @@
 import { TypeResolver, FieldResolver, ObjectField, ResolverMap } from '../types';
-import { WrapperFor } from './constant';
+import { WrapperFor } from './constants';
 import { GraphQLObjectType, GraphQLAbstractType, GraphQLSchema } from 'graphql';
 import { PackOptions } from '../pack/types';
 

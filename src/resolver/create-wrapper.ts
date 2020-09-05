@@ -1,6 +1,6 @@
 import { GraphQLObjectType, isObjectType, isAbstractType, GraphQLType, GraphQLAbstractType } from 'graphql';
 import { FieldResolver, TypeResolver, ObjectField } from '../types';
-import { WrapperFor } from './constant';
+import { WrapperFor } from './constants';
 import {
   GenericWrapperFunction,
   FieldWrapperFunction,

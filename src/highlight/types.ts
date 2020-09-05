@@ -1,8 +1,9 @@
-import { GraphQLSchema } from 'graphql';
+import { GraphQLSchema, GraphQLNamedType, GraphQLInputField } from 'graphql';
 import { getFieldForReference } from './utils/get-field-for-reference';
 import { getTypeForReference } from './utils/get-type-for-reference';
 import { Highlight } from './highlight';
 import { HighlightCallback } from '../resolver-map/types';
+import { ObjectField } from '../types';
 
 export type Reference = TypeReference | FieldReference;
 export type FieldReference = [string, string];
@@ -31,3 +32,9 @@ export type ReferenceMap = {
 };
 
 export type CoercibleHighlight = Highlight | Reference[] | HighlightCallback;
+
+export type WalkCallback = (options: {
+  reference: Reference;
+  type: GraphQLNamedType;
+  field?: ObjectField | GraphQLInputField;
+}) => void | Promise<void>;

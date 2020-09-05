@@ -8,3 +8,4 @@ export { isHighlighter } from './is-highlighter';
 export { isReference } from './is-reference';
 export { isTypeReference } from './is-type-reference';
 export { unique } from './unique';
+export { walk } from './walk';

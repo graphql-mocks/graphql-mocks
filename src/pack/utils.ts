@@ -2,7 +2,7 @@ import { ResolverContext, FieldResolver, TypeResolver } from '../types';
 import { defaultPackOptions } from './pack';
 import { PackOptions } from './types';
 import { createWrapper } from '../resolver/create-wrapper';
-import { WrapperFor } from '../resolver/constant';
+import { WrapperFor } from '../resolver/constants';
 import { isFieldResolver, isTypeResolver } from '../resolver/utils';
 
 export function normalizePackOptions(packOptions: Partial<PackOptions> = defaultPackOptions): PackOptions {
