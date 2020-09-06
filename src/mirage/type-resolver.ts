@@ -50,18 +50,17 @@ export const mirageTypeResolver: GraphQLTypeResolver<any, any> = function mirage
     if (modelName) {
       mirageModelMessage =
         `Received model "${modelName}" which did not match one of the possible types above. ` +
-        `If "${modelName}" represents one of the possible types, fix the model name or ` +
-        ` add a manual Type Resolver can be added to the Resolver Map.` +
-        `A custom Type Resolver can be added at ["${abstractType.name}", "__resolveType"] that ` +
-        `is passed into the \`createRouteHandler\`, \`GraphQLHandler\` instance, or \`pack\` ` +
-        `function. Ensure that a type resolver returns one of the possible types listed above.` +
+        `If "${modelName}" should represent one of the possible types, fix the model name or ` +
+        `add a custom Type Resolver to the Resolver Map. A custom Type Resolver can be added ` +
+        `at ["${abstractType.name}", "__resolveType"]. Ensure that the custom type resolver returns ` +
+        `one of the possible types listed above.` +
         `\n\n` +
-        `If "${modelName}" is the abstract type "${abstractType.name}", consider:\n\n` +
-        `1. Only creating models for discrete types and using { polymorphic: true } along with ` +
-        `corresponding { inverse: true } relationships that point to the polymorphic field ` +
-        `that represent "${abstractType.name}.` +
-        `2. Create a model type that represents the polymorphic abstract type *only* and when creating` +
-        `the model, add a __typename property that specifies the discrete GraphQL type the instance represents.` +
+        `If "${modelName}" represents the abstract type "${abstractType.name}", consider one of the following:\n\n` +
+        `1. Replacing ${modelName} with models for its discrete types and using { polymorphic: true } ` +
+        `along with  corresponding { inverse: true } relationships that point to the polymorphic field ` +
+        `that represent "${abstractType.name}.\n\n` +
+        `2. Create a model for the abstract type ${abstractType.name} and *only* create this model, but with ` +
+        `a __typename property that specifies the discrete GraphQL type the instance represents.` +
         `\n\n` +
         `See the the Mirage JS section of the docs at www.graphql-mocks.com for examples.`;
     }
