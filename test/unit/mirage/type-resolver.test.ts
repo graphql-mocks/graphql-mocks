@@ -1,10 +1,10 @@
 import { Model, Server } from 'miragejs';
-import { generatePackOptions } from '../../../mocks';
+import { generatePackOptions } from '../../mocks';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
-import { MirageGraphQLMapper, mirageAbstractTypeResolver } from '../../../../src/mirage';
-import { ResolverInfo, ResolverContext } from '../../../../src/types';
-import { PackOptions } from '../../../../src/pack/types';
+import { mirageTypeResolver } from '../../../src/mirage';
+import { ResolverInfo, ResolverContext } from '../../../src/types';
+import { PackOptions } from '../../../src/pack/types';
 
 function generateContext(packOptions: PackOptions, options?: { useFindInCommon?: boolean }): ResolverContext {
   // important we turn this off for most tests and only
@@ -19,7 +19,7 @@ function generateContext(packOptions: PackOptions, options?: { useFindInCommon?:
   return context;
 }
 
-describe('mirage/resolvers/abstract', function () {
+describe('mirage/type-resolver', function () {
   let mockResolverInfo: ResolverInfo;
   let mirageServer: Server;
 
@@ -70,15 +70,7 @@ describe('mirage/resolvers/abstract', function () {
 
       const dogModel = mirageServer.create('dog');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalUnionType);
-      expect(resolvedType).to.equal('Dog');
-    });
-
-    it('resolves a union by mapper', async function () {
-      const doggyModel = mirageServer.create('doggy');
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
-      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      const resolvedType = mirageTypeResolver(dogModel, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -93,7 +85,7 @@ describe('mirage/resolvers/abstract', function () {
         useFindInCommon: true,
       });
 
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      const resolvedType = mirageTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -107,7 +99,7 @@ describe('mirage/resolvers/abstract', function () {
         useFindInCommon: true,
       });
 
-      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
+      const resolvedType = mirageTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -118,7 +110,7 @@ describe('mirage/resolvers/abstract', function () {
       });
 
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
+      const resolvedType = mirageTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -128,14 +120,14 @@ describe('mirage/resolvers/abstract', function () {
       };
 
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
+      const resolvedType = mirageTypeResolver(doggy, context, mockResolverInfo, animalUnionType);
       expect(resolvedType).to.equal('Dog');
     });
 
     it('throws an error when an union cannot be found', function () {
       const doggyModel = mirageServer.create('doggy');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      expect(() => mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType)).to.throw(
+      expect(() => mirageTypeResolver(doggyModel, context, mockResolverInfo, animalUnionType)).to.throw(
         /Unable to find a matching type for resolving for UnionType type "Animal"./,
       );
     });
@@ -179,15 +171,7 @@ describe('mirage/resolvers/abstract', function () {
 
       const dogModel = mirageServer.create('dog');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(dogModel, context, mockResolverInfo, animalInterfaceType);
-      expect(resolvedType).to.equal('Dog');
-    });
-
-    it('resolves an interface to a type by mapper', async function () {
-      const doggyModel = mirageServer.create('doggy');
-      const mirageMapper = new MirageGraphQLMapper().addTypeMapping('Dog', 'Doggy');
-      const context = generateContext(generatePackOptions({ dependencies: { mirageMapper, graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      const resolvedType = mirageTypeResolver(dogModel, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -198,7 +182,7 @@ describe('mirage/resolvers/abstract', function () {
       });
 
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      const resolvedType = mirageTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -210,7 +194,7 @@ describe('mirage/resolvers/abstract', function () {
 
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
-      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
+      const resolvedType = mirageTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -225,7 +209,7 @@ describe('mirage/resolvers/abstract', function () {
         useFindInCommon: true,
       });
 
-      const resolvedType = mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
+      const resolvedType = mirageTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -239,7 +223,7 @@ describe('mirage/resolvers/abstract', function () {
         useFindInCommon: true,
       });
 
-      const resolvedType = mirageAbstractTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
+      const resolvedType = mirageTypeResolver(doggy, context, mockResolverInfo, animalInterfaceType);
       expect(resolvedType).to.equal('Dog');
     });
 
@@ -247,7 +231,7 @@ describe('mirage/resolvers/abstract', function () {
       const doggyModel = mirageServer.create('doggy');
       const context = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
-      expect(() => mirageAbstractTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType)).to.throw(
+      expect(() => mirageTypeResolver(doggyModel, context, mockResolverInfo, animalInterfaceType)).to.throw(
         /Unable to find a matching type for resolving for InterfaceType type "Animal"/,
       );
     });
@@ -291,7 +275,7 @@ describe('mirage/resolvers/abstract', function () {
       const unmatchableModel = mirageServer.create('bird');
       const mockContext = generateContext(generatePackOptions({ dependencies: { graphqlSchema: schema } }));
 
-      expect(() => mirageAbstractTypeResolver(unmatchableModel, mockContext, mockResolverInfo, animalUnion)).to.throw(
+      expect(() => mirageTypeResolver(unmatchableModel, mockContext, mockResolverInfo, animalUnion)).to.throw(
         /Received model "Bird" which did not match one of the possible types above./,
       );
     });

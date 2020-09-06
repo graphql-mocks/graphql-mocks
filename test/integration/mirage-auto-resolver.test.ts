@@ -7,32 +7,18 @@ import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
 import { ResolverMap } from '../../src/types';
 import { GraphQLHandler } from '../../src/graphql';
-import { MirageGraphQLMapper } from '../../src/mirage';
 
 describe('integration/mirage-auto-resolver', function () {
   let graphQLHandler: GraphQLHandler;
   let resolvers: ResolverMap;
-  let mirageMapper: MirageGraphQLMapper;
 
   beforeEach(async function () {
-    mirageMapper = new MirageGraphQLMapper()
-      .addTypeMapping('AthleticHobby', 'SportsHobby')
-      .addTypeMapping('Automobile', 'Car')
-      .addFieldMapping(['Person', 'paginatedFriends'], ['Person', 'friends'])
-      .addFieldMapping(['Person', 'fullName'], ['Person', 'name'])
-      .addFieldMapping(['Person', 'friendsByAgeRange'], ['Person', 'friends'])
-      .addFieldFilter(['Person', 'friendsByAgeRange'], (personModels, _parent, { minimum, maximum }) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        return personModels.filter((model: any) => model.age >= minimum && model.age <= maximum);
-      });
-
     mirageServer.db.loadData(defaultScenario);
 
     graphQLHandler = new GraphQLHandler({
       resolverMap: defaultResolvers,
       middlewares: [mirageMiddleware()],
       dependencies: {
-        mirageMapper,
         mirageServer,
         graphqlSchema: graphqlSchema,
       },
@@ -66,62 +52,6 @@ describe('integration/mirage-auto-resolver', function () {
             {
               body:
                 "They're the modern stone age family. From the town of Bedrock. They're a page right out of history",
-            },
-          ],
-        },
-      },
-    });
-  });
-
-  it('can handle a type look up using a mapper', async function () {
-    const query = `query {
-      person(id: 1) {
-        id
-        name
-        fullName
-      }
-    }`;
-
-    const modelAttrs = mirageServer.schema.first('person')!.attrs;
-    expect('name' in modelAttrs).to.be.true;
-    expect('fullName' in modelAttrs).to.be.false;
-    expect(mirageMapper.findMatchForField(['Person', 'fullName'])).to.deep.equal(
-      ['Person', 'name'],
-      'Person.fullname <=> Person.name mapping exists',
-    );
-
-    const result = await graphQLHandler.query(query);
-    expect(result).to.deep.equal({
-      data: {
-        person: {
-          id: '1',
-          name: 'Fred Flinstone',
-          fullName: 'Fred Flinstone',
-        },
-      },
-    });
-  });
-
-  it('can filter results by mirage mapper field filter', async function () {
-    const query = `query {
-      person(id: 1) {
-        friendsByAgeRange(minimum: 39, maximum: 41) {
-          name
-        }
-      }
-    }`;
-
-    const result = await graphQLHandler.query(query);
-
-    expect(result).to.deep.equal({
-      data: {
-        person: {
-          friendsByAgeRange: [
-            {
-              name: 'Wilma Flinstone',
-            },
-            {
-              name: 'Betty Rubble',
             },
           ],
         },
@@ -223,9 +153,8 @@ describe('integration/mirage-auto-resolver', function () {
 
   it('can resolve an interface type', async function () {
     // This test handles a few different auto-resolving cases.
-    // Case #1. parent mirage model name, look up on mapper
-    // Case #2. parent mirage model name, looked up as GraphQL Type
-    // Case #3. Looking at all types that use the interface and find a type
+    // Case #1. parent mirage model name, looked up as GraphQL Type
+    // Case #2. Looking at all types that use the interface and find a type
     // that shares the most common fields
 
     // Case #1 pre-checks
@@ -240,11 +169,6 @@ describe('integration/mirage-auto-resolver', function () {
       'AthleticHobby does exist as a mirage model',
     );
 
-    expect(mirageMapper.findMatchForType('AthleticHobby')).to.be.equal(
-      'SportsHobby',
-      'Type <=> Model mapping exists on mapper',
-    );
-
     // Case #3 pre-checks
     expect(graphqlSchema.getType('CulinaryHobby')).to.equal(undefined, 'CulinaryHobby does not exist on schema');
     expect(mirageServer.schema.all('CulinaryHobby').length).to.be.greaterThan(
@@ -256,11 +180,6 @@ describe('integration/mirage-auto-resolver', function () {
       `Mirage: You're trying to find model(s) of type CookingHobby but this collection doesn't exist in the database`,
       'CookingHobby does exist as a mirage model',
     );
-    expect(
-      mirageMapper.typeMappings.some((mapping) => {
-        return mapping.graphql[0] === 'CookingHobby' && mapping.mirage[0] === 'CulinaryHobby';
-      }),
-    ).to.be.equal(false, 'no mappings exists between mirage and graphql');
 
     const query = `query {
       allPersons {
@@ -439,89 +358,6 @@ describe('integration/mirage-auto-resolver', function () {
     });
   });
 
-  context('Relay Connections', function () {
-    it('can resolve a root-level relay connection (via static resolver with helpers)', async function () {
-      const query = `query {
-        allPersonsPaginated(first: 2) {
-          edges {
-            cursor
-            node {
-              id
-              name
-            }
-          }
-          pageInfo {
-            endCursor
-            hasNextPage
-            hasPreviousPage
-            startCursor
-          }
-        }
-      }`;
-
-      const result = await graphQLHandler.query(query);
-      expect(result.errors).to.equal(undefined);
-
-      const edges = result.data!.allPersonsPaginated.edges;
-      const pageInfo = result.data!.allPersonsPaginated.pageInfo;
-      const firstPersonEdge = edges[0];
-      const secondPersonEdge = edges[1];
-
-      expect(firstPersonEdge.cursor).to.equal('model:person(1)');
-      expect(firstPersonEdge.node.id).to.equal('1');
-      expect(firstPersonEdge.node.name).to.equal('Fred Flinstone');
-
-      expect(secondPersonEdge.cursor).to.equal('model:person(2)');
-      expect(secondPersonEdge.node.id).to.equal('2');
-      expect(secondPersonEdge.node.name).to.equal('Barney Rubble');
-
-      expect(pageInfo).to.deep.equal({
-        endCursor: 'model:person(2)',
-        hasNextPage: true,
-        hasPreviousPage: false,
-        startCursor: 'model:person(1)',
-      });
-    });
-
-    it('can resolve a type relay connection', async function () {
-      const query = `query {
-        allPersons {
-          id
-          name
-          paginatedFriends(first: 1) {
-            edges {
-              cursor
-              node {
-                name
-              }
-            }
-            pageInfo {
-              startCursor
-              endCursor
-              hasPreviousPage
-              hasNextPage
-            }
-          }
-        }
-      }`;
-
-      const result = await graphQLHandler.query(query);
-      const firstPerson = result.data!.allPersons[0];
-
-      expect(firstPerson.name).to.equal('Fred Flinstone');
-      expect(firstPerson.id).to.equal('1');
-      expect(firstPerson.paginatedFriends.edges.length).to.equal(1);
-      expect(firstPerson.paginatedFriends.edges[0].cursor).to.equal('model:person(2)');
-      expect(firstPerson.paginatedFriends.edges[0].node.name).to.equal('Barney Rubble');
-      expect(firstPerson.paginatedFriends.pageInfo).to.deep.equal({
-        endCursor: 'model:person(2)',
-        hasNextPage: true,
-        hasPreviousPage: false,
-        startCursor: 'model:person(2)',
-      });
-    });
-  });
-
   context('Middleware Options', function () {
     const allPersonsQuery = `
       {
@@ -540,14 +376,13 @@ describe('integration/mirage-auto-resolver', function () {
             }),
           ],
           dependencies: {
-            mirageMapper,
             mirageServer,
             graphqlSchema: graphqlSchema,
           },
         });
       });
 
-      it('can query on the auto-resolvers patched in by in the `include` option', async function () {
+      it('can query on the auto-resolvers patched in by in the `highlight` option', async function () {
         expect(await graphQLHandler.query(allPersonsQuery)).to.deep.equal({
           data: {
             allPersons: [
@@ -578,7 +413,6 @@ describe('integration/mirage-auto-resolver', function () {
             }),
           ],
           dependencies: {
-            mirageMapper,
             mirageServer,
             graphqlSchema: graphqlSchema,
           },

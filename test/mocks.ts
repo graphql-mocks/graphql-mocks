@@ -1,6 +1,5 @@
 import { buildSchema, GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 import { PackOptions } from '../src/pack/types';
-import { MirageGraphQLMapper } from '../src/mirage';
 
 export const generatePackOptions: (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,5 +35,3 @@ export const userObjectType = schema.getType('User') as GraphQLObjectType;
 export const nameableInterfaceType = schema.getType('Nameable') as GraphQLInterfaceType;
 export const userObjectFields = (userObjectType as GraphQLObjectType).getFields();
 export const userObjectNameField = userObjectFields['name'];
-
-export const createEmptyMirageMapper = (): MirageGraphQLMapper => new MirageGraphQLMapper();

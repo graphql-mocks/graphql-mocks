@@ -1,4 +1,4 @@
-import { GraphQLResolveInfo, isNonNullType, GraphQLType, isAbstractType, isObjectType } from 'graphql';
+import { GraphQLResolveInfo, GraphQLType, isAbstractType, isObjectType } from 'graphql';
 import { hasListType } from '../graphql/utils';
 import { FieldResolver, TypeResolver } from '../types';
 
@@ -16,13 +16,13 @@ export function coerceSingular(subject: any): any {
     return null;
   }
 
-  throw new Error('Tried to a coerce singular result but got an array of more than one result.');
+  return subject;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function coerceToList(subject: any): any[] | null | undefined {
+export function coerceToList(subject: any): any[] {
   if (subject == null) {
-    return subject;
+    return [];
   }
 
   if (Array.isArray(subject)) {
@@ -38,12 +38,6 @@ export function coerceReturnType(result: any, info: GraphQLResolveInfo): any {
     result = coerceSingular(result);
   } else {
     result = coerceToList(result);
-  }
-
-  if (result == null && isNonNullType(info.returnType)) {
-    throw new Error(
-      `Failed to resolve field "${info.parentType.name}.${info.fieldName}", got a nullish result for a non-null return type.`,
-    );
   }
 
   return result;

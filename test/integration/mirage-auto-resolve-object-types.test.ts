@@ -1,20 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
-import { Model, Server, hasMany, belongsTo } from 'miragejs';
+import { Model, Server, hasMany, belongsTo, ModelInstance } from 'miragejs';
 import { expect } from 'chai';
 import { mirageMiddleware } from '../../src/mirage';
 import { GraphQLHandler } from '../../src/graphql';
-import { MirageGraphQLMapper } from '../../src/mirage/mapper/mapper';
 
-// patchAutoResolvers middleware covers both auto-resolving of
-// root queries and graphql object types. This test focuses on the
-// feature of auto-resolving fields on graphql object types, provided
-// by patchAutoResolvers
 describe('integration/mirage-auto-resolve-types', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mirageServer: Server;
-  let mirageMapper: MirageGraphQLMapper;
+
   const createSchemaString = (additionalBits = ''): string => {
     return `
     schema {
@@ -38,8 +33,6 @@ describe('integration/mirage-auto-resolve-types', function () {
         }),
       },
     });
-
-    mirageMapper = new MirageGraphQLMapper();
   });
 
   afterEach(function () {
@@ -47,14 +40,20 @@ describe('integration/mirage-auto-resolve-types', function () {
   });
 
   describe('scalar types', function () {
+    let grace: ModelInstance;
     beforeEach(function () {
-      mirageServer.schema.create<any, any, any>('person', {
+      grace = mirageServer.schema.create<any, any, any>('person', {
         name: 'Grace Hopper',
       });
     });
 
     it('returns a scalar from a model attr', async function () {
       const handler = new GraphQLHandler({
+        resolverMap: {
+          Query: {
+            person: (): ModelInstance => grace,
+          },
+        },
         middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
@@ -76,37 +75,6 @@ describe('integration/mirage-auto-resolve-types', function () {
         data: {
           person: {
             name: 'Grace Hopper',
-          },
-        },
-      });
-    });
-
-    it('returns a scalar from a field filter', async function () {
-      mirageMapper.addFieldFilter(['Person', 'name'], () => 'Person Name Override');
-
-      const handler = new GraphQLHandler({
-        middlewares: [mirageMiddleware()],
-        dependencies: {
-          mirageMapper,
-          mirageServer,
-          graphqlSchema: createSchemaString(`
-              type Person {
-                name: String
-              }
-            `),
-        },
-      });
-
-      const result = await handler.query(`{
-        person {
-          name
-        }
-      }`);
-
-      expect(result).to.deep.equal({
-        data: {
-          person: {
-            name: 'Person Name Override',
           },
         },
       });
@@ -144,12 +112,14 @@ describe('integration/mirage-auto-resolve-types', function () {
     });
 
     it('returns a collection of relationships from a model', async function () {
-      mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
-
       const handler = new GraphQLHandler({
+        resolverMap: {
+          Query: {
+            person: (): unknown => rootPerson,
+          },
+        },
         middlewares: [mirageMiddleware()],
         dependencies: {
-          mirageMapper,
           mirageServer,
           graphqlSchema: createSchemaString(`
               type Person {
@@ -192,58 +162,6 @@ describe('integration/mirage-auto-resolve-types', function () {
         },
       });
     });
-
-    it('returns a filtered collection of relationships from a model using a field filter', async function () {
-      mirageMapper
-        .addFieldFilter(['Query', 'person'], () => rootPerson)
-        .addFieldFilter(['Person', 'friends'], (models) => {
-          // Filter friends that start with 'M' names
-          return models.filter((model: any) => model?.name?.startsWith('M'));
-        });
-
-      const handler = new GraphQLHandler({
-        middlewares: [mirageMiddleware()],
-        dependencies: {
-          mirageMapper,
-          mirageServer,
-          graphqlSchema: createSchemaString(`
-              type Person {
-                name: String
-                friends: [Person!]!
-              }
-            `),
-        },
-      });
-
-      const result = await handler.query(`{
-        person {
-          name
-          friends {
-            name
-          }
-        }
-      }`);
-
-      expect(result).to.deep.equal(
-        {
-          data: {
-            person: {
-              name: 'Sarah',
-
-              friends: [
-                {
-                  name: 'Michael',
-                },
-                {
-                  name: 'Mary',
-                },
-              ],
-            },
-          },
-        },
-        'only M names are included due to field filter',
-      );
-    });
   });
 
   describe('object types', function () {
@@ -257,12 +175,14 @@ describe('integration/mirage-auto-resolve-types', function () {
         bestFriend,
       });
 
-      mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
-
       const handler = new GraphQLHandler({
+        resolverMap: {
+          Query: {
+            person: (): unknown => rootPerson,
+          },
+        },
         middlewares: [mirageMiddleware()],
         dependencies: {
-          mirageMapper,
           mirageServer,
           graphqlSchema: createSchemaString(`
               type Person {
@@ -288,58 +208,6 @@ describe('integration/mirage-auto-resolve-types', function () {
             name: 'Sarah',
             bestFriend: {
               name: 'Travis',
-            },
-          },
-        },
-      });
-    });
-
-    it('returns a single object from a model', async function () {
-      const bestFriend = mirageServer.schema.create<any, any, any>('person', {
-        name: 'Travis',
-      });
-
-      const bestFriendOverride = mirageServer.schema.create<any, any, any>('person', {
-        name: 'Friend Override via Field Filter!',
-      });
-
-      const rootPerson = mirageServer.schema.create<any, any, any>('person', {
-        name: 'Sarah',
-        bestFriend,
-      });
-
-      mirageMapper.addFieldFilter(['Query', 'person'], () => rootPerson);
-      mirageMapper.addFieldFilter(['Person', 'bestFriend'], () => bestFriendOverride);
-
-      const handler = new GraphQLHandler({
-        middlewares: [mirageMiddleware()],
-        dependencies: {
-          mirageMapper,
-          mirageServer,
-          graphqlSchema: createSchemaString(`
-              type Person {
-                name: String
-                bestFriend: Person
-              }
-            `),
-        },
-      });
-
-      const result = await handler.query(`{
-        person {
-          name
-          bestFriend {
-            name
-          }
-        }
-      }`);
-
-      expect(result).to.deep.equal({
-        data: {
-          person: {
-            name: 'Sarah',
-            bestFriend: {
-              name: 'Friend Override via Field Filter!',
             },
           },
         },

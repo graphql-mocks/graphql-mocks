@@ -1,4 +1,7 @@
 import { Edge, CursorForNode, RelayPaginationResult } from './types';
+import { ObjectField } from '../types';
+import { unwrap } from '../graphql/utils';
+import { isObjectType } from 'graphql';
 
 export function createEdge<T>(node: T, cursor: string): { cursor: string; node: T } {
   return {
@@ -82,4 +85,17 @@ export function relayPaginateNodes<T = unknown>(
       endCursor: endNode ? cursorForNode(endNode) : null,
     },
   };
+}
+
+export function isRelayConnectionField(field: ObjectField): boolean {
+  const rawType = unwrap(field.type);
+
+  if (!isObjectType(rawType) || (isObjectType(rawType) && !rawType.getFields()?.edges)) {
+    return false;
+  }
+
+  const relayArgNames = ['first', 'last', 'before', 'after'];
+  const foundRelayArgs = field.args.filter((arg) => relayArgNames.includes(arg.name));
+
+  return foundRelayArgs.length === relayArgNames.length;
 }

@@ -1,10 +1,9 @@
 import { GraphQLSchema, GraphQLTypeResolver, GraphQLAbstractType, GraphQLObjectType } from 'graphql';
-import { MirageGraphQLMapper } from '../mapper/mapper';
 import { findTypeWithFieldsMostInCommon, convertModelNameToTypeName } from './utils';
-import { extractDependencies } from '../../resolver/extract-dependencies';
+import { extractDependencies } from '../resolver/extract-dependencies';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = function mirageUnionResolver(
+export const mirageTypeResolver: GraphQLTypeResolver<any, any> = function mirageUnionResolver(
   obj,
   context,
   _info,
@@ -15,10 +14,6 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
   const { graphqlSchema } = extractDependencies<{
     graphqlSchema: GraphQLSchema;
   }>(context, ['graphqlSchema']);
-
-  const { mirageMapper } = extractDependencies<{
-    mirageMapper: MirageGraphQLMapper;
-  }>(context, ['mirageMapper'], { required: false });
 
   const modelName = convertModelNameToTypeName(obj?.modelName);
   const possibleConcreteTypes = graphqlSchema.getPossibleTypes(abstractType) as GraphQLObjectType[];
@@ -34,18 +29,14 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
       'from the object against fields in the possible types...';
   }
 
-  const mappedModelName = mirageMapper && modelName && mirageMapper.findMatchForModel(modelName);
   const typenameInModel = '__typename' in obj ? obj.__typename : undefined;
 
   // Prefer a matching type name in this order:
   // 1. typenameInModel - embedded __typename property on the object or a model
-  // 2. mappedModelName - modelName mapped to a type name
-  // 3. modelName - the modelName property on the object
-  // 4. matchingFieldsCandidate - a lucky guess at looking and hoping the most
+  // 2. modelName - the modelName property on the object
+  // 3. matchingFieldsCandidate - a lucky guess at looking and hoping the most
   // matching fields is the way to go
-  const typeNameCandidates = [typenameInModel, mappedModelName, modelName, matchingFieldsCandidate].filter(
-    Boolean,
-  ) as string[];
+  const typeNameCandidates = [typenameInModel, modelName, matchingFieldsCandidate].filter(Boolean) as string[];
 
   const match = typeNameCandidates.find((typeNameCandidate) => possibleConcreteTypeNames.includes(typeNameCandidate));
   if (!match) {
@@ -59,21 +50,20 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
     if (modelName) {
       mirageModelMessage =
         `Received model "${modelName}" which did not match one of the possible types above. ` +
-        `If "${modelName}" represents one of the possible types, fix the model name ` +
-        `or use a MirageGraphQLMapper instance with a type mapping ["TypeName", "${modelName}"]. ` +
+        `If "${modelName}" should represent one of the possible types, fix the model name or ` +
+        `add a custom Type Resolver to the Resolver Map. A custom Type Resolver can be added ` +
+        `at ["${abstractType.name}", "__resolveType"]. Ensure that the custom type resolver returns ` +
+        `one of the possible types listed above.` +
         `\n\n` +
-        `If "${modelName}" is the abstract type "${abstractType.name}", consider ` +
-        `only creating models for discrete types and using { polymorphic: true } along with any ` +
-        `corresponding { inverse: true } relationships that point to the polymorphic field ` +
-        `that represent "${abstractType.name}.`;
+        `If "${modelName}" represents the abstract type "${abstractType.name}", consider one of the following:\n\n` +
+        `1. Replacing ${modelName} with models for its discrete types and using { polymorphic: true } ` +
+        `along with  corresponding { inverse: true } relationships that point to the polymorphic field ` +
+        `that represent "${abstractType.name}.\n\n` +
+        `2. Create a model for the abstract type ${abstractType.name} and *only* create this model, but with ` +
+        `a __typename property that specifies the discrete GraphQL type the instance represents.` +
+        `\n\n` +
+        `See the the Mirage JS section of the docs at www.graphql-mocks.com for examples.`;
     }
-
-    const lastResortMessage =
-      `As a last resort, a manual Type Resolver can be added to the Resolver Map at ` +
-      `["${abstractType.name}", "__resolveType"] that is passed into the \`createRouteHandler\`, ` +
-      `\`GraphQLHandler\` instance, or \`pack\` function. Ensure that it returns one of the possible types listed above.` +
-      `\n\n` +
-      `See the the Mirage JS section of the docs at www.graphql-mocks.com for examples.`;
 
     const message = [
       `Unable to find a matching type for resolving for ${kindName} type "${abstractType.name}".`,
@@ -91,10 +81,6 @@ export const mirageAbstractTypeResolver: GraphQLTypeResolver<any, any> = functio
       ' ',
 
       mirageModelMessage,
-
-      ' ',
-
-      lastResortMessage,
     ]
       .filter(Boolean)
       .join('\n');
