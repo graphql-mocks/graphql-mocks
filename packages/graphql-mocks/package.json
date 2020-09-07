@@ -1,0 +1,67 @@
+{
+  "name": "graphql-mocks",
+  "version": "0.4.2",
+  "description": "Tools for setting up graphql test resolvers",
+  "main": ".index.js",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "build": "tsc --declaration",
+    "clean": "rm -rf lib",
+    "copy-package-json": "cp package.json lib",
+    "build-publishable": "yarn clean && yarn build && yarn copy-package-json",
+    "prepare-deploy": "yarn test && yarn version && yarn build-publishable"
+  },
+  "author": "Chad Carbert",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.difference": "^4.5.0",
+    "lodash.differencewith": "^4.5.0",
+    "lodash.flattendepth": "^4.7.0",
+    "lodash.intersection": "^4.4.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isequalwith": "^4.4.0",
+    "lodash.merge": "^4.6.2",
+    "lodash.mergewith": "^4.6.2"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0",
+    "miragejs": "^0.1.40"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.7",
+    "@types/inflected": "^1.1.29",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.difference": "^4.5.6",
+    "@types/lodash.differencewith": "^4.5.6",
+    "@types/lodash.flattendepth": "^4.7.6",
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/lodash.isequalwith": "^4.4.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.mergewith": "^4.6.6",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.13.2",
+    "@types/sinon": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.22.0",
+    "@typescript-eslint/parser": "^2.22.0",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "graphql": "^14",
+    "miragejs": "^0.1.40",
+    "mocha": "^7.1.1",
+    "np": "^6.2.3",
+    "prettier": "^2.0.5",
+    "sinon": "^9.0.0",
+    "ts-node": "^8.5.4",
+    "typescript": "3.9"
+  }
+}
