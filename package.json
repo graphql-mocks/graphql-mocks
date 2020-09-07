@@ -56,6 +56,7 @@
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "graphql": "^14",
+    "lerna": "^3.22.1",
     "miragejs": "^0.1.40",
     "mocha": "^7.1.1",
     "np": "^6.2.3",
