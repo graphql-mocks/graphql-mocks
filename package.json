@@ -1,5 +1,5 @@
 {
-  "name": "graphql-mocks",
+  "name": "@graphql-mocks/mono",
   "version": "0.4.2",
   "description": "Tools for setting up graphql test resolvers",
   "main": ".index.js",
