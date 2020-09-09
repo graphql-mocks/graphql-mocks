@@ -1,0 +1,23 @@
+{
+  "name": "@graphql-mocks/mirage",
+  "version": "0.0.0",
+  "devDependencies": {
+    "miragejs": "^0.1.40",
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.difference": "^4.5.6",
+    "@types/lodash.differencewith": "^4.5.6",
+    "@types/lodash.flattendepth": "^4.7.6",
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/lodash.isequalwith": "^4.4.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.mergewith": "^4.6.6",
+    "@types/sinon": "^9.0.0",
+    "sinon": "^9.0.0",
+    "graphql": "^14"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0",
+    "miragejs": "^0.1.40"
+  }
+}
