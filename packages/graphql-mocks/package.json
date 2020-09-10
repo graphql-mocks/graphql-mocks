@@ -3,19 +3,18 @@
   "version": "0.4.2",
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
-  "engines": {
+  "main": "dist/index.js",
+  "module": "dist/graphql-mocks.esm.js",
+  "umd": "dist/graphql-mocks.umd.production.min.js",
+  "typings": "dist/index.d.ts",
+    "engines": {
     "node": ">= 10.0.0"
   },
-  "main": ".index.js",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
     "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
-    "build": "tsc --declaration",
-    "clean": "rm -rf lib",
-    "copy-package-json": "cp package.json lib",
-    "build-publishable": "yarn clean && yarn build && yarn copy-package-json",
-    "prepare-deploy": "yarn test && yarn version && yarn build-publishable"
+    "build": "tsdx build --format cjs,esm,umd"
   },
   "license": "ISC",
   "dependencies": {
@@ -33,7 +32,9 @@
     "graphql": "^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
-    "miragejs": "^0.1.40",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@pika/pack": "^0.5.0",
+    "@pika/plugin-ts-standard-pkg": "^0.9.2",
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.difference": "^4.5.6",
     "@types/lodash.differencewith": "^4.5.6",
@@ -44,7 +45,8 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.mergewith": "^4.6.6",
     "@types/sinon": "^9.0.0",
-    "sinon": "^9.0.0",
-    "graphql": "^14"
+    "graphql": "^14",
+    "miragejs": "^0.1.40",
+    "sinon": "^9.0.0"
   }
 }
