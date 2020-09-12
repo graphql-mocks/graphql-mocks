@@ -23,7 +23,7 @@ export function extractDependencies<T extends PackDependencies>(
   context: ResolverContext,
   requestedDependencies: (keyof T)[],
   options = { required: true },
-) {
+): Partial<PackDependencies> {
   const packedDependencies = extractAllDependencies<T>(context);
 
   if (!Array.isArray(requestedDependencies) || requestedDependencies.length === 0) {

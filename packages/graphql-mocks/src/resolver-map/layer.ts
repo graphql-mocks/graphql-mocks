@@ -10,7 +10,7 @@ import { setResolver } from './set-resolver';
 import { applyWrappers } from '../resolver';
 import { Packed } from '../pack/types';
 
-type LayerOptions = {} & ReplaceableResolverOption & WrappableOption;
+type LayerOptions = ReplaceableResolverOption & WrappableOption;
 
 export function layer(partials: ResolverMap[], options?: LayerOptions): ResolverMapMiddleware {
   options = {

@@ -3,7 +3,7 @@ import { hasListType } from '../graphql/utils';
 import { FieldResolver, TypeResolver } from '../types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function coerceSingular(subject: any): any {
+export function coerceSingular(subject: unknown): any {
   if (!Array.isArray(subject)) {
     return subject;
   }
@@ -20,7 +20,7 @@ export function coerceSingular(subject: any): any {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function coerceToList(subject: any): any[] {
+export function coerceToList(subject: unknown): any[] {
   if (subject == null) {
     return [];
   }
@@ -33,7 +33,7 @@ export function coerceToList(subject: any): any[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function coerceReturnType(result: any, info: GraphQLResolveInfo): any {
+export function coerceReturnType(result: unknown, info: GraphQLResolveInfo): any {
   if (!hasListType(info.returnType)) {
     result = coerceSingular(result);
   } else {
