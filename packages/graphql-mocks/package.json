@@ -8,10 +8,11 @@
   "unpkg": "dist/graphql-mocks.umd.production.min.js",
   "license": "MIT",
   "scripts": {
-    "pretest": "tsc --noEmit && yarn lint",
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
     "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
-    "build": "tsdx build --format cjs,esm,umd"
+    "build": "tsdx build --format cjs,esm,umd",
+    "prepare": "yarn test && yarn build"
   },
   "engines": {
     "node": ">= 10.0.0"

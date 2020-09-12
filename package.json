@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "lerna run lint",
     "test": "lerna run test",
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "publish": "lerna publish"
   },
   "author": "Chad Carbert",
   "workspaces": [
