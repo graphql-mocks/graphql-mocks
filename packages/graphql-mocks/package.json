@@ -5,14 +5,13 @@
   "description": "Tools for setting up graphql test resolvers",
   "main": "dist/index.js",
   "module": "dist/graphql-mocks.esm.js",
-  "umd": "dist/graphql-mocks.umd.production.min.js",
-  "typings": "dist/index.d.ts",
-    "engines": {
+  "unpkg": "dist/graphql-mocks.umd.production.min.js",
+  "engines": {
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "build": "tsdx build --format cjs,esm,umd"
   },
