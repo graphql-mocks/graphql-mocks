@@ -1,7 +1,7 @@
 import { Response } from 'miragejs';
-import { CreateGraphQLHandlerOptions } from '../graphql/types';
+import { CreateGraphQLHandlerOptions } from 'graphql-mocks/graphql/types';
 import { MirageRouteHandler } from './types';
-import { GraphQLHandler } from '..';
+import { GraphQLHandler } from 'graphql-mocks';
 
 export function createRouteHandler(handlerOrOptions: CreateGraphQLHandlerOptions | GraphQLHandler): MirageRouteHandler {
   const graphqlHandler =

@@ -1,12 +1,20 @@
 import { GraphQLSchema } from 'graphql';
-import { ResolverMapMiddleware, ResolverMap } from '../types';
-import { ReplaceableResolverOption, HighlightableOption } from '../resolver-map/types';
-import { highlightAllCallback } from '../resolver-map/utils/highlight-all-callback';
-import { setResolver } from '../resolver-map';
+import { ResolverMapMiddleware, ResolverMap } from 'graphql-mocks/types';
+import { ReplaceableResolverOption, HighlightableOption } from 'graphql-mocks/resolver-map/types';
+import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils/highlight-all-callback';
+import { setResolver } from 'graphql-mocks/resolver-map';
 import { mirageFieldResolver, mirageTypeResolver } from '.';
-import { coerceHighlight } from '../highlight/utils/coerce-highlight';
-import { resolvesTo, combine, union, fromResolverMap, interfaces, HIGHLIGHT_ALL, ROOT_MUTATION } from '../highlight';
-import { walk } from '../highlight/utils/walk';
+import { coerceHighlight } from 'graphql-mocks/highlight/utils/coerce-highlight';
+import {
+  resolvesTo,
+  combine,
+  union,
+  fromResolverMap,
+  interfaces,
+  HIGHLIGHT_ALL,
+  ROOT_MUTATION,
+} from 'graphql-mocks/highlight';
+import { walk } from 'graphql-mocks/highlight/utils/walk';
 
 export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {

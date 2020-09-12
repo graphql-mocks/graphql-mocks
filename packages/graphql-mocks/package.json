@@ -18,8 +18,7 @@
     "node": ">= 10.0.0"
   },
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",

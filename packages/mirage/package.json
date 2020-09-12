@@ -1,23 +1,39 @@
 {
   "name": "@graphql-mocks/mirage",
   "version": "0.0.0",
+  "author": "Chad Carbert",
+  "description": "Mock with graphql-mocks and miragejs",
+  "main": "dist/index.js",
+  "module": "dist/graphql-mocks.esm.js",
+  "unpkg": "dist/graphql-mocks.umd.production.min.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "build": "tsdx build --format cjs,esm,umd",
+    "prepare": "yarn test && yarn build"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "lodash.intersection": "^4.4.0"
+  },
   "devDependencies": {
+    "graphql": "^14",
+    "graphql-mocks": "^0.4.2",
     "miragejs": "^0.1.40",
-    "@types/lodash.clonedeep": "^4.5.6",
-    "@types/lodash.difference": "^4.5.6",
-    "@types/lodash.differencewith": "^4.5.6",
-    "@types/lodash.flattendepth": "^4.7.6",
     "@types/lodash.intersection": "^4.4.6",
-    "@types/lodash.isequal": "^4.5.5",
-    "@types/lodash.isequalwith": "^4.4.6",
-    "@types/lodash.merge": "^4.6.6",
-    "@types/lodash.mergewith": "^4.6.6",
     "@types/sinon": "^9.0.0",
-    "sinon": "^9.0.0",
-    "graphql": "^14"
+    "sinon": "^9.0.0"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0",
-    "miragejs": "^0.1.40"
+    "miragejs": "^0.1.40",
+    "graphql-mocks": "^0.4.2"
   }
 }
