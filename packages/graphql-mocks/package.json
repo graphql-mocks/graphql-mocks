@@ -6,16 +6,20 @@
   "main": "dist/index.js",
   "module": "dist/graphql-mocks.esm.js",
   "unpkg": "dist/graphql-mocks.umd.production.min.js",
-  "engines": {
-    "node": ">= 10.0.0"
-  },
+  "license": "MIT",
   "scripts": {
     "pretest": "tsc --noEmit && yarn lint",
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "test": "mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "build": "tsdx build --format cjs,esm,umd"
   },
-  "license": "ISC",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
     "lodash.difference": "^4.5.0",
