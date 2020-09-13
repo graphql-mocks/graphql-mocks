@@ -1,11 +1,11 @@
-import { stashStateWrapper, stashFor } from '../../../src/stash-state/wrapper';
+import { stashStateWrapper, stashFor } from '../../../src/wrapper';
 import { ResolverMap } from '../../../src/types';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 import { GraphQLSchema } from 'graphql';
 
-describe('stash-state/wrapper', function () {
+describe('wrapper/stash-state', function () {
   it('saves stashes on a result object', async function () {
     const resolverReturn = {};
     const initialResolver = sinon.spy(() => resolverReturn);

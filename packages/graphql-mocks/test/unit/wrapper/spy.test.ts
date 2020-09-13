@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import { spyWrapper } from '../../../src/spy/wrapper';
+import { spyWrapper } from '../../../src/wrapper';
 import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
 import { GraphQLResolveInfo, GraphQLSchema } from 'graphql';
 import { FieldResolver } from '../../../src/types';
 
-describe('spy/wrapper', function () {
+describe('wrapper/spy', function () {
   it('provides accesss to spies on resolvers', async function () {
     const resolverReturnValue = 'resolver return value!';
     const initialResolver = (): string => resolverReturnValue;

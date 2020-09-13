@@ -1,11 +1,11 @@
-import { logWrapper } from '../../../src/log/wrapper';
+import { logWrapper } from '../../../src/wrapper';
 import { ResolverMap, FieldResolver, TypeResolver } from '../../../src/types';
 import { expect } from 'chai';
 import { stub, SinonStub } from 'sinon';
 import { generatePackOptions, userObjectType, userObjectNameField, nameableInterfaceType } from '../../mocks';
 import { GraphQLResolveInfo, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
 
-describe('log/wrapper', function () {
+describe('wrapper/log', function () {
   let logStub: SinonStub;
 
   beforeEach(function () {
