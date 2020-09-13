@@ -1,6 +1,6 @@
 import { GraphQLSchema, GraphQLNamedType } from 'graphql';
 import { FieldReference, HighlighterFactory, Highlighter } from '../types';
-import { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from './constants';
+import { HIGHLIGHT_ALL, HIGHLIGHT_ROOT_QUERY, HIGHLIGHT_ROOT_MUTATION } from './constants';
 
 function concat<T>(a: T[], b: T[]): T[] {
   return ([] as T[]).concat(a, b);
@@ -48,11 +48,11 @@ export class FieldHighlighter implements Highlighter {
 
     let type = schema.getType(typeTarget);
 
-    if (typeTarget === ROOT_QUERY) {
+    if (typeTarget === HIGHLIGHT_ROOT_QUERY) {
       type = schema.getQueryType();
     }
 
-    if (typeTarget === ROOT_MUTATION) {
+    if (typeTarget === HIGHLIGHT_ROOT_MUTATION) {
       type = schema.getMutationType();
     }
 

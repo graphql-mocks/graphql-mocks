@@ -1,7 +1,11 @@
 import { buildSchema } from 'graphql';
 import { expect } from 'chai';
 import { type } from '../../../../src/highlight/highlighter/type';
-import { HIGHLIGHT_ALL, ROOT_QUERY, ROOT_MUTATION } from '../../../../src/highlight/highlighter/constants';
+import {
+  HIGHLIGHT_ALL,
+  HIGHLIGHT_ROOT_QUERY,
+  HIGHLIGHT_ROOT_MUTATION,
+} from '../../../../src/highlight/highlighter/constants';
 
 const schema = buildSchema(`
   schema {
@@ -80,12 +84,12 @@ describe('highlight/highlighter/type', function () {
   });
 
   it('highlights the root query type with the ROOT_QUERY export', function () {
-    const highlights = type(ROOT_QUERY).mark(schema).filter(isNotInternal);
+    const highlights = type(HIGHLIGHT_ROOT_QUERY).mark(schema).filter(isNotInternal);
     expect(highlights).to.deep.equal(['Query']);
   });
 
   it('highlights the root mutation type with the ROOT_MUTATION export', function () {
-    const highlights = type(ROOT_MUTATION).mark(schema).filter(isNotInternal);
+    const highlights = type(HIGHLIGHT_ROOT_MUTATION).mark(schema).filter(isNotInternal);
     expect(highlights).to.deep.equal(['Mutation']);
   });
 });
