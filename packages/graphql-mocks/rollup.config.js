@@ -52,21 +52,40 @@ function modules(format) {
   };
 }
 
-/*
 function bundle(format) {
   return {
     input: 'src/index.ts',
 
     output: {
       file: `dist/bundles/graphql-mocks.${format}.js`,
-      format: format,
+      format: 'esm',
       name: 'GraphQLMocks',
       sourcemap: true,
     },
 
-    plugins: [typescript()],
+    plugins: [
+      typescript(),
+      getBabelOutputPlugin({
+        plugins: [
+          '@babel/plugin-proposal-class-properties',
+          '@babel/plugin-proposal-optional-chaining',
+          '@babel/plugin-proposal-nullish-coalescing-operator',
+          '@babel/plugin-proposal-object-rest-spread',
+        ],
+        presets: [
+          [
+            '@babel/preset-env',
+            {
+              modules: 'auto',
+              targets: {
+                esmodules: format === 'es',
+              },
+            },
+          ],
+        ],
+      }),
+    ],
   };
 }
-*/
 
-export default [].concat(modules('cjs'), modules('es') /*, bundle('es'), bundle('cjs'), bundle('umd')*/);
+export default [].concat(modules('cjs'), modules('es'), bundle('es'), bundle('cjs'), bundle('umd'));

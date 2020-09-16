@@ -3,17 +3,23 @@
   "version": "0.4.2",
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
+  "type": "commonjs",
   "main": "dist/index.js",
-  "module": "dist/graphql-mocks.esm.js",
-  "unpkg": "dist/graphql-mocks.umd.production.min.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/bundles/graphql-mocks.umd.js",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
-    "clean": "",
-    "build": "rollup -c rollup.config.js",
-    "prepare": "yarn test && yarn build"
+    "clean": "rimraf ./dist",
+    "prepare": "yarn build",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "prepublishOnly": "yarn test"
+  },
+  "publishConfig": {
+    "directory": "dist"
   },
   "engines": {
     "node": ">= 10.0.0"
