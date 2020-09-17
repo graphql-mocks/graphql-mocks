@@ -41,6 +41,9 @@
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0"
   },
+  "optionalDependencies": {
+    "sinon": "^9.0.0"
+  },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.6",
     "@types/lodash.difference": "^4.5.6",
