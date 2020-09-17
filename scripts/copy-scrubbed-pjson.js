@@ -12,8 +12,28 @@ function cleanPackageJson(pjson) {
 
   delete copy.devDependencies;
   delete copy.scripts;
+  delete copy.publishConfig;
+
+  copy.main = copy.main.replace('dist/', '');
+  copy.module = copy.module.replace('dist/', '');
+  copy.unpkg = copy.unpkg.replace('dist/', '');
 
   return copy;
+}
+
+function checkEntryPoints(dir, pjson) {
+  const entryPoints = ['main', 'module', 'unpkg'];
+
+  entryPoints.forEach((entryPoint) => {
+    const entryPointPath = path.resolve(dir, pjson[entryPoint]);
+    if (!fs.existsSync(entryPointPath)) {
+      console.error('**************************');
+      console.error('FAILED TO FIND ENTRY POINT');
+      console.error('**************************');
+      console.error(`Entry point ${entryPoint} does not exist at: ${entryPointPath}`);
+      process.exit(1);
+    }
+  });
 }
 
 // assumes all packages are going to be putting their
@@ -31,16 +51,17 @@ const copyPackageJson = async () => {
   }
 
   const pkg = require(packageJson);
-  const cleanedPjson = cleanPackageJson(pkg);
+  const cleanedPkg = cleanPackageJson(pkg);
 
   const targetDir = path.resolve(root, DIST_DIR);
+  checkEntryPoints(targetDir, cleanedPkg);
 
   if (!fs.existsSync(targetDir)) {
     fs.mkdirpSync(targetDir);
   }
 
   const targetPjsonPath = path.resolve(targetDir, 'package.json');
-  await fs.writeFile(targetPjsonPath, JSON.stringify(cleanedPjson, null, 2) + '\n');
+  await fs.writeFile(targetPjsonPath, JSON.stringify(cleanedPkg, null, 2) + '\n');
 };
 
 (async () => {
