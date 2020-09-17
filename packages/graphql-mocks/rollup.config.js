@@ -1,9 +1,13 @@
-import { getBabelOutputPlugin } from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
+import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 
 import pkg from './package.json';
 
-const external = [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
+const forcedExternal = ['sinon'];
+const pjsonExternal = [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
+const external = [...forcedExternal, ...pjsonExternal];
 
 function modules(format) {
   let entryFileNames;
@@ -65,6 +69,8 @@ function bundle(format) {
 
     plugins: [
       typescript(),
+      resolve(),
+      commonjs(),
       getBabelOutputPlugin({
         plugins: [
           '@babel/plugin-proposal-class-properties',
