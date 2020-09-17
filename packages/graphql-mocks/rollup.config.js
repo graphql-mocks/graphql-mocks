@@ -76,7 +76,7 @@ function bundle(format) {
           [
             '@babel/preset-env',
             {
-              modules: 'auto',
+              modules: format === 'es' ? false : format,
               targets: {
                 esmodules: format === 'es',
               },
