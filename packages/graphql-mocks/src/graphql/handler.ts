@@ -1,10 +1,11 @@
 import { graphql, GraphQLSchema, ExecutionResult, GraphQLArgs } from 'graphql';
 import { pack } from '../pack';
-import { createSchema, attachResolversToSchema, buildContext } from './utils';
-import { normalizePackOptions } from '../pack/utils';
+import { createSchema, attachResolversToSchema } from './utils';
 import { CreateGraphQLHandlerOptions } from './types';
 import { ResolverMapMiddleware, ResolverMap } from '../types';
 import { PackOptions } from '../pack/types';
+import { buildContext } from './utils/build-context';
+import { normalizePackOptions } from '../pack/utils/normalize-pack-options';
 
 export class GraphQLHandler {
   state: PackOptions['state'];

@@ -4,7 +4,7 @@ import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Object
 import { setResolver } from './set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
-import { embedPackOptionsWrapper } from '../pack';
+import { embedPackOptionsWrapper } from '../pack/utils';
 import { getResolver } from './get-resolver';
 import { coerceHighlight, isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
 import { interfaces, combine, resolvesTo, union } from '../highlight';

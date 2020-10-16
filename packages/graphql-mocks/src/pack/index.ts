@@ -1,2 +1,2 @@
 export { pack } from './pack';
-export { embedPackOptionsWrapper } from './utils';
+export * as utils from './utils';

@@ -2,3 +2,4 @@ export { extractDependencies, extractAllDependencies } from './extract-dependenc
 export { applyWrappers } from './apply-wrappers';
 export { createWrapper } from './create-wrapper';
 export { WrapperFor } from './constants';
+export * as utils from './utils';

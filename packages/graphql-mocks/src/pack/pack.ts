@@ -1,9 +1,8 @@
 import cloneDeep from 'lodash.clonedeep';
 import { embed } from '../resolver-map/embed';
-import { embedPackOptionsWrapper, normalizePackOptions } from './utils';
+import { embedPackOptionsWrapper } from './utils';
 import { PackOptions, Packer, PackState } from './types';
-
-export const defaultPackOptions: PackOptions = { state: {}, dependencies: {} };
+import { defaultPackOptions, normalizePackOptions } from './utils/normalize-pack-options';
 
 export const pack: Packer = async function pack(
   initialResolversMap = {},
