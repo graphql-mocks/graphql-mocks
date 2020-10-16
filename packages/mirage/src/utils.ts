@@ -1,17 +1,25 @@
 import intersection from 'lodash.intersection';
-import { GraphQLObjectType } from 'graphql';
+import {
+  GraphQLEnumType,
+  GraphQLInputObjectType,
+  GraphQLInterfaceType,
+  GraphQLObjectType,
+  GraphQLScalarType,
+  GraphQLType,
+  GraphQLUnionType,
+} from 'graphql';
 import { Server } from 'miragejs/server';
 
 function toPascalCase(string: string): string {
   return `${string}`
     .replace(new RegExp(/[-_]+/, 'g'), ' ')
     .replace(new RegExp(/[^\w\s]/, 'g'), '')
-    .replace(new RegExp(/\s+(.)(\w+)/, 'g'), ($1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`)
+    .replace(new RegExp(/\s+(.)(\w+)/, 'g'), (_$1, $2, $3) => `${$2.toUpperCase() + $3.toLowerCase()}`)
     .replace(new RegExp(/\s/, 'g'), '')
     .replace(new RegExp(/\w/), (s) => s.toUpperCase());
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function findTypeWithFieldsMostInCommon(parent: any, eligibleTypes: GraphQLObjectType[]): string | undefined {
   let matchedTypes: GraphQLObjectType[] = [];
   let matchedFieldCount = 0;
@@ -49,7 +57,7 @@ export function cleanRelayConnectionName(typeName: string): string | undefined {
   return typeName.endsWith('Connection') ? typeName.replace('Connection', '') : undefined;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function mirageCursorForNode(node: any): string {
   return node.toString();
 }
@@ -62,4 +70,16 @@ export function isValidModelName(mirageServer: Server, modelName: string): boole
     // nope; no match
     return false;
   }
+}
+
+type UnwrappedType =
+  | GraphQLScalarType
+  | GraphQLObjectType
+  | GraphQLInterfaceType
+  | GraphQLUnionType
+  | GraphQLEnumType
+  | GraphQLInputObjectType;
+
+export function unwrap(type: GraphQLType): UnwrappedType {
+  return 'ofType' in type ? unwrap(type.ofType) : type;
 }

@@ -1,5 +1,4 @@
-import { mirageFieldResolver } from '../../../src/mirage';
-import { generatePackOptions } from '../../mocks';
+import { mirageFieldResolver } from '../../src';
 import {
   GraphQLSchema,
   buildSchema,
@@ -10,6 +9,7 @@ import {
 } from 'graphql';
 import { expect } from 'chai';
 import { Model, Server, belongsTo, ModelInstance, hasMany, Registry } from 'miragejs';
+import { generatePackOptions } from '../test-helpers';
 
 describe('mirage/field-resolver', function () {
   let mirageServer: Server;
@@ -74,7 +74,7 @@ describe('mirage/field-resolver', function () {
       parentType: schema?.getType('User'),
       fieldName: 'favoriteMovie',
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      returnType: new GraphQLNonNull(schema?.getType('Movie')!),
+      returnType: new GraphQLNonNull(schema.getType('Movie')!),
     };
 
     const result = mirageFieldResolver(user, {}, context, info as GraphQLResolveInfo);
@@ -148,7 +148,8 @@ describe('mirage/field-resolver', function () {
       });
       const Spell = Model.extend({});
 
-      type MyRegistry = Registry<{ spell: typeof Model; sourcerer: typeof Sourcerer }, {}>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type MyRegistry = Registry<{ spell: typeof Model; sourcerer: typeof Sourcerer }, any>;
 
       mirageServer = new Server<MyRegistry>({
         models: {

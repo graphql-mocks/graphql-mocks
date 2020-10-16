@@ -3,8 +3,8 @@
 
 import { Model, Server } from 'miragejs';
 import { expect } from 'chai';
-import { mirageMiddleware } from '../../src/mirage';
-import { GraphQLHandler } from '../../src/graphql';
+import { mirageMiddleware } from '../../src/middleware';
+import { GraphQLHandler } from 'graphql-mocks';
 
 describe('integration/mirage-auto-resolve-root-query', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

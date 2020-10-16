@@ -3,8 +3,8 @@
 
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
-import { mirageMiddleware } from '../../src/mirage';
-import { GraphQLHandler } from '../../src/graphql';
+import { mirageMiddleware } from '../../src';
+import { GraphQLHandler } from 'graphql-mocks';
 
 const schemaString = `
   schema {

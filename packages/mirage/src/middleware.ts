@@ -12,7 +12,7 @@ import {
   fromResolverMap,
   interfaces,
   HIGHLIGHT_ALL,
-  ROOT_MUTATION,
+  HIGHLIGHT_ROOT_MUTATION,
 } from 'graphql-mocks/highlight';
 import { walk } from 'graphql-mocks/highlight/utils/walk';
 
@@ -23,7 +23,7 @@ export function mirageMiddleware(options?: ReplaceableResolverOption & Highlight
 
     // In no case do we want to add Mutation resolvers
     // these are best handled with custom resolvers
-    highlight = highlight.exclude([ROOT_MUTATION, HIGHLIGHT_ALL]);
+    highlight = highlight.exclude([HIGHLIGHT_ROOT_MUTATION, HIGHLIGHT_ALL]);
 
     // If we can't replace resolvers, exclude the ones that exist in the resolver map
     if (!options?.replace) {

@@ -1,5 +1,5 @@
 import { ModelInstance, Server } from 'miragejs';
-import { extractDependencies } from '../../../../../src/resolver/extract-dependencies';
+import { extractDependencies } from 'graphql-mocks/resolver/extract-dependencies';
 
 export default function (
   _parent: unknown,

@@ -1,10 +1,10 @@
 import { Model, Server } from 'miragejs';
-import { generatePackOptions } from '../../mocks';
+import { generatePackOptions } from '../test-helpers';
 import { buildSchema, GraphQLSchema, GraphQLInterfaceType, GraphQLResolveInfo, GraphQLUnionType } from 'graphql';
 import { expect } from 'chai';
-import { mirageTypeResolver } from '../../../src/mirage';
-import { ResolverInfo, ResolverContext } from '../../../src/types';
-import { PackOptions } from '../../../src/pack/types';
+import { mirageTypeResolver } from '../../src';
+import { ResolverInfo, ResolverContext } from 'graphql-mocks/types';
+import { PackOptions } from 'graphql-mocks/pack/types';
 
 function generateContext(packOptions: PackOptions, options?: { useFindInCommon?: boolean }): ResolverContext {
   // important we turn this off for most tests and only

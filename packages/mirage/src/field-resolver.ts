@@ -1,9 +1,9 @@
 import { FieldResolver } from 'graphql-mocks/types';
-import { relayPaginateNodes, isRelayConnectionField } from 'graphql-mocks/relay/utils';
+import { paginateNodes, isRelayConnectionField } from 'graphql-mocks/relay';
 import { mirageCursorForNode, cleanRelayConnectionName, isValidModelName } from './utils';
 import { coerceToList } from 'graphql-mocks/resolver/utils';
 import { isScalarType, isNamedType, GraphQLSchema } from 'graphql';
-import { unwrap, hasListType } from 'graphql-mocks/graphql/utils';
+import { unwrap, hasListType } from 'graphql-mocks/graphql/type-utils';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { Server } from 'miragejs';
 
@@ -59,7 +59,7 @@ export const mirageFieldResolver: FieldResolver = function mirageObjectResolver(
 
   if (isRelayPaginated) {
     const nodes = coerceToList(result);
-    return nodes && relayPaginateNodes(nodes, args, mirageCursorForNode);
+    return nodes && paginateNodes(nodes, args, mirageCursorForNode);
   }
 
   return result;

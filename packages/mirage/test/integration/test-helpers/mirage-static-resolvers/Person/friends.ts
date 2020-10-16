@@ -1,4 +1,4 @@
-import { FieldResolver } from '../../../../../src/types';
+import { FieldResolver } from 'graphql-mocks/types';
 
 const resolver: FieldResolver = function (parent /*, args, context, info*/) {
   return parent.friends.models;

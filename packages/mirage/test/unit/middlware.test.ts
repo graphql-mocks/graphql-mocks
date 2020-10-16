@@ -1,8 +1,8 @@
-import { mirageMiddleware } from '../../../src/mirage';
+import { mirageMiddleware } from '../../src';
 import { expect } from 'chai';
-import { generatePackOptions } from '../../mocks';
+import { generatePackOptions } from '../test-helpers';
 import { buildSchema, GraphQLSchema } from 'graphql';
-import { ResolverMap } from '../../../src/types';
+import { ResolverMap } from 'graphql-mocks/types';
 import sinon from 'sinon';
 
 describe('mirage/middleware', function () {

@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { createServer } from 'miragejs';
-import { createRouteHandler } from '../../../src/mirage';
-import { createMockRequest, MockPretender } from '../../integration/test-helpers/pretender';
-import { ResolverMap } from '../../../src/types';
-import { GraphQLHandler } from '../../../src';
+import { createRouteHandler } from '../../src';
+import { createMockRequest, MockPretender } from '../integration/test-helpers/pretender';
+import { ResolverMap } from 'graphql-mocks/types';
+import { GraphQLHandler } from 'graphql-mocks';
 
 describe('mirage/route-handler', function () {
   let graphqlSchema: string;

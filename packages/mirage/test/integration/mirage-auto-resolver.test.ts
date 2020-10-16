@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { expect } from 'chai';
 import defaultResolvers from './test-helpers/mirage-static-resolvers';
-import { mirageMiddleware } from '../../src/mirage';
+import { mirageMiddleware } from '../../src';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
-import { ResolverMap } from '../../src/types';
-import { GraphQLHandler } from '../../src/graphql';
+import { ResolverMap } from 'graphql-mocks/types';
+import { GraphQLHandler } from 'graphql-mocks';
 
 describe('integration/mirage-auto-resolver', function () {
   let graphQLHandler: GraphQLHandler;
