@@ -11,8 +11,13 @@
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
-    "build": "tsdx build --format cjs,esm,umd",
-    "prepare": "yarn test && yarn build"
+    "clean": "rimraf ./dist",
+    "prepare": "yarn build",
+    "build": "yarn clean && rollup -c rollup.config.js",
+    "prepublishOnly": "yarn test"
+  },
+  "publishConfig": {
+    "directory": "dist"
   },
   "engines": {
     "node": ">= 10.0.0"
@@ -32,8 +37,8 @@
     "sinon": "^9.0.0"
   },
   "peerDependencies": {
+    "graphql-mocks": "^0.4.2",
     "graphql": "^14.0.0 || ^15.0.0",
-    "miragejs": "^0.1.40",
-    "graphql-mocks": "^0.4.2"
+    "miragejs": "^0.1.40"
   }
 }
