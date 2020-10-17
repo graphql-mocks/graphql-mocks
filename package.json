@@ -1,14 +1,12 @@
 {
   "name": "@graphql-mocks/mono",
-  "version": "0.4.2",
   "description": "Mono repo for core graphql-mocks packages",
   "private": true,
   "scripts": {
     "lint": "lerna run lint",
     "test": "lerna run test",
     "build": "lerna run build",
-    "prepublishOnly": "yarn build && yarn test",
-    "publish": "lerna publish",
+    "publish-packages": "yarn bootstrap && lerna publish",
     "bootstrap": "yarn build && lerna bootstrap && node scripts/link-packages"
   },
   "author": "Chad Carbert",

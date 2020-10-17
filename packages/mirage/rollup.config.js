@@ -61,9 +61,9 @@ function bundle(format) {
     input: 'src/index.ts',
 
     output: {
-      file: `dist/bundles/graphql-mocks.${format}.js`,
+      file: `dist/bundles/graphql-mocks-mirage.${format}.js`,
       format: 'esm',
-      name: 'GraphQLMocks',
+      name: 'GraphQLMocksMirage',
       sourcemap: true,
     },
 

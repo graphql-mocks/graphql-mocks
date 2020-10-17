@@ -1,6 +1,6 @@
 {
   "name": "graphql-mocks",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
   "type": "commonjs",
@@ -13,10 +13,9 @@
     "pretest": "tsc --noEmit && yarn lint",
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
-    "prepare": "yarn build",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
-    "prepublishOnly": "yarn test"
+    "prepublishOnly": "yarn build && yarn test"
   },
   "publishConfig": {
     "directory": "dist"
