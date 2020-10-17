@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/mirage",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Chad Carbert",
   "description": "Mock graphql using graphql-mocks and miragejs",
   "type": "commonjs",
