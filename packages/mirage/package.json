@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/mirage",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "author": "Chad Carbert",
   "description": "Mock graphql using graphql-mocks and miragejs",
   "type": "commonjs",
@@ -14,8 +14,7 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
-    "prepublishOnly": "yarn test"
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson"
   },
   "publishConfig": {
     "directory": "dist"
@@ -23,9 +22,6 @@
   "engines": {
     "node": ">= 12.0.0"
   },
-  "files": [
-    "dist"
-  ],
   "dependencies": {
     "lodash.intersection": "^4.4.0"
   },

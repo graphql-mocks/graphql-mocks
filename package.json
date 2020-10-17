@@ -6,7 +6,7 @@
     "lint": "lerna run lint",
     "test": "lerna run test",
     "build": "lerna run build",
-    "publish-packages": "yarn bootstrap && lerna publish",
+    "publish-packages": "lerna version --no-push && yarn bootstrap && yarn test && lerna publish from-package",
     "bootstrap": "yarn build && lerna bootstrap && node scripts/link-packages"
   },
   "author": "Chad Carbert",
