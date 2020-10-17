@@ -1,0 +1,41 @@
+{
+  "name": "@graphql-mocks/mirage",
+  "version": "0.1.2",
+  "author": "Chad Carbert",
+  "description": "Mock graphql using graphql-mocks and miragejs",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/bundles/graphql-mocks-mirage.umd.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "dependencies": {
+    "lodash.intersection": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/sinon": "^9.0.0",
+    "graphql": "^14",
+    "graphql-mocks": "^0.5.2",
+    "miragejs": "^0.1.40",
+    "sinon": "^9.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0",
+    "graphql-mocks": "^0.5.0",
+    "miragejs": "^0.1.40"
+  }
+}

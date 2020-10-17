@@ -1,0 +1,57 @@
+{
+  "name": "graphql-mocks",
+  "version": "0.5.2",
+  "author": "Chad Carbert",
+  "description": "Tools for setting up graphql test resolvers",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/bundles/graphql-mocks.umd.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.difference": "^4.5.0",
+    "lodash.differencewith": "^4.5.0",
+    "lodash.flattendepth": "^4.7.0",
+    "lodash.intersection": "^4.4.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isequalwith": "^4.4.0",
+    "lodash.merge": "^4.6.2",
+    "lodash.mergewith": "^4.6.2"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0"
+  },
+  "optionalDependencies": {
+    "sinon": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash.clonedeep": "^4.5.6",
+    "@types/lodash.difference": "^4.5.6",
+    "@types/lodash.differencewith": "^4.5.6",
+    "@types/lodash.flattendepth": "^4.7.6",
+    "@types/lodash.intersection": "^4.4.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/lodash.isequalwith": "^4.4.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.mergewith": "^4.6.6",
+    "@types/sinon": "^9.0.0",
+    "graphql": "^14",
+    "miragejs": "^0.1.40",
+    "sinon": "^9.0.0"
+  }
+}

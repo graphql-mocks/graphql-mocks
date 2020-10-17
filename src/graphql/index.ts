@@ -1,1 +1,0 @@
-export { GraphQLHandler } from './handler';

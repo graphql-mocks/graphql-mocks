@@ -7,10 +7,8 @@ module.exports = {
   },
 
   extends: [
-    'plugin:@typescript-eslint/recommended',
     'eslint:recommended',
-    'plugin:mocha/recommended',
-    'prettier/@typescript-eslint',
+    'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
 
@@ -19,10 +17,9 @@ module.exports = {
     sourceType: 'module',
   },
 
-  plugins: ['mocha'],
+  plugins: ['@typescript-eslint'],
 
   rules: {
-    'mocha/no-hooks-for-single-case': 'off',
     'no-dupe-class-members': 'off',
   },
 };

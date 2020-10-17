@@ -1,0 +1,3 @@
+export const HIGHLIGHT_ALL = '*';
+export const HIGHLIGHT_ROOT_QUERY = '<ROOT_QUERY_TYPE>';
+export const HIGHLIGHT_ROOT_MUTATION = '<ROOT_MUTATION_TYPE>';
