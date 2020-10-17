@@ -15,7 +15,7 @@
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
-    "prepublishOnly": "yarn build && yarn test"
+    "prepublishOnly": "yarn test"
   },
   "publishConfig": {
     "directory": "dist"
