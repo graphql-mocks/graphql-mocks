@@ -5,7 +5,7 @@ import { getBabelOutputPlugin } from '@rollup/plugin-babel';
 
 import pkg from './package.json';
 
-const forcedExternal = ['sinon'];
+const forcedExternal = [/^graphql-mocks\/.*/];
 const pjsonExternal = [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
 const external = [...forcedExternal, ...pjsonExternal];
 

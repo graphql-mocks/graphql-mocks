@@ -1,10 +1,10 @@
 import { GraphQLSchema } from 'graphql';
 import { ResolverMapMiddleware, ResolverMap } from 'graphql-mocks/types';
 import { ReplaceableResolverOption, HighlightableOption } from 'graphql-mocks/resolver-map/types';
-import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils/highlight-all-callback';
+import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils';
 import { setResolver } from 'graphql-mocks/resolver-map';
 import { mirageFieldResolver, mirageTypeResolver } from '.';
-import { coerceHighlight } from 'graphql-mocks/highlight/utils/coerce-highlight';
+import { coerceHighlight } from 'graphql-mocks/highlight/utils';
 import {
   resolvesTo,
   combine,
