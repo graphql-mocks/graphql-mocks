@@ -14,7 +14,8 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.58",
     "classnames": "^2.2.6",
     "graphiql": "0.17.5",
-    "graphql-mocks": "../lib",
+    "graphql-mocks": "0.5.2",
+    "@graphql-mocks/mirage": "0.1.2",
     "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
