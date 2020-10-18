@@ -1,6 +1,6 @@
 {
-  "name": "docs",
-  "version": "0.0.0",
+  "name": "@graphql-mocks/docs",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "CODE_EXAMPLE_ENV=docs docusaurus start",
@@ -42,5 +42,12 @@
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",
     "regenerator-runtime": "^0.13.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/graphql-mocks/graphql-mocks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/graphql-mocks/graphql-mocks/issues"
   }
 }
