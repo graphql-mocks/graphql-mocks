@@ -10,15 +10,6 @@ import RouteHandlerExample from 'code-examples/mirage-auto-resolvers/route-handl
 import BasicExample from 'code-examples/mirage-auto-resolvers/basic.source.md';
 import basicExampleResult from '../../code-examples/mirage-auto-resolvers/basic.result';
 
-import FieldAttrMappingExample from 'code-examples/mirage-auto-resolvers/field-attr-mapping.source.md';
-import fieldAttrMappingResult from '../../code-examples/mirage-auto-resolvers/field-attr-mapping.result';
-
-import TypeModelMappingExample from 'code-examples/mirage-auto-resolvers/type-model-mapping.source.md';
-import typeModelMappingResult from '../../code-examples/mirage-auto-resolvers/type-model-mapping.result';
-
-import FieldFilteringExample from 'code-examples/mirage-auto-resolvers/field-filter.source.md';
-import fieldFilteringResult from '../../code-examples/mirage-auto-resolvers/field-filter.result';
-
 import MutationCreateExample from 'code-examples/mirage-auto-resolvers/mutation-create.source.md';
 import mutationCreateResult from '../../code-examples/mirage-auto-resolvers/mutation-create.result';
 
@@ -140,71 +131,6 @@ const handler = new GraphQLHandler({
 ```
 
 `mirageServer` is a required dependency.
-
-## `MirageGraphQLMapper`
-
-The `MirageGraphQLMapper` class provides a few escape hatches. It can be added
-to the `dependencies` specified on `GraphQLHandler` instance or through `pack`,
-alongside `mirageServer`.
-
-```js
-const handler = new GraphQLHandler({
-  dependencies: {
-    mirageServer,
-    mirageMapper,
-  },
-});
-```
-
-### Field Filtering
-
-Filtering Filtering is provided by the `addFieldFilter` method on a
-`MirageGraphQLMapper` instance. First, specify the target for the Field Filter
-Resolver with a field reference `['Type', 'field']`, then the Field Filter
-Resolver. The Field Filter Resolver is like a regular resolver except it has a
-first argument that specifies an array of the _currently determined_ results.
-Because it's an array, even in the case of a singular result, you can use array
-methods and re-use filter functions. The results can be filtered down by args or
-return a new value to override the result.
-
-In this example, the root query field `wizard` is filtered down based on an
-exact match of the `name` arg.
-
-<FieldFilteringExample />
-<GraphQLResult result={fieldFilteringResult} />
-
-### Field resolver overrides
-
-In the case a field needs to be overridden a field filter can be used via
-`addFieldFilter` which will override the result that would normally be
-determined from a GraphQL Mirage Auto Resolvers.
-
-```js
-const mirageMapper = new MirageGraphQLMapper().addFieldFilter(['Query', 'person'], () => 'override with this value');
-```
-
-### Mapping Types and Fields
-
-In the case a GraphQL Type, or field, should mapped to a different Mirage
-Model, or attr, you can use `MirageGraphQLMapper`. This makes
-it easier to decouple Mirage definitions from the GraphQL schema.
-
-#### Field/Attr Mapping
-
-This example maps the Type and field `['Wizard', 'dwelling']` to the Model and
-attr `['Person', 'location']`.
-
-<FieldAttrMappingExample />
-<GraphQLResult result={fieldAttrMappingResult} />
-
-#### Type/Model Mapping
-
-This example maps the Type `'Wizard'` to the Model `'Person'`.
-
-<TypeModelMappingExample />
-<GraphQLResult result={typeModelMappingResult} />
-
-## Additional Examples
 
 ### Basic Query
 This example shows the result of querying with Auto Resolvers against Mirage

@@ -1,9 +1,9 @@
 import { GraphQLHandler, embed } from 'graphql-mocks';
-import { patchAutoResolvers, MirageGraphQLMapper } from 'graphql-mocks/mirage';
-import { logWrapper } from 'graphql-mocks/log';
+import { extractDependencies } from 'graphql-mocks/resolver';
+import { logWrapper } from 'graphql-mocks/wrapper';
+import { mirageMiddleware } from '@graphql-mocks/mirage';
 import { createServer, Model, hasMany } from 'miragejs';
 import graphqlSchema from './schema';
-import { extractDependencies } from 'graphql-mocks/resolver';
 
 // Using Mirage JS and the `patchAutoResolvers` Resolver Map Middleware
 // to setup stateful Auto Resolvers
@@ -25,14 +25,6 @@ const mike = mirageServer.create('character', {
 const monstersInc = mirageServer.create('film', {
   name: 'Monsters, Inc.',
   characters: [mike],
-});
-
-// The Mapper helps extends any configuration or options that
-// are used by the Mirage Resolver Map Middleware. In this case
-// we are adding a filter for resolving the `Film.character` field
-const mirageMapper = new MirageGraphQLMapper();
-mirageMapper.addFieldFilter(['Film', 'character'], (films, _parent, args) => {
-  return films.filter((film) => film.name.startsWith(args.name));
 });
 
 // Check the console to see logging applied to only root-query resolvers!
@@ -63,10 +55,9 @@ const resolverMap = {
 // export the composed GraphQL Handler
 export default new GraphQLHandler({
   resolverMap,
-  middlewares: [patchAutoResolvers(), loggerMiddleware],
+  middlewares: [mirageMiddleware(), loggerMiddleware],
   dependencies: {
     graphqlSchema,
     mirageServer,
-    mirageMapper,
   },
 });

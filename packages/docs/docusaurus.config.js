@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable no-undef */
+
 const path = require('path');
 
 module.exports = {
@@ -9,7 +12,9 @@ module.exports = {
   organizationName: 'graphql-mocks',
   projectName: 'graphql-mocks',
   themeConfig: {
-    disableDarkMode: true,
+    colorMode: {
+      disableSwitch: true,
+    },
     prism: {
       theme: require('prism-react-renderer/themes/github'),
     },
@@ -19,7 +24,7 @@ module.exports = {
         alt: 'graphql-mocks logo',
         src: 'img/logo.svg',
       },
-      links: [
+      items: [
         {
           to: 'docs/getting-started/introduction',
           label: 'Docs',
@@ -54,5 +59,6 @@ module.exports = {
       },
     ],
   ],
-  plugins: [path.resolve(__dirname, './plugins/docusaurus-load-examples.js')],
+
+  plugins: [path.resolve(__dirname, 'plugins/docusaurus-load-examples.js')],
 };

@@ -71,7 +71,7 @@ module.exports = function (context, options) {
     configureWebpack(config, isServer, utils) {
       const { getBabelLoader, getCacheLoader } = utils;
       const { rehypePlugins, remarkPlugins } = options;
-      const pluginCacheDir = path.resolve(config.resolve.alias['@generated'], 'docusaurus-load-examples');
+      const pluginCacheDir = path.resolve(config.resolve.alias['@generated'], 'docusaurus-load-examples/default');
 
       return {
         resolve: {
