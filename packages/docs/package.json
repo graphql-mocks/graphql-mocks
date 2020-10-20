@@ -10,7 +10,7 @@
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.58",
+    "@docusaurus/core": "^2.0.0-alpha.65",
     "@docusaurus/preset-classic": "^2.0.0-alpha.65",
     "classnames": "^2.2.6",
     "graphiql": "0.17.5",
