@@ -1,5 +1,5 @@
 import { GraphQLSchema, isSchema, GraphQLNamedType, isAbstractType, isObjectType } from 'graphql';
-import { applyWrappers } from '../resolver/apply-wrappers';
+import { applyWrappers } from '../resolver';
 import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, ObjectField } from '../types';
 import { setResolver } from './set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
