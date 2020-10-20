@@ -5,3 +5,4 @@ export default buildConfig(pkg, ['cjs', 'es', 'umd'], {
   external: [/^graphql-mocks\/.*/],
   bundleGlobalName: 'GraphQLMocksMirage',
 });
+
