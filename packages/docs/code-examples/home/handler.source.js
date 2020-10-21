@@ -5,7 +5,7 @@ import { mirageMiddleware } from '@graphql-mocks/mirage';
 import { createServer, Model, hasMany } from 'miragejs';
 import graphqlSchema from './schema';
 
-// Using Mirage JS and the `patchAutoResolvers` Resolver Map Middleware
+// Using Mirage JS and the `mirageMiddlware` Resolver Map Middleware
 // to setup stateful Auto Resolvers
 const mirageServer = createServer({
   models: {

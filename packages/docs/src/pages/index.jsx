@@ -91,7 +91,7 @@ function Home() {
           </Tabs>
           <ul className={classnames(styles.features, 'hero')}>
             <li className="feature feature--left">
-              <h2 className="feature__heading">1. Mock GraphQL APIs</h2>
+              <h2 className="feature__heading">Mock and Prototype GraphQL APIs</h2>
               <div className="feature__dot-grid"></div>
               <p>
                 Mocking your GraphQL API starts with your Resolvers. This library provides the tools to help you
@@ -100,7 +100,7 @@ function Home() {
               </p>
             </li>
             <li className="feature feature--left">
-              <h2 className="feature__heading">2. Reuse Setup</h2>
+              <h2 className="feature__heading">Declarative Setup</h2>
               <div className="feature__dot-grid"></div>
               <p>
                 The Resolver Wrappers and Resolver Map Middlewares compose to create abstractions that make it easier to
@@ -109,7 +109,7 @@ function Home() {
               </p>
             </li>
             <li className="feature feature--left">
-              <h2 className="feature__heading">3. Leverage Test Utilities</h2>
+              <h2 className="feature__heading">Test & Understand</h2>
               <div className="feature__dot-grid"></div>
               <p>
                 <code>graphql-mocks</code> is aimed to help you test better, whether you want to log what is happening

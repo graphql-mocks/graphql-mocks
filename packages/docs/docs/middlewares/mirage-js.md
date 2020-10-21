@@ -22,15 +22,15 @@ import mutationDeleteResult from '../../code-examples/mirage-auto-resolvers/muta
 import StaticResolverExample from 'code-examples/mirage-auto-resolvers/static-resolver.source.md';
 import staticResolverResult from '../../code-examples/mirage-auto-resolvers/static-resolver.result';
 
-[Mirage JS](https://miragejs.com/) is a great tool that makes mocking
-RESTful APIs much easier. One of the main benefits of Mirage JS is that it
-provides a full in-memory database and ORM. This allows for mocking to be
-stateful with change reflected in subsequent.
+[Mirage JS](https://miragejs.com/) is a great tool that makes mocking RESTful
+APIs much easier. One of the main benefits of Mirage JS is that it provides a
+full in-memory database and ORM. This allows for mocking to be stateful with
+change reflected in subsequent.
 
 This library provides a few ways that we can extend a Mirage JS setup with Auto
 Resolvers or by using Mirage JS within resolver functions, or both. The
-flexibility of `graphql-mocks` lets Mirage JS auto resolve parts of the
-Schema while allowing other Middlewares or resolver functions to fulfill the rest.
+flexibility of `graphql-mocks` lets Mirage JS auto resolve parts of the Schema
+while allowing other Middlewares or resolver functions to fulfill the rest.
 
 ## Mirage JS & Auto Resolving
 
@@ -57,23 +57,23 @@ Relationships will be automatically resolved based on the matching naming
 between Mirage JS models and GraphQL types, or through a mapping defined by a
 `MirageGraphQLMapper` instance. This provides the basis for the auto resolving a
 GraphQL query. Auto Resolvers are applied to a Resolver map via the
-[`patchAutoFieldResolvers`](#patchautoresolvers-auto-resolvers-middleware) Middleware.
+`mirageMiddlware` Middleware.
 
 ## Mocking the Network with Mirage JS Route Handlers
 
 A GraphQL handler handles the mocked responses for GraphQL queries and
-mutations. However, in applications using GraphQL clients these GraphQL operations
-happen on a remote GraphQL API server and this transport layer also has to be
-mocked. Mirage JS comes out-of-the-box with XHR interception with route handlers.
-GraphQL API Servers operate on a single endpoint for a query so only one
-route handler is needed.
+mutations. However, in applications using GraphQL clients these GraphQL
+operations happen on a remote GraphQL API server and this transport layer also
+has to be mocked. Mirage JS comes out-of-the-box with XHR interception with
+route handlers. GraphQL API Servers operate on a single endpoint for a query so
+only one route handler is needed.
 
 The library does not require using Mirage's route handling but if the
 application is browser-based it can be a quick way to get setup. Migrating to
 other mocked networking in the future is easy as well.
 
-Use `createRouteHandler` to get setup with a GraphQL endpoint quickly. Either
-an instance of `GraphQLHandler` can be used, or the same options that would be
+Use `createRouteHandler` to get setup with a GraphQL endpoint quickly. Either an
+instance of `GraphQLHandler` can be used, or the same options that would be
 passed to its constructor. The server can be referenced by `this` within
 `routes()` and can be passed in for the `mirageServer` dependency.
 
@@ -81,20 +81,22 @@ passed to its constructor. The server can be referenced by `this` within
 
 This example sets up a GraphQLHandler on the `graphql` route.
 
-Note: The rest of the examples skip this part and focus on `graphql-mocks`/Mirage JS configuration and examples.
+Note: The rest of the examples skip this part and focus on
+`graphql-mocks`/Mirage JS configuration and examples.
 
-## `patchAutoResolvers` Auto Resolvers Middleware
+## Mirage JS Auto Resolvers Middleware
 
-The `patchAutoResolvers` will fill the Resolver Map with Auto Resolvers where resolvers do not
-already exist. It will also check and apply the necessary resolvers for the
-GraphQL Interface and Union types. `mirageServer` is a required dependency.
+The `mirageMiddleware` will fill the Resolver Map with Auto Resolvers where
+resolvers do not already exist. It will also check and apply the necessary
+resolvers for the GraphQL Interface and Union types. `mirageServer` is a
+required dependency.
 
 ```js
 import { GraphQLHandler } from 'graphql-mocks';
-import { patchAutoResolvers } from 'graphql-mocks/mirage';
+import { mirageMiddleware } from '@graphql-mocks/mirage';
 
 const handler = new GraphQLHandler({
-  middlewares: [patchAutoResolvers()],
+  middlewares: [mirageMiddleware()],
   dependencies: {
     mirageServer,
     graphqlSchema,
@@ -104,10 +106,11 @@ const handler = new GraphQLHandler({
 
 ## Selectively Applying Mirage Auto Resolvers
 
-In some cases it is handy to specify the types and fields that should use
-Mirage JS Auto Resolvers. This is handy when using a different Auto Resolvers to resolve
-different parts of the GraphQL Schema. To specify the application of Mirage Auto Resolvers to specific fields, the
-`patchAutoTypeResolvers` middleware can be used:
+In some cases it is handy to specify the types and fields that should use Mirage
+JS Auto Resolvers. This is handy when using a different Auto Resolvers to
+resolve different parts of the GraphQL Schema. To specify the application of
+Mirage Auto Resolvers to specific fields, the `patchAutoTypeResolvers`
+middleware can be used:
 
 ```js
 const mirageMiddleware = patchAutoFieldResolvers({
@@ -134,12 +137,12 @@ const handler = new GraphQLHandler({
 
 ### Basic Query
 This example shows the result of querying with Auto Resolvers against Mirage
-Models with relationships (between a Wizard and their spells). It uses
-`patchAutoResolvers` Middleware, sets up dependencies and runs a query. The
-mutations will persist as part of Mirage JS's server for future mutations and queries.
+Models with relationships (between a Wizard and their spells). It uses the
+`mirageMiddlware` middlware, sets up dependencies and runs a query. The
+mutations will persist as part of Mirage JS's in-memory database for future
+mutations and queries.
 
-<BasicExample/>
-<GraphQLResult result={basicExampleResult} />
+<BasicExample/> <GraphQLResult result={basicExampleResult} />
 
 ### Mutations (Create, Update, Delete)
 
@@ -152,8 +155,7 @@ can be done by accessing the `mirageServer` dependency with the
 This example creates a new instance of a Wizard model on the Mirage JS using a
 GraphQL Input Type.
 
-<MutationCreateExample/>
-<GraphQLResult result={mutationCreateResult} />
+<MutationCreateExample/> <GraphQLResult result={mutationCreateResult} />
 
 #### Update Example
 
@@ -163,8 +165,7 @@ correct House, and return the updated data. The `resolverMap` has a
 `updateHouse` Resolver Function that will handle this mutation and update the
 within Mirage JS.
 
-<MutationUpdateExample/>
-<GraphQLResult result={mutationUpdateResult} />
+<MutationUpdateExample/> <GraphQLResult result={mutationUpdateResult} />
 
 #### Delete Example
 
@@ -172,8 +173,7 @@ Removing Voldemort's entry in the Mirage JS database can be done through a
 `removeWizard` mutation. The `resolverMap` has a `removeWizard` Resolver
 Function that will handle this mutation and update the within Mirage JS.
 
-<MutationDeleteExample/>
-<GraphQLResult result={mutationDeleteResult} />
+<MutationDeleteExample/> <GraphQLResult result={mutationDeleteResult} />
 
 ### Static Resolver Functions
 
@@ -182,13 +182,12 @@ using the `extractDependencies` utility. This technique can be with
 [Mutations](#mutations-create-update-delete), and Query Resolver Functions to
 bypass Auto Resolving whiile still having access to Mirage.
 
-<StaticResolverExample />
-<GraphQLResult result={staticResolverResult} />
+<StaticResolverExample /> <GraphQLResult result={staticResolverResult} />
 
 ## Comparison with `miragejs/graphql`
 
-Mirage JS has a GraphQL solution, `miragejs/graphql`, that leverages
-mirage & graphql automatic mocking and takes care of some of the mirage setup
+Mirage JS has a GraphQL solution, `miragejs/graphql`, that leverages mirage &
+graphql automatic mocking and takes care of some of the mirage setup
 automatically. The `graphql-mocks` library does a few things differently than
 `miragejs/graphql`.
 
@@ -200,4 +199,5 @@ automatically. The `graphql-mocks` library does a few things differently than
   between GraphQL and Mirage](#mapping-types-and-fields).
 - `miragejs/graphql` attempts automatic filtering where this library does not.
   Instead, it provides `MirageGraphQLMapper` with [field
-  filtering](#field-filtering) to make filtering with the current result set easier.
+  filtering](#field-filtering) to make filtering with the current result set
+  easier.

@@ -1,5 +1,5 @@
 import { GraphQLHandler } from 'graphql-mocks';
-import { patchAutoResolvers } from 'graphql-mocks/mirage';
+import { mirageMiddleware } from '@graphql-mocks/mirage';
 import { createServer, Model, hasMany } from 'miragejs';
 
 // Define GraphQL Schema
@@ -41,7 +41,7 @@ mirageServer.schema.create('wizard', { name: 'Harry Potter', spells: [makeWaterS
 mirageServer.schema.create('wizard', { name: 'Hermione Granger', spells: [makeDisappearSpell, makeFireSpell] });
 
 const graphqlHandler = new GraphQLHandler({
-  middlewares: [patchAutoResolvers()],
+  middlewares: [mirageMiddleware()],
   dependencies: {
     graphqlSchema,
     mirageServer,
