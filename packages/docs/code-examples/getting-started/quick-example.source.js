@@ -16,21 +16,20 @@ type Query {
 
 const resolverMap = {
   Query: {
-    helloWorld: () => {
+    helloWorld() {
       return 'Hello from our test resolver!';
     },
   },
 };
 
-// `embed` returns a Middleware that will apply wrappers
-const SpyResolverMapMiddleware = embed({
-  wrappers: [spyWrapper],
-});
-
-// Create a query handler with the GraphQL Schema, Resolver Map, and middleware
+// Create a query handler with the GraphQL Schema, Resolver Map, and embedded wrappers
 const handler = new GraphQLHandler({
   resolverMap,
-  middlewares: [SpyResolverMapMiddleware],
+  middlewares: [
+    embed({
+      wrappers: [spyWrapper],
+    }),
+  ],
   dependencies: {
     graphqlSchema,
   },

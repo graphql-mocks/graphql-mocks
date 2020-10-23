@@ -50,7 +50,7 @@ const graphqlSchema = `
 const resolverMap = {
   Mutation: {
     removeWizard(_root, args, context, _info) {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
       const wizard = mirageServer.schema.wizards.find(args.wizardId);
       wizard.destroy();

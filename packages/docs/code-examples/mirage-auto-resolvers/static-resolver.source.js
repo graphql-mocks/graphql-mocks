@@ -37,7 +37,7 @@ mirageServer.schema.create('person', {
 const resolverMap = {
   Query: {
     wizards: (parent, args, context, info) => {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
       return mirageServer.schema.all('person').models;
     },
   },

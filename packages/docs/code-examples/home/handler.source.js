@@ -34,12 +34,12 @@ const loggerMiddleware = embed({ include: ['Query', '*'], wrappers: [logWrapper]
 const resolverMap = {
   Mutation: {
     createFilm(_root, args, context) {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
       return mirageServer.create('film', { name: args.name });
     },
 
     createCharacter(_root, args, context) {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
       const film = mirageServer.find('film', args.filmId);
 
       if (!film) throw new Error(`Unable to find film by filmId: ${args.filmId}`);

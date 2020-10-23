@@ -1,6 +1,5 @@
 import { createServer } from 'miragejs';
-import { createRouteHandler } from '@graphql-mocks/mirage';
-import { patchAutoFieldResolvers } from '@graphql-mocks/mirage';
+import { createRouteHandler, mirageMiddleware } from '@graphql-mocks/mirage';
 
 codegen(`
   const {output} = require('../helpers');
@@ -17,7 +16,7 @@ createServer({
     this.post(
       'graphql',
       createRouteHandler({
-        middlewares: [patchAutoFieldResolvers()],
+        middlewares: [mirageMiddleware()],
         dependencies: {
           mirageServer,
           graphqlSchema,

@@ -48,7 +48,7 @@ const graphqlSchema = `
 const resolverMap = {
   Mutation: {
     addWizard(_root, args, context, _info) {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
       const addedWizard = mirageServer.schema.wizards.create({
         name: args.input.name,

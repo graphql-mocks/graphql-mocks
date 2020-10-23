@@ -6,5 +6,7 @@ import sinonResult from './quick-example.sinon.result';
 it('getting-started/quick-example', async () => {
   const actual = await query;
   expect(actual).to.deep.equal(expected);
-  expect(handler.packOptions.state.spies.Query.helloWorld.firstCall.returnValue).to.deep.equal('');
+  expect(handler.packOptions.state.spies.Query.helloWorld.firstCall.returnValue).to.deep.equal(
+    'Hello from our test resolver!',
+  );
 });

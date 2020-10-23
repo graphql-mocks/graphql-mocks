@@ -49,7 +49,7 @@ const graphqlSchema = `
 const resolverMap = {
   Mutation: {
     updateHouse(_root, args, context, _info) {
-      const { mirageServer } = extractDependencies(['mirageServer'], context);
+      const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
       // lookup and update the house on the wizard with args
       const wizard = mirageServer.schema.wizards.find(args.wizardId);

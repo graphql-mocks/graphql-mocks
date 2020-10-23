@@ -4,7 +4,7 @@
 // handler with `graphql-mocks`.
 import { makeExecutableSchema } from 'graphql-tools';
 import { buildSchema, graphql, printSchema } from 'graphql';
-import { pack } from 'graphql-mocks';
+import { pack } from 'graphql-mocks/pack';
 
 async function run() {
   const graphqlSchema = buildSchema(`
