@@ -9,36 +9,36 @@ const graphqlSchema = `
   }
 
   type Query {
-    wizards: [Wizard!]!
+    movies: [Movie!]!
   }
 
-  type Wizard {
+  type Movie {
+    title: String!
+    actors: [Actor!]!
+  }
+
+  type Actor {
     name: String!
-    spells: [Spell!]!
-  }
-
-  type Spell {
-    incantation: String!
   }
 `;
 
 // Create the mirage server and schema
 const mirageServer = createServer({
   models: {
-    Spell: Model,
-    Wizard: Model.extend({
-      spells: hasMany(),
+    Actor: Model,
+    Movie: Model.extend({
+      actors: hasMany(),
     }),
   },
 });
 
 // Create model instances
-const makeWaterSpell = mirageServer.schema.create('spell', { incantation: 'Aguamenti' });
-const makeDisappearSpell = mirageServer.schema.create('spell', { incantation: 'Evanesco' });
-const makeFireSpell = mirageServer.schema.create('spell', { incantation: 'Incendio' });
+const meryl = mirageServer.schema.create('actor', { name: 'Meryl Streep' });
+const bill = mirageServer.schema.create('actor', { name: 'Bill Murray' });
+const anjelica = mirageServer.schema.create('actor', { name: 'Anjelica Huston' });
 
-mirageServer.schema.create('wizard', { name: 'Harry Potter', spells: [makeWaterSpell, makeDisappearSpell] });
-mirageServer.schema.create('wizard', { name: 'Hermione Granger', spells: [makeDisappearSpell, makeFireSpell] });
+mirageServer.schema.create('movie', { title: 'Fantastic Mr. Fox', actors: [meryl, bill] });
+mirageServer.schema.create('movie', { title: 'The Life Aquatic with Steve Zissou', actors: [bill, anjelica] });
 
 const graphqlHandler = new GraphQLHandler({
   middlewares: [mirageMiddleware()],
@@ -50,10 +50,10 @@ const graphqlHandler = new GraphQLHandler({
 
 const query = graphqlHandler.query(`
   {
-    wizards {
-      name
-      spells {
-        incantation
+    movies {
+      title
+      actors {
+        name
       }
     }
   }

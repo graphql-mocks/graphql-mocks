@@ -1,13 +1,27 @@
 export default {
   data: {
-    wizards: [
+    movies: [
       {
-        name: 'Harry Potter',
-        spells: [{ incantation: 'Aguamenti' }, { incantation: 'Evanesco' }],
+        title: 'Fantastic Mr. Fox',
+        actors: [
+          {
+            name: 'Meryl Streep',
+          },
+          {
+            name: 'Bill Murray',
+          },
+        ],
       },
       {
-        name: 'Hermione Granger',
-        spells: [{ incantation: 'Evanesco' }, { incantation: 'Incendio' }],
+        title: 'The Life Aquatic with Steve Zissou',
+        actors: [
+          {
+            name: 'Bill Murray',
+          },
+          {
+            name: 'Anjelica Huston',
+          },
+        ],
       },
     ],
   },

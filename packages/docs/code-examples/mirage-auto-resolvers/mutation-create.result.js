@@ -1,9 +1,9 @@
 export default {
   data: {
-    addWizard: {
+    addMovie: {
       id: '1',
-      name: 'Bellatrix Lestrange',
-      house: 'Slytherin',
+      title: 'Isle of Dogs',
+      style: 'StopMotion',
     },
   },
 };

@@ -5,20 +5,20 @@ export default `
   }
 
   type Query {
-    films: [Film!]!
-    film(name: String!): Film!
+    movies(name: String): [Movie!]!
     characters: [Character!]!
   }
 
   type Mutation {
-    createFilm(name: String!): Film!
-    createCharacter(name: String!, filmId: ID!): Character!
+    createFilm(name: String!): Movie!
+    createCharacter(name: String!, movieId: ID!): Character!
   }
 
-  type Film {
+  type Movie {
     id: ID!
     name: String!
-    characters: Character!
+    year: String!
+    characters: [Character!]!
   }
 
   type Character {
@@ -26,8 +26,8 @@ export default `
     name: String!
   }
 
-  type AddCharacterToFilmPayload {
+  type AddCharacterToMoviePayload {
     character: Character!
-    Film: Film!
+    Movie: Movie!
   }
 `;

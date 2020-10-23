@@ -4,18 +4,16 @@ import { extractDependencies } from 'graphql-mocks/resolver';
 
 const mirageServer = createServer({
   models: {
-    wizard: Model,
+    movie: Model,
   },
 });
 
-const harry = mirageServer.schema.create('wizard', {
-  name: 'Harry Potter',
-  house: 'Gryffindor',
+const grandBudapestHotel = mirageServer.schema.create('movie', {
+  title: 'The Grand Budapest Hotel',
 });
 
-const voldemort = mirageServer.schema.create('wizard', {
-  name: 'Tom Riddle',
-  house: 'Slytherin',
+const hamilton = mirageServer.schema.create('movie', {
+  title: 'Hamilton',
 });
 
 const graphqlSchema = `
@@ -25,37 +23,29 @@ const graphqlSchema = `
   }
 
   type Query {
-    wizards: [Wizard!]!
+    movies: [Movie!]!
   }
 
   type Mutation {
     # Remove
-    removeWizard(wizardId: ID!): Wizard!
+    removeMovie(movieId: ID!): Movie!
   }
 
-  type Wizard {
+  type Movie {
     id: ID!
-    name: String!
-    house: House!
-  }
-
-  enum House {
-    Gryffindor
-    Hufflepuff
-    Ravenclaw
-    Slytherin
+    title: String!
   }
 `;
 
 const resolverMap = {
   Mutation: {
-    removeWizard(_root, args, context, _info) {
+    removeMovie(_root, args, context, _info) {
       const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
-      const wizard = mirageServer.schema.wizards.find(args.wizardId);
-      wizard.destroy();
+      const movie = mirageServer.schema.movies.find(args.movieId);
+      movie.destroy();
 
-      return wizard;
+      return movie;
     },
   },
 };
@@ -70,18 +60,17 @@ const handler = new GraphQLHandler({
 
 const mutation = handler.query(
   `
-    mutation($wizardId: ID!) {
-      removeWizard(wizardId: $wizardId) {
+    mutation($movieId: ID!) {
+      removeMovie(movieId: $movieId) {
         id
-        name
-        house
+        title
       }
     }
   `,
 
   // Pass external variables for the mutation
   {
-    wizardId: voldemort.id,
+    movieId: hamilton.id,
   },
 );
 

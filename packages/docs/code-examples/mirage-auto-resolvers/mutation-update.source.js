@@ -4,16 +4,16 @@ import { extractDependencies } from 'graphql-mocks/resolver';
 
 const mirageServer = createServer({
   models: {
-    wizard: Model,
+    movie: Model,
   },
 });
 
-// Create Voldemort (Tom Riddle) in Mirage JS
-// Whoops! He's been assigned the wrong house
-// but we can fix this via a GraphQL Mutation
-const voldemort = mirageServer.schema.create('wizard', {
-  name: 'Tom Riddle',
-  house: 'Hufflepuff',
+// Create the movie "The Royal Tenenbaums" in Mirage JS
+// Whoops! It's been assigned the wrong year but we can
+// fix this via a GraphQL Mutation
+const royalTenenbaums = mirageServer.schema.create('movie', {
+  name: 'The Royal Tenenbaums',
+  year: '2020',
 });
 
 const graphqlSchema = `
@@ -23,39 +23,32 @@ const graphqlSchema = `
   }
 
   type Query {
-    wizards: [Wizard!]!
+    movies: [Movie!]!
   }
 
   type Mutation {
     # Update
-    updateHouse(wizardId: ID!, house: House!): Wizard!
+    updateYear(movieId: ID!, year: String!): Movie!
   }
 
-  type Wizard {
+  type Movie {
     id: ID!
     name: String!
-    house: House!
-  }
-
-
-  enum House {
-    Gryffindor
-    Hufflepuff
-    Ravenclaw
-    Slytherin
+    year: String!
   }
 `;
 
 const resolverMap = {
   Mutation: {
-    updateHouse(_root, args, context, _info) {
+    updateYear(_root, args, context, _info) {
       const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
-      // lookup and update the house on the wizard with args
-      const wizard = mirageServer.schema.wizards.find(args.wizardId);
-      wizard.house = args.house;
+      // lookup and update the year on the movie with args
+      const movie = mirageServer.schema.movies.find(args.movieId);
+      movie.year = args.year;
+      movie.save();
 
-      return wizard;
+      return movie;
     },
   },
 };
@@ -70,19 +63,19 @@ const handler = new GraphQLHandler({
 
 const mutation = handler.query(
   `
-    mutation($wizardId: ID!, $house: House!) {
-      updateHouse(wizardId: $wizardId, house: $house) {
+    mutation($movieId: ID!, $year: String!) {
+      updateYear(movieId: $movieId, year: $year) {
         id
         name
-        house
+        year
       }
     }
   `,
 
   // Pass external variables for the mutation
   {
-    wizardId: voldemort.id, // corresponds with the model we created above
-    house: 'Slytherin',
+    movieId: royalTenenbaums.id, // corresponds with the model we created above
+    year: '2001',
   },
 );
 

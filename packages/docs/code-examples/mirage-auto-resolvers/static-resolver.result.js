@@ -1,14 +1,14 @@
 export default {
   data: {
-    wizards: [
+    movies: [
       {
-        name: 'Hermione',
+        name: 'Moonrise Kingdom',
       },
       {
-        name: 'Harry',
+        name: 'The Darjeeling Limited',
       },
       {
-        name: 'Draco',
+        name: 'Bottle Rocket',
       },
     ],
   },

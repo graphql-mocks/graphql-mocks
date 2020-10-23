@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "CODE_EXAMPLE_ENV=docs typedoc --tsconfig ../graphql-mocks/tsconfig.json && docusaurus start",
-    "build": "typedoc --tsconfig ../graphql-mocks/tsconfig.json && docusaurus build",
+    "start": "CODE_EXAMPLE_ENV=docs yarn build:api && docusaurus start",
+    "build": "CODE_EXAMPLE_ENV=docs yarn build:api && yarn build:docs",
+    "build:api": "typedoc --tsconfig ../graphql-mocks/tsconfig.json",
+    "build:docs": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
@@ -42,6 +44,7 @@
     "lodash.uniq": "^4.5.0",
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",
+    "react-syntax-highlighter": "^15.4.3",
     "regenerator-runtime": "^0.13.5",
     "typedoc": "^0.19.2"
   },

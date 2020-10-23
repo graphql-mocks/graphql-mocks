@@ -1,5 +1,5 @@
-/* eslint-disable import/no-unresolved */
 import React from 'react';
+import SyntaxHighlighter from 'react-syntax-highlighter';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
@@ -8,14 +8,17 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 import GraphiQL from 'graphiql';
 import 'graphiql/graphiql.css';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 import graphqlHandler from '../../code-examples/home/handler.source';
 
-// for mdx to work the following import is required so that it's included in the
-// bundle
-import { mdx } from '@mdx-js/react';
-import HandlerSource from 'code-examples/home/handler.source.md';
+const defaultQuery = `{
+  movies(name:"Mo") {
+    name
+    year
+    characters {
+      name
+    }
+  }
+}`;
 
 function Home() {
   const context = useDocusaurusContext();
@@ -40,22 +43,55 @@ function Home() {
             </div>
           </div>
         </header>
+
         <main>
-          <Tabs
-            style={{ minHeight: '600px' }}
-            defaultValue="editor"
-            values={[
-              { label: 'Live', value: 'editor' },
-              { label: 'Source', value: 'source' },
-            ]}
-          >
-            <TabItem value="editor">
-              <center>
-                <em>
-                  ⚠️ Warning: <strong>No servers</strong> are used in the resolving of these GraphQL queries
-                </em>
-              </center>
-              <div style={{ height: '600px' }}>
+          <ul className={classnames(styles.features, 'hero')}>
+            <li className="feature">
+              <h2 className="feature__heading">💪 Mock and Prototype GraphQL APIs</h2>
+              <div className="feature__dot-grid"></div>
+              <p>
+                This library provides the tools to create mock GraphQL APIs or prototype on GraphQL Schema changes that
+                might not exist yet. Use your mock GraphQL API in the browser or with any GraphQL API consumer.
+              </p>
+            </li>
+            <li className="feature">
+              <h2 className="feature__heading">🧑‍🎨 Create Declarative Abstractions</h2>
+              <div className="feature__dot-grid"></div>
+              <p>
+                Use [Highlight](/docs/highlight/introducing-highlight), [Resolver
+                Wrappers](/docs/resolver/introducing-wrappers) and [Resolver Map
+                Middlewares](/docs/resolver-map/introducing-middlewares) to create and compose declarative abstractions.
+                This makes it easier to paint a picture of your Mock API in the perfect state, ready to tweak and
+                iterate.
+              </p>
+            </li>
+            <li className="feature">
+              <h2 className="feature__heading">🧑‍🔬 Test better</h2>
+              <div className="feature__dot-grid"></div>
+              <p>
+                <code>graphql-mocks</code> is aimed to helping you test better, too. Whether you want to log what is
+                happening in your queries during local development, spy on your Resolvers with Sinon JS, or assert
+                against state from running queries against the handler, graphql-mocks helps make it easier.
+              </p>
+            </li>
+            <li className="feature">
+              <h2 className="feature__heading">👀 Take a look!</h2>
+              <div className="feature__dot-grid"></div>
+              <p>To quickly show a few of the features in action here we have:</p>
+              <ul>
+                <li>Setting up a GraphQL query handler and making a query</li>
+                <li>
+                  Using the <code>@graphql-mocks/mirage</code> package and its middleware to mock stateful queries (try
+                  a mutation and see the change persist in subsequent queries)
+                </li>
+                <li>
+                  An embedded <code>logWrapper</code> <em>highlighted on all</em> root-level Query resolvers for logging
+                </li>
+              </ul>
+              <div className={styles['no-servers-warning']}>
+                ⚠️ Warning: <strong>No servers</strong> are harmed, or used, in the resolving of these GraphQL queries
+              </div>
+              <div className={styles['yellow-outline']} style={{ height: '400px' }}>
                 <GraphiQL
                   storage={{
                     removeItem() {
@@ -68,14 +104,7 @@ function Home() {
                       'noop';
                     },
                   }}
-                  defaultQuery={`{
-  film(name:"Mons") {
-    name
-    characters {
-      name
-    }
-  }
-}`}
+                  query={defaultQuery}
                   docExplorerOpen={false}
                   fetcher={(data) => {
                     return graphqlHandler.query(data.query).then((result) => {
@@ -84,38 +113,48 @@ function Home() {
                   }}
                 ></GraphiQL>
               </div>
-            </TabItem>
-            <TabItem value="source">
-              <HandlerSource />
-            </TabItem>
-          </Tabs>
-          <ul className={classnames(styles.features, 'hero')}>
-            <li className="feature feature--left">
-              <h2 className="feature__heading">Mock and Prototype GraphQL APIs</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                Mocking your GraphQL API starts with your Resolvers. This library provides the tools to help you
-                bootstrap and extend the Resolvers in your Resolver Map. It also includes out-of-the-box helpers for
-                relay pagination and setting up stateful queries via Mirage JS.
-              </p>
-            </li>
-            <li className="feature feature--left">
-              <h2 className="feature__heading">Declarative Setup</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                The Resolver Wrappers and Resolver Map Middlewares compose to create abstractions that make it easier to
-                combine and re-use for the various states of your GraphQL API. This is especially useful when you are in
-                a test scenario and your cases may change from test to test.
-              </p>
-            </li>
-            <li className="feature feature--left">
-              <h2 className="feature__heading">Test & Understand</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                <code>graphql-mocks</code> is aimed to help you test better, whether you want to log what is happening
-                throughout the execution of your query , spy on your Resolvers with Sinon JS, or extract common state
-                for test assertions.
-              </p>
+              <SyntaxHighlighter
+                className={` ${styles['banner-code']} ${styles['yellow-outline']} `}
+                language="javascript"
+              >
+                {`
+// 1. Setup your handler with a resolver map, middlewares,
+// and wrappers as needed
+
+const handler = new GraphQLHandler({
+  // optionally, provide a base resolver map
+  resolverMap,
+
+  // use middlewares from packages, make your own,
+  // and embed resolver wrappers
+  middlewares: [
+    mirageMiddleware(),
+
+    embed({
+      // Highlight callbacks makes it easy to declaratively
+      // select what should be wrapped with the \`logWrapper\`
+      highlight: (h) => h.include(field(['Query', '*']))
+      wrappers: [logWrapper],
+    }),
+  ]
+
+  // fun fact: dependencies are available in any resolver with
+  // the \`extractDependencies\` utility function
+  dependencies: {
+    graphqlSchema,
+  },
+});
+
+
+// 2. Run queries!
+
+handler.query(\`
+  query {
+    ...
+  }
+\`).then(result => console.log(result));
+          `}
+              </SyntaxHighlighter>
             </li>
           </ul>
         </main>

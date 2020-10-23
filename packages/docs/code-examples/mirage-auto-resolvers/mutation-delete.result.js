@@ -1,9 +1,8 @@
 export default {
   data: {
-    removeWizard: {
+    removeMovie: {
       id: '2',
-      name: 'Tom Riddle',
-      house: 'Slytherin',
+      title: 'Hamilton',
     },
   },
 };

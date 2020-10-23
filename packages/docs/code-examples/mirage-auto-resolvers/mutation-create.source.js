@@ -4,7 +4,7 @@ import { extractDependencies } from 'graphql-mocks/resolver';
 
 const mirageServer = createServer({
   models: {
-    wizard: Model,
+    Movie: Model,
   },
 });
 
@@ -15,47 +15,46 @@ const graphqlSchema = `
   }
 
   type Query {
-    wizards: [Wizard!]!
+    Movie: [Movie!]!
   }
 
   type Mutation {
     # Create mutation
-    addWizard(input: AddWizardInput): Wizard!
+    addMovie(input: AddMovieInput): Movie!
   }
 
-  type Wizard {
+  type Movie {
     id: ID!
-    name: String!
-    house: House!
+    title: String!
+    style: MovieStyle!
   }
 
-  input AddWizardInput {
-    name: String!
-    house: House!
+  input AddMovieInput {
+    title: String!
+    style: MovieStyle!
   }
 
-  enum House {
-    Gryffindor
-    Hufflepuff
-    Ravenclaw
-    Slytherin
+  enum MovieStyle {
+    LiveAction
+    StopMotion
+    Animated
   }
 `;
 
 // Represents the resolverMap with our static Resolver Function
 // using `extractDependencies` to handle the input args and
-// return the added Wizard
+// return the added Movie
 const resolverMap = {
   Mutation: {
-    addWizard(_root, args, context, _info) {
+    addMovie(_root, args, context, _info) {
       const { mirageServer } = extractDependencies(context, ['mirageServer']);
 
-      const addedWizard = mirageServer.schema.wizards.create({
-        name: args.input.name,
-        house: args.input.house,
+      const addedMovie = mirageServer.schema.movies.create({
+        title: args.input.title,
+        style: args.input.style,
       });
 
-      return addedWizard;
+      return addedMovie;
     },
   },
 };
@@ -70,20 +69,20 @@ const handler = new GraphQLHandler({
 
 const mutation = handler.query(
   `
-    mutation($wizard: AddWizardInput) {
-      addWizard(input: $wizard) {
+    mutation($movie: AddMovieInput) {
+      addMovie(input: $movie) {
         id
-        name
-        house
+        title
+        style
       }
     }
   `,
 
   // Pass external variables for the mutation
   {
-    wizard: {
-      name: 'Bellatrix Lestrange',
-      house: 'Slytherin',
+    movie: {
+      title: 'Isle of Dogs',
+      style: 'StopMotion',
     },
   },
 );

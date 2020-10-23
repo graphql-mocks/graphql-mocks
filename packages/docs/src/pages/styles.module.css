@@ -37,3 +37,21 @@
   height: 200px;
   width: 200px;
 }
+
+.yellow-outline {
+  border: 10px solid #f4db67;
+  overflow: hidden;
+  border-radius: 20px;
+  margin-bottom: 3rem;
+}
+
+.banner-code {
+  margin-bottom: 5rem;
+  padding: 2rem 5rem !important;
+}
+
+.no-servers-warning {
+  font-style: italic;
+  text-align: center;
+  margin-top: 3rem;
+}

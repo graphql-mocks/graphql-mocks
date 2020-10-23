@@ -57,24 +57,19 @@ p {
 
 .feature {
   margin-top: 0;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-left: auto;
+  margin-right: auto;
   list-style: none;
-  width: 60%;
+  width: 75%;
 }
 
 .feature:not(:last-child) {
   margin-bottom: 3rem;
 }
 
-.feature--left {
-  align-self: flex-start;
-  margin-left: 20%;
-}
-
 .feature__heading {
   min-height: 2rem;
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   margin-bottom: 0;
 }
 
@@ -90,5 +85,5 @@ p {
 }
 
 .feature > p {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }

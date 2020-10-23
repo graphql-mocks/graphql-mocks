@@ -5,12 +5,13 @@ const path = require('path');
 
 module.exports = {
   title: 'graphql-mocks',
-  tagline: 'Roll your own Mock GraphQL APIs',
+  tagline: 'Declarative Mocking for GraphQL APIs',
   url: 'http://www.graphql-mocks.com',
   baseUrl: '/',
   favicon: 'img/favicon.png',
   organizationName: 'graphql-mocks',
   projectName: 'graphql-mocks',
+  onBrokenLinks: 'warn',
   themeConfig: {
     colorMode: {
       disableSwitch: true,
@@ -29,7 +30,16 @@ module.exports = {
           to: 'docs/getting-started/introduction',
           label: 'Docs',
           position: 'right',
-          activeBaseRegex: 'docs/(?!(typedoc|api-quick-start))',
+        },
+        {
+          href: '/api',
+          label: 'API',
+          position: 'right',
+        },
+        {
+          href: 'https://discord.gg/eJxddt2CJS',
+          label: 'Discord',
+          position: 'right',
         },
         {
           href: 'https://github.com/chadian/graphql-mocks',

@@ -1,0 +1,31 @@
+---
+title: Automatic Filtering with Wrappers
+---
+
+import { GraphQLResult } from '../../src/components/graphql-result';
+import automaticFilterResult from '../../code-examples/guides/automatic-filtering.result';
+import AutomaticFilterSource from 'code-examples/guides/automatic-filtering-filter.source.md';
+import AutomaticFilterData from 'code-examples/guides/automatic-filtering-data.source.md';
+import AutomaticFilterExample from 'code-examples/guides/automatic-filtering-example.source.md';
+
+A common pattern is to filter information on Field Resolvers based on arguments from a query. In the case this pattern can be applied to multiple Field Resolvers it's useful to standardize this filtering with [Resolver Wrappers](/docs/resolver/introducing-wrappers). This helps separate filtering from the data resolution and allows for re-use. The nature of the filtering depends on the conventions of your GraphQL API.
+
+## Example
+
+This Resolver Wrapper is an example of automatically filtering a list based on the arguments passed in. If a given key is provided it will filter any list down based on the value of the argument.
+
+<AutomaticFilterSource />
+
+For this example the `Query.movies` resolver has the following data:
+<AutomaticFilterData />
+
+Then setting up the handler to apply the `automaticFilter` Wrapper against the `Query.movies`
+field resolver. The `highlight` argument can be customized to specify a specific selection of fields that should receive the automatic filter wrapper. Also, because there can be multiple Resolver Wrappers passed into the `wrappers` array, you could crete and combine multiple automatic filtering Field Wrappers to flexibly compose filtering across your fields.
+
+The final query in the example, `FilteredMovies`, will automatically filter based on the query args `{ "year": "2001" }` since `year` is an argument that also exists on the `Movie` type being filtered.
+
+<AutomaticFilterExample />
+
+<GraphQLResult result={automaticFilterResult} />
+
+In the result the movie "La La Land" was filtered out since it was released in 2016 and the query specified movies with the year `'2001'`.

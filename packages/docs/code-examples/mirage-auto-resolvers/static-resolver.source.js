@@ -1,5 +1,6 @@
 import { GraphQLHandler } from 'graphql-mocks';
 import { extractDependencies } from 'graphql-mocks/resolver';
+import { mirageMiddleware } from '@graphql-mocks/mirage';
 import { createServer, Model } from 'miragejs';
 
 const graphqlSchema = `
@@ -8,43 +9,49 @@ const graphqlSchema = `
   }
 
   type Query {
-    wizards: [Wizard!]!
+    movies: [Movie!]!
   }
 
-  type Wizard {
+  type Movie {
     name: String!
   }
 `;
 
 const mirageServer = createServer({
   models: {
-    Person: Model,
+    Movie: Model,
   },
 });
 
-mirageServer.schema.create('person', {
-  name: 'Hermione',
+mirageServer.schema.create('movie', {
+  name: 'Moonrise Kingdom',
 });
 
-mirageServer.schema.create('person', {
-  name: 'Harry',
+mirageServer.schema.create('movie', {
+  name: 'The Darjeeling Limited',
 });
 
-mirageServer.schema.create('person', {
-  name: 'Draco',
+mirageServer.schema.create('movie', {
+  name: 'Bottle Rocket',
 });
 
 const resolverMap = {
   Query: {
-    wizards: (parent, args, context, info) => {
+    movies: (_parent, _args, context, _info) => {
       const { mirageServer } = extractDependencies(context, ['mirageServer']);
-      return mirageServer.schema.all('person').models;
+      return mirageServer.schema.movies.all().models;
     },
   },
 };
 
 const handler = new GraphQLHandler({
   resolverMap,
+
+  // Note: the `mirageMiddleware` is only required for handling downstream
+  // mirage relationships from the returned models. Non-relationship
+  // attributes on the model will "just work"
+  middlewares: [mirageMiddleware()],
+
   dependencies: {
     graphqlSchema,
     mirageServer,
@@ -53,7 +60,7 @@ const handler = new GraphQLHandler({
 
 const query = handler.query(`
   {
-    wizards {
+    movies {
       name
     }
   }

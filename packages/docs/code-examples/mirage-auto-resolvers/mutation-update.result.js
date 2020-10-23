@@ -1,9 +1,9 @@
 export default {
   data: {
-    updateHouse: {
+    updateYear: {
       id: '1',
-      name: 'Tom Riddle',
-      house: 'Slytherin',
+      name: 'The Royal Tenenbaums',
+      year: '2001',
     },
   },
 };
