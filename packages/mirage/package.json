@@ -5,8 +5,9 @@
   "description": "Mock graphql using graphql-mocks and miragejs",
   "type": "commonjs",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/es/index.js",
   "unpkg": "dist/bundles/graphql-mocks-mirage.umd.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
@@ -14,7 +15,8 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson"
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {
     "directory": "dist"

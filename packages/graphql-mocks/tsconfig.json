@@ -5,6 +5,6 @@
   ],
   "exclude": ["./test"],
   "compilerOptions": {
-    "rootDir": "./src"
+    "rootDir": "src"
   }
 }

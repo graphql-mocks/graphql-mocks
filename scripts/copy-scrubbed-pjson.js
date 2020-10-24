@@ -17,12 +17,13 @@ function cleanPackageJson(pjson) {
   copy.main = copy.main.replace('dist/', '');
   copy.module = copy.module.replace('dist/', '');
   copy.unpkg = copy.unpkg.replace('dist/', '');
+  copy.types = copy.types.replace('dist/', '');
 
   return copy;
 }
 
 function checkEntryPoints(dir, pjson) {
-  const entryPoints = ['main', 'module', 'unpkg'];
+  const entryPoints = ['main', 'module', 'unpkg', 'types'];
 
   entryPoints.forEach((entryPoint) => {
     const entryPointPath = path.resolve(dir, pjson[entryPoint]);
