@@ -12,7 +12,7 @@ import {
 } from '../../../src/resolver/types';
 import { GraphQLObjectType, GraphQLAbstractType, GraphQLResolveInfo, isInterfaceType } from 'graphql';
 
-function generateTypeWrapperOptions(wrapperFor: WrapperFor): BaseWrapperOptions {
+function generateTypeWrapperOptions(wrapperFor: typeof WrapperFor[keyof typeof WrapperFor]): BaseWrapperOptions {
   let type: GraphQLObjectType | GraphQLAbstractType | undefined = undefined;
   let field: ObjectField | undefined;
 

@@ -1,5 +1,5 @@
-export enum WrapperFor {
-  TYPE = 'TYPE',
-  FIELD = 'FIELD',
-  ANY = 'ANY',
-}
+export const WrapperFor = {
+  TYPE: 'TYPE',
+  FIELD: 'FIELD',
+  ANY: 'ANY',
+} as const;
