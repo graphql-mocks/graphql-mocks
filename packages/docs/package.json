@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "CODE_EXAMPLE_ENV=docs docusaurus start",
-    "build": "docusaurus build",
+    "start": "CODE_EXAMPLE_ENV=docs typedoc --tsconfig ../graphql-mocks/tsconfig.json && docusaurus start",
+    "build": "typedoc --tsconfig ../graphql-mocks/tsconfig.json && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
@@ -12,10 +12,10 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.65",
     "@docusaurus/preset-classic": "^2.0.0-alpha.65",
+    "@graphql-mocks/mirage": "0.1.2",
     "classnames": "^2.2.6",
     "graphiql": "0.17.5",
     "graphql-mocks": "0.5.2",
-    "@graphql-mocks/mirage": "0.1.2",
     "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
@@ -42,7 +42,8 @@
     "lodash.uniq": "^4.5.0",
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",
-    "regenerator-runtime": "^0.13.5"
+    "regenerator-runtime": "^0.13.5",
+    "typedoc": "^0.19.2"
   },
   "repository": {
     "type": "git",
