@@ -29,13 +29,13 @@ export function buildReferenceMap(schema: GraphQLSchema, references: Reference[]
     })
     .forEach(([typeName, field]) => {
       if (field) {
-        map[typeName] = map[typeName] || {};
         const type = getTypeForReference(schema, typeName);
-        if (type) {
-          map[typeName].type = type;
-        }
+        if (!type) return;
 
-        map[typeName].fields = map[typeName].fields || {};
+        map[typeName] = map[typeName] ?? { type };
+
+        if (!field) return;
+        map[typeName].fields = map[typeName].fields ?? {};
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         map[typeName].fields![field.name] = field;

@@ -39,7 +39,7 @@ export type GenericWrapperFunction = (
 export interface NamedWrapper {
   name: string;
   wrap: GenericWrapperFunction;
-  wrapperFor: WrapperFor;
+  wrapperFor: typeof WrapperFor[keyof typeof WrapperFor];
 }
 
 export type Wrapper = NamedWrapper | GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;

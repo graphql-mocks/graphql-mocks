@@ -36,11 +36,11 @@ function hasTypeResolverPackage(
 class InternalNamedWrapper implements NamedWrapper {
   name: string;
   wrapper: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction;
-  wrapperFor: WrapperFor;
+  wrapperFor: typeof WrapperFor[keyof typeof WrapperFor];
 
   constructor(
     name: string,
-    wrapperFor: WrapperFor,
+    wrapperFor: typeof WrapperFor[keyof typeof WrapperFor],
     wrapperFn: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction,
   ) {
     if (typeof name !== 'string') {
@@ -102,7 +102,7 @@ type WrapperFn = {
   [WrapperFor.ANY]: GenericWrapperFunction;
 };
 
-export function createWrapper<K extends WrapperFor>(
+export function createWrapper<K extends typeof WrapperFor[keyof typeof WrapperFor]>(
   name: string,
   wrapperFor: K,
   wrapperFn: WrapperFn[K],
