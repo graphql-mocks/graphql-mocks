@@ -4,7 +4,7 @@ import { ReplaceableResolverOption, HighlightableOption } from 'graphql-mocks/re
 import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils';
 import { setResolver } from 'graphql-mocks/resolver-map';
 import { mirageFieldResolver, mirageTypeResolver } from '.';
-import { coerceHighlight } from 'graphql-mocks/highlight/utils';
+
 import {
   resolvesTo,
   combine,
@@ -14,7 +14,7 @@ import {
   HIGHLIGHT_ALL,
   HIGHLIGHT_ROOT_MUTATION,
 } from 'graphql-mocks/highlight';
-import { walk } from 'graphql-mocks/highlight/utils/walk';
+import { coerceHighlight, walk } from 'graphql-mocks/highlight/utils';
 
 export function mirageMiddleware(options?: ReplaceableResolverOption & HighlightableOption): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {

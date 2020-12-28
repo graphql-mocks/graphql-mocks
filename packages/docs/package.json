@@ -1,0 +1,58 @@
+{
+  "name": "@graphql-mocks/docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "CODE_EXAMPLE_ENV=docs yarn build:api && docusaurus start",
+    "build": "CODE_EXAMPLE_ENV=docs yarn build:api && yarn build:docs",
+    "build:api": "typedoc --tsconfig ../graphql-mocks/tsconfig.json",
+    "build:docs": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "CODE_EXAMPLE_ENV=docs docusaurus deploy",
+    "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
+  },
+  "dependencies": {
+    "@docusaurus/core": "^2.0.0-alpha.65",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.65",
+    "@graphql-mocks/mirage": "0.1.2",
+    "classnames": "^2.2.6",
+    "graphiql": "0.17.5",
+    "graphql-mocks": "0.5.2",
+    "graphql-tools": "^6.0.11",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/node": "^7.10.4",
+    "@babel/register": "^7.10.4",
+    "babel-plugin-codegen": "^4.0.1",
+    "chai": "^4.2.0",
+    "core-js": "^3.6.5",
+    "globby": "^11.0.1",
+    "lodash.uniq": "^4.5.0",
+    "mocha": "^8.0.1",
+    "prettier": "^2.0.5",
+    "react-syntax-highlighter": "^15.4.3",
+    "regenerator-runtime": "^0.13.5",
+    "typedoc": "^0.19.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/graphql-mocks/graphql-mocks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/graphql-mocks/graphql-mocks/issues"
+  }
+}

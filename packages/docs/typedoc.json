@@ -1,0 +1,15 @@
+{
+  "readme": "none",
+  "inputFiles": ["../graphql-mocks/src/"],
+  "mode": "modules",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeNotExported": true,
+  "disableSources": true,
+  "hideGenerator": true,
+  "out": "static/api",
+
+  "target": "ESNext",
+  "moduleResolution": "node",
+  "esModuleInterop": true
+}

@@ -1,0 +1,42 @@
+---
+id: create-handler
+title: Creating a GraphQL Handler
+---
+
+import CreateHandlerExample from 'code-examples/getting-started/create-handler.source.md';
+import createHandlerExampleResult from '../../code-examples/getting-started/create-handler.result';
+import { GraphQLResult } from '../../src/components/graphql-result';
+
+Ultimately, in order to be able to execute GraphQL queries you need a GraphQL handler. This handler represents your
+GraphQL API and will take a query and variables and return a promise containing containing data or errors.
+
+If you are just getting started with setting up your GraphQL API this library provides a GraphQL handler. If you already
+have a GraphQL handler [use the `pack` guide](../guides/pack) to still be able to use this library's underlying
+composibility features including Resovler Map Middlewares and Resolver Wrappers.
+
+## Getting started
+
+A `GraphQLHandler` instance handles GraphQL operations (queries and mutations). A GraphQL Schema is a required
+dependency for setting it up. The Schema can be a:
+
+- instance of `GraphQLSchema`
+- GraphQL Schema AST (sometimes what is provided by babel loaders or bundlers)
+- a string that is formatted in GraphQL SDL (Schema Definition Language)
+
+A `GraphQLHandler` instance has a `query` function that processes queries and variables, returning the execution as a
+promise with the result or any errors.
+
+Here is a quick example:
+
+<CreateHandlerExample />
+<GraphQLResult result={createHandlerExampleResult} />
+
+This example follows a similar path of creating custom resolvers that many GraphQL tutorials follow, especially those
+for testing and mocking an API.
+
+## Next Steps
+
+To do this setup manual resolvers for each field on each type is possible but can take a bit of time and makes managing
+the Resolver Map surface area a bit more cumbersome. This library provides abstractions to make this process easier,
+whether there are common resolvers, static data, or auto resolvers backed by a stateful source this library provides the
+ways of setting up your mock GraphQL API easier.
