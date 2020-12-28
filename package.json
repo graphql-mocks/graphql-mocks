@@ -6,7 +6,7 @@
     "lint": "lerna run lint",
     "test": "lerna run test",
     "build": "lerna run build",
-    "publish-packages": "lerna version --no-push && yarn bootstrap && yarn test && lerna publish from-package",
+    "publish-packages": "lerna version --no-private --no-push && yarn bootstrap && yarn test && lerna publish from-package --no-private",
     "link-packages": "node scripts/link-packages",
     "postinstall": "yarn link-packages",
     "bootstrap": "lerna bootstrap && yarn build"
