@@ -1,6 +1,6 @@
 {
   "name": "graphql-mocks",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
   "type": "commonjs",
