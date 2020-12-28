@@ -1,6 +1,5 @@
 {
   "name": "@graphql-mocks/docs",
-  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "CODE_EXAMPLE_ENV=docs yarn build:api && docusaurus start",
