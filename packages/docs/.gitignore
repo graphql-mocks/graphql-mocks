@@ -9,8 +9,7 @@
 .cache-loader
 
 # Typedoc generated files
-/docs/typedoc/*
-/website/sidebars.js
+static/api/*
 
 # Misc
 .DS_Store
