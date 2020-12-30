@@ -36,10 +36,22 @@ export type GenericWrapperFunction = (
   options: BaseWrapperOptions,
 ) => FieldResolver | TypeResolver | Promise<FieldResolver | TypeResolver>;
 
-export interface NamedWrapper {
+export type WrapperForOptions = typeof WrapperFor[keyof typeof WrapperFor];
+
+export type WrapperFnMapping = {
+  [WrapperFor.FIELD]: FieldWrapperFunction;
+  [WrapperFor.TYPE]: TypeWrapperFunction;
+  [WrapperFor.ANY]: GenericWrapperFunction;
+};
+
+export interface NamedWrapper<T extends WrapperForOptions> {
   name: string;
-  wrap: GenericWrapperFunction;
-  wrapperFor: typeof WrapperFor[keyof typeof WrapperFor];
+  wrap: WrapperFnMapping[T];
+  wrapperFor: T;
 }
 
-export type Wrapper = NamedWrapper | GenericWrapperFunction | FieldWrapperFunction | TypeWrapperFunction;
+export type Wrapper =
+  | NamedWrapper<WrapperForOptions>
+  | GenericWrapperFunction
+  | FieldWrapperFunction
+  | TypeWrapperFunction;
