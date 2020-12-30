@@ -58,11 +58,11 @@ function Home() {
               <h2 className="feature__heading">🧑‍🎨 Create Declarative Abstractions</h2>
               <div className="feature__dot-grid"></div>
               <p>
-                Use [Highlight](/docs/highlight/introducing-highlight), [Resolver
-                Wrappers](/docs/resolver/introducing-wrappers) and [Resolver Map
-                Middlewares](/docs/resolver-map/introducing-middlewares) to create and compose declarative abstractions.
-                This makes it easier to paint a picture of your Mock API in the perfect state, ready to tweak and
-                iterate.
+                Use <a href="/docs/highlight/introducing-highlight">Highlight</a>,{' '}
+                <a href="/docs/resolver/introducing-wrappers">Resolver Wrappers</a> and{' '}
+                <a href="/docs/resolver-map/introducing-middlewares">Resolver Map Middlewares</a> to create and compose
+                declarative abstractions. This makes it easier to paint a picture of your Mock API in the perfect state,
+                ready to tweak and iterate.
               </p>
             </li>
             <li className="feature">
