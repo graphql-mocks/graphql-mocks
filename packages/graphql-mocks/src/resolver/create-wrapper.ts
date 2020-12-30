@@ -9,6 +9,8 @@ import {
   FieldResolverWrapperOptions,
   TypeResolverWrapperOptions,
   BaseWrapperOptions,
+  WrapperForOptions,
+  WrapperFnMapping,
 } from './types';
 
 function hasFieldResolverPackage(
@@ -33,14 +35,14 @@ function hasTypeResolverPackage(
   return Boolean(isAbstractType(type) && pkg);
 }
 
-class InternalNamedWrapper implements NamedWrapper {
+class InternalNamedWrapper implements NamedWrapper<WrapperForOptions> {
   name: string;
   wrapper: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction;
-  wrapperFor: typeof WrapperFor[keyof typeof WrapperFor];
+  wrapperFor: WrapperForOptions;
 
   constructor(
     name: string,
-    wrapperFor: typeof WrapperFor[keyof typeof WrapperFor],
+    wrapperFor: WrapperForOptions,
     wrapperFn: FieldWrapperFunction | TypeWrapperFunction | GenericWrapperFunction,
   ) {
     if (typeof name !== 'string') {
@@ -60,7 +62,7 @@ class InternalNamedWrapper implements NamedWrapper {
   ): Promise<FieldResolver | TypeResolver>;
   async wrap(
     resolver: FieldResolver | TypeResolver,
-    options: BaseWrapperOptions | FieldResolverWrapperOptions,
+    options: BaseWrapperOptions,
   ): Promise<FieldResolver | TypeResolver> {
     const { type, field } = options;
     const wrapper = this.wrapper;
@@ -96,16 +98,10 @@ class InternalNamedWrapper implements NamedWrapper {
   }
 }
 
-type WrapperFn = {
-  [WrapperFor.FIELD]: FieldWrapperFunction;
-  [WrapperFor.TYPE]: TypeWrapperFunction;
-  [WrapperFor.ANY]: GenericWrapperFunction;
-};
-
-export function createWrapper<K extends typeof WrapperFor[keyof typeof WrapperFor]>(
+export function createWrapper<K extends WrapperForOptions>(
   name: string,
   wrapperFor: K,
-  wrapperFn: WrapperFn[K],
-): NamedWrapper {
-  return new InternalNamedWrapper(name, wrapperFor, wrapperFn);
+  wrapperFn: WrapperFnMapping[K],
+): NamedWrapper<K> {
+  return (new InternalNamedWrapper(name, wrapperFor, wrapperFn) as unknown) as NamedWrapper<K>;
 }

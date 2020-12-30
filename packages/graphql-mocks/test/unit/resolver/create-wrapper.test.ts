@@ -8,11 +8,12 @@ import {
   TypeWrapperFunction,
   FieldWrapperFunction,
   GenericWrapperFunction,
-  BaseWrapperOptions,
+  WrapperForOptions,
+  WrapperFnMapping,
 } from '../../../src/resolver/types';
 import { GraphQLObjectType, GraphQLAbstractType, GraphQLResolveInfo, isInterfaceType } from 'graphql';
 
-function generateTypeWrapperOptions(wrapperFor: typeof WrapperFor[keyof typeof WrapperFor]): BaseWrapperOptions {
+function generateTypeWrapperOptions<T extends WrapperForOptions>(wrapperFor: T): Parameters<WrapperFnMapping[T]>[1] {
   let type: GraphQLObjectType | GraphQLAbstractType | undefined = undefined;
   let field: ObjectField | undefined;
 
@@ -53,7 +54,7 @@ describe('resolvers/create-wrapper', function () {
     };
 
     const wrapper = createWrapper('my-type-wrapper', WrapperFor.TYPE, wrapperFn);
-    const result = await wrapper.wrap(resolver, generateTypeWrapperOptions(WrapperFor.TYPE));
+    const result = await wrapper.wrap(resolver as TypeResolver, generateTypeWrapperOptions(WrapperFor.TYPE));
     expect(result).to.equal(wrapped);
   });
 
@@ -67,11 +68,11 @@ describe('resolvers/create-wrapper', function () {
     };
 
     const wrapper = createWrapper('my-type-wrapper', WrapperFor.FIELD, wrapperFn);
-    const result = await wrapper.wrap(resolver, generateTypeWrapperOptions(WrapperFor.FIELD));
+    const result = await wrapper.wrap(resolver as FieldResolver, generateTypeWrapperOptions(WrapperFor.FIELD));
     expect(result).to.equal(wrapped);
   });
 
-  it('creates a named wrapper for any (type or field) resolver using a generic wrapper', async function () {
+  it('creates a named generic wrapper for any (type or field) resolver using a generic wrapper', async function () {
     let wrapped: FieldResolver | TypeResolver | undefined = undefined;
 
     const wrapperFn: GenericWrapperFunction = function (resolver, options) {
@@ -90,7 +91,7 @@ describe('resolvers/create-wrapper', function () {
     expect(result).to.equal(wrapped);
   });
 
-  it('returns the original resolver if a match wrapper match is not found', async function () {
+  it('returns the original resolver if a matching wrapper is not found', async function () {
     let wrappedInWrapper: TypeResolver | undefined = undefined;
 
     const wrapperFn: TypeWrapperFunction = function (resolver, options) {
@@ -100,7 +101,7 @@ describe('resolvers/create-wrapper', function () {
     };
 
     const wrapper = createWrapper('my-type-wrapper', WrapperFor.TYPE, wrapperFn);
-    const wrapped = await wrapper.wrap(resolver, generateTypeWrapperOptions(WrapperFor.FIELD));
+    const wrapped = await wrapper.wrap(resolver as TypeResolver, generateTypeWrapperOptions(WrapperFor.FIELD) as any);
 
     expect(wrapped).to.not.equal(wrappedInWrapper);
     expect(wrapped).to.equal(resolver);
