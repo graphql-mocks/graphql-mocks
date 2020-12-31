@@ -13,6 +13,11 @@ export const relayWrapper = ({
   force?: boolean;
 }): NamedWrapper<'FIELD'> => {
   force = force ?? false;
+
+  if (!cursorForNode) {
+    throw new Error('cursorForNode is a required, provide it as an option to `relayWrapper`');
+  }
+
   return createWrapper('relay-wrapper', 'FIELD', (resolver) => {
     return async (parent, args, context, info) => {
       const { fieldName, parentType } = info;
