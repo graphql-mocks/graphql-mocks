@@ -1,6 +1,5 @@
 const process = require('process');
 
-// TODO swap to CODE_CODE_EXAMPLE_ENV
 const CODE_EXAMPLE_ENV_VAR = 'CODE_EXAMPLE_ENV';
 const TEST_ENV = 'test';
 const DOCS_ENV = 'docs';
@@ -14,9 +13,16 @@ const isDocsEnv = () => {
 };
 
 const output = (testOutput, docsOutput) => {
-  if (testOutput && isTestEnv()) return testOutput;
-  if (docsOutput && isDocsEnv()) return docsOutput;
-  return '';
+  if (isTestEnv()) {
+    return testOutput != null ? testOutput : '';
+  } else if (isDocsEnv()) {
+    return docsOutput != null ? docsOutput : '';
+  } else {
+    throw new Error(
+      `No CODE_EXAMPLE_ENV environment variable set. Valid options are 'docs' or 'test'.
+      Use docs when running documentation and test when running tests`,
+    );
+  }
 };
 
 module.exports = {

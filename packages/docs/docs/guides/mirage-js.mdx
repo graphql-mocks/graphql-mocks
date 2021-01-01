@@ -168,6 +168,33 @@ about mocking HTTP endpoints with route handlers.
 
 Note: The rest of the examples skip this part and focus on `graphql-mocks` and Mirage JS configuration and examples.
 
+## Relay Pagination
+
+Use the `relayWrapper` for quick relay pagination. It must be *after* the Mirage JS Middleware. The `@graphql-mocks/mirage` package
+provides a `mirageCursorForNode` function to be used for the required `cursorForNode` argument.
+
+Check out the [Relay Wrapper documentation](/docs/guides/relay-pagination) for more details.
+
+```js
+import { GraphQLHandler } from 'graphql-mocks';
+import { mirageCursorForNode } from '@graphql-mocks/mirage';
+
+const handler = new GraphQLHandler({
+  middlewares: [
+    mirageMiddleware(),
+    embed({
+      wrappers: [
+        relayWrapper({ cursorForNode: mirageCursorForNode })
+      ]
+    })
+  ],
+  dependencies: {
+    mirageServer,
+    graphqlSchema,
+  },
+});
+```
+
 ## Examples
 
 ### Basic Query

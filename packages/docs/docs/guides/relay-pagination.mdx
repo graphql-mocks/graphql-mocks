@@ -1,0 +1,178 @@
+---
+title: Relay Pagination
+---
+
+import RelayWrapperEmbed from 'code-examples/relay/relay-wrapper-embed.source.md';
+import RelayWrapperHandler from 'code-examples/relay/relay-wrapper-handler.source.md';
+import RelayWrapperQuery from 'code-examples/relay/relay-wrapper-query.source.md';
+
+import { GraphQLResult } from '../../src/components/graphql-result';
+import relayPaginationResult from '../../code-examples/relay/relay-wrapper-query.result';
+
+One of the common ways of paginating in GraphQL is by using "Relay Pagnation". Relay Pagination is cursor-based and was
+made specifically with GraphQL in mind and is defined by the
+[Relay Pagination Specification](https://relay.dev/graphql/connections.htm).
+
+To make using relay pagination as possible graphql-mocks provides a Relay Wrapper and also exposes the underlying
+utility functions in case you want to paginate something yourself.
+
+## Relay Resolver Wrapper
+
+- See the [API reference](/api/modules/_relay_wrapper_.html#relaywrapper)
+
+The Relay Resolver Wrapper can paginate the results of the resolver it's wrapping, automatically. It assumes that what
+is returned from the wrapped resolver is the full result set and then it applies the pagination args, `first`, `last`,
+`before`, `after`, to return the current results.
+
+When applied, the wrapper by default will paginate for any `Connection` fields that:
+
+- have pagination args (first, last, before, after)
+- return an object type that has an `edges` field
+
+If it does not meet these conditions the wrapper returns the original result without paginating, unless the `force`
+option is passed.
+
+```js
+import { relayWrapper } from 'graphql-mocks/relay';
+
+relayWrapper({
+  // required, must specify a function that can return
+  // a cursor for a given node
+  cursorForNode: (node) => node.id
+
+  // defaults to false
+  force: false
+})
+```
+
+The wrapper would take a single object or an array of object and return relay pagination for the connection field with
+the paginated objects as the `node` for each edge.
+
+```js
+{
+  edges: [
+    {
+      node
+      cursor
+    }
+  ],
+  pageInfo: {
+    hasNextPage,
+    hasPreviousPage,
+    startCursor,
+    endCursor
+  }
+}
+```
+
+### Example
+
+This example uses an array of `Actor` objects:
+
+```js
+[
+  { id: '1', name: 'Suzy Bishop' },
+  { id: '2', name: 'Eli Cash' },
+  { id: '3', name: 'Margot Tenenbaum' },
+];
+```
+
+This array will be paginated as an `ActorConnection`, using any pagination args, on the `Query.actors` field.
+
+```graphql
+type Query {
+  actors(first: Int, last: Int, before: String, after: String): ActorConnection!
+}
+
+type ActorConnection {
+  edges: [ActorEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ActorEdge {
+  node: Actor!
+  cursor: String!
+}
+
+type Actor {
+  id: ID!
+  name: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+```
+
+Using `embed` with the wrapper creates a Resolver Map Middleware that can be applied against all resolvers.
+
+<RelayWrapperEmbed />
+
+- The `cursorForNode` argument is required, representing a function that receives the node and must return an opaque
+  cursor for pagination. In the example the `id` field on the node is returned for the cursor.
+- The `relayWrapper` will default with a `force` value of false.
+
+Now, let's use the manufactured `relayMiddleware` middleware with our `GraphQLHandler`. Remember that this middleware
+must come _after_ any other middlewares that would return the data being paginated.
+
+<RelayWrapperHandler />
+
+The data being paginated could be from a previous middleware in the `middlewares` array but in this example the initial
+`resolverMap` provides the two characters that will be relay paginated based on the pagination args on the
+`Query.actors` fields.
+
+Let's run a query against the handler selecting the first two actors:
+
+<RelayWrapperQuery />
+<GraphQLResult result={relayPaginationResult} />
+
+Notice that `hasPreviousPage` is `true` since we only requested the first two actors. Also, that the cursors are using the object's id based on the `cursorForNode` function specified.
+
+## Relay Utility functions
+
+When relay pagination is needed and the Relay Wrapper isn't appropriate, the underlying utility functions can help.
+
+### `paginateNodes`
+* [API](/api/modules/_relay_paginate_nodes_.html#paginatenodes)
+
+`paginateNodes` takes in an array of nodes and returns a paginated result for a connection field.
+
+```js
+paginateNodes(
+  // collection of nodes, or objects, to paginate
+  nodes,
+
+  // from the resolver function
+  args: { first, last, before, after },
+
+  // a function that returns a cursor for a given node
+  cursorForNode,
+)
+```
+
+Returning the following structure
+
+```js
+{
+  edges: [
+    {
+      node
+      cursor
+    }
+  ],
+  pageInfo: {
+    hasNextPage,
+    hasPreviousPage,
+    startCursor,
+    endCursor
+  }
+}
+```
+
+### `isRelayConnectionField`
+* [API](/api/modules/_relay_is_relay_connection_field_.html#isrelayconnectionfield)
+
+Useful for determining if a `GraphQLField` is a relay connection field.
