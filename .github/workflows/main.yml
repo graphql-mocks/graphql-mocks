@@ -13,6 +13,8 @@ jobs:
       with:
         node-version: 12
     - name: yarn & test
+      env:
+        CODE_EXAMPLE_ENV: test
       run: |
         yarn
         yarn bootstrap
