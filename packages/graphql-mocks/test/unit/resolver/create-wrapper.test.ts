@@ -101,6 +101,7 @@ describe('resolvers/create-wrapper', function () {
     };
 
     const wrapper = createWrapper('my-type-wrapper', WrapperFor.TYPE, wrapperFn);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const wrapped = await wrapper.wrap(resolver as TypeResolver, generateTypeWrapperOptions(WrapperFor.FIELD) as any);
 
     expect(wrapped).to.not.equal(wrappedInWrapper);
