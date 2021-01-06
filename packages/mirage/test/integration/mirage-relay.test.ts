@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+import { embed, GraphQLHandler } from 'graphql-mocks';
+import { relayWrapper } from 'graphql-mocks/relay';
 import { Model, Server, hasMany } from 'miragejs';
 import { expect } from 'chai';
-import { mirageMiddleware } from '../../src';
-import { GraphQLHandler } from 'graphql-mocks';
+import { mirageMiddleware, mirageCursorForNode } from '../../src';
 
 const schemaString = `
   schema {
@@ -12,7 +13,6 @@ const schemaString = `
   }
 
   type Query {
-    people(first: Int, last: Int, before: String, after: String): PersonConnection!
     person: Person!
   }
 
@@ -78,7 +78,7 @@ describe('integration/mirage-relay', function () {
           person: (): unknown => rootPerson,
         },
       },
-      middlewares: [mirageMiddleware()],
+      middlewares: [mirageMiddleware(), embed({ wrappers: [relayWrapper({ cursorForNode: mirageCursorForNode })] })],
       dependencies: {
         mirageServer,
         graphqlSchema: schemaString,
@@ -89,70 +89,6 @@ describe('integration/mirage-relay', function () {
   afterEach(function () {
     (mirageServer as any) = null;
     (handler as any) = null;
-  });
-
-  describe('root query relay pagination', function () {
-    it('automatically relay paginates with all models for a given type', async function () {
-      const result = await handler.query(`{
-        people {
-          edges {
-            cursor
-            node {
-              name
-            }
-          }
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-            startCursor
-            endCursor
-          }
-        }
-      }`);
-
-      expect((result.data as any)?.people.edges).to.deep.equal([
-        {
-          cursor: 'model:person(1)',
-          node: {
-            name: 'Darth Vader',
-          },
-        },
-        {
-          cursor: 'model:person(2)',
-          node: {
-            name: 'Princess Leia',
-          },
-        },
-        {
-          cursor: 'model:person(3)',
-          node: {
-            name: 'R2-D2',
-          },
-        },
-        {
-          cursor: 'model:person(4)',
-          node: {
-            name: 'Greedo',
-          },
-        },
-        // since the pagination is at the root level and there is
-        // no parent, then it automatically paginates all types
-        // that match the model, including Rooty
-        {
-          cursor: 'model:person(5)',
-          node: {
-            name: 'Rooty',
-          },
-        },
-      ]);
-
-      expect((result.data as any)?.people.pageInfo).to.deep.equal({
-        startCursor: 'model:person(1)',
-        endCursor: 'model:person(5)',
-        hasNextPage: false,
-        hasPreviousPage: false,
-      });
-    });
   });
 
   describe('field query relay pagination', function () {
@@ -178,10 +114,6 @@ describe('integration/mirage-relay', function () {
       }`);
 
       expect((result.data as any)?.person.name).to.equal('Rooty');
-
-      // since the pagination is at the field level and these are the
-      // friends of Rooty, Rooty should not be included in these automatic
-      // results
       expect((result.data as any)?.person.friends.edges).to.deep.equal([
         {
           cursor: 'model:person(1)',

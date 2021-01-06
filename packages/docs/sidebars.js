@@ -34,6 +34,6 @@ module.exports = {
         'highlight/creating-highlighters',
       ],
     },
-    { Guides: ['guides/automatic-filtering', 'guides/mirage-js', 'guides/pack'] },
+    { Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'] },
   ],
 };

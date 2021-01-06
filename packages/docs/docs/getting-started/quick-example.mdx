@@ -5,9 +5,9 @@ title: Quick Example
 
 import { GraphQLResult } from '../../src/components/graphql-result';
 
-import QuickExample from 'code-examples/getting-started/quick-example.source.md'; import quickExampleQueryResult from
-'../../code-examples/getting-started/quick-example.query.result'; import quickExampleSinonResult from
-'../../code-examples/getting-started/quick-example.sinon.result';
+import QuickExample from 'code-examples/getting-started/quick-example.source.md';
+import quickExampleQueryResult from '../../code-examples/getting-started/quick-example.query.result';
+import quickExampleSinonResult from '../../code-examples/getting-started/quick-example.sinon.result';
 
 This example will show how to:
 
@@ -18,12 +18,14 @@ This example will show how to:
 4. Execute a Query with the GraphQL Handler
 5. Check the state object for the results of the Sinon Spies
 
-<QuickExample/>
+<QuickExample />
 
 First `console.log`
+
 <GraphQLResult result={quickExampleQueryResult} />
 
 Second `console.log`
+
 <GraphQLResult result={quickExampleSinonResult} />
 
 And that's an end-to-end example using the library to create a quick mock GraphQL API with the Sinon Spy Wrapper for

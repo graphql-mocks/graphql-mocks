@@ -20,6 +20,12 @@ as well as the result. It is useful for troubleshooting and understanding the fl
 Selectively apply it using the `highlight` option with `embed` to pinpoint which Resolvers receive logging. When used
 with other wrappers it is recommended that the position be considered as outer wrappers won't include logging.
 
+## Relay Wrapper
+
+This wrapper is handy for being able a resolver's result and applying [relay pagination](https://relay.dev/graphql/connections.htm) to it.
+
+The documentation for the Relay Wrapper is covered in the [Relay Pagination Guide](/docs/guides/relay-pagination).
+
 ## Spy Wrapper
 
 Package: `graphql-mocks`
