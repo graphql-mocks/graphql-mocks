@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "CODE_EXAMPLE_ENV=docs yarn build:api && docusaurus start",
-    "build": "CODE_EXAMPLE_ENV=docs yarn build:api && yarn build:docs",
-    "build:api": "typedoc --tsconfig ../graphql-mocks/tsconfig.json",
-    "build:docs": "docusaurus build",
+    "start": "yarn build:api && CODE_EXAMPLE_ENV=docs docusaurus start",
+    "build": "yarn build:api && yarn build:docs",
+    "build:api": "yarn build:api:graphql-mocks && yarn build:api:mirage",
+    "build:api:graphql-mocks": "yarn --cwd ../graphql-mocks typedoc --out ../docs/static/api/graphql-mocks src/index.ts",
+    "build:api:mirage": "yarn --cwd ../mirage typedoc --out ../docs/static/api/mirage src/index.ts",
+    "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "CODE_EXAMPLE_ENV=docs docusaurus deploy",
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
@@ -46,7 +48,7 @@
     "prettier": "^2.0.5",
     "react-syntax-highlighter": "^15.4.3",
     "regenerator-runtime": "^0.13.5",
-    "typedoc": "^0.19.2"
+    "typedoc": "^0.21.4"
   },
   "repository": {
     "type": "git",

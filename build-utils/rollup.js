@@ -12,9 +12,11 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
 
   function buildPlugins(format, tsOptions = {}) {
     return [
-      typescript(tsOptions),
-      format === 'umd' && resolve(),
-      format === 'umd' && commonjs(),
+      typescript({
+        ...tsOptions
+      }),
+      resolve(),
+      commonjs(),
       getBabelOutputPlugin({
         plugins: [
           '@babel/plugin-proposal-class-properties',
@@ -45,7 +47,7 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
       input,
       external,
       output: {
-        format: 'es',
+        format: 'cjs',
         dir,
         sourcemap: true,
       },
@@ -80,6 +82,7 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
     builds.push({
       input,
       output: {
+        // final output is handled by babel as umd as passed into buildPlugins
         format: 'es',
         file,
         name: bundleGlobalName,
