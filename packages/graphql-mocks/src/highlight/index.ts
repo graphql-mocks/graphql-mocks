@@ -10,3 +10,4 @@ export { union } from './highlighter/union';
 
 export { HIGHLIGHT_ALL, HIGHLIGHT_ROOT_QUERY, HIGHLIGHT_ROOT_MUTATION } from './highlighter/constants';
 export * as utils from './utils';
+export * as types from './types';

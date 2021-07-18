@@ -10,3 +10,5 @@ export * as relay from './relay';
 export * as resolver from './resolver';
 export * as resolverMap from './resolver-map';
 export * as wrapper from './wrapper';
+
+export * as types from './types';
