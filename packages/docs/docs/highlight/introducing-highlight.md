@@ -42,10 +42,10 @@ const highlights = hi(graphqlSchema)
 ## References
 
 The underlying primitive for Highlight and many of the utilities in graphql-mocks are References. References can define:
-* GraphQL types by a single string as a [Type Reference](/api/graphql-mocks/modules/highlight.types.html#TypeReference), `"Query"` for example
-* GraphQL fields by a tuple [Field Reference](/api/graphql-mocks/modules/highlight.types.html#FieldReference) `["Query", "allUsers"]` of the type name and field name.
+* GraphQL types by a single string as a [Type Reference](pathname:///api/graphql-mocks/modules/highlight.types.html#TypeReference), `"Query"` for example
+* GraphQL fields by a tuple [Field Reference](pathname:///api/graphql-mocks/modules/highlight.types.html#FieldReference) `["Query", "allUsers"]` of the type name and field name.
 
-Any functions using the [`Reference`](/api/graphql-mocks/modules/highlight.types.html#Reference) type accept either a Type Reference or a Field Reference.
+Any functions using the [`Reference`](pathname:///api/graphql-mocks/modules/highlight.types.html#Reference) type accept either a Type Reference or a Field Reference.
 
 ## Pulling Highlighted References from a `Highlight` instance
 
@@ -68,7 +68,7 @@ Would log a list of highlighted references, for example:
 
 ## `highlight` Middleware Option
 
-Much of the highlighting will happen in Resolver Map Middlewares or as arguments for Resolver Map Middlewares, like with [`embed`](/docs/resolver-map/managing-resolvers#wrap-existing-resolvers-with-resolver-wrappers). It is useful to support a `highlight` argument that conforms to the [`CoercibleHighlight`](/api/graphql-mocks/modules/highlight.types.html#CoercibleHighlight) interface and provides a flexible argument for users of the Middleware. More on this design pattern is covered in Creating Middlewares, but it's usually easiest to supply a callback where the highlight instance is already provided:
+Much of the highlighting will happen in Resolver Map Middlewares or as arguments for Resolver Map Middlewares, like with [`embed`](/docs/resolver-map/managing-resolvers#wrap-existing-resolvers-with-resolver-wrappers). It is useful to support a `highlight` argument that conforms to the [`CoercibleHighlight`](pathname:///api/graphql-mocks/modules/highlight.types.html#CoercibleHighlight) interface and provides a flexible argument for users of the Middleware. More on this design pattern is covered in Creating Middlewares, but it's usually easiest to supply a callback where the highlight instance is already provided:
 
 ```js
 middleware({
