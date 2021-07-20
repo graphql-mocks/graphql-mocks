@@ -186,7 +186,7 @@ approach with a managed context to provide conventions and assist in threading t
 
 For example, `dependencies` that are passed to the [graphql-mocks GraphQL Handler](/docs/getting-started/create-handler)
 can reliably be pulled from context using the
-[`extractDependencies` function](http://localhost:3000/api/modules/_resolver_extract_dependencies_.html#extractdependencies).
+[`extractDependencies` function](http://localhost:3000pathname:///api/graphql-mocks/modules/_resolver_extract_dependencies_.html#extractdependencies).
 There are other helpful ways that context can be used with `graphql-mocks`, too!
 
 ### `info` parameter (fourth)

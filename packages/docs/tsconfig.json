@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "commonjs",
-    "allowJs": true,
-    "typeRoots": ["../../documentation/node_modules/graphql-mocks/"]
-  }
-}

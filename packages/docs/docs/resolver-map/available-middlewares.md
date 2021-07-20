@@ -15,7 +15,7 @@ Manage the Resolver Map by using `embed` to create Resolver Map Middlewares that
 
 ## `layer`
 * Package: `graphql-mocks`
-* [Documentation](/docs/resolver-map/managing-resolvers#using-embed)
+* [Documentation](/docs/resolver-map/managing-resolvers#using-layer)
 
 Lazily add layering of Resolver Map Partials with `layer` and the Resolver Map Middleware it creates. It also supports using Resolver Wrappers in its application of partials.
 

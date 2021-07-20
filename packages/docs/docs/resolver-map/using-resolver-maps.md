@@ -63,14 +63,14 @@ const resolverMap = {
 ```
 
 The first level within a `resolverMap` object represents the GraphQL Type which has a value of an object. This next
-level object refers the field name referencing a [Field Resolver](docs/resolver/using-resolvers#field-resolvers) or in
+level object refers the field name referencing a [Field Resolver](/docs/resolver/using-resolvers#field-resolvers) or in
 the case that the type is an Abstract type (Union or Interface) the key is `__resolveType` and points to a
 [Type Resolver](/docs/resolver/using-resolvers#type-resolvers). In this example the resolver functions are references to
 resolver functions would could be provided inline or imported from elsewhere.
 
 It should also be noted that "gaps" in a Resolver Map are covered by the
-[default field resolver](docs/resolver/using-resolvers#default-field-resolver) or the
-[default type resolver](docs/resolver/using-resolvers#default-type-resolver) in the case of type resolvers for Unions
+[default field resolver](/docs/resolver/using-resolvers#default-field-resolver) or the
+[default type resolver](/docs/resolver/using-resolvers#default-type-resolver) in the case of type resolvers for Unions
 and Interfaces.
 
 ## Modifying the Resolver Map Surface Area

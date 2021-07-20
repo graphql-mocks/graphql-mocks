@@ -29,6 +29,9 @@ function parseToMarkDown(content, { examplePath }) {
         {
           modules: false,
           useBuiltIns: false,
+          targets: {
+            node: 16,
+          },
         },
       ],
     ],

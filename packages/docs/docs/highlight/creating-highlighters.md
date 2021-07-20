@@ -2,9 +2,9 @@
 title: Create Custom Highlighters
 ---
 
-Highlighters return highlighted [References](/docs/highlight/introducing-highlight#references), that is an array of either [Type References](/api/modules/_highlight_types_.html#typereference) or [Field References](/api/modules/_highlight_types_.html#fieldreference), for a given schema. There are already a number of useful highlighters provided by graphql-mocks out-of-the-box.
+Highlighters return highlighted [References](/docs/highlight/introducing-highlight#references), that is an array of either [Type References](pathname:///api/graphql-mocks/modules/highlight.types.html#TypeReference) or [Field References](pathname:///api/graphql-mocks/modules/highlight.types.html#FieldReference), for a given schema. There are already a number of useful highlighters provided by graphql-mocks out-of-the-box.
 
-A highlighter must conform to the [`Highlighter` interface](/api/interfaces/_highlight_types_.highlighter.html). This interface is simply a `mark` function on an object:
+A highlighter must conform to the [`Highlighter` interface](pathname:///api/graphql-mocks/interfaces/highlight.types.Highlighter.html). This interface is simply a `mark` function on an object:
 ```
 {
   mark(schema: GraphQLSchema): Reference[]

@@ -46,8 +46,6 @@ const query = handler.query(
   },
 );
 
-query.then((result) => console.log(result));
-
 codegen(`
   const {output} = require('../helpers');
   module.exports = output("module.exports = { query }", "query.then(result => console.log(result))");
