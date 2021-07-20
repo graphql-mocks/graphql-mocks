@@ -5,7 +5,7 @@ const path = require('path');
 
 module.exports = {
   title: 'graphql-mocks',
-  tagline: 'Declarative Mocking for GraphQL APIs',
+  tagline: 'A suite of tools for declaratively mocking GraphQL APIs',
   url: 'http://www.graphql-mocks.com',
   baseUrl: '/',
   favicon: 'img/favicon.png',
