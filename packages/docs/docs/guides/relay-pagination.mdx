@@ -18,7 +18,7 @@ utility functions in case you want to paginate something yourself.
 
 ## Relay Resolver Wrapper
 
-- See the [API reference](/api/modules/_relay_wrapper_.html#relaywrapper)
+- See the [API reference](/api/graphql-mocks/modules/relay.html#relayWrapper)
 
 The Relay Resolver Wrapper can paginate the results of the resolver it's wrapping, automatically. It assumes that what
 is returned from the wrapped resolver is the full result set and then it applies the pagination args, `first`, `last`,
@@ -136,7 +136,7 @@ Notice that `hasPreviousPage` is `true` since we only requested the first two ac
 When relay pagination is needed and the Relay Wrapper isn't appropriate, the underlying utility functions can help.
 
 ### `paginateNodes`
-* [API](/api/modules/_relay_paginate_nodes_.html#paginatenodes)
+* [API](/api/graphql-mocks/modules/relay.html#paginateNodes)
 
 `paginateNodes` takes in an array of nodes and returns a paginated result for a connection field.
 
@@ -173,6 +173,6 @@ Returning the following structure
 ```
 
 ### `isRelayConnectionField`
-* [API](/api/modules/_relay_is_relay_connection_field_.html#isrelayconnectionfield)
+* [API](/api/graphql-mocks/modules/relay.html#isRelayConnectionField)
 
 Useful for determining if a `GraphQLField` is a relay connection field.

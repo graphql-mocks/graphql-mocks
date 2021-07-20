@@ -8,7 +8,7 @@ the arguments can be checked, changed, same with the final returned result.
 The Generic Resolver Wrapper shows the basic
 
 ## Generic Resolver Wrapper
-* [API](/api/modules/_resolver_types_.html#genericwrapperfunction)
+* [API](/api/graphql-mocks/modules/resolver.types.html#GenericWrapperFunction)
 
 ```js
 const wrapper = function (originalResolver, wrapperOptions) {
@@ -28,7 +28,7 @@ const wrapper = function (originalResolver, wrapperOptions) {
 
 `wrapperOptions` includes useful contextual details about the Resolver being wrapped. Including `wrapperOptions.type`
 for the GraphQL type and `wrapperOptions.field` if it is wrapping a Field Resolver. Check out the
-[`BaseWrapperOptions` type](/api/modules/_resolver_types_.html#basewrapperoptions) to see the other properties on
+[`BaseWrapperOptions` type](/api/graphql-mocks/modules/resolver.types.html#BaseWrapperOptions) to see the other properties on
 `wrapperOptions.
 
 As we have seen in the [Using Resolver](/docs/resolver/using-resolvers) there are two types of Resolvers: Field
@@ -36,7 +36,7 @@ Resolvers and Type Resolvers. Both can be wrapped but it's important to note the
 functions are different. Therefore, there are some Resolver Wrappers that can only be used for Field Resolvers, or Type Resolvers. To make this easier it is recommended to use the `createWrapper` helper which provides additional type checks and guards at runtime. Feel free to use the
 
 ## `createWrapper`
-* [API](/api/modules/_resolver_create_wrapper_.html)
+* [API](/api/graphql-mocks/modules/resolver.html#createWrapper)
 
 Using `createWrapper` helps by providing more context about the wrapper and includes the following benefits:
 * The wrapper is named which helps in debugging through multiple wrappers

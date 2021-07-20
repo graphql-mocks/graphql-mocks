@@ -5,7 +5,7 @@ title: Creating Custom Middlewares
 
 ## Anatomy of a Resolver Map Middleware
 
-Resovler Map Middlewares represent the lazy application of changes to a Resolver Map. A [Resolver Map Middleware](/api/modules/_types_.html#resolvermapmiddleware) receives a Resolver Map, along with some contextual options, and returns a Resolver Map. The Resolver Map returned does not need to be the same one that was passed in but it will represent the Resolver Map going forward.
+Resovler Map Middlewares represent the lazy application of changes to a Resolver Map. A [Resolver Map Middleware](/api/graphql-mocks/modules/types.html#ResolverMapMiddleware) receives a Resolver Map, along with some contextual options, and returns a Resolver Map. The Resolver Map returned does not need to be the same one that was passed in but it will represent the Resolver Map going forward.
 
 ```js
 async (resolverMap, packOptions) => {
@@ -24,7 +24,7 @@ with `packOptions` representing:
 ```
 Note: Only these properties should be relied on. Do not add additional properties, there is no guarantee they will be preserved.
 
-* `state` — Useful for any storing any references that should be persisted for accessing from the outside, via the [`state` property](/api/classes/_graphql_handler_.graphqlhandler.html#state) on a `GraphQLHandler` instance.
+* `state` — Useful for any storing any references that should be persisted for accessing from the outside, via the [`state` property](/api/graphql-mocks/classes/GraphQLHandler.html#state) on a `GraphQLHandler` instance.
 * `dependencies` — Contains any external dependencies initially passed in when creating the `GraphQLHandler`.
 
 The `packOptions` object is also available within Resolver Wrappers.
@@ -61,7 +61,7 @@ By using `CoercibleHighlight` it provides a flexible option by accepting:
 * Highlight callback function `(h) => { return h.include(['Query', 'user']) }`, a callback where the highlight instance is setup and expects a returned `Highlight` instance.
 * `Highlight` instance, provided directly by the consumers of the middleware
 
-These three options can be converted into a `Highlight` instance with the [`coerceHighlight` utility](/api/modules/_highlight_utils_coerce_highlight_.html#coercehighlight).
+These three options can be converted into a `Highlight` instance with the [`coerceHighlight` utility](/api/graphql-mocks/modules/highlight.utils.html#coerceHighlight).
 
 If the default behavior is to "highlight the entire schema" for a the `highlight` option the `highlightAllCallback` can be used as the default value which will highlight everything in the schema.
 
@@ -145,7 +145,7 @@ When operating on the landscape of a Resolver Map there are some useful utilitie
 
 `import { setResolver } from 'graphql-mocks/resolver-map';`
 
-[API Documentation](/api/modules/_resolver_map_set_resolver_.html#setresolver)
+[API Documentation](/api/graphql-mocks/modules/resolverMap.html#setResolver)
 
 Add a Resolver function to a Resolver Map at a given reference.
 
@@ -153,7 +153,7 @@ Add a Resolver function to a Resolver Map at a given reference.
 
 `import { getResolver } from 'graphql-mocks/resolver-map';`
 
-[API Documentation](/api/modules/_resolver_map_get_resolver_.html#getresolver)
+[API Documentation](/api/graphql-mocks/modules/resolverMap.html#getResolver)
 
 Get a Resolver function from a Resolver Map for a given reference.
 
@@ -161,6 +161,6 @@ Get a Resolver function from a Resolver Map for a given reference.
 
 `import { applyWrappers } from 'graphql-mocks/resolver';`
 
-[API Documentation](/api/modules/_resolver_apply_wrappers_.html#applywrappers)
+[API Documentation](/api/graphql-mocks/modules/resolver.html#applyWrappers)
 
 Generally, it's easiest to use [`embed`](/docs/resolver-map/available-middlewares#embed) and [`layer`](/docs/resolver-map/available-middlewares#layer) Resolver Map Middleware functions to add wrappers. In other cases it might be useful for a custom Resolver Map Middleware to have an array of wrappers passed in as an option and apply them to a Resolver function using `applyWrappers`.
