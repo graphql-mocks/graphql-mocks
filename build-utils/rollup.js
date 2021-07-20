@@ -13,9 +13,9 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
   function buildPlugins(format, tsOptions = {}) {
     return [
       typescript({
-        ...tsOptions
+        ...tsOptions,
       }),
-      resolve(),
+      format === 'umd' && resolve(),
       commonjs(),
       getBabelOutputPlugin({
         plugins: [
