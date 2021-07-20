@@ -1,0 +1,305 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>typeUtils | graphql-mocks</title>
+	<meta name="description" content="Documentation for graphql-mocks">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">graphql-mocks</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../index.html">graphql-mocks</a>
+				</li>
+				<li>
+					<a href="graphql.html">graphql</a>
+				</li>
+				<li>
+					<a href="graphql.typeUtils.html">typeUtils</a>
+				</li>
+			</ul>
+			<h1>Namespace typeUtils</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="graphql.typeUtils.html#hasListType" class="tsd-kind-icon">has<wbr>List<wbr>Type</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="graphql.typeUtils.html#isInternalType" class="tsd-kind-icon">is<wbr>Internal<wbr>Type</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="graphql.typeUtils.html#isRootMutationType" class="tsd-kind-icon">is<wbr>Root<wbr>Mutation<wbr>Type</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="graphql.typeUtils.html#isRootQueryType" class="tsd-kind-icon">is<wbr>Root<wbr>Query<wbr>Type</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-namespace"><a href="graphql.typeUtils.html#unwrap" class="tsd-kind-icon">unwrap</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="hasListType" class="tsd-anchor"></a>
+					<h3>has<wbr>List<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">has<wbr>List<wbr>Type<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/7213569/packages/graphql-mocks/src/graphql/type-utils/has-list-type.ts#L6">packages/graphql-mocks/src/graphql/type-utils/has-list-type.ts:6</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if a type is a list type or a wrapped list type (ie: wrapped with non-null)</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">GraphQLType</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="isInternalType" class="tsd-anchor"></a>
+					<h3>is<wbr>Internal<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Internal<wbr>Type<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/7213569/packages/graphql-mocks/src/graphql/type-utils/is-internal-type.ts#L3">packages/graphql-mocks/src/graphql/type-utils/is-internal-type.ts:3</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="isRootMutationType" class="tsd-anchor"></a>
+					<h3>is<wbr>Root<wbr>Mutation<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Root<wbr>Mutation<wbr>Type<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLSchema</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/7213569/packages/graphql-mocks/src/graphql/type-utils/is-root-mutation-type.ts#L3">packages/graphql-mocks/src/graphql/type-utils/is-root-mutation-type.ts:3</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>schema: <span class="tsd-signature-type">GraphQLSchema</span></h5>
+								</li>
+								<li>
+									<h5>type: <span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="isRootQueryType" class="tsd-anchor"></a>
+					<h3>is<wbr>Root<wbr>Query<wbr>Type</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Root<wbr>Query<wbr>Type<span class="tsd-signature-symbol">(</span>schema<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLSchema</span>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/7213569/packages/graphql-mocks/src/graphql/type-utils/is-root-query-type.ts#L3">packages/graphql-mocks/src/graphql/type-utils/is-root-query-type.ts:3</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>schema: <span class="tsd-signature-type">GraphQLSchema</span></h5>
+								</li>
+								<li>
+									<h5>type: <span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-namespace">
+					<a name="unwrap" class="tsd-anchor"></a>
+					<h3>unwrap</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-namespace">
+						<li class="tsd-signature tsd-kind-icon">unwrap<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">GraphQLType</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">UnwrappedType</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/7213569/packages/graphql-mocks/src/graphql/type-utils/unwrap.ts#L19">packages/graphql-mocks/src/graphql/type-utils/unwrap.ts:19</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">GraphQLType</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">UnwrappedType</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../index.html">Exports</a>
+					</li>
+					<li class="current tsd-kind-namespace">
+						<a href="graphql.html">graphql</a>
+						<ul>
+							<li class="current tsd-kind-namespace tsd-parent-kind-namespace">
+								<a href="graphql.typeUtils.html">type<wbr>Utils</a>
+							</li>
+							<li class=" tsd-kind-namespace tsd-parent-kind-namespace">
+								<a href="graphql.types.html">types</a>
+							</li>
+							<li class=" tsd-kind-namespace tsd-parent-kind-namespace">
+								<a href="graphql.utils.html">utils</a>
+							</li>
+						</ul>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="highlight.html">highlight</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="pack.html">pack</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="relay.html">relay</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="resolver.html">resolver</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="resolverMap.html">resolver<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="types.html">types</a>
+					</li>
+					<li class=" tsd-kind-namespace">
+						<a href="wrapper.html">wrapper</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="graphql.typeUtils.html#hasListType" class="tsd-kind-icon">has<wbr>List<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="graphql.typeUtils.html#isInternalType" class="tsd-kind-icon">is<wbr>Internal<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="graphql.typeUtils.html#isRootMutationType" class="tsd-kind-icon">is<wbr>Root<wbr>Mutation<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="graphql.typeUtils.html#isRootQueryType" class="tsd-kind-icon">is<wbr>Root<wbr>Query<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-namespace">
+						<a href="graphql.typeUtils.html#unwrap" class="tsd-kind-icon">unwrap</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
