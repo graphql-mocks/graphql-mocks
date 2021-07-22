@@ -34,6 +34,14 @@ module.exports = {
         'highlight/creating-highlighters',
       ],
     },
+    {
+      ['GraphQL Paper']: [
+        'paper/introducing-paper',
+        'paper/installation',
+        'paper/querying-data',
+        'paper/mutating-data',
+      ],
+    },
     { Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'] },
   ],
 };
