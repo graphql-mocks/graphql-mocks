@@ -30,6 +30,7 @@ import { scalarFieldValidator } from './validations/validators/scalar-field';
 import { uniqueIdFieldValidator } from './validations/validators/unique-id';
 import { captureTransactionResultKeys } from './transaction/capture-transaction-result-keys';
 import { convertResultKeysToDocument } from './transaction/convert-result-keys-to-document';
+import { createSchema } from './graphql/create-schema';
 
 // Auto Freezing needs to be disabled because it interfers with using
 // of using js a `Proxy` on the resulting data, see:
@@ -63,9 +64,10 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     afterTransaction: [],
   };
 
-  constructor(graphqlSchema: GraphQLSchema, options?: { operations?: UserOperations }) {
-    this.current = createDocumentStore(graphqlSchema);
-    this.sourceGraphQLSchema = graphqlSchema;
+  constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: { operations?: UserOperations }) {
+    const schema = createSchema(graphqlSchema);
+    this.current = createDocumentStore(schema);
+    this.sourceGraphQLSchema = schema;
 
     this.operations = {
       ...(options?.operations as UserOperations),
