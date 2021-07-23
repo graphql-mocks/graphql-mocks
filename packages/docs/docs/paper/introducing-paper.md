@@ -9,12 +9,12 @@ import { GraphQLResult } from '../../src/components/graphql-result';
 
 GraphQL Paper is a flexible in-memory store based on a provided GraphQL Schema. Its features include:
 
-* Written in TypeScript
 * Built and based on GraphQL
+* Written in TypeScript
 * Support and integration with `graphql-mocks`
 * Support for relationships and connections between types
 * Immutable
-* Accessible via native js APIs 
+* Accessible via native js APIs
 * Hooks
 * Events
 * Transaction Operations
