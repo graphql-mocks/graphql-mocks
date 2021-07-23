@@ -5,7 +5,7 @@ import 'event-target-polyfill';
 import { GraphQLSchema } from 'graphql';
 import { produce, setAutoFreeze } from 'immer';
 import { createStoreEvents } from './events/dispatch';
-import { defaultOperations } from './operations/index';
+import * as defaultOperations from './operations/index';
 import { transaction } from './transaction/transaction';
 import { Queue } from './transaction/queue';
 import {

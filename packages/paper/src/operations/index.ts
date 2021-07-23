@@ -1,15 +1,6 @@
-import { createOperation } from './create';
-import { findOperation } from './find';
-import { removeOperation } from './remove';
-import { cloneOperation } from './clone';
-import { getStoreOperation } from './get-store';
-import { queueEventOperation } from './queue-event';
-
-export const defaultOperations = {
-  create: createOperation,
-  find: findOperation,
-  remove: removeOperation,
-  clone: cloneOperation,
-  getStore: getStoreOperation,
-  queueEvent: queueEventOperation,
-};
+export { createOperation as create } from './create';
+export { findOperation as find } from './find';
+export { removeOperation as remove } from './remove';
+export { cloneOperation as clone } from './clone';
+export { getStoreOperation as getStore } from './get-store';
+export { queueEventOperation as queueEvent } from './queue-event';
