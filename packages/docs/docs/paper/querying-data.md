@@ -3,7 +3,31 @@ id: querying-data
 title: Querying Data
 ---
 
-Data is organized in a `DocumentStore` on the `Paper` instance. A "frozen" version of the data store is available on the `Paper` instance under the `data` property. The shape of the store is:
+Data is organized in a `DocumentStore` on the `Paper` instance. A "frozen" immutable version of the data store is available on the `Paper` instance. A `Document` is a POJO (plain-old javascript object) that represents a concrete GraphQL type.
+
+For example an `Actor` GraphQL type:
+
+```graphql
+type Actor {
+  name: String!
+}
+```
+
+Could have a corresponding `Document`:
+```js
+{
+  name: 'Jurassic Park'
+}
+```
+
+**Note:**
+It is important to remember that a document retrieved from the store is considered stale-on-arrival and cannot be modified. It does not represent an instance but instead a stale copy, or snapshot, of the document at the time of retrieval. For an updated version of the document it needs to be exchanged for an updated copy (see below)
+
+## Querying Documents via the `data` Property
+
+A frozen copy of the store is available via the `data` property on the `Paper` instance.
+
+The shape of a store is:
 
 ```js
 {
@@ -11,9 +35,7 @@ Data is organized in a `DocumentStore` on the `Paper` instance. A "frozen" versi
 }
 ```
 
-Where a `Document` is a special POJO (plain-old javascript object) that represents the properties available on a GraphQL type.
-
-Let's say that the GraphQL Schema had these two types:
+A GraphQL Schema with these two types:
 
 ```graphql
 type Actor {
@@ -25,7 +47,7 @@ type Film {
 }
 ```
 
-A simplified store could like:
+Could have a store like:
 ```js
 {
   Film: [
@@ -39,11 +61,61 @@ A simplified store could like:
 }
 ```
 
-To fetch the representation of this store on a `Paper` instance would then be something like:
+Since the data is accessed by type as a regular array the usual array methods can be used for accessing.
 
 ```js
-// would return { title: 'Jurassic Park' }
-paper.data.Film[0]
+// returns the document { title: 'Jurassic Park' }
+paper.data.Film[0];
 ```
 
-Any data fetched should be considered immutable and "stale on arrival". To get the latest copy it should be refetched.
+```js
+// returns the document { title: 'Godzilla' }
+paper.data.Film.find(({title}) => title === 'Godzilla');
+```
+
+## Fetching Updates via Exchanging Documents
+
+Since documents are immutable snapshots they need to be exchanged for updated copies. This can be done by using the `find` method on a `Paper` instance which will take the existing document to be exchanged for the latest copy.
+
+```js
+// with a reference to an existing document exists from previously being fetched
+film;
+
+// return the latest copy of that document
+const updatedFilm = paper.find(film);
+```
+
+## Returning Documents from Mutation Transactions
+
+It's often useful to be able to have immediate access to a `Document` that has just updated in a mutation transaction. This can be done by either returning the Document, an array of Dcouments or an object of documents.
+
+```js
+const macAndMe = await paper.mutate(({ create }) => {
+  const film = create('Film', { title: 'Mac and Me' });
+  return film;
+});
+```
+
+The `film` variable representing the newly created document is returned and available outside via the `macAndMe`.
+
+Similar with returning an object that can be destructured:
+
+```js
+const { macAndme, spaceJam } = await paper.mutate(({ create }) => {
+  const macAndMe = create('Film', { title: 'Mac and Me' });
+  const spaceJam = create('Film', { title: 'Space Jam' });
+
+  return { macAndMe, spaceJam };
+});
+```
+
+Or an Array:
+
+```js
+const [macAndme, spaceJam] = await paper.mutate(({ create }) => {
+  const filmOne = create('Film', { title: 'Mac and Me' });
+  const filmTwo = create('Film', { title: 'Space Jam' });
+
+  return [filmOne, filmTwo];
+});
+```
