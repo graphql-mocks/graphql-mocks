@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "yarn build:api && CODE_EXAMPLE_ENV=docs docusaurus start",
-    "build": "yarn build:api && yarn build:docs",
+    "clean": "docusaurus clear",
+    "start": "yarn clean && yarn build:api && CODE_EXAMPLE_ENV=docs docusaurus start",
+    "build": "yarn clean && yarn build:api && yarn build:docs",
     "build:api": "yarn build:api:graphql-mocks && yarn build:api:mirage && yarn build:api:paper && yarn build:api:sinon",
     "build:api:graphql-mocks": "yarn --cwd ../graphql-mocks typedoc --readme none --out ../docs/static/api/graphql-mocks src/index.ts",
     "build:api:sinon": "yarn --cwd ../sinon typedoc --readme none --out ../docs/static/api/sinon src/index.ts",
@@ -12,7 +13,7 @@
     "build:api:paper": "yarn --cwd ../paper typedoc --readme none --out ../docs/static/api/paper src/index.ts",
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "CODE_EXAMPLE_ENV=docs docusaurus deploy",
+    "deploy": "yarn clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
   },
   "dependencies": {

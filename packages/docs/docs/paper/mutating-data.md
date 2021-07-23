@@ -72,9 +72,9 @@ await paper.mutate(({ create }) => {
 
 The first argument is the GraphQL type for the document and the second is an object representing its fields.
 
-### Creating a Documented with Connections
+#### Creating a Documented with Connections
 
-The `create` operation supports the ability to create connections through either by a [nested object](#connections-on-create-via-nesting) or explicitly through the [property on the document](#connections-via-document-properties), both of which are covered below.
+The `create` operation supports the ability to create connections through either by a [nested object](#creating-connections-within-create-via-nesting) or explicitly through the [property on the document](#creating-connections-via-document-properties), both of which are covered below.
 
 ### `find`
 
@@ -163,7 +163,7 @@ type Film {
 
 **Note:** Connections are one direction. If "Document A" is connected to "Document B" and "Document B" is also connected to "Document A" then two connectiosn must be defined explicitly. There is no automatic reflexive assumptions or setup done (although a custom operation could be created to help handle this case).
 
-### Connections via Document Properties
+### Creating Connections via Document Properties
 
 Within a *Mutate Transaction* callback changes can be made to any documents and their properties.
 
@@ -236,7 +236,7 @@ await paper.mutate(({ create }) => {
 });
 ```
 
-### Connections within `create` via Nesting
+### Creating Connections within `create` via Nesting
 
 One powerful technique is to use the `create` operation with a nested object that includes its connections. This nesting will work recursively. Other documents that have already been created can be included, too.
 
@@ -258,7 +258,7 @@ await paper.mutate(({ create }) => {
 });
 ```
 
-This nested `create` will end up creating a `Film` document and four `Actor` documents (skipping `scarlettJohansson` because the `Actor` document was already created).
+This nested `create` will end up creating a `Film` document and four `Actor` documents, skipping creating `scarlettJohansson` because the `Actor` document was already created but it will still be included as a connection.
 
 ## Returning Data Outside the *Mutate Transaction* callback
 
