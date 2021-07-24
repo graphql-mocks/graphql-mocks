@@ -4,26 +4,27 @@ title: Operations
 ---
 
 Operations are functions available within an *Mutate Transaction* callback and are bound with special internal context.
-The ones that are provided out-of-the-box are `create`, `find`, `remove`, `clone`, `getStore`, `queueEvent`. These are covered
-in [*Mutating Data*]('/docs/paper/mutating-data#transaction-operations').
+
+## Base Operations
+
+The ones that are provided out-of-the-box are `create`, `find`, `remove`, `clone`, `getStore`, `queueEvent`. These are covered in [*Mutating Data*]('/docs/paper/mutating-data#transaction-operations').
 
 ## Operational Context
 
-What makes Operations different than regular functions is that the first argument is bound (via `.bind`) with [*Operation Context*](pathname:///api/paper/modules/types.html#OperationContext) at the beginning of the transaction.
+What makes Operations different than regular functions is that the first argument is bound (via `.bind`) at the beginning of every transaction with [`Operation Context`](pathname:///api/paper/modules/types.html#OperationContext).
 
-Currently, the `OperationContext` includes:
-
+The shape of the Operation Context is:
 ```
 {
-  eventQueue: Event[]
-  schema: GraphQLSchema
   store: DocumentStore
+  schema: GraphQLSchema
+  eventQueue: Event[]
 }
 ```
 
-* `eventQueue` is an array of events that will be pushed out at the end of a transaction
-* `schema` is an instance of `GraphQLSchema` based on the schema passed into `Paper`
 * `store` is the current version of the store available for mutation during the transaction
+* `schema` is an instance of `GraphQLSchema` based on the schema passed into `Paper`
+* `eventQueue` is an array of events that will be pushed out at the end of a transaction
 
 ## Creating Custom Operations
 
@@ -37,17 +38,18 @@ export const customOperation = (context, argOne, argTwo) => {
 };
 ```
 
-If creating an Opereration in typescript the type can be imported and assigned to the function.
+If using typescript, import the `OperationContext in` for the first argument of the function. Setting up your Operation this way should allow the types and autocomplete to work within the the *Mutate Transaction* callback.
 
 ```typescript
-import { Operation }  from 'graphql-paper/types';
+// customOperation.ts
+import { OperationContext }  from 'graphql-paper/types';
 
-export const customOperation: Operation = (context, argOne, argTwo) => {
+export const customOperation = (context: OperationContext, argOne: string, argTwo: number) => {
   /* custom logic for your custom operation */
 };
 ```
 
-Operations can be added to the `Paper` constructor
+Operations can be added to the `Paper` constructor's second argument configuration object, on the `operations` key.
 
 ```js
 import { customOperation } from './customOperation';
@@ -57,13 +59,11 @@ const operations = { custom: customOperation };
 const paper = new Paper(graphqlSchema, { operations });
 ```
 
-If using typescript provide the type argument to get typing within *Mutate Transaction* callbacks.
-
 ```typescript
 import { customOperation } from './customOperation';
 import { graphqlSchema } from './schema';
 
-const operations: OperationMap = { custom: customOperation };
+const operations = { custom: customOperation };
 const paper = new Paper<typeof operations>(graphqlSchema, { operations });
 ```
 
@@ -71,6 +71,6 @@ The key provided in the `OperationMap` hash is what is made available within the
 
 ```js
 paper.mutate(({ custom }) => {
-  custom('argOne', 'argTwo');
+  custom('argOne magic!', 42);
 });
 ```
