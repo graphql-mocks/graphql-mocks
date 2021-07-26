@@ -22,7 +22,7 @@ import { createDocumentStore } from './store/create-document-store';
 import { findDocument } from './store/find-document';
 import { proxyWrap } from './store/proxy-wrap';
 import { validate } from './validations/validate';
-import { exclusiveDocumentFieldsOnType } from './validations/validators/exclusive-document-fields-on-type';
+import { documentPropertyExistsAsFieldOnTypeValidator } from './validations/validators/document-property-exists-as-field-on-type';
 import { listFieldValidator } from './validations/validators/list-field';
 import { nonNullFieldValidator } from './validations/validators/non-null-field';
 import { objectFieldValidator } from './validations/validators/object-field';
@@ -49,7 +49,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
   events = new EventTarget();
 
   validators: { document: DocumentTypeValidator[]; field: FieldValidator[] } = {
-    document: [exclusiveDocumentFieldsOnType],
+    document: [documentPropertyExistsAsFieldOnTypeValidator],
     field: [
       listFieldValidator,
       nonNullFieldValidator,

@@ -46,6 +46,7 @@ import { OperationContext }  from 'graphql-paper/types';
 
 export const customOperation = (context: OperationContext, argOne: string, argTwo: number) => {
   /* custom logic for your custom operation */
+  return /* return anything useful as a result of the operation */;
 };
 ```
 
@@ -64,13 +65,13 @@ import { customOperation } from './customOperation';
 import { graphqlSchema } from './schema';
 
 const operations = { custom: customOperation };
-const paper = new Paper<typeof operations>(graphqlSchema, { operations });
+const paper = new Paper(graphqlSchema, { operations });
 ```
 
 The key provided in the `OperationMap` hash is what is made available within the *Mutate Transaction* callback.
 
 ```js
 paper.mutate(({ custom }) => {
-  custom('argOne magic!', 42);
+  const result = custom('argOne magic!', 42);
 });
 ```

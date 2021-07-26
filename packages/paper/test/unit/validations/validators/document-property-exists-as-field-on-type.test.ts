@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { GraphQLObjectType } from 'graphql';
 import { buildTestSchema } from '../test-helpers';
-import { exclusiveDocumentFieldsOnType } from '../../../../src/validations/validators/exclusive-document-fields-on-type';
+import { documentPropertyExistsAsFieldOnTypeValidator } from '../../../../src/validations/validators/document-property-exists-as-field-on-type';
 import { createDocumentStore } from '../../../../src/store/create-document-store';
 import { createDocument } from '../../../../src/document/create-document';
 
@@ -16,7 +16,7 @@ it('throws if the document has a field that does not exist on the graphql type',
   });
 
   expect(() =>
-    exclusiveDocumentFieldsOnType.validate({
+    documentPropertyExistsAsFieldOnTypeValidator.validate({
       store: createDocumentStore(),
       graphqlSchema,
       document,
