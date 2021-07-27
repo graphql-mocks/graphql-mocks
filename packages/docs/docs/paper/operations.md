@@ -7,7 +7,7 @@ Operations are functions available within an *Mutate Transaction* callback and a
 
 ## Base Operations
 
-The ones that are provided out-of-the-box are `create`, `find`, `remove`, `clone`, `getStore`, `queueEvent`. These are covered in [*Mutating Data*]('/docs/paper/mutating-data#transaction-operations').
+The ones that are provided out-of-the-box are `create`, `find`, `remove`, `clone`, `getStore`, `queueEvent`. These are covered in [*Mutating Data*](/docs/paper/mutating-data#transaction-operations).
 
 ## Operational Context
 

@@ -22,14 +22,42 @@ where the `document` property contains an array of Document Validators and the `
 
 ## Provided and Default Validators
 
-| Exported as      | Type | Included by Default | Description |
-| --- | --- | --- | --- |
-| [`documentPropertyExistsAsFieldOnTypeValidator`](pathname:///api/paper/modules/validators.html#documentPropertyExistsAsFieldOnTypeValidator) | Document | true | Enforces that any property that exists on a document also exists on the GraphQL type 
-| [`listFieldValidator`](pathname:///api/paper/modules/validators.html#listFieldValidator) | Field | true | Enforces that lists are represented by arrays or connections to other documents |
-| [`nonNullFieldValidator`](pathname:///api/paper/modules/validators.html#nonNullFieldValidator) | Field | true | Enforces that non-fields are not null |
-| [`objectFieldValidator`](pathname:///api/paper/modules/validators.html#objectFieldValidator) | Field | true | Enforces that a field represented by an object is an object |
-| [`scalarFieldValidator`](pathname:///api/paper/modules/validators.html#scalarFieldValidator) | Field | true | Enforces that a field represented by a scalar is a scalar |
-| [`uniqueIdFieldValidator`](pathname:///api/paper/modules/validators.html#uniqueIdFieldValidator) | Field | true | Enforces that a type with *one* ID field is unique amongst other documents of the same type |
+
+### [`documentPropertyExistsAsFieldOnTypeValidator`](pathname:///api/paper/modules/validators.html#documentPropertyExistsAsFieldOnTypeValidator)
+* Type: Document Validator
+* Included by default
+
+Enforces that any property that exists on a document also exists on the GraphQL type
+
+### [`listFieldValidator`](pathname:///api/paper/modules/validators.html#listFieldValidator)
+* Type: Field Validator
+* Included by default
+
+Enforces that lists are represented by arrays or connections to other documents
+
+### [`nonNullFieldValidator`](pathname:///api/paper/modules/validators.html#nonNullFieldValidator)
+* Type: Field Validator
+* Included by default
+
+Enforces that non-fields are not null
+
+### [`objectFieldValidator`](pathname:///api/paper/modules/validators.html#objectFieldValidator)
+* Type: Field Validator
+* Included by default
+
+Enforces that a field represented by an object is an object
+
+### [`scalarFieldValidator`](pathname:///api/paper/modules/validators.html#scalarFieldValidator)
+* Type: Field Validator
+* Included by default
+
+Enforces that a field represented by a scalar is a scalar
+
+[`uniqueIdFieldValidator`](pathname:///api/paper/modules/validators.html#uniqueIdFieldValidator)
+* Type: Field
+* Included by default
+
+Enforces that a type with *one* ID field is unique amongst other documents of the same type
 
 ### Removing a Default Validator
 
@@ -116,7 +144,7 @@ Available within `validate`:
 * `store` is read-only version of the `DocumentStore`
 * `fieldConnections` is an array of document keys or undefined if none exist (in which case `fieldValue` is the representative value when the property is accessed)
 
-## Adding a Custom Validator Function
+## Adding a Custom Validator Function to `Paper`
 
 To add a custom validator function to an instance of `Paper` import it and push it on to the corresponding `document` or `field` array depending on if it's a Document Validator or Field Validator, respectively.
 
