@@ -3,25 +3,13 @@ id: querying-data
 title: Querying Data
 ---
 
-Data is organized in a `DocumentStore` on the `Paper` instance. A "frozen" immutable version of the data store is available on the `Paper` instance. A `Document` is a POJO (plain-old javascript object) that represents a concrete GraphQL type.
-
-For example an `Actor` GraphQL type:
-
-```graphql
-type Actor {
-  name: String!
-}
-```
-
-Could have a corresponding `Document`:
-```js
-{
-  name: 'Jurassic Park'
-}
-```
+There are a few different ways to retrieve data from a `Paper` instance the current `DocumentStore`.
+* [Access via the `data` property](#querying-documents-via-the-data-property)
+* [Exchange a previous document for a newer copy](#exchange-documents-for-a-newer-copy)
+* [Return documents from within a `mutate` transaction](#exchange-documents-for-a-newer-copy)
 
 **Note:**
-It is important to remember that a document retrieved from the store is considered stale-on-arrival and cannot be modified. It does not represent an instance but instead a stale copy, or snapshot, of the document at the time of retrieval. For an updated version of the document it needs to be exchanged for an updated copy ([see below](#fetching-updates-via-exchanging-documents))
+It is important to remember that a document retrieved from the store is considered stale-on-arrival and cannot be modified. It does not represent an instance but instead a stale copy, or snapshot, of the document at the time of retrieval. For an updated version of the document it needs to be exchanged for an updated copy ([see below](#exchange-documents-for-a-newer-copy))
 
 ## Querying Documents via the `data` Property
 
@@ -73,7 +61,7 @@ paper.data.Film[0];
 paper.data.Film.find(({title}) => title === 'Godzilla');
 ```
 
-## Fetching Updates via Exchanging Documents
+## Exchange Documents for a Newer Copy
 
 Since documents are immutable snapshots they need to be exchanged for updated copies. This can be done by using the `find` method on a `Paper` instance which will take the existing document to be exchanged for the latest copy.
 

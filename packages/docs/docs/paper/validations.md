@@ -3,11 +3,13 @@ id: validations
 title: Validations
 ---
 
-Validations are what keep the DocumentStore in check and maintain consistency after every transactions. The power in these validations is that they flexibly describe and define the set of rules to which the Document Store must up hold. The default rules that enforce sensible defaults (see *Provided and Default Validators* section) for GraphQL and connections. If there are particular restrictions to your GraphQL API and its data then adding custom validators can be a way to enforce these rules (see the *Creating Custom Validator* sections).
+Validations are what keep the `DocumentStore` in check and maintain consistency after every transactions. The power in these validations is that they flexibly describe and define the set of rules to which the Document Store must up hold.
+
+The default rules that enforce sensible defaults (see *Provided and Default Validators* section) for GraphQL and connections. If there are particular restrictions to your GraphQL API and its data then adding custom validators can be a way to enforce these rules (see the *Creating Custom Validator* sections).
 
 Validations are provided by *Validators* which come in two flavors *Document Validators* and *Field Validators*. Which combination of validators that are used can be specificed and custom validators can be added, too.
 
-The validators are located on a `Paper` instance under the [`validators` property](/api/paper/classes/Paper.html#validators):
+The validators are located on a `Paper` instance under the [`validators` property](pathname:///api/paper/classes/Paper.html#validators):
 
 ```js
 paper.validators = {
