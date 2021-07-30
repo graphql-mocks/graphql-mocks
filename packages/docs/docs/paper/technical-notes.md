@@ -47,6 +47,10 @@ Before a transaction can occur each document has its connections expanded from o
 
 After a transaction any document properties that have references are collpased into an internal array for connections, being stored as document keys.
 
+## `nullDocument`
+
+Since GraphQL has a concept of nullable lists, that is lists that contain null, and connections are represented by documents there is a special reserved `nullDocument` used in storing lists that contain null. This is a special case and not something that normally crops up during average usage and is kept relatively hidden but would be important to consider when writing a custom validator that needs to check connections. During expansion of connections `nullDocuments` in lists are represented by `null` values and when collapsed the proxy ensures that any lists containing `nullDocuments` are represented by `null` also.
+
 ## Performance
 
 Because GraphQL Paper handles everything "in memory" as javascript data structures it should be relatively quick for most use cases. If there is a case where it is slow please open an issue on github. There is some low-hanging fruit but also a desire to avoid early over optimization.
