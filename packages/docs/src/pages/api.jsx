@@ -16,7 +16,7 @@ function Home() {
   return (
     <Layout title="Home" description={siteConfig.tagline}>
       <div className="container">
-        <header>
+        <header style={{ marginTop: '2rem' }}>
           <h1>API Documentation</h1>
         </header>
         <main>
@@ -24,6 +24,9 @@ function Home() {
           <ul>
             <li>
               <ApiLink directoryName="graphql-mocks" packageName="graphql-mocks" />
+            </li>
+            <li>
+              <ApiLink directoryName="sinon" packageName="@graphql-mocks/sinon" />
             </li>
             <li>
               <ApiLink directoryName="mirage" packageName="@graphql-mocks/mirage" />
