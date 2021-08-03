@@ -12,7 +12,7 @@ import quickExampleSinonResult from '../../code-examples/getting-started/quick-e
 This example will show how to:
 
 1. Create a Resolver Map with Resolver functions
-2. Apply a Resolver Wrapper to Resolver functions, the Sinon Spy Wrapper `spyWrapper` in this case via `embed`. The spy
+2. Apply a Resolver Wrapper to Resolver functions, the Sinon Spy Wrapper `spyWrapper` (via `@graphql-mocks/sinon`) by using `embed`. The spy
    wrapper will capture all calls to our resolver function which can be useful for testing.
 3. Setup a GraphQL Handler with the the Resolver Wrapper to be able to execute queries
 4. Execute a Query with the GraphQL Handler

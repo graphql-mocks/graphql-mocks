@@ -1,5 +1,5 @@
 import { GraphQLHandler, embed } from 'graphql-mocks';
-import { spyWrapper } from 'graphql-mocks/wrapper';
+import { spyWrapper } from '@graphql-mocks/sinon';
 
 // this string represents our schema formatted in
 // GraphQL SDL (Schema Definition Language), but

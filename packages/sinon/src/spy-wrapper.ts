@@ -1,6 +1,6 @@
 import { spy } from 'sinon';
-import { createWrapper } from '../resolver';
-import { WrapperFor } from '../resolver/constants';
+import { createWrapper } from 'graphql-mocks/resolver';
+import { WrapperFor } from 'graphql-mocks/resolver/constants';
 
 export const spyWrapper = createWrapper('spy-wrapper', WrapperFor.FIELD, async function spyWrappercreate(
   originalResolver,

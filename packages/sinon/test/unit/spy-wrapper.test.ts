@@ -1,18 +1,35 @@
 import { expect } from 'chai';
-import { spyWrapper } from '../../../src/wrapper';
-import { generatePackOptions, userObjectType, userObjectNameField } from '../../mocks';
-import { GraphQLResolveInfo, GraphQLSchema } from 'graphql';
-import { FieldResolver } from '../../../src/types';
+import { spyWrapper } from '../../src/spy-wrapper';
+import { buildSchema, GraphQLObjectType, GraphQLResolveInfo } from 'graphql';
+import { FieldResolver } from 'graphql-mocks/types';
 
-describe('wrapper/spy', function () {
+describe('spy-wrapper', function () {
+  const schema = buildSchema(`
+    schema {
+      query: Query
+    }
+
+    type Query {
+      user: User
+    }
+
+    type User {
+      name: String
+    }
+  `);
+
+  const userObjectType = schema.getType('User') as GraphQLObjectType;
+  const userObjectNameField = userObjectType.getFields().name;
+
   it('provides accesss to spies on resolvers', async function () {
     const resolverReturnValue = 'resolver return value!';
     const initialResolver = (): string => resolverReturnValue;
-    const packOptions = generatePackOptions();
-    const state = packOptions.state;
+    const packOptions = { dependencies: {}, state: {} };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const state = packOptions.state as any;
 
     const wrappedResolver = (await spyWrapper.wrap(initialResolver as FieldResolver, {
-      schema: {} as GraphQLSchema,
+      schema,
       resolverMap: {},
       type: userObjectType,
       field: userObjectNameField,

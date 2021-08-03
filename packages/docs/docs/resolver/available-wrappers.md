@@ -28,10 +28,10 @@ The documentation for the Relay Wrapper is covered in the [Relay Pagination Guid
 
 ## Spy Wrapper
 
-Package: `graphql-mocks`
+Package: `@graphql-mocks/sinon`
 
 ```js
-import { spyWrapper } from 'graphql-mocks/wrapper';
+import { spyWrapper } from '@graphql-mocks/sinon';
 ```
 
 **Note: Sinon must be installed as a `devDependency` to be used with this wrapper**

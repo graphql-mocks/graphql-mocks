@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap } from '../../../src/types';
-import { spyWrapper } from '../../../src/wrapper';
+import { spyWrapper } from '@graphql-mocks/sinon';
 import { embed } from '../../../src/resolver-map/embed';
 
 describe('graphql/hander', function () {
