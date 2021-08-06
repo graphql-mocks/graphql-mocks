@@ -23,14 +23,15 @@ import { findDocument } from './store/find-document';
 import { proxyWrap } from './store/proxy-wrap';
 import { validate } from './validations/validate';
 import { documentPropertyExistsAsFieldOnTypeValidator } from './validations/validators/document-property-exists-as-field-on-type';
-import { listFieldValidator } from './validations/validators/list-field';
-import { nonNullFieldValidator } from './validations/validators/non-null-field';
-import { objectFieldValidator } from './validations/validators/object-field';
-import { scalarFieldValidator } from './validations/validators/scalar-field';
-import { uniqueIdFieldValidator } from './validations/validators/unique-id';
 import { captureTransactionResultKeys } from './transaction/capture-transaction-result-keys';
 import { convertResultKeysToDocument } from './transaction/convert-result-keys-to-document';
 import { createSchema } from './graphql/create-schema';
+import {
+  listFieldValidator,
+  objectFieldValidator,
+  scalarFieldValidator,
+  uniqueIdFieldValidator,
+} from './validations/validators';
 
 // Auto Freezing needs to be disabled because it interfers with using
 // of using js a `Proxy` on the resulting data, see:
@@ -50,13 +51,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
   validators: { document: DocumentTypeValidator[]; field: FieldValidator[] } = {
     document: [documentPropertyExistsAsFieldOnTypeValidator],
-    field: [
-      listFieldValidator,
-      nonNullFieldValidator,
-      objectFieldValidator,
-      scalarFieldValidator,
-      uniqueIdFieldValidator,
-    ],
+    field: [listFieldValidator, objectFieldValidator, scalarFieldValidator, uniqueIdFieldValidator],
   };
 
   hooks: HooksMap<Paper['operations'] & UserOperations> = {

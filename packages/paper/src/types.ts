@@ -127,4 +127,4 @@ export interface Hook<T extends OperationMap> {
   (operations: BoundOperationMap<T>): any | Promise<any>;
 }
 
-export type HooksMap<OM extends OperationMap> = Record<string, Hook<OM>[]>;
+export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[]; afterTransaction: Hook<OM>[] };

@@ -37,9 +37,9 @@ Enforces that lists are represented by arrays or connections to other documents
 
 ### [`nonNullFieldValidator`](pathname:///api/paper/modules/validators.html#nonNullFieldValidator)
 * Type: Field Validator
-* Included by default
+* **Not** included by default
 
-Enforces that non-fields are not null
+Enforces that non-fields are not null. This is a stricter validator is not included by default because there are cases where non-null fields may represent derived/computed data and not be represented by data stored on the document.
 
 ### [`objectFieldValidator`](pathname:///api/paper/modules/validators.html#objectFieldValidator)
 * Type: Field Validator
@@ -61,7 +61,7 @@ Enforces that a type with *one* ID field is unique amongst other documents of th
 
 ### Removing a Default Validator
 
-Validators are functions that exist on the `Paper` instance under the `validators.document` or `validators.field` arrays for Document Validators or Field Validators, respectively. To remove a validator from an instance set the array to a new array with the validators excluded. 
+Validators are functions that exist on the `Paper` instance under the `validators.document` or `validators.field` arrays for Document Validators or Field Validators, respectively. To remove a validator from an instance set the array to a new array with the validators excluded.
 
 In this example `uniqueIdFieldValidator` and `documentPropertyExistsAsFieldOnTypeValidator` are filtered out from being used by the instance of `Paper`.
 
@@ -102,7 +102,7 @@ A Document Validator enforces validation at the document-level, for the field-le
 }
 ```
 Available within `validate`:
-* `document` represents the document being validated 
+* `document` represents the document being validated
 * `type` represents the `GraphQLType` of the document being validated
 * `graphqlSchema` is an instance of the `GraphQLSchema`
 * `store` is read-only version of the `DocumentStore`
@@ -135,7 +135,7 @@ Field Validators that implement the `FieldValidator` interface with an object th
 * `skipNullValue` skips validation when the field is represented by a null or undefined value on the document
 
 Available within `validate`:
-* `document` represents the document being validated 
+* `document` represents the document being validated
 * `type` represents the `GraphQLType` of the document being validated
 * `field` represents the `GraphQLField` of the document property being validated
 * `fieldName` represents a string for the property on the document (and the field on the GraphQL type)
