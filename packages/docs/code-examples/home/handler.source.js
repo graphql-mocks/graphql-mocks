@@ -1,31 +1,31 @@
 import { GraphQLHandler, embed } from 'graphql-mocks';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { logWrapper } from 'graphql-mocks/wrapper';
-import { mirageMiddleware } from '@graphql-mocks/mirage';
-import { createServer, Model, hasMany } from 'miragejs';
 import graphqlSchema from './schema';
 import { field } from 'graphql-mocks/highlight';
+import { Paper } from 'paper';
 
-// Using Mirage JS and the `mirageMiddlware` Resolver Map Middleware
-// to setup stateful Auto Resolvers
-const mirageServer = createServer({
-  models: {
-    Movie: Model.extend({
-      characters: hasMany('character'),
-    }),
+const paper = new Paper(graphqlSchema);
 
-    Character: Model,
-  },
+paper.mutate(({ create }) => {
+  // create characters
+  const mike = create('Character', { name: 'Mike Wazowski' });
+  const boo = create('Character', { name: 'Boo' });
+  const moana = create('Character', { name: 'Moana' });
+  const tui = create('Character', { name: 'Chief Tui' });
+
+  // create films with characters
+  const
 });
 
 // Create some initial data
-const mike = mirageServer.create('character', {
-  name: 'Mike Wazowski',
-});
+// const mike = mirageServer.create('character', {
+//   name: 'Mike Wazowski',
+// });
 
-const boo = mirageServer.create('character', {
-  name: 'Boo',
-});
+// const boo = mirageServer.create('character', {
+//   name: 'Boo',
+// });
 
 mirageServer.create('movie', {
   name: 'Monsters, Inc.',
