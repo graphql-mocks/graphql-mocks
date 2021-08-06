@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { GraphQLHandler } from 'graphql-mocks';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { Paper } from 'graphql-paper';
-import { paperMiddleware } from '../../src/middleware';
 
 const graphqlSchema = `
   schema {
@@ -44,7 +43,7 @@ const graphqlSchema = `
   }
 `;
 
-describe('@graphql-mocks/paper integration', () => {
+describe('graphql-mocks and GraphQL Paper integration', () => {
   let paper: Paper;
   let handler: GraphQLHandler;
 
@@ -111,7 +110,6 @@ describe('@graphql-mocks/paper integration', () => {
           },
         },
       },
-      middlewares: [paperMiddleware()],
       dependencies: { paper, graphqlSchema },
     });
   });

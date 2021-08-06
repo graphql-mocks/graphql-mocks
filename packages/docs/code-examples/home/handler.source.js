@@ -1,9 +1,9 @@
 import { GraphQLHandler, embed } from 'graphql-mocks';
+import { Paper } from 'paper';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { logWrapper } from 'graphql-mocks/wrapper';
 import graphqlSchema from './schema';
 import { field } from 'graphql-mocks/highlight';
-import { Paper } from 'paper';
 
 const paper = new Paper(graphqlSchema);
 
@@ -11,40 +11,21 @@ paper.mutate(({ create }) => {
   // create characters
   const mike = create('Character', { name: 'Mike Wazowski' });
   const boo = create('Character', { name: 'Boo' });
-  const moana = create('Character', { name: 'Moana' });
-  const tui = create('Character', { name: 'Chief Tui' });
+  const joe = create('Character', { name: 'Joe Gardner' });
+  const moonwind = create('Character', { name: 'Moonwind' });
 
   // create films with characters
-  const
-});
+  create('Movie', {
+    name: 'Monsters, Inc.',
+    characters: [boo, mike],
+    year: '2001',
+  });
 
-// Create some initial data
-// const mike = mirageServer.create('character', {
-//   name: 'Mike Wazowski',
-// });
-
-// const boo = mirageServer.create('character', {
-//   name: 'Boo',
-// });
-
-mirageServer.create('movie', {
-  name: 'Monsters, Inc.',
-  characters: [boo, mike],
-  year: '2001',
-});
-
-const moana = mirageServer.create('character', {
-  name: 'Moana',
-});
-
-const tui = mirageServer.create('character', {
-  name: 'Chief Tui',
-});
-
-mirageServer.create('movie', {
-  name: 'Moana',
-  characters: [moana, tui],
-  year: '2016',
+  create('Movie', {
+    name: 'Soul',
+    characters: [joe, moonwind],
+    year: '2020',
+  });
 });
 
 // Check the console to see logging applied to only root-query resolvers!
@@ -54,8 +35,9 @@ const loggerMiddleware = embed({ wrappers: [logWrapper], highlight: (h) => h.inc
 const resolverMap = {
   Query: {
     movies(_root, args, context) {
-      const { mirageServer } = extractDependencies(context, ['mirageServer']);
-      let movies = mirageServer.schema.movies.all().models;
+      const { paper } = extractDependencies(context, ['paper']);
+      let movies = paper.data.Movie;
+
       if (args.name) {
         movies = movies.filter((movie) => movie?.name?.startsWith(args.name));
       }
@@ -65,21 +47,22 @@ const resolverMap = {
   },
 
   Mutation: {
-    create(_root, args, context) {
-      const { mirageServer } = extractDependencies(context, ['mirageServer']);
-      return mirageServer.create('movie', { name: args.name });
+    create(_root, { name, year, characterIds }, context) {
+      const { paper } = extractDependencies(context, ['paper']);
+      return paper.mutate(({ create, getStore }) => {
+        const store = getStore();
+
+        const characters = characterIds
+          .map((id) => store.data.Character.find((character) => character.id === id))
+          .filter(Boolean);
+
+        return create('Movie', { name, year, characters });
+      });
     },
 
-    createCharacter(_root, args, context) {
-      const { mirageServer } = extractDependencies(context, ['mirageServer']);
-      const movie = mirageServer.find('movie', args.movieId);
-
-      if (!movie) throw new Error(`Unable to find movie by movieId: ${args.movieId}`);
-
-      const character = mirageServer.create('character', { name: args.character });
-      movie.characters.push(character);
-
-      return character;
+    createCharacter(_root, { name }, context) {
+      const { paper } = extractDependencies(context, ['paper']);
+      return paper.mutate(({ create }) => create('Character', { name }));
     },
   },
 };
@@ -87,9 +70,9 @@ const resolverMap = {
 // export the composed GraphQL Handler
 export default new GraphQLHandler({
   resolverMap,
-  middlewares: [mirageMiddleware(), loggerMiddleware],
+  middlewares: [loggerMiddleware],
   dependencies: {
     graphqlSchema,
-    mirageServer,
+    paper,
   },
 });

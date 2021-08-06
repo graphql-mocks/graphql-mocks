@@ -13,7 +13,6 @@ The individual packages hosted in this repo can be found in the `packages` folde
 
 - `graphql-mocks` (folder: `graphql-mocks`) — The main package containing graphql-mocks core functionality
 - `graphql-paper` (folder: `paper`) - GraphQL Paper, an in-memory store using GraphQL schema. Can be used on its own without graphql-mocks.
-- `@graphql-mocks/paper` (folder: `graphql-mocks-paper`) - `graphql-mocks` integration with `graphql-paper`, automatically resolve data
 - `@graphql-mocks/sinon` (folder: `sinson`) - Sinon spy integration with graphql-mocks, useful for test scenarios
 - `@graphql-mocks/mirage` (folder: `mirage`) - Mirage.js integration with graphql-mocks, automatically resolve data with Mirage
 - `@graphql-mocks/docs` (folder: `docs`) — Contains the documentation published at [www.graphql-mocks.com](https://www.graphql-mocks.com)

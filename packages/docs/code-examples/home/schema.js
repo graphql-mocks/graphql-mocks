@@ -10,8 +10,8 @@ export default `
   }
 
   type Mutation {
-    createFilm(name: String!): Movie!
-    createCharacter(name: String!, movieId: ID!): Character!
+    createFilm(name: String!, year: String!, characterIds: [String!]!): Movie!
+    createCharacter(name: String!): Character!
   }
 
   type Movie {

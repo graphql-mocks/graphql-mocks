@@ -23,4 +23,6 @@ Lazily add layering of Resolver Map Partials with `layer` and the Resolver Map M
 * Package: `@graphql-mocks/mirage`
 * [Documenation](/docs/guides/mirage-js)
 
+*Note:* If starting new it's easier to use GraphQL Paper which works natively with GraphQL, including connections/relationships. GraphQL Paper solves the same use cases as Mirage but in a GraphQL-first way using the GraphQL Schema with more extensibility and features like events, custom validations, hooks. If migrating from an existing a Mirage setup then using the Mirage JS middleware is likely a good fit.
+
 [Mirage JS](https://miragejs.com/) is a tool for mocking out REST APIs and includes a stateful ORM and DB layer. The `@graphql-mocks/mirage` provides a middleware that leverages the ORM and DB from Mirage JS to provide stateful GraphQL queries so that data can be persisted, mutated and reflect real-world scenarios. See the [documentation](/docs/guides/mirage-js) for all details and plenty of examples.

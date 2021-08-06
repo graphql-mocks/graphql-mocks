@@ -1,1 +1,0 @@
-../../../scripts/copy-scrubbed-pjson.js

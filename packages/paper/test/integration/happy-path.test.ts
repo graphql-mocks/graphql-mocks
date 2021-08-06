@@ -7,6 +7,7 @@ import { getDocumentKey } from '../../src/document/get-document-key';
 import { RemoveEvent } from '../../src/events/remove';
 import { ModifyEvent } from '../../src/events/modify-document';
 import { createDocument } from '../../src/document/create-document';
+import { nonNullFieldValidator } from '../../dist/validations/validators';
 
 const schemaString = `
   schema {
@@ -317,6 +318,10 @@ describe('happy path', () => {
   describe('validations', () => {
     it('provides validation feedback on transactions', async () => {
       let caughtError;
+
+      // add validator not included by default
+      paper.validators.field.push(nonNullFieldValidator as any);
+
       try {
         await paper.mutate(({ create }) => {
           create('Account', {
