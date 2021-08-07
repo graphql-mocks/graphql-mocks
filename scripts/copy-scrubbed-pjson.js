@@ -14,10 +14,10 @@ function cleanPackageJson(pjson) {
   delete copy.scripts;
   delete copy.publishConfig;
 
-  copy.main = copy.main.replace('dist/', '');
-  copy.module = copy.module.replace('dist/', '');
-  copy.unpkg = copy.unpkg.replace('dist/', '');
-  copy.types = copy.types.replace('dist/', '');
+  copy.main = copy.main?.replace('dist/', '');
+  copy.module = copy.module?.replace('dist/', '');
+  copy.unpkg = copy.unpkg?.replace('dist/', '');
+  copy.types = copy.types?.replace('dist/', '');
 
   return copy;
 }
@@ -26,7 +26,14 @@ function checkEntryPoints(dir, pjson) {
   const entryPoints = ['main', 'module', 'unpkg', 'types'];
 
   entryPoints.forEach((entryPoint) => {
-    const entryPointPath = path.resolve(dir, pjson[entryPoint]);
+    const entryPointRelativePath = pjson[entryPoint];
+
+    if (!entryPointRelativePath) {
+      return;
+    }
+
+    const entryPointPath = path.resolve(dir, entryPointRelativePath);
+
     if (!fs.existsSync(entryPointPath)) {
       console.error('**************************');
       console.error('FAILED TO FIND ENTRY POINT');
@@ -42,7 +49,7 @@ function checkEntryPoints(dir, pjson) {
 const DIST_DIR = 'dist';
 
 const copyPackageJson = async () => {
-  console.log(`Copying clean package.json to dist...`);
+  console.log(`starting copying clean package.json to dist...`);
   const root = path.resolve(process.cwd());
 
   const packageJson = path.resolve(root, './package.json');
@@ -55,6 +62,7 @@ const copyPackageJson = async () => {
   const cleanedPkg = cleanPackageJson(pkg);
 
   const targetDir = path.resolve(root, DIST_DIR);
+  console.log('checking entry points on package.json...');
   checkEntryPoints(targetDir, cleanedPkg);
 
   if (!fs.existsSync(targetDir)) {
@@ -62,7 +70,8 @@ const copyPackageJson = async () => {
   }
 
   const targetPjsonPath = path.resolve(targetDir, 'package.json');
-  await fs.writeFile(targetPjsonPath, JSON.stringify(cleanedPkg, null, 2) + '\n');
+  await fs.writeFileSync(targetPjsonPath, JSON.stringify(cleanedPkg, null, 2) + '\n');
+  console.log('finished copying cleaned package.json');
 };
 
 (async () => {
