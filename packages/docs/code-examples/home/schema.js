@@ -25,9 +25,4 @@ export default `
     id: ID!
     name: String!
   }
-
-  type AddCharacterToMoviePayload {
-    character: Character!
-    Movie: Movie!
-  }
 `;
