@@ -1,3 +1,4 @@
-import { nanoid } from 'nanoid';
+import ShortUniqueId from 'short-unique-id';
 
-export const generateDocumentKey = (): string => nanoid(10);
+const uid = new ShortUniqueId({ length: 8 });
+export const generateDocumentKey = (): string => uid();

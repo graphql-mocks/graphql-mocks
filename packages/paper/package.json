@@ -29,12 +29,13 @@
     "immer": "^8.0.0",
     "just-diff": "^3.1.1",
     "lodash.merge": "^4.6.2",
-    "nanoid": "^3.1.20"
-  },
-  "devDependencies": {
-    "graphql": "^14"
+    "short-unique-id": "^4.3.3"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0"
+  },
+  "devDependencies": {
+    "graphql": "^14",
+    "graphql-mocks": "^0.7.0"
   }
 }
