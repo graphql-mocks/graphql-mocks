@@ -1,4 +1,4 @@
-import { isScalarType } from 'graphql/type/definition';
+import { isScalarType } from 'graphql';
 import { FieldValidator } from '../../types';
 import { FieldReturnTypeMismatch } from '../errors/field-return-type-mismatch';
 

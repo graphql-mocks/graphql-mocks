@@ -7,7 +7,7 @@ import { getDocumentKey } from '../../src/document/get-document-key';
 import { RemoveEvent } from '../../src/events/remove';
 import { ModifyEvent } from '../../src/events/modify-document';
 import { createDocument } from '../../src/document/create-document';
-import { nonNullFieldValidator } from '../../dist/validations/validators';
+import { nonNullFieldValidator } from '../../src/validations/validators';
 
 const schemaString = `
   schema {

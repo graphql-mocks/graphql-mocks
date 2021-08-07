@@ -1,5 +1,5 @@
 import { GraphQLHandler, embed } from 'graphql-mocks';
-import { Paper } from 'paper';
+import { Paper } from 'graphql-paper';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { logWrapper } from 'graphql-mocks/wrapper';
 import graphqlSchema from './schema';

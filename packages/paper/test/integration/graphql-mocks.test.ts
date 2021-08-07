@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { GraphQLHandler } from 'graphql-mocks';
 import { extractDependencies } from 'graphql-mocks/resolver';
-import { Paper } from 'graphql-paper';
+import { Paper } from '../../src/index';
 
 const graphqlSchema = `
   schema {
