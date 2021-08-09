@@ -37,20 +37,20 @@ function Home() {
             <section className="hero__slice">
               <img src="img/highlight.svg" className={classnames('hero__logo')} />
               <h2>Highlight</h2>
-              <p>Use `Highlight` to flexibly query the part of the schema to operate on</p>
+              <p>
+                Use <code>Highlight</code> to flexibly query parts of the schema to operate on
+              </p>
             </section>
             <section className="hero__slice">
               <img src="img/logo.svg" className={classnames('hero__logo')} />
               <h2>Mock</h2>
-              <p>Declaratively mock and wrap resolvers to cover all the scenarios</p>
+              <p>Declaratively mock and wrap resolvers to cover various scenarios</p>
             </section>
             <section className="hero__slice">
               <img src="img/paper.svg" className={classnames('hero__logo')} />
               <h2>Store</h2>
               <p>
-                Persist mutations via an in-memory store with
-                <br />
-                <code>graphql-paper</code>
+                Persist mutations and control stateful data with a <code>graphql-paper</code> in-memory store
               </p>
             </section>
           </div>
@@ -77,7 +77,7 @@ function Home() {
             <ul>
               <li>Setting up a GraphQL query handler and making a query</li>
               <li>
-                Using the <code>@graphql-mocks/mirage</code> package and its middleware to mock stateful queries (try a
+                Using <code>graphql-paper</code> package for an in-memory graphql store to allow stateful queries (try a
                 mutation and see the change persist in subsequent queries)
               </li>
               <li>
@@ -113,8 +113,7 @@ function Home() {
               language="javascript"
             >
               {`
-// 1. Setup your handler with a resolver map, middlewares,
-// and wrappers as needed
+// 1. Setup your handler
 
 const handler = new GraphQLHandler({
   // optionally, provide a base resolver map
@@ -123,20 +122,18 @@ const handler = new GraphQLHandler({
   // use middlewares from packages, make your own,
   // and embed resolver wrappers
   middlewares: [
-    mirageMiddleware(),
-
     embed({
-      // Highlight callbacks makes it easy to declaratively
-      // select what should be wrapped with the \`logWrapper\`
+      // Highlight makes it easy to declaratively select
+      // what resolvers should be wrapped with the \`logWrapper\`
       highlight: (h) => h.include(field(['Query', '*']))
       wrappers: [logWrapper],
     }),
   ]
 
-  // fun fact: dependencies are available in any resolver with
-  // the \`extractDependencies\` utility function
+  // add dependencies needed by middlewares or resolvers
   dependencies: {
     graphqlSchema,
+    paper
   },
 });
 
@@ -147,7 +144,7 @@ handler.query(\`
   query {
     ...
   }
-\`).then(result => console.log(result));
+\`);
           `}
             </SyntaxHighlighter>
           </div>

@@ -11,8 +11,8 @@ provides a set of composable tools and utilities that can be used together to fl
 ## 🔋 Batteries Included
 
 Testing, mocking or prototyping, use `graphql-mocks` with its GraphQL utilities, _Resolver Map Middlewares_ and
-_Resolver Wrappers_ to get started. Use the Mirage JS Auto Resolvers Middlware for out-of-the-box stateful queries using
-an in-memory database. The `spyWrapper` can be used to wrap Sinon spies around resolvers easily in tests. The
+_Resolver Wrappers_ to get started. Use the GraphQL Paper for out-of-the-box stateful queries using
+an in-memory store. The `spyWrapper` can be used to wrap Sinon spies around resolvers easily in tests. The
 `logWrapper` quickly gives insights into logging Resolver activity. The application of these, and more, can be
 conditionally applied to your GraphQL schema using a query-like technique called _Highlight_. The layering of all of
 these creates a reusable, declarative system for creating mock GraphQL APIs.

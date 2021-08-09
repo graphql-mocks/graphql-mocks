@@ -7,9 +7,12 @@ import QuickExample from 'code-examples/paper/introducing-paper.source.md';
 import quickExampleResult from '../../code-examples/paper/introducing-paper.result';
 import { GraphQLResult } from '../../src/components/graphql-result';
 
-GraphQL Paper is a flexible in-memory store based on a provided GraphQL Schema. Its features include:
+GraphQL Paper is a flexible in-memory store based on a provided GraphQL Schema.
+
+## ✨ Features
 
 * Built and based on GraphQL
+* Works without graphql-mocks with support for the official default GraphQL resolvers
 * Written in TypeScript
 * Support and integration with `graphql-mocks`
 * Support for relationships and connections between types
@@ -31,7 +34,7 @@ There is [API reference](/api/paper/) available for the `graphql-paper` package.
 
 ## Documents and the Store
 
-A `Document` is a POJO (plain-old javascript object) that represents a concrete GraphQL type.
+With GraphQL Paper a `Document` is a POJO (plain-old javascript object) that represents a concrete GraphQL type, it is *not* an instance.
 
 For example an `Actor` GraphQL type:
 
@@ -48,7 +51,7 @@ Could have a corresponding `Document`:
 }
 ```
 
-Documents are stored in an array on the `DocumentStore` keyed by the GraphQL type. Based on the previous example a basic store could like:
+Documents are stored in an array on the `DocumentStore` keyed by the GraphQL type. Based on the previous example a basic store containing our document could look like:
 
 ```js
 {
@@ -56,7 +59,7 @@ Documents are stored in an array on the `DocumentStore` keyed by the GraphQL typ
 }
 ```
 
-This is a simplistic but realistic example of how data is stored. Learn how to [query](/docs/paper/querying-data) and [mutate](/docs/paper/mutating-data) the store or see below for a quick example of both. Check out the [technical notes](/docs/paper/technical-notes) for the finer details.
+This is a simplistic but realistic example of how data is stored. Learn how to [query](/docs/paper/querying-data) and [mutate](/docs/paper/mutating-data) the store (see below for a quick example of both). Check out the [technical notes](/docs/paper/technical-notes) for the finer details.
 
 ## A Quick Example
 

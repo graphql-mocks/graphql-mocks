@@ -3,7 +3,7 @@ id: operations
 title: Operations
 ---
 
-Operations are functions available within an *Mutate Transaction* callback and are bound with special internal context.
+Operations are functions available within an *Mutate Transaction* callback with access to internal context including the current version of the store being operated on.
 
 ## Base Operations
 

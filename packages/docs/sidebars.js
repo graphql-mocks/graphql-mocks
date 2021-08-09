@@ -40,6 +40,7 @@ module.exports = {
         'paper/installation',
         'paper/querying-data',
         'paper/mutating-data',
+        'paper/with-graphql',
         'paper/events',
         'paper/hooks',
         'paper/operations',
