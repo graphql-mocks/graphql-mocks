@@ -37,9 +37,7 @@ function Home() {
             <section className="hero__slice">
               <img src="img/highlight.svg" className={classnames('hero__logo')} />
               <h2>Highlight</h2>
-              <p>
-                Use <em>highlight</em> to flexibly select the part of the schema to work on
-              </p>
+              <p>Use `Highlight` to flexibly query the part of the schema to operate on</p>
             </section>
             <section className="hero__slice">
               <img src="img/logo.svg" className={classnames('hero__logo')} />
