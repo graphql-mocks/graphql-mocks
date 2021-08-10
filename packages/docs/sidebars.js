@@ -40,14 +40,16 @@ module.exports = {
         'paper/installation',
         'paper/querying-data',
         'paper/mutating-data',
-        'paper/with-graphql',
         'paper/events',
         'paper/hooks',
         'paper/operations',
         'paper/validations',
         'paper/technical-notes',
+        { Guides: ['paper/guides/with-graphql'] },
       ],
     },
-    { Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'] },
+    {
+      Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'],
+    },
   ],
 };

@@ -14,7 +14,7 @@
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "yarn clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
-    "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
+    "test": "CODE_EXAMPLE_ENV=test mocha --require \"event-target-polyfill\" \"./code-examples/**/*.test.js\""
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.65",
