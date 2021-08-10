@@ -42,11 +42,17 @@ async function run() {
 
   // pull results off the returned result
   const { title, actors } = westSideStory;
+
+  // FIRST console.log
   console.log(title);
+
+  // SECOND console.log
   console.log(actors);
 
   // can lookup results on the `Paper` instance, too
   const richard = paper.data.Actor.find(({ name }) => name === 'Richard Beymer');
+
+  // THIRD console.log
   console.log(richard);
 
   codegen(`

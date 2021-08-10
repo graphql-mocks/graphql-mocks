@@ -12,12 +12,12 @@ async function run() {
   const mutationType = graphqlSchema.getMutationType();
   const mutationTypeFields = mutationType.getFields();
 
-  mutationTypeFields.addFilm = function filmsResolver(root, args, context, info) {
-    return paper.data.mutate(({ create, getStore }) => {
+  mutationTypeFields.addFilm.resolve = function filmsResolver(root, args, context, info) {
+    return paper.mutate(({ create, getStore }) => {
       const store = getStore();
       const maxIdReducer = (previous, { id }) => Math.max(Number(previous), Number(id)).toString();
-      let lastFilmId = store.data.Film.reduce(maxIdReducer, '0');
-      let lastActorId = store.data.Actor.reduce(maxIdReducer, '0');
+      let lastFilmId = store.Film.reduce(maxIdReducer, '0');
+      let lastActorId = store.Actor.reduce(maxIdReducer, '0');
 
       const newFilm = create('Film', {
         id: ++lastFilmId,
@@ -26,8 +26,10 @@ async function run() {
       });
 
       newFilm.actors = args.input.actors.map((actor) => {
-        actor.id = ++lastActorId;
-        return actor;
+        return create('Actor', {
+          id: ++lastActorId,
+          ...actor,
+        });
       });
 
       return newFilm;
@@ -57,7 +59,7 @@ async function run() {
   const result = await graphql({
     source: mutation,
     schema: graphqlSchema,
-    variables: { addFilmInput: mutationInput },
+    variableValues: { addFilmInput: mutationInput },
   });
 
   console.log(result);
