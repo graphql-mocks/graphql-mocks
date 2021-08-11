@@ -84,7 +84,6 @@ This library provides functionality to extend resolvers and make modifications t
 | --------------- | ----------------------- |
 | Resolver        | Resolver Wrapper        |
 | Resolver Map    | Resolver Map Middleware |
-| -               | Highlight               |
 
 ### Resolver Wrapper
 
@@ -129,6 +128,10 @@ it against a GraphQL Schema and its Resolver Map.
 Already have a GraphQL Handler setup, maybe from using `graphql-tools`? You can still use `pack` to create a Resolver
 Map that includes the Middlewares and Wrappers and everything necessary to pass to your existing setup.
 
+## GraphQL Paper
+
+[GraphQL Paper](/docs/paper/introducing-paper) is a library provided by `graphql-mocks` but can be used standalone. It it an in-memory store for stateful handling of data based on a GraphQL Schema. It's been designed and tested to integrate with `graphql-mocks` to provide a complete GraphQL mocking story.
+
 ## A Note on Composability
 
 Both Resolver Map Middlewares and Resolver Wrappers are based around functional composition so that they can be applied
@@ -136,4 +139,4 @@ flexibly. This flexibility is often powered by the _Highlight_ system to selecti
 parts of the schema. Flexibility is considered important here because it empowers the creation of specific mock and test
 GraphQL APIs scenarios. This is done in a way that is easier and clearer than managing Resolvers and Resolver Maps by
 hand or leaving everything up to a rigidly automatic solution (which can also be codified with this libraries
-primitives).
+primitives). GraphQL Paper provides a stateful in-memory store for representing data backed by a GraphQL Schema that can be easily modified from mutations. The GraphQL Paper store can also be customized and extended with events, hooks, and custom validations.

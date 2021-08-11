@@ -45,7 +45,7 @@ module.exports = {
         'paper/operations',
         'paper/validations',
         'paper/technical-notes',
-        { Guides: ['paper/guides/with-graphql'] },
+        { Guides: ['paper/guides/with-graphql', 'paper/guides/managing-ids'] },
       ],
     },
     {

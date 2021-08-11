@@ -53,7 +53,7 @@ Enforces that a field represented by an object is an object
 
 Enforces that a field represented by a scalar is a scalar
 
-[`uniqueIdFieldValidator`](pathname:///api/paper/modules/validators.html#uniqueIdFieldValidator)
+### [`uniqueIdFieldValidator`](pathname:///api/paper/modules/validators.html#uniqueIdFieldValidator)
 * Type: Field
 * Included by default
 
