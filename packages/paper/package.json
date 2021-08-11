@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r \"event-target-polyfill\" -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
