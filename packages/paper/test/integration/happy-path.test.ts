@@ -21,6 +21,14 @@ const schemaString = `
   type Account {
     id: ID!
     email: String!
+    user: User!
+  }
+
+  type User {
+    firstName: String!
+    lastName: String!
+    dateOfBirth: String!
+    account: Account!
   }
 
   type Team {
@@ -52,10 +60,17 @@ describe('happy path', () => {
     paper = new Paper(graphqlSchema);
 
     await paper.mutate(({ create }) => {
-      create('Account', {
+      const account = create('Account', {
         id: '1',
         email: 'windows95@aol.com',
+        user: {
+          firstName: 'Windows',
+          lastName: '95',
+          dateOfBirth: '1995',
+        },
       });
+
+      account.user.account = account;
     });
 
     events = [];
@@ -83,6 +98,16 @@ describe('happy path', () => {
       expect(paper.data.Account).to.have.length(1);
       expect(paper.data.Account?.[0]?.id).to.equal('1');
       expect(paper.data.Account?.[0]?.email).to.equal('windows95@aol.com');
+    });
+
+    it('can be spread documents into new objects', () => {
+      const account = paper.data.Account[0];
+      expect({ ...account }).to.deep.equal({ email: 'windows95@aol.com', id: '1' });
+      expect({ ...account.user }).to.deep.equal({
+        firstName: 'Windows',
+        lastName: '95',
+        dateOfBirth: '1995',
+      });
     });
   });
 
