@@ -36,7 +36,7 @@ Operations can be destructured from the first argument provided in the *Mutation
 await paper.mutate(({ create }) => {
   create('Actor', {
     name: 'Julia Roberts'
-  })
+  });
 });
 ```
 
@@ -180,7 +180,7 @@ await paper.mutate(({ create }) => {
   // as a property within `create`
   const jurassicPark = create('Film', {
     name: 'Jurassic Park',
-    leadingActor: jeffGoldblum 
+    leadingActor: jeffGoldblum
   });
 
   // or assigned after
