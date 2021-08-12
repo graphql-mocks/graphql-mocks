@@ -6,12 +6,12 @@ import { buildTestSchema, createMockFieldValidatorOptions } from '../test-helper
 
 it('throws on a graphql scalar field mismatch', () => {
   const graphqlSchema = buildTestSchema(`
-      donutsEaten: Int
+      donutsEaten: Float
     `);
 
   const document = createDocument('Person', {
     donutsEaten: {
-      /* `donutsEaten` should be an Int, not an object */
+      /* `donutsEaten` should be an Float, not an object */
     },
   });
 
@@ -25,6 +25,6 @@ it('throws on a graphql scalar field mismatch', () => {
       }),
     ),
   ).to.throw(
-    'The field "donutsEaten" represents a graphql "Int" type and on the document should be a boolean, number, string, but got object',
+    'The field "donutsEaten" represents a graphql "Float" type and on the document should be a boolean, number, string, but got object',
   );
 });
