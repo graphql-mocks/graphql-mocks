@@ -31,9 +31,13 @@ import abstractTypeWithDiscreteModelsResult from '../../code-examples/mirage-aut
 import AbstractTypeWithTypenameExample from 'code-examples/mirage-auto-resolvers/abstract-type-with-typename.source.md';
 import abstractTypeWithTypenameResult from '../../code-examples/mirage-auto-resolvers/abstract-type-with-typename.result';
 
-[Mirage JS](https://miragejs.com/) is a great tool that makes mocking RESTful APIs much easier. One of the main benefits
+[Mirage JS](https://miragejs.com/) is a great tool that makes mocking *resources* backed by RESTful APIs easier. One of the main benefits
 of Mirage JS is that it provides a full in-memory database and ORM. This allows for mocked queries to be backed by
-stateful data.
+stateful data, much like GraphQL Paper.
+
+**Note:** If starting a new project it's recommended to use [GraphQL Paper](/docs/paper/introducing-paper)
+since it is based on the GraphQL Schema and is GraphQL-first in mocking data, along with `graphql-mocks`. If a project is already using Mirage JS
+then this guide will help adopt it for use with GraphQL using `graphql-mocks` and its tools.
 
 This library provides a few ways that to extend GraphQL with Mirage JS including "Auto Resolvers" or by using Mirage JS
 within resolver functions, or a combination of both.

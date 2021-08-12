@@ -11,7 +11,7 @@ import ExampleSchema from 'code-examples/paper/with-graphql-schema.source.md';
 import MutationExample from 'code-examples/paper/with-graphql-mutation.source.md';
 import mutationExampleResult from '../../../code-examples/paper/with-graphql-mutation.result';
 
-GraphQL Paper is built on the core [`graphql` library](https://github.com/graphql/graphql-js) and works well with its default resolvers. GraphQL Paper should also work well with other javascript systems that use resolver functions, too. The best integrations will still be with `graphql-mocks` and its packages which are designed and tested together.
+GraphQL Paper is built on the core [`graphql` library](https://github.com/graphql/graphql-js) and works well with its default resolvers. GraphQL Paper should also work well with other javascript systems that use resolver functions, too. The best integrations will still be with `graphql-mocks` and its packages which are designed and tested together. If using GraphQL Paper with `graphql-mocks` check out the [guide](/docs/guides/paper) dedicated to setup, common patterns and techniques.
 
 
 ## Example

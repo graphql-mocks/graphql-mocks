@@ -5,10 +5,10 @@ module.exports = {
         'getting-started/introduction',
         'getting-started/installation',
         'getting-started/create-handler',
+        'getting-started/concepts',
         'getting-started/quick-example',
       ],
     },
-    'concepts',
     {
       'Resolver & Wrappers ': [
         'resolver/using-resolvers',
@@ -49,7 +49,13 @@ module.exports = {
       ],
     },
     {
-      Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'],
+      Guides: [
+        'guides/paper',
+        'guides/automatic-filtering',
+        'guides/relay-pagination',
+        'guides/pack',
+        'guides/mirage-js',
+      ],
     },
   ],
 };

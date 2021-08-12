@@ -10,7 +10,7 @@ IDs that exist as scalars on a GraphQL Schema are considered part of the data of
 It can be helpful to have an automatically generated ID that reflects the ID format used by the GraphQL API being mocked.
 
 ### Using a Custom Hook
-This can be done by using an `afterTransaction` hook function to ensure that any IDs that are added automatically. [Learn more about creating custom hooks](/docs/paper/hooks).
+This can be done by using an `afterTransaction` hook function to ensure that any IDs that are missing are added automatically. [Learn more about creating custom hooks](/docs/paper/hooks).
 
 Assuming the GraphQL Paper documents have an id field:
 
