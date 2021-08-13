@@ -1,8 +1,17 @@
 ---
-title: Using GraphQL Paper with graphql-mocks
+title: Using Paper with graphql-mocks
 ---
 
+import { GraphQLResult } from '../../src/components/graphql-result';
+import PaperQueryingExample from 'code-examples/guides/paper-querying.source.md';
+import paperQueryingResult from '../../code-examples/guides/paper-querying.result';
+
+import PaperMutationExample from 'code-examples/guides/paper-mutation.source.md';
+import paperMutationResult from '../../code-examples/guides/paper-mutation.result';
+
 GraphQL Paper can be used on its own but has been designed and tested to integrate with `graphql-mocks`.
+
+For more features specific to GraphQL Paper and its capabilities check out the [GraphQL Paper Documentation](/docs/paper/introducing-paper).
 
 ## Setup
 
@@ -17,14 +26,14 @@ const paper = new Paper(graphqlSchema);
 const handler = new GraphQLHandler({ dependencies: { graphqlSchema, paper }})
 ```
 
-## Using `paper` within Resolver Functions
+## Using `Paper` within Resolver Functions
 
 Within a resolver function the `paper` dependency can be extracted using `extractDependencies`.
 
 ```js
 import { extractDependencies } from 'graphql-mocks/resolver';
 
-function resolver (parent, args, context, info) {
+function resolver(parent, args, context, info) {
     const paper = extractDependencies(context, ['paper']);
     // do something with the paper store...
     // see below for query and mutation examples
@@ -33,11 +42,19 @@ function resolver (parent, args, context, info) {
 
 ## Querying Data
 
-Only top-level Query resolvers need to be specified for the GraphQL Paper Document. The rercursive data structure of Paper Documents from the store will follow Connections to other Paper Documents, automatically resolving the fields backed by *Concrete Data*. In the case of *Derived Data* there are some patterns below.
+Only top-level Query resolvers need to be specified for the GraphQL Paper Document. The rercursive data structure of Paper Documents from the store will follow Connections to other Paper Documents, automatically resolving the fields backed by *Concrete Data*. In the case of *Derived Data* there are some examples and patterns to follow below.
+
+<PaperQueryingExample />
+
+<GraphQLResult result={paperQueryingResult} />
 
 ## Mutating Data
 
-Similar to *Querying Data* only the top-level Mutation resolvers need to be defined returning necessary documents.
+Similar to *Querying Data* only the top-level Mutation resolvers need to be defined returning necessary documents and nested *Concrete Data* will be automatically resolved.
+
+<PaperMutationExample />
+
+<GraphQLResult result={paperMutationResult} />
 
 ## Separation of Concrete and Derived Data
 
@@ -45,13 +62,12 @@ One important thing to consider when using GraphQL Paper with `graphql-mocks` is
 
 ### Concrete Data
 
-Concrete data usually reprensents a distinct entity, might have an ID and defined property values. In the example of GraphQL Paper concrete data is represented by a Paper Document and its properties. Not all GraphQL Types or fields on GraphQL Types should be reflected by concrete data, which is covered in the *Derived Data* sections below.
+Concrete data usually represents a distinct entity, might have an ID and defined property values. In the example of GraphQL Paper concrete data is represented by a Paper Document and its properties. Not all GraphQL Types or fields on GraphQL Types should be reflected by concrete data, which is covered in the *Derived Data* sections below.
 
 An example of concrete data could be a `Film` which is unique and represents a singular entity.
 
 ```graphql
 type Film {
-  id: ID!
   title: String!
 }
 ```
@@ -60,12 +76,11 @@ represented concretely by a Paper Document:
 
 ```js
 {
-  id: '1',
   title: 'The Notebook'
 }
 ```
 
-Concerte Data represented by GraphQL Paper that mirrors the GraphQL Schema will resolve automatically.
+Concrete Data represented by GraphQL Paper that mirrors the GraphQL Schema will resolve automatically.
 
 ### Derived Data
 
@@ -143,9 +158,11 @@ const wrapper = createWrapper('FilmSearchResults', WrapperFor.FIELD, function(or
 
 #### Derived Fields
 
-In other cases derived fields could be something that derives its value from other properties.
+In other cases derived fields could be something that derives its value from other fields or when filtering the existing data based on the arguments.
 
-In this example we wouldn't want to store the `speed` on the Paper Document since it can be determined from `miles` and `timeInHours`.
+In the case that the derived data is filtered or refined based on arguments, and the data exists by the resolver already, it's best to use a resolver wrapper. See [*Automatic Resolver Filtering with Wrappers*](/docs/guides/automatic-filtering) for ideas and examples.
+
+This is an example of a value being derived from other fields. We wouldn't want to store the `speed` on the Paper Document since it can be determined from `miles` and `timeInHours`. The source data would would be best represented with by a resolver.
 
 ```
 type Trip {
@@ -157,7 +174,7 @@ type Trip {
 }
 ```
 
-The resolver for the `speed` field woudl look like:
+The resolver for the `speed` field would look like:
 
 ```js
 function tripSpeedResolver(parent, args, context, info) {

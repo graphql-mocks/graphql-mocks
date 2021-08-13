@@ -25,7 +25,7 @@ type SomeType {
 For most testing and development cases this should run fast enough, after each transaction. In the case this is too slow a custom operation could be created (see below).
 
 ```js
-paper.hooks.afterTransaction.push(function({ getStore }) {
+function autoIncrementIdHook({ getStore }) {
   const store = getStore();
   Object.entries(store).forEach(([type, documents]) => {
     // find the current maximum id for the current type
@@ -41,7 +41,9 @@ paper.hooks.afterTransaction.push(function({ getStore }) {
       }
     });
   });
-});
+}
+
+paper.hooks.afterTransaction.push(autoIncrementIdHook);
 ```
 
 #### Using uuids
@@ -49,7 +51,7 @@ paper.hooks.afterTransaction.push(function({ getStore }) {
 Using a custom `uuid` function is simpler to generate a missing ID for any document missing one after a transaction is complete.
 
 ```js
-paper.hooks.afterTransaction.push(function({ getStore }) {
+function addUuidHook({ getStore }) {
   const store = getStore();
   Object.entries(store).forEach(([type, documents]) => {
     documents.forEach((document) => {
@@ -59,7 +61,9 @@ paper.hooks.afterTransaction.push(function({ getStore }) {
       }
     });
   });
-});
+};
+
+paper.hooks.afterTransaction.push(addUuidHook);
 ```
 
 ### Using a Custom Operation
