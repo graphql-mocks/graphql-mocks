@@ -3,9 +3,12 @@
 
 const path = require('path');
 
+// needed to polyfill Events on the server
+require('event-target-polyfill');
+
 module.exports = {
   title: 'graphql-mocks',
-  tagline: 'Declarative Mocking for GraphQL APIs',
+  tagline: 'Tools for declaratively mocking GraphQL APIs',
   url: 'http://www.graphql-mocks.com',
   baseUrl: '/',
   favicon: 'img/favicon.png',
@@ -42,7 +45,7 @@ module.exports = {
           position: 'right',
         },
         {
-          href: 'https://github.com/chadian/graphql-mocks',
+          href: 'https://github.com/graphql-mocks/graphql-mocks',
           label: 'GitHub',
           position: 'right',
         },

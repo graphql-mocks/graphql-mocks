@@ -5,10 +5,10 @@ module.exports = {
         'getting-started/introduction',
         'getting-started/installation',
         'getting-started/create-handler',
+        'getting-started/concepts',
         'getting-started/quick-example',
       ],
     },
-    'concepts',
     {
       'Resolver & Wrappers ': [
         'resolver/using-resolvers',
@@ -34,6 +34,30 @@ module.exports = {
         'highlight/creating-highlighters',
       ],
     },
-    { Guides: ['guides/automatic-filtering', 'guides/relay-pagination', 'guides/mirage-js', 'guides/pack'] },
+    {
+      ['GraphQL Paper']: [
+        'paper/introducing-paper',
+        'paper/installation',
+        'paper/querying-data',
+        'paper/mutating-data',
+        'paper/operations',
+        'paper/events',
+        'paper/hooks',
+        'paper/validations',
+        'paper/technical-notes',
+        {
+          'GraphQL Paper Guides': ['paper/guides/factories', 'paper/guides/with-graphql', 'paper/guides/managing-ids'],
+        },
+      ],
+    },
+    {
+      Guides: [
+        'guides/paper',
+        'guides/automatic-filtering',
+        'guides/relay-pagination',
+        'guides/pack',
+        'guides/mirage-js',
+      ],
+    },
   ],
 };

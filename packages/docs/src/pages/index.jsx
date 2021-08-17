@@ -27,12 +27,34 @@ function Home() {
     <Layout title="Home" description={siteConfig.tagline}>
       <div className="container">
         <header className="hero">
-          <img src="img/logo.svg" className={classnames('hero__logo')} />
           <div className="hero__content">
             <h1 className="hero__title">
               <code>{siteConfig.title}</code>
             </h1>
             <p className="hero__subtitle">{siteConfig.tagline}</p>
+          </div>
+          <div className="hero__slices">
+            <section className="hero__slice">
+              <img src="img/highlight.svg" className={classnames('hero__logo')} />
+              <h2>Highlight</h2>
+              <p>
+                Use <code>Highlight</code> to flexibly select parts of the schema to operate on
+              </p>
+            </section>
+            <section className="hero__slice">
+              <img src="img/logo.svg" className={classnames('hero__logo')} />
+              <h2>Mock</h2>
+              <p>Declaratively mock resolvers using wrappers and middlewares to cover various scenarios</p>
+            </section>
+            <section className="hero__slice">
+              <img src="img/paper.svg" className={classnames('hero__logo')} />
+              <h2>Store</h2>
+              <p>
+                Persist mutations and control stateful data with a <code>graphql-paper</code> in-memory store
+              </p>
+            </section>
+          </div>
+          <div className="hero__content">
             <div>
               <Link
                 className={classnames('button button--secondary button--lg', styles.getStarted)}
@@ -45,81 +67,53 @@ function Home() {
         </header>
 
         <main>
-          <ul className={classnames(styles.features, 'hero')}>
-            <li className="feature">
-              <h2 className="feature__heading">💪 Mock and Prototype GraphQL APIs</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                This library provides the tools to create mock GraphQL APIs or prototype on GraphQL Schema changes that
-                might not exist yet. Use your mock GraphQL API in the browser or with any GraphQL API consumer.
-              </p>
-            </li>
-            <li className="feature">
-              <h2 className="feature__heading">🧑‍🎨 Create Declarative Abstractions</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                Use <a href="/docs/highlight/introducing-highlight">Highlight</a>,{' '}
-                <a href="/docs/resolver/introducing-wrappers">Resolver Wrappers</a> and{' '}
-                <a href="/docs/resolver-map/introducing-middlewares">Resolver Map Middlewares</a> to create and compose
-                declarative abstractions. This makes it easier to paint a picture of your Mock API in the perfect state,
-                ready to tweak and iterate.
-              </p>
-            </li>
-            <li className="feature">
-              <h2 className="feature__heading">🧑‍🔬 Test better</h2>
-              <div className="feature__dot-grid"></div>
-              <p>
-                <code>graphql-mocks</code> is aimed to helping you test better, too. Whether you want to log what is
-                happening in your queries during local development, spy on your Resolvers with Sinon JS, or assert
-                against state from running queries against the handler, graphql-mocks helps make it easier.
-              </p>
-            </li>
-            <li className="feature">
-              <h2 className="feature__heading">👀 Take a look!</h2>
-              <div className="feature__dot-grid"></div>
-              <p>To quickly show a few of the features in action here we have:</p>
-              <ul>
-                <li>Setting up a GraphQL query handler and making a query</li>
-                <li>
-                  Using the <code>@graphql-mocks/mirage</code> package and its middleware to mock stateful queries (try
-                  a mutation and see the change persist in subsequent queries)
-                </li>
-                <li>
-                  An embedded <code>logWrapper</code> <em>highlighted on all</em> root-level Query resolvers for logging
-                </li>
-              </ul>
-              <div className={styles['no-servers-warning']}>
-                ⚠️ Warning: <strong>No servers</strong> are harmed, or used, in the resolving of these GraphQL queries
-              </div>
-              <div className={styles['yellow-outline']} style={{ height: '400px' }}>
-                <GraphiQL
-                  storage={{
-                    removeItem() {
-                      'noop';
-                    },
-                    getItem() {
-                      'noop';
-                    },
-                    setItem() {
-                      'noop';
-                    },
-                  }}
-                  query={defaultQuery}
-                  docExplorerOpen={false}
-                  fetcher={(data) => {
-                    return graphqlHandler.query(data.query).then((result) => {
-                      return result;
-                    });
-                  }}
-                ></GraphiQL>
-              </div>
-              <SyntaxHighlighter
-                className={` ${styles['banner-code']} ${styles['yellow-outline']} `}
-                language="javascript"
-              >
-                {`
-// 1. Setup your handler with a resolver map, middlewares,
-// and wrappers as needed
+          <div className="demo">
+            <h2 className="feature__heading">Demo</h2>
+            <div className="feature__dot-grid"></div>
+            <p>
+              ⚠️ Warning: <strong>No servers</strong> are used, or harmed, in the resolving of these GraphQL queries
+            </p>
+            <p>To quickly show a few of the features in action here we have:</p>
+            <ul>
+              <li>Setting up a GraphQL query handler and making a query</li>
+              <li>
+                Using <code>graphql-paper</code> package, an in-memory graphql store, which allows stateful queries (try
+                a mutation and see the change persist in subsequent queries)
+              </li>
+              <li>
+                An embedded <code>logWrapper</code> <em>highlighted on all</em> root-level Query resolvers for logging
+              </li>
+            </ul>
+            <p>Go ahead and do a few queries and mutations (see changes persist)</p>
+            <div className={styles['yellow-outline']} style={{ height: '400px' }}>
+              <GraphiQL
+                storage={{
+                  removeItem() {
+                    'noop';
+                  },
+                  getItem() {
+                    'noop';
+                  },
+                  setItem() {
+                    'noop';
+                  },
+                }}
+                query={defaultQuery}
+                docExplorerOpen={false}
+                fetcher={(data) => {
+                  return graphqlHandler.query(data.query).then((result) => {
+                    return result;
+                  });
+                }}
+              ></GraphiQL>
+            </div>
+            <h2>The Code</h2>
+            <SyntaxHighlighter
+              className={` ${styles['banner-code']} ${styles['yellow-outline']} `}
+              language="javascript"
+            >
+              {`
+// 1. Setup your handler
 
 const handler = new GraphQLHandler({
   // optionally, provide a base resolver map
@@ -128,35 +122,32 @@ const handler = new GraphQLHandler({
   // use middlewares from packages, make your own,
   // and embed resolver wrappers
   middlewares: [
-    mirageMiddleware(),
-
     embed({
-      // Highlight callbacks makes it easy to declaratively
-      // select what should be wrapped with the \`logWrapper\`
+      // Highlight makes it easy to declaratively select
+      // what resolvers should be wrapped with the \`logWrapper\`
       highlight: (h) => h.include(field(['Query', '*']))
       wrappers: [logWrapper],
     }),
   ]
 
-  // fun fact: dependencies are available in any resolver with
-  // the \`extractDependencies\` utility function
+  // add dependencies needed by middlewares or resolvers
   dependencies: {
     graphqlSchema,
+    paper: new Paper(graphqlSchema)
   },
 });
 
 
-// 2. Run queries!
+// 2. Run queries (or mutations)!
 
 handler.query(\`
   query {
     ...
   }
-\`).then(result => console.log(result));
+\`);
           `}
-              </SyntaxHighlighter>
-            </li>
-          </ul>
+            </SyntaxHighlighter>
+          </div>
         </main>
       </div>
     </Layout>

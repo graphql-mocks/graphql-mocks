@@ -26,7 +26,7 @@ dependency for setting it up. The Schema can be a:
 A `GraphQLHandler` instance has a `query` function that processes queries and variables, returning the execution as a
 promise with the result or any errors.
 
-Here is a quick example:
+Here is an example:
 
 <CreateHandlerExample />
 <GraphQLResult result={createHandlerExampleResult} />
@@ -37,6 +37,6 @@ for testing and mocking an API.
 ## Next Steps
 
 To do this setup manual resolvers for each field on each type is possible but can take a bit of time and makes managing
-the Resolver Map surface area a bit more cumbersome. This library provides abstractions to make this process easier,
-whether there are common resolvers, static data, or auto resolvers backed by a stateful source this library provides the
-ways of setting up your mock GraphQL API easier.
+the Resolver Map surface area a bit more cumbersome. This library provides tools to make this process easier,
+whether there are common resolvers, static data, or automatic resolvers backed by a stateful source with [GraphQL Paper](/docs/paper/introducing-paper),
+this library provides many ways to setup your mock GraphQL APIs. These are covered in brief in the next section with an example in the following section.

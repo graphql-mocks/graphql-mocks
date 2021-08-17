@@ -3,16 +3,18 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "yarn build:api && CODE_EXAMPLE_ENV=docs docusaurus start",
-    "build": "yarn build:api && yarn build:docs",
-    "build:api": "yarn build:api:graphql-mocks && yarn build:api:sinon && yarn build:api:mirage",
+    "clean": "docusaurus clear",
+    "start": "yarn clean && yarn build:api && CODE_EXAMPLE_ENV=docs docusaurus start",
+    "build": "yarn clean && yarn build:api && yarn build:docs",
+    "build:api": "yarn build:api:graphql-mocks && yarn build:api:paper && yarn build:api:sinon && yarn build:api:mirage",
     "build:api:graphql-mocks": "yarn --cwd ../graphql-mocks typedoc --readme none --out ../docs/static/api/graphql-mocks src/index.ts",
     "build:api:sinon": "yarn --cwd ../sinon typedoc --readme none --out ../docs/static/api/sinon src/index.ts",
+    "build:api:paper": "yarn --cwd ../paper typedoc --readme none --out ../docs/static/api/paper src/index.ts",
     "build:api:mirage": "yarn --cwd ../mirage typedoc --readme none --out ../docs/static/api/mirage src/index.ts",
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "CODE_EXAMPLE_ENV=docs docusaurus deploy",
-    "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\""
+    "deploy": "yarn clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
+    "test": "CODE_EXAMPLE_ENV=test mocha --require \"event-target-polyfill\" \"./code-examples/**/*.test.js\""
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.65",
@@ -21,6 +23,7 @@
     "classnames": "^2.2.6",
     "graphiql": "0.17.5",
     "graphql-mocks": "^0.7.0",
+    "graphql-paper": "^0.0.0-beta",
     "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
@@ -43,6 +46,7 @@
     "babel-plugin-codegen": "^4.0.1",
     "chai": "^4.2.0",
     "core-js": "^3.6.5",
+    "event-target-polyfill": "^0.0.3",
     "globby": "^11.0.1",
     "lodash.uniq": "^4.5.0",
     "mocha": "^8.0.1",

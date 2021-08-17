@@ -26,6 +26,9 @@ function Home() {
               <ApiLink directoryName="graphql-mocks" packageName="graphql-mocks" />
             </li>
             <li>
+              <ApiLink directoryName="paper" packageName="graphql-paper" />
+            </li>
+            <li>
               <ApiLink directoryName="sinon" packageName="@graphql-mocks/sinon" />
             </li>
             <li>
