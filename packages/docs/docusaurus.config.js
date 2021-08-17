@@ -45,7 +45,7 @@ module.exports = {
           position: 'right',
         },
         {
-          href: 'https://github.com/chadian/graphql-mocks',
+          href: 'https://github.com/graphql-mocks/graphql-mocks',
           label: 'GitHub',
           position: 'right',
         },
