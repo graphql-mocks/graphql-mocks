@@ -38,13 +38,13 @@ function Home() {
               <img src="img/highlight.svg" className={classnames('hero__logo')} />
               <h2>Highlight</h2>
               <p>
-                Use <code>Highlight</code> to flexibly query parts of the schema to operate on
+                Use <code>Highlight</code> to flexibly select parts of the schema to operate on
               </p>
             </section>
             <section className="hero__slice">
               <img src="img/logo.svg" className={classnames('hero__logo')} />
               <h2>Mock</h2>
-              <p>Declaratively mock and wrap resolvers to cover various scenarios</p>
+              <p>Declaratively mock resolvers using wrappers and middlewares to cover various scenarios</p>
             </section>
             <section className="hero__slice">
               <img src="img/paper.svg" className={classnames('hero__logo')} />
@@ -77,8 +77,8 @@ function Home() {
             <ul>
               <li>Setting up a GraphQL query handler and making a query</li>
               <li>
-                Using <code>graphql-paper</code> package for an in-memory graphql store to allow stateful queries (try a
-                mutation and see the change persist in subsequent queries)
+                Using <code>graphql-paper</code> package, an in-memory graphql store, which allows stateful queries (try
+                a mutation and see the change persist in subsequent queries)
               </li>
               <li>
                 An embedded <code>logWrapper</code> <em>highlighted on all</em> root-level Query resolvers for logging
@@ -133,12 +133,12 @@ const handler = new GraphQLHandler({
   // add dependencies needed by middlewares or resolvers
   dependencies: {
     graphqlSchema,
-    paper
+    paper: new Paper(graphqlSchema)
   },
 });
 
 
-// 2. Run queries!
+// 2. Run queries (or mutations)!
 
 handler.query(\`
   query {
