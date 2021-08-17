@@ -14,6 +14,7 @@ In testing and development it is handy to have a store that reflects the current
 ## ✨ Features
 
 * Built and based on GraphQL
+* Works in the Browser and Node JS
 * Works without `graphql-mocks` with support for the official default GraphQL resolvers
 * Written in TypeScript
 * Support and integration with `graphql-mocks`
@@ -31,7 +32,7 @@ Coming Soon:
 
 ## API Reference
 
-There is [API reference](/api/paper/) available for the `graphql-paper` package.
+There is the [API reference](/api/paper/) available for the `graphql-paper` package.
 
 ## Integration with `graphql-mocks`
 
@@ -64,11 +65,11 @@ Documents are stored in an array on the `DocumentStore` keyed by the GraphQL typ
 }
 ```
 
-This is a simplistic but realistic example of how data is stored. Learn how to [query](/docs/paper/querying-data) and [mutate](/docs/paper/mutating-data) the store (see below for a quick example of both). Check out the [technical notes](/docs/paper/technical-notes) for the finer details.
+This is a simplistic, but realistic example, of how data is stored. Learn how to [query](/docs/paper/querying-data) and [mutate](/docs/paper/mutating-data) the store (see below for a quick example of both). Check out the [technical notes](/docs/paper/technical-notes) for a closer look at how everything works.
 
 ## A Quick Example
 
-Here's a small glimpse at what is possible with GraphQL Mocks:
+Here's a small glimpse at what is possible with GraphQL Paper:
 
 <QuickExample />
 

@@ -75,7 +75,7 @@ const latestFilm = paper.find(film);
 
 ## Returning Documents from Mutation Transactions
 
-It's often useful to be able to have immediate access to a `Document` that has just updated in a mutation transaction. This can be done by either returning the Document, an array of Dcouments or an object of documents.
+It's often useful to be able to have immediate access to a `Document` that has just been created/updated in a mutation transaction. This can be done by returning the Document, an array of Documents or an object of documents.
 
 ```js
 const macAndMe = await paper.mutate(({ create }) => {

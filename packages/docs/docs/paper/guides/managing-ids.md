@@ -3,7 +3,7 @@ id: managing-ids
 title: Managing IDs
 ---
 
-IDs that exist as scalars on a GraphQL Schema are considered part of the data of a `Document`. GraphQL Paper doesn't use them for tracking uniqueness although it does have ways of helping ensure that data for ID fields are kept unique and can also help in generating values.
+IDs that exist as scalars on a GraphQL Schema are considered part of the data of a `Document`. GraphQL Paper doesn't use them for tracking uniqueness although it does have ways of helping ensure that data for ID fields are kept unique and also help in generating ID values.
 
 ## Automatically Generating IDs
 
@@ -12,7 +12,7 @@ It can be helpful to have an automatically generated ID that reflects the ID for
 ### Using a Custom Hook
 This can be done by using an `afterTransaction` hook function to ensure that any IDs that are missing are added automatically. [Learn more about creating custom hooks](/docs/paper/hooks).
 
-Assuming the GraphQL Paper documents have an id field:
+Assuming the GraphQL Paper document has an id field:
 
 ```graphql
 type SomeType {
@@ -22,7 +22,7 @@ type SomeType {
 
 #### Using auto-incrementing IDs
 
-For most testing and development cases this should run fast enough, after each transaction. In the case this is too slow a custom operation could be created (see below).
+For most testing and development cases this should run fast enough, and only after each transaction. In the case this is too slow a custom operation could be created (see below).
 
 ```js
 function autoIncrementIdHook({ getStore }) {

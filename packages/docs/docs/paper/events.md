@@ -3,21 +3,42 @@ id: events
 title: Events
 ---
 
-After a *Mutate Transaction* any relevant events will be dispatched followed by any events that have been queued. This is useful for responding to specific changes either from GraphQL Paper or custom events that might have been dispatched in a custom operation or the *Mutate Transaction* itself via the `queueEvent` operation.
-
+After a *Mutate Transaction* any relevant events will be dispatched followed by any events that have been queued. This is useful for responding to specific changes either from GraphQL Paper or custom events that might have been queued in a custom operation or by the *Mutate Transaction* itself using the `queueEvent` operation.
 ## Listening to Events
 
 Events are available via the `events` property on the `Paper` instance which follow the [`EventTarget` pattern](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/EventTarget).
 
-To listen for an event use `events.addEventListener`, for example to listen for the `create` event.
+To listen for an event use `events.addEventListener` on a `Paper` instance, for example to listen for the `create` event.
 
 ```js
-paper.addEventListener('create', (event) => {
+paper.events.addEventListener('create', (event) => {
  // do something with the `create` event
 });
 ```
 
 [`removeEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) is also available to stop listening for an event for a particular listener.
+
+### Polyfilling `EventTarget` for Node.js
+
+If using a Node.js version 14 and higher `EventTarget` should be supported, otherwise install the [`event-target-polyfill`](https://www.npmjs.com/package/event-target-polyfill) package.
+
+```shell
+# npm
+npm install --save-dev event-target-polyfill
+
+# yarn
+yarn add --dev event-target-polyfill
+```
+
+Then include it early on in a top-level file before using GraphQL Paper
+
+```js
+// using common js
+require('event-target-polyfill');
+
+// using ES Module imports
+import 'event-target-polyfill';
+```
 
 ## Library Events
 
@@ -76,7 +97,6 @@ The `changes` property lists the changes per key, for example if `changedPropert
 }
 ```
 
-## Custom Events
+## Dispatching Custom Events
 
-Any instance of `Event` that is added either via [`queueEvent` operation](/docs/paper/mutating-data#queueevent) or in a custom operation and pushed to the [`eventQueue` array on the context](/docs/paper/operations#operational-context) will be dispatched after the transaction is complete and after the library events have been dispatched.
-
+Any instance of `Event` that is added either via [`queueEvent` operation](/docs/paper/mutating-data#queueevent) or in a custom operation and pushed to the [`eventQueue` array](/docs/paper/operations#operational-context) will be dispatched after the transaction is complete *and* after the library events have been dispatched first.

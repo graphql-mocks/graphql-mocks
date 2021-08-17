@@ -3,15 +3,17 @@ id: mutating-data
 title: Mutating Data
 ---
 
-Data in the store is *always* mutated via the `mutate` method on a `Paper` instance by passing in a *Mutation Transaction* callback. Within the *Mutation Transaction* callback there are several operations available to support being able to make changes easily to the store, even custom ones can be added.
+Data in the store is *always* mutated via the `mutate` method on a `Paper` instance by passing in a *Mutation Transaction* callback. Within the *Mutation Transaction* callback there are several operations available to support being able to make changes easily to the store, even [custom ones can be added](/docs/paper/operations#creating-custom-operations).
 
 ## `mutate` and the *Mutate Transaction* callback
 
 To make any changes call the `mutate` method on the `Paper` instance and provide a *Mutate Transaction* callback.
 
-Operations can be destructured from the first argument provided in the *Mutation Transaction* callback. For example, an `Actor` document could be created within `mutate` by using the `create` operation. In this example only `create` is being destructured for use by any combination of operations can be used with the callback (see more out-of-the-box operations below).
+Operations can be destructured from the first argument provided in the *Mutation Transaction* callback.
 
-For example, with a GraphQL Schema:
+For example, an `Actor` document could be created within `mutate` by using the `create` operation. In this example only `create` is being destructured for use but any combination of operations can be used with the callback (see more of the [library-provided operations](/docs/paper/mutating-data#transaction-operations) below).
+
+With a GraphQL Schema:
 
 ```graphql
 schema {
@@ -58,7 +60,7 @@ await paper.mutate(({ create, find, remove, clone, getStore, queueEvent }) => {
 });
 ```
 
-Creating custom operations is supported and can be helpful for creating common functional mutations to the GraphQL store or to provide common helpers that are useful within a *Transaction Callback*.
+Creating [custom operations](/docs/paper/operations#creating-custom-operations) can be helpful for creating common functional mutations on the GraphQL Paper `DocumentStore` or to provide common helpers that are useful within a *Transaction Callback*.
 
 ### `create`
 
@@ -72,7 +74,7 @@ await paper.mutate(({ create }) => {
 });
 ```
 
-The first argument is the GraphQL type for the document and the second is an object representing its fields.
+The first argument is the GraphQL type for the document and the second is an object representing its data, mapping GraphQL fields to the object properties.
 
 #### Creating a Documented with Connections
 
@@ -88,7 +90,7 @@ In order to make changes to documents it's important to have access to a version
 let existingDocument;
 
 await paper.mutate(({ find }) => {
-  const mutatableVersion = find(existingDocument);
+  const mutableVersion = find(existingDocument);
 });
 ```
 
@@ -120,7 +122,7 @@ await paper.mutate(({ clone }) => {
 
 * [API](/api/paper/modules/operations.html#getStore)
 
-This operation gives the *current* read **and write** version of the store available for mutating within the *Mutation Transaction* callback. This is useful for when access to underlying `DocumentStore` data structure and its `Documents` is required. It can also be useful to query by using typical javascript methods, for example:
+This operation gives the current **mutable** version of the `DocumentStore` available for mutating within the *Mutation Transaction* callback. This is useful for when access to underlying `DocumentStore` data structure and its `Documents` is required. It can also be useful to query by using typical javascript methods, for example:
 
 ```js
 await paper.mutate(({ getStore }) => {
@@ -149,7 +151,7 @@ await paper.mutate(({ queueEvent }) => {
 
 A *Connection* is used to create a relationship between Documents where one GraphQL type references another GraphQL type in the GraphQL schema.
 
-A `Document` reference can: be:
+A `Document` reference can be:
 * one-to-one, ie: one film can have one leading actor:
 ```graphql
 type Film {
@@ -163,9 +165,9 @@ type Film {
 }
 ```
 
-**Note:** Non-null (denoted by a `!`, ie: `Actor!`, `[Actor!]!`, `[Actor!]`, `[Actor]!`) variations of these work also.
+**Note:** Non-null (denoted by a `!`, ie: `Actor!`, `[Actor!]!`, `[Actor!]`, `[Actor]!`) variations of these also work and are validated.
 
-**Note:** Connections are one direction. If "Document A" is connected to "Document B" and "Document B" is also connected to "Document A" then two connectiosn must be defined explicitly. There is no automatic reflexive assumptions or setup done (although a custom operation could be created to help handle this case).
+**Note:** Connections are one direction. If "Document A" is connected to "Document B" and "Document B" is also connected to "Document A" then two connections must be defined explicitly. There is no automatic reflexive assumptions or setup done between connections (although a custom operation could be created to handle these cases).
 
 ### Creating Connections via Document Properties
 
@@ -173,7 +175,7 @@ Within a *Mutate Transaction* callback changes can be made to any documents and 
 
 #### One-to-One Connections
 
-To create a one-way one-to-one connection between a parent document and its child assign the property to a Document reference (see `leadingActor` property assigned to the `jeffGoldblum` child document below).
+To create a one-way one-to-one connection between a document and another, assign the property to a `Document`, see below where the `leadingActor` property is connected by assigning the `jeffGoldblum` document.
 
 ```js
 await paper.mutate(({ create }) => {
@@ -191,13 +193,14 @@ await paper.mutate(({ create }) => {
   const lifeAquatic = create('Film', {
     name: 'The Life Aquatic'
   });
+
   lifeAquatic.leadingActor = jeffGoldbum;
 });
 ```
 
 #### One-to-Many Connections
 
-To create a one-way one-to-many connection reference documents on the property via an Array, either on an existing or new document.
+To create a one-way one-to-many connection reference documents on the property via an Array, this works with new and existing documents.
 
 ```js
 await paper.mutate(({ create }) => {
@@ -209,7 +212,7 @@ await paper.mutate(({ create }) => {
     name: 'Owen Wilson'
   });
 
-  // as a property within `create`
+  // on the `actors` property within `create`
   const theRoyalTenebaums = create('Film', {
     title: 'The Royal Tenebaums',
     actors: [anjelicaHuston, owenWilson]
@@ -223,7 +226,7 @@ await paper.mutate(({ create }) => {
   // This works assuming it's a non-null list:
   // (ie: `actors: [Actor]!` or `actors: [Actor!]!`.
   //
-  // Otherwise the array needs to be created first:
+  // Otherwise the array needs to be created first since it could be null:
   // `theLifeAquatic.actors = theLifeAquatic.actors ?? [];`
   //
   // see note below for more details
@@ -266,4 +269,4 @@ This nested `create` will end up creating a `Film` document and four `Actor` doc
 
 ## Returning Data Outside the *Mutate Transaction* callback
 
-It's also very useful to stash documents that have been used or created within a `mutate` transaction afterwards. This can be done by returning a document, an array of documents, or an object with documents values, from the *Mutate Transaction* callback. See [*Returning Documents from Mutation Transactions*](/docs/paper/querying-data#returning-documents-from-mutation-transactions) for examples.
+It's also very useful to return documents that have been used or created within a `mutate` transaction to be referenced afterwards. This can be done by returning a document, an array of documents, or an object with documents values, from the *Mutate Transaction* callback. See [*Returning Documents from Mutation Transactions*](/docs/paper/querying-data#returning-documents-from-mutation-transactions) for examples.
