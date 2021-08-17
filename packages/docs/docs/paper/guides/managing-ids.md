@@ -46,7 +46,7 @@ function autoIncrementIdHook({ getStore }) {
 paper.hooks.afterTransaction.push(autoIncrementIdHook);
 ```
 
-#### Using uuids
+#### Using UUIDs
 
 Using a custom `uuid` function is simpler to generate a missing ID for any document missing one after a transaction is complete.
 

@@ -3,8 +3,8 @@ id: querying-data
 title: Querying Data
 ---
 
-There are a few different ways to retrieve data from a `Paper` instance the current `DocumentStore`.
-* [Access via the `data` property](#querying-documents-via-the-data-property)
+There are a few different ways to retrieve data from a `Paper` instance.
+* [Access the current `DocumentStore` via the `data` property](#querying-documents-via-the-data-property)
 * [Exchange a previous document for a newer copy](#exchange-documents-for-a-newer-copy)
 * [Return documents from within a `mutate` transaction](#exchange-documents-for-a-newer-copy)
 
@@ -13,7 +13,7 @@ It is important to remember that a document retrieved from the store is consider
 
 ## Querying Documents via the `data` Property
 
-A frozen copy of the store is available via the `data` property on the `Paper` instance.
+A frozen read-only copy of the store is available via the `data` property on the `Paper` instance.
 
 The shape of a store is:
 
@@ -121,7 +121,7 @@ type Actor {
 
 type Film {
   title: String!
-  actor: [Actor!]!
+  actors: [Actor!]!
 }
 ```
 

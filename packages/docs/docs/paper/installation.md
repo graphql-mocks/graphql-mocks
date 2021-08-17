@@ -13,7 +13,7 @@ npm install --save-dev graphql-paper
 yarn add --dev graphql-paper
 ```
 
-You will also need to install `graphql` as a peer dependency if you have not already installed it.
+You will also need to install `graphql` as a peer dependency if it has not already been installed.
 
 ```bash
 # npm

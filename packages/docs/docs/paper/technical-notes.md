@@ -5,7 +5,7 @@ title: Technical Notes
 
 ## Storage & Immutability
 
-GraphQL Paper uses `immer` under the hood to be able to handle changes and optimize sharing references in a reference tree for unchanged portions. `Document`s and `DocumentStore`s are considered stale-on-arrival which means they should not be directly edited. There are safeguards in place that try and prevent editing a document or store outside of a *Mutate Transaction*. Immutability also allows versions sharing the the same Document Key to be compared.
+GraphQL Paper uses `immer` under the hood to be able to handle changes and optimize sharing references for unchanged portions in a object tree. `Document`s and `DocumentStore`s are considered stale-on-arrival which means they should not be directly edited. There are safeguards in place that try and prevent editing a document or store outside of a *Mutate Transaction*. This immutability also allows versioning the `DocumentStore` and `Document`s. Comparing different versions of documents is also possible based on their Document Keys.
 
 ## Documents
 

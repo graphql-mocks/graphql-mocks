@@ -9,10 +9,12 @@ import { GraphQLResult } from '../../src/components/graphql-result';
 
 GraphQL Paper is a flexible in-memory store based on a provided GraphQL Schema.
 
+In testing and development it is handy to have a store that reflects the current state of the world, handles connections between data, and updates via mutations. While GraphQL Paper integrates well with the rest of `graphql-mocks`, it can also be used on its own.
+
 ## ✨ Features
 
 * Built and based on GraphQL
-* Works without graphql-mocks with support for the official default GraphQL resolvers
+* Works without `graphql-mocks` with support for the official default GraphQL resolvers
 * Written in TypeScript
 * Support and integration with `graphql-mocks`
 * Support for relationships and connections between types
@@ -24,9 +26,8 @@ GraphQL Paper is a flexible in-memory store based on a provided GraphQL Schema.
 * Validations ([docs](/docs/paper/validations))
 
 Coming Soon:
-* Time-travel snapshots, restore to existing snapshots
-
-In testing and development it is handy to have a store that reflects the current state of the world, handles connections between data, and updates via mutations. While GraphQL Paper integrates well with the rest of `graphql-mocks`, it can also be used on its own.
+* Time-travel debugging, store snapshots, and the ability to restore to existing store snapshots
+* Specialized `factory` operation with support for various states and scenarios
 
 ## API Reference
 

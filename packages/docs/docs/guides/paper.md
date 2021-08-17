@@ -164,7 +164,7 @@ In the case that the derived data is filtered or refined based on arguments, and
 
 This is an example of a value being derived from other fields. We wouldn't want to store the `speed` on the Paper Document since it can be determined from `miles` and `timeInHours`. The source data would would be best represented with by a resolver.
 
-```
+```graphql
 type Trip {
   miles: Float!
   timeInHours: Float!

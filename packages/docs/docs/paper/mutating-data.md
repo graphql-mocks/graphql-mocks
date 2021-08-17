@@ -9,7 +9,9 @@ Data in the store is *always* mutated via the `mutate` method on a `Paper` insta
 
 To make any changes call the `mutate` method on the `Paper` instance and provide a *Mutate Transaction* callback.
 
-With a GraphQL Schema:
+Operations can be destructured from the first argument provided in the *Mutation Transaction* callback. For example, an `Actor` document could be created within `mutate` by using the `create` operation. In this example only `create` is being destructured for use by any combination of operations can be used with the callback (see more out-of-the-box operations below).
+
+For example, with a GraphQL Schema:
 
 ```graphql
 schema {
@@ -30,7 +32,7 @@ type Actor {
 }
 ```
 
-Operations can be destructured from the first argument provided in the *Mutation Transaction* callback. For example, an `Actor` document could be created within `mutate` by using the `create` operation. In this example only `create` is being destructured for use by any combination of operations can be used with the callback (see more out-of-the-box operations below).
+The following *Mutate Transaction* callback will create a `Document` of the GraphQL `Actor` type.
 
 ```js
 await paper.mutate(({ create }) => {
@@ -40,9 +42,9 @@ await paper.mutate(({ create }) => {
 });
 ```
 
-**Note:** `mutate` returns a promise and the transaction callback is not considered executed until the promise is fulfilled. Calls to `mutate` will process transaction callbacks serially and the in called order.
+**Note:** `mutate` returns a promise and the transaction callback is not considered executed until the promise is fulfilled. Calls to `mutate` will process transaction callbacks in the order they are called.
 
-All changes within a *Mutation Transaction* callback will be validated to ensure consistency with the new version of the store.
+All changes within a *Mutation Transaction* callback will be validated via [Validators](/docs/paper/validations) after the transaction to ensure the new version of the `DocumentStore` is consistent.
 
 ## Transaction Operations
 
@@ -118,7 +120,7 @@ await paper.mutate(({ clone }) => {
 
 * [API](/api/paper/modules/operations.html#getStore)
 
-This operation gives the current version of the store available for mutating within the *Mutation Transaction* callback. This is useful for when access to underlying `DocumentStore` data structure and its `Documents` is required. It can also be useful to query by using typical javascript methods, for example:
+This operation gives the *current* read **and write** version of the store available for mutating within the *Mutation Transaction* callback. This is useful for when access to underlying `DocumentStore` data structure and its `Documents` is required. It can also be useful to query by using typical javascript methods, for example:
 
 ```js
 await paper.mutate(({ getStore }) => {
@@ -128,6 +130,8 @@ await paper.mutate(({ getStore }) => {
   const julia = store.Actor.find(({ name }) => name === 'Julia Roberts');
 });
 ```
+
+If common modifications are being done via `getStore` consider making a [custom operation](/docs/paper/operations#creating-custom-operations).
 
 ### `queueEvent`
 
@@ -262,4 +266,4 @@ This nested `create` will end up creating a `Film` document and four `Actor` doc
 
 ## Returning Data Outside the *Mutate Transaction* callback
 
-It's also very useful to stash documents that have been used or created within a `mutate` transaction afterwards. This can be done by returning a document an array, object of documents from the *Mutate Transaction* callback. See [*Returning Documents from Mutation Transactions*](/docs/paper/querying-data#returning-documents-from-mutation-transactions) for examples.
+It's also very useful to stash documents that have been used or created within a `mutate` transaction afterwards. This can be done by returning a document, an array of documents, or an object with documents values, from the *Mutate Transaction* callback. See [*Returning Documents from Mutation Transactions*](/docs/paper/querying-data#returning-documents-from-mutation-transactions) for examples.

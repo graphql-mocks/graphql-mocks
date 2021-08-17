@@ -101,7 +101,7 @@ match, and combine them for different scenarios. This is handy because for the n
 
 Learn more about [Resolver Maps](/docs/resolver-map/using-resolver-maps) and [Resolver Map Middlewares](/docs/resolver-map/introducing-middlewares).
 
-### Highlight
+## Highlight
 
 The ability to select the parts of the schema to operate on, and mock, is made easier by using the declarative Highlight
 system. You will most likely encounter Highlight when interacting with Resolver Map Middlewares to apply modifications
