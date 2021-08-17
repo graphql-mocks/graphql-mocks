@@ -33,6 +33,10 @@ Coming Soon:
 
 There is [API reference](/api/paper/) available for the `graphql-paper` package.
 
+## Integration with `graphql-mocks`
+
+Check out the [guide](/docs/guides/paper) for using `graphql-mocks` with GraphQL Paper.
+
 ## Documents and the Store
 
 With GraphQL Paper a `Document` is a POJO (plain-old javascript object) that represents a concrete GraphQL type, it is *not* an instance.

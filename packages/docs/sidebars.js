@@ -40,12 +40,14 @@ module.exports = {
         'paper/installation',
         'paper/querying-data',
         'paper/mutating-data',
+        'paper/operations',
         'paper/events',
         'paper/hooks',
-        'paper/operations',
         'paper/validations',
         'paper/technical-notes',
-        { Guides: ['paper/guides/with-graphql', 'paper/guides/managing-ids'] },
+        {
+          'GraphQL Paper Guides': ['paper/guides/factories', 'paper/guides/with-graphql', 'paper/guides/managing-ids'],
+        },
       ],
     },
     {
