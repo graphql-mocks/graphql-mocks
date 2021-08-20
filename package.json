@@ -9,9 +9,11 @@
     "publish-packages": "lerna version --no-private --no-push && yarn bootstrap && yarn test && lerna publish from-package --no-private",
     "link-packages": "node scripts/link-packages",
     "postinstall": "yarn link-packages",
-    "bootstrap": "lerna bootstrap && yarn build"
+    "bootstrap": "lerna bootstrap && yarn build",
+    "create-release": "node scripts/create-release"
   },
   "author": "Chad Carbert",
+  "repository": "github:graphql-mocks/graphql-mocks",
   "workspaces": [
     "packages/*"
   ],
