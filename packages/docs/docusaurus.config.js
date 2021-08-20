@@ -73,5 +73,8 @@ module.exports = {
     ],
   ],
 
-  plugins: [path.resolve(__dirname, 'plugins/docusaurus-load-examples.js')],
+  plugins: [
+    path.resolve(__dirname, 'plugins/docusaurus-load-examples.js'),
+    path.resolve(__dirname, 'plugins/docusaurus-plausible-analytics.js'),
+  ],
 };
