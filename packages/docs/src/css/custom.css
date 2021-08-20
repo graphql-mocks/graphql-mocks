@@ -47,13 +47,33 @@ p {
   padding: 3rem;
 }
 
+@media only screen and (max-width: 850px) {
+  .hero__slices {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .hero__slice {
+    width: 100%;
+    padding: 0.25rem;
+    margin: auto;
+  }
+
+  .hero__logo {
+    margin: auto;
+    width: 150px !important;
+  }
+}
+
 .hero__slice p {
   font-size: 1.1rem;
   line-height: 1.3;
 }
 
 .hero__logo {
-  width: 100%; 
+  width: 100%;
 }
 
 .hero__content {
