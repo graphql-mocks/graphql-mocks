@@ -25,10 +25,11 @@ In testing and development it is handy to have a store that reflects the current
 * Events ([docs](/docs/paper/events))
 * Transaction Operations ([docs](/docs/paper/operations))
 * Validations ([docs](/docs/paper/validations))
+* API Query Imports
 
 Coming Soon:
 * Time-travel debugging, store snapshots, and the ability to restore to existing store snapshots
-* Specialized `factory` operation with support for various states and scenarios
+* Specialized `factory` operation with support for various states and scenarios, with functional factories currently working now ([docs](/docs/paper/guides/factories))
 
 ## API Reference
 
