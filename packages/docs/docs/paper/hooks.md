@@ -3,6 +3,8 @@ id: hooks
 title: Hooks
 ---
 
+## Creating Custom Hooks
+
 Hooks provide a way of accessing different points during a Mutate Transaction with the same [operations](/docs/paper/mutating-data#transaction-operations) that are available during the *Mutuate Transaction* itself.
 
 The current hooks available are:
@@ -12,9 +14,10 @@ The current hooks available are:
 To create a hook provide a hook function, or async function:
 
 ```js
-export const customBeforeTransactionHook = async ({ create, find, remove, clone, getStore, queueEvent }) {
+export const customBeforeTransactionHook =
+  async ({ create, find, remove, clone, getStore, queueEvent }) {
   // custom hook logic here
-};
+  };
 ```
 
 
@@ -26,4 +29,4 @@ import { customBeforeTransactionHook } from './custom-hooks';
 paper.hooks.beforeTransaction.push(customBeforeTransactionHook);
 ```
 
-When an array of hook functions are ran they will be run serially, one after the other, waiting for async functions or returned promises to resolve.
+When an array of hook functions are ran they will be run in order, one after the other, waiting for previous async functions or returned promises to resolve.

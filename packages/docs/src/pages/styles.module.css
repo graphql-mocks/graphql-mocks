@@ -50,6 +50,13 @@
   padding: 2rem 5rem !important;
 }
 
+@media only screen and (max-width: 850px) {
+  .banner-code {
+    margin-bottom: 5rem;
+    padding: 0.5rem !important;
+  }
+}
+
 .no-servers-warning {
   font-style: italic;
   text-align: center;

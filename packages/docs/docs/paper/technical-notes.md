@@ -5,22 +5,22 @@ title: Technical Notes
 
 ## Storage & Immutability
 
-GraphQL Paper uses `immer` under the hood to be able to handle changes and optimize sharing references for unchanged portions in a object tree. `Document`s and `DocumentStore`s are considered stale-on-arrival which means they should not be directly edited. There are safeguards in place that try and prevent editing a document or store outside of a *Mutate Transaction*. This immutability also allows versioning the `DocumentStore` and `Document`s. Comparing different versions of documents is also possible based on their Document Keys.
+GraphQL Paper uses `immer` under the hood to be able to handle changes and optimize sharing references for unchanged portions in an object tree. `Document`s and `DocumentStore`s are considered stale-on-arrival which means they should not be directly edited. There are safeguards in place that try and prevent editing a document or store outside of a *Mutate Transaction*. This immutability also allows versioning the `DocumentStore` and `Document`s. Comparing different versions of documents is also possible based on their Document Keys.
 
 ## Documents
 
 Documents have a few hidden symboled properties that assist with tracking some internal state:
 
 ### Document Key
-Document Keys are uniquely generated string at the time a document is created. It is an internal identifier or reference used by the library to be able to track and reference a document. This leaves any `ID` fields on a GraphQL type in "user land" although GraphQL Paper does provide a validator to check that `ID`s on fields are unique within a type.
+Document Keys are uniquely generated string at the time a document is created. It is an internal identifier or reference used by the library to be able to track and reference a document across versions. This leaves any `ID` fields on a GraphQL type as data in "user land" although GraphQL Paper does provide a validator to check that `ID`s on fields are unique within a type.
 
 ### Connections
 
-Connections for a document are stored as an array of document keys (strings).
+Connections for a document are stored as an array of document keys (strings) representing the documents they are connected to.
 
 ### GraphQL Type Name
 
-Documents are "typed" by a GraphQL type. This is registered when a document is created and should never change.
+Documents are "typed" by a GraphQL type. The type is registered when a document is created and should never change.
 
 ## Transaction Lifecycle
 
@@ -43,14 +43,14 @@ Documents are "typed" by a GraphQL type. This is registered when a document is c
 
 When accessing Documents outside of a *Mutate Transaction* the documents are wrapped in a proxy to assist with lookups of connections and to prevent document properties from being mutated outside a *Mutate Transaction*. The proxy also has a reference to the copy of the store when the document is retrieved ensuring that any connections looked up will also be *frozen* at the same point in time.
 
-Before a transaction can occur each document has its connections expanded from on the document properties from document keys to references to the other documents. If the field supports a GraphQL List type then the documents are represented as an array of Documents.
+Before a transaction can occur each document has its connections expanded from document properties by the array of document keys to references to the other documents. If the field supports a GraphQL List type then the documents are represented as an array of Documents.
 
-After a transaction any document properties that have references are collpased into an internal array for connections, being stored as document keys.
+After a transaction any document properties that have references are collapsed into an internal array for connections, being stored as document keys.
 
 ## `nullDocument`
 
-Since GraphQL has a concept of nullable lists, that is lists that contain null, and connections are represented by documents there is a special reserved `nullDocument` used in storing lists that contain null. This is a special case and not something that normally crops up during average usage and is kept relatively hidden but would be important to consider when writing a custom validator that needs to check connections. During expansion of connections `nullDocuments` in lists are represented by `null` values and when collapsed the proxy ensures that any lists containing `nullDocuments` are represented by `null` also.
+Since GraphQL has a concept of nullable lists, that is lists that contain null, and connections are represented by documents there is a special reserved `nullDocument` used in storing lists that contain null. This is a special case and not something that normally crops up during average usage and is kept relatively hidden in the library but would be important to consider when writing a custom validator that needs to check connections. During expansion of connections `nullDocuments` in lists are represented by `null` values and when collapsed the proxy ensures that any lists containing `nullDocuments` are represented by `null` also.
 
 ## Performance
 
-Because GraphQL Paper handles everything "in memory" as javascript data structures it should be relatively quick for most use cases. If there is a case where it is slow please open an issue on github. There is some low-hanging fruit but also a desire to avoid early over optimization.
+Because GraphQL Paper handles everything "in memory" as javascript data structures it should be relatively quick for most use cases. If there is a case where it is slow please open an issue on github. There are some low-hanging fruit but also a desire to avoid early over optimizations.

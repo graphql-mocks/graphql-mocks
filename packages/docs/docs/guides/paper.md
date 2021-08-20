@@ -80,7 +80,7 @@ represented concretely by a Paper Document:
 }
 ```
 
-Concrete Data represented by GraphQL Paper that mirrors the GraphQL Schema will resolve automatically.
+This is an example of *Concrete Data* represented by a GraphQL Paper Document where its properties mirror the GraphQL Types and its fields which allows for the data to resolve automatically, and recursively through connections and their fields.
 
 ### Derived Data
 
@@ -101,9 +101,9 @@ type FilmSearchResults {
 
 ##### Using Resolvers
 
-A *Resolver* function can be used to resolve the correct shape of the *Derived Data*. In the case a *Resolver* function already exists then using a *Resolver Wrapper* (see below) is appropriate.
+A *Resolver* function can be used to resolve the correct shape of the *Derived Data*. In the case a *Resolver* function already exists then using a *Resolver Wrapper* is appropriate (see below).
 
-Using the `FilmSearchResults` type from above assume that we have a top-level query `searchFilms`:
+This example uses the `FilmSearchResults` type from above and assumes that we have a top-level query field `searchFilms`:
 
 ```graphql
 type Query {
@@ -111,26 +111,26 @@ type Query {
 }
 ```
 
-```js
-const resolverMap = {
-  Query: {
-    searchFilm(root, args, context, info) {
-      const { paper } = extractDependencies(context, ["paper"]);
-      const films = paper.data.Film.filter((film) => film.title.includes(args.query));
+The `searchFilm` resolver function could look like:
 
-      // return the required shape of `FilmSearchResults`
-      return {
-        results: films,
-        count: films.length,
-      };
-    }
-  }
+```js
+const  searchFilmResolver = (root, args, context, info) => {
+  const { paper } = extractDependencies(context, ["paper"]);
+  const films = paper.data.Film.filter((film) => film.title.includes(args.query));
+
+  // return the required shape of `FilmSearchResults`
+  return {
+    results: films,
+    count: films.length,
+  };
 }
 ```
 
+This resolver can be applied to the initial `resolverMap` passed into the [GraphQL Handler](/docs/getting-started/create-handler) or applied via [`embed`](/docs/resolver-map/managing-resolvers#using-embed).
+
 ##### Using Resolver Wrappers
 
-In some special cases the data might already be represented by a field with a resolver that resolves the correct data but not in the supporting shape of the *Derived Type*. In this case a *Resolver Wrapper* can be used to retrieve the original resolver's data and return a modified form. This has the added benefit of decoupling the resolver sourcing the data from the wrapper that transforms it to the shape expected, making the wrapper re-usable also in cases where this transform might be needed again.
+In some special cases the data might already be represented by a field with a resolver that resolves the correct data but not in the supporting shape of the *Derived Type*. In this case a *Resolver Wrapper* can be used to retrieve the data of the original resolver and return a modified form. This has the added benefit of decoupling the resolver sourcing the data from the wrapper that transforms it to the shape expected, making the wrapper re-usable also in cases where this transform might be needed again.
 
 In this example the `films` property on an `Actor` might already be returning the `films` property but not in the shape of `FilmSearchResults`.
 
@@ -162,7 +162,7 @@ In other cases derived fields could be something that derives its value from oth
 
 In the case that the derived data is filtered or refined based on arguments, and the data exists by the resolver already, it's best to use a resolver wrapper. See [*Automatic Resolver Filtering with Wrappers*](/docs/guides/automatic-filtering) for ideas and examples.
 
-This is an example of a value being derived from other fields. We wouldn't want to store the `speed` on the Paper Document since it can be determined from `miles` and `timeInHours`. The source data would would be best represented with by a resolver.
+This is an example of a value being derived from other fields. We wouldn't want to store the `speed` on the Paper Document since it can be determined from `miles` and `timeInHours`. The `speed` data itself would would be best represented by a resolver.
 
 ```graphql
 type Trip {

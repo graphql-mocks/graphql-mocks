@@ -34,7 +34,7 @@ GraphQL Paper also provides connections between different types and their corres
 
 In this example returning the resolvers for a list of `[Film!]` from the `Query.films` or a single `Film` by ID from `Query.film` will also satisify any queries that request a film's `Actor`s by returning the `actors` connections on the `Film` document.
 
-Using the `graphql` npm package with the above schema for an end-to-end example involving mutations.
+Using the `graphql` npm package with the above schema for an end-to-end example involving queries.
 
 <QueryExample />
 
@@ -57,7 +57,7 @@ async function createSomeTypeMutationResolver(root, args, context, info) {
 }
 ```
 
-If the result is not satisfied by the document the result can be awaited and modified as needed. Assuming in this example the mutation payload only required the payload of
+If the result is not satisfied by the document the result can be awaited and modified as needed. Assuming in this example the mutation payload only required the payload with the ID
 ```
 { someTypeId: newId }
 ```
@@ -67,20 +67,21 @@ Then the mutation resolver could look like:
 ```js
 async function createSomeTypeMutationResolver(root, args, context, info) {
   // return the paper.mutate
-  const someType = await paper.mutate(({ create }) => {
+  const someTypeDocument = await paper.mutate(({ create }) => {
     // return the created SomeType Paper Document
     return create('SomeType', { /* use data from args... */ });
   });
 
+  // take the resulting document and returning the required shape
   return {
-    someTypeId: someType.id
+    someTypeId: someTypeDocument.id
   };
 }
 ```
 
 #### Complete Mutation Example
 
-Using the `graphql` npm package with the above schema for an end-to-end example involving mutations.
+Using the `graphql` npm package with the above schema for an end-to-end example using mutations.
 
 <MutationExample />
 <GraphQLResult result={mutationExampleResult} />

@@ -38,19 +38,30 @@ function Home() {
               <img src="img/highlight.svg" className={classnames('hero__logo')} />
               <h2>Highlight</h2>
               <p>
-                Use <code>Highlight</code> to flexibly select parts of the schema to operate on
+                Use{' '}
+                <a href="/docs/highlight/introducing-highlight">
+                  <code>Highlight</code>
+                </a>{' '}
+                to flexibly select parts of the schema to operate on
               </p>
             </section>
             <section className="hero__slice">
               <img src="img/logo.svg" className={classnames('hero__logo')} />
               <h2>Mock</h2>
-              <p>Declaratively mock resolvers using wrappers and middlewares to cover various scenarios</p>
+              <p>
+                Mock resolvers and resolver maps using <a href="/docs/resolver/introducing-wrappers">wrappers</a> and{' '}
+                <a href="/docs/resolver-map/introducing-middlewares">middlewares</a> to cover various scenarios
+              </p>
             </section>
             <section className="hero__slice">
               <img src="img/paper.svg" className={classnames('hero__logo')} />
               <h2>Store</h2>
               <p>
-                Persist mutations and control stateful data with a <code>graphql-paper</code> in-memory store
+                Persist mutations and control stateful data with a{' '}
+                <a href="/docs/paper/introducing-paper">
+                  <code>graphql-paper</code>
+                </a>{' '}
+                in-memory store
               </p>
             </section>
           </div>
