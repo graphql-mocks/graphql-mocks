@@ -41,7 +41,7 @@ export class GraphQLHandler {
     query: GraphQLArgs['source'],
     variableValues?: GraphQLArgs['variableValues'],
     queryContext?: GraphQLArgs['contextValue'],
-    graphqlArgs?: GraphQLArgs,
+    graphqlArgs?: Partial<GraphQLArgs>,
   ): Promise<ExecutionResult> {
     const initialContext = this.initialContext;
     const packOptions = this.packOptions;
