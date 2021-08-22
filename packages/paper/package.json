@@ -1,6 +1,6 @@
 {
   "name": "graphql-paper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Chad Carbert",
   "description": "",
   "type": "commonjs",
@@ -38,6 +38,6 @@
   },
   "devDependencies": {
     "graphql": "^14",
-    "graphql-mocks": "^0.7.1"
+    "graphql-mocks": "^0.7.2"
   }
 }
