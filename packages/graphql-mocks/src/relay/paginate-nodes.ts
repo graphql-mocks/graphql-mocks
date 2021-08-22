@@ -1,4 +1,4 @@
-import { applyCursorsToEdges } from '.';
+import { applyCursorsToEdges } from './apply-cursor-to-edges';
 import { createEdge } from './create-edge';
 import { CursorForNode, RelayPaginationResult } from './types';
 

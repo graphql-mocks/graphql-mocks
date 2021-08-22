@@ -1,5 +1,5 @@
 import { GraphQLSchema, DocumentNode, isSchema, buildASTSchema, buildSchema } from 'graphql';
-import { copySchema } from '../utils';
+import { copySchema } from '../utils/copy-schema';
 
 export function createSchema(schema: GraphQLSchema | DocumentNode | string): GraphQLSchema {
   if (isSchema(schema)) return copySchema(schema);
