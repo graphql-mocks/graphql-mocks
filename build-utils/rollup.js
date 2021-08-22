@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import { getBabelOutputPlugin } from '@rollup/plugin-babel';
+import json from '@rollup/plugin-json';
 
 export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlobalName } = { external: [] }) {
   const pjsonExternal = [...Object.keys(pkg.dependencies || {}), ...Object.keys(pkg.peerDependencies || {})];
@@ -37,6 +38,7 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
           ],
         ],
       }),
+      json(),
     ].filter(Boolean);
   }
 
