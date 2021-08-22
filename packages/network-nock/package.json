@@ -19,7 +19,8 @@
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {
-    "directory": "dist"
+    "directory": "dist",
+    "access": "public"
   },
   "engines": {
     "node": ">= 12.0.0"
