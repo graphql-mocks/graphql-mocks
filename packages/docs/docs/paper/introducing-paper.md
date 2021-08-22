@@ -70,7 +70,7 @@ This is a simplistic, but realistic example, of how data is stored. Learn how to
 
 ## A Quick Example
 
-Here's a small glimpse at what is possible with GraphQL Paper:
+Here's a quick glimpse at what is possible with GraphQL Paper:
 
 <QuickExample />
 

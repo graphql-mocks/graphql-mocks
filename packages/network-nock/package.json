@@ -1,0 +1,39 @@
+{
+  "name": "@graphql-mocks/network-nock",
+  "version": "0.0.0",
+  "author": "Chad Carbert",
+  "description": "Mock using graphql-mocks with Nock",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "unpkg": "dist/bundles/graphql-mocks-sinon.umd.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "publishConfig": {
+    "directory": "dist"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "devDependencies": {
+    "@types/nock": "^11.1.0",
+    "@types/node-fetch": "^2.5.12",
+    "graphql": "^14",
+    "graphql-mocks": "^0.7.1",
+    "nock": "^13.1.2",
+    "node-fetch": "^2.6.1"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0",
+    "graphql-mocks": "^0.7.1"
+  }
+}

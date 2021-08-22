@@ -51,6 +51,9 @@ module.exports = {
       ],
     },
     {
+      ['Network Handling']: ['network/introduction', 'network/nock'],
+    },
+    {
       Guides: [
         'guides/paper',
         'guides/automatic-filtering',
