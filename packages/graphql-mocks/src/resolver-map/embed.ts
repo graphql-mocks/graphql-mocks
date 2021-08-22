@@ -6,7 +6,8 @@ import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from 
 import { highlightAllCallback } from './utils/highlight-all-callback';
 import { embedPackOptionsWrapper } from '../pack/utils';
 import { getResolver } from './get-resolver';
-import { coerceHighlight, isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
+import { isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
+import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import { interfaces, combine, resolvesTo, union } from '../highlight';
 
 export type EmbedOptions = {

@@ -2,7 +2,7 @@ import { createWrapper } from '../resolver';
 import { coerceToList } from '../resolver/utils';
 import { isRelayConnectionField } from './is-relay-connection-field';
 import { CursorForNode } from './types';
-import { paginateNodes } from '.';
+import { paginateNodes } from './paginate-nodes';
 import { NamedWrapper } from '../resolver/types';
 
 export const relayWrapper = ({

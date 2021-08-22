@@ -1,6 +1,7 @@
 import { GraphQLSchema } from 'graphql';
 import { Reference, WalkCallback } from '../types';
-import { getTypeForReference, getFieldForReference } from '.';
+import { getTypeForReference } from './get-type-for-reference';
+import { getFieldForReference } from './get-field-for-reference';
 
 export async function walk(
   graphqlSchema: GraphQLSchema,
