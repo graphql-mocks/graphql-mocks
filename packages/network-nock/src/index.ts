@@ -21,7 +21,8 @@ export function nockHandler(
       checkRequest(request, requestBody);
     }
 
-    const result = await graphqlHandler.query(query, variables, { request }, { operationName });
+    const context = { nock: { request } };
+    const result = await graphqlHandler.query(query, variables, context, { operationName });
 
     if (checkGraphQLResult) {
       checkGraphQLResult(result);
