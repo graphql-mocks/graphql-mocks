@@ -154,8 +154,8 @@ describe('nock-handler', function () {
     const graphqlErrorHandler = new GraphQLHandler({
       resolverMap: {
         Query: {
-          helloWorld(_root, _args, { request: r }) {
-            request = r;
+          helloWorld(_root, _args, { nock }) {
+            request = nock.request;
           },
         },
       },
@@ -172,7 +172,7 @@ describe('nock-handler', function () {
       `,
     );
 
-    expect(request.method).to.equal('POST');
+    expect(request?.method).to.equal('POST');
     expect(request.options.href).to.equal('http://graphql-api.com/graphql');
   });
 
