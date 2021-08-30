@@ -8,30 +8,36 @@ export function expressMiddleware(graphqlHandler: GraphQLHandler): RequestHandle
       res,
       function _expressGraphQLHandler() {
         if (req.method !== 'POST') {
-          next(new Error('Only requests with a method of "POST" are accepted'));
+          const error = new Error('Only requests with a method of "POST" are accepted');
+          console.error(error);
+          next(error);
           return;
         }
 
         if (typeof req.body !== 'object') {
-          next(new Error(`Expected request body to be an object, got ${req.body}`));
+          const error = new Error(`Expected request body to be an object, got ${req.body}`);
+          console.error(error);
+          next(error);
           return;
         }
 
         const { query, variables, operationName } = req.body;
 
         if (typeof query !== 'string') {
-          next(
-            new Error(
-              `The request body requires a "query" of type string for querying the graphql-mocks GraphQLHandler\nReceived "${typeof query}"`,
-            ),
+          const error = new Error(
+            `The request body requires a "query" of type string for querying the graphql-mocks GraphQLHandler\nReceived "${typeof query}"`,
           );
+          console.error(error);
+          next(error);
           return;
         }
 
         if (variables && typeof variables !== 'object') {
-          next(
-            new Error(`The request body contains "variables" of type "${typeof variables}" but should be an object"`),
+          const error = new Error(
+            `The request body contains "variables" of type "${typeof variables}" but should be an object"`,
           );
+          console.error(error);
+          next(error);
           return;
         }
 

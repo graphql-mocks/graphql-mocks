@@ -138,6 +138,5 @@ describe('express-middleware', function () {
 
     expect(expressContext.req).to.exist;
     expect(expressContext.res).to.exist;
-    expect(expressContext.next).to.exist;
   });
 });
