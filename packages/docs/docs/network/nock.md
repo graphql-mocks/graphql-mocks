@@ -57,7 +57,7 @@ The Nock request object is made available within the `context` arg for each Grap
 ```js
 function resolver(parent, args, context, info) {
   // reference to the Nock request
-  const { request } = context;  
+  const { request } = context;
 }
 ```
 
