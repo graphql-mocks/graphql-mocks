@@ -32,6 +32,9 @@ function Home() {
               <ApiLink directoryName="network-nock" packageName="@graphql-mocks/network-nock" />
             </li>
             <li>
+              <ApiLink directoryName="network-express" packageName="@graphql-mocks/network-express" />
+            </li>
+            <li>
               <ApiLink directoryName="sinon" packageName="@graphql-mocks/sinon" />
             </li>
             <li>
