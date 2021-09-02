@@ -7,6 +7,7 @@ export function nockHandler(
   graphqlHandler: GraphQLHandler,
   options?: {
     checkRequest?: (request: ReplyFnContext['req'], body: Body) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     checkGraphQLResult?: (result: Record<string, any>) => void;
   },
 ): ReplyFn {
