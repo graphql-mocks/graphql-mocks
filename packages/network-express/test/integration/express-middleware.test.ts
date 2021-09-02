@@ -110,11 +110,13 @@ describe('express-middleware', function () {
   });
 
   it('has access to the express req and res objects', async function () {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let expressContext: any;
 
     const serverStarted = new Promise<void>((resolve) => {
       const app = createApp({
         Query: {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           helloWorld(_root, _args, { express }, _info) {
             expressContext = express;
           },

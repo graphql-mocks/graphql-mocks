@@ -19,10 +19,11 @@ yarn add --dev nock @graphql-mocks/network-nock
 
 ## Usage
 
-In any Nock `.reply()`, use the `nockHandler` by calling it with a `GraphQLHandler` instance.
+In any Nock POST `.reply()`, use the `nockHandler` with a `GraphQLHandler` instance.
 
 ```js
 import { GraphQLHandler } from 'graphql-mocks';
+import graphqlSchema from './graphqlSchema';
 import { nockHandler } from '@graphql-mocks/network-nock';
 import nock from 'nock';
 
@@ -35,7 +36,7 @@ nock('http://graphql-api.com')
   .reply(nockHandler(graphqlHandler));
 ```
 
-The `nockHandler` function accepts an `options` object with `checkGraphQLResult` and `checkRequest` callbacks:
+The `nockHandler` function also accepts an `options` argument, an object with `checkGraphQLResult` and `checkRequest` callbacks:
 
 ```js
 nockHandler(graphqlHandler, {
@@ -48,16 +49,46 @@ These callbacks are useful for doing checks or additional assertions during test
 * `checkRequest` callback is passed the incoming `request` and the `requestBody`
 * `checkGraphQLResult` callback is passed the result from the GraphQLHandler
 
-The `nockHandler` will pass along the [Operation Name](https://graphql.org/learn/serving-over-http/#post-request) it receives from the request.
+With the above nock handler setup, a `node-fetch` call will be intercepted by and responded to from nock and graphql-mocks.
+
+```js
+import fetch from 'node-fetch';
+
+fetch('http://localhost:8080/graphql, {
+  method: 'POST',
+  body: JSON.stringify({
+    // required
+    query: `
+      query {
+        # graphql query
+      }
+    `,
+
+    // optional
+    variables: {},
+
+    // optional
+    operationName: 'OperationName'
+  }),
+}).then(async (response) => {
+  // get the final json payload
+  const result = await response.json();
+  return result;
+})
+```
+
+See the [GraphQL docs](https://graphql.org/learn/serving-over-http/#post-request) for details on these body parameters, and making http requests.
 
 ### Resolver Context
 
-The Nock request object is made available within the `context` arg for each GraphQL resolver:
+The Nock request object is made available within the resolver `context` under the `nock` property:
 
 ```js
 function resolver(parent, args, context, info) {
-  // reference to the Nock request
-  const { request } = context;
+  const { nock } = context;
+
+  // reference to the Nock request object
+  nock.request;
 }
 ```
 
