@@ -29,6 +29,9 @@ function Home() {
               <ApiLink directoryName="paper" packageName="graphql-paper" />
             </li>
             <li>
+              <ApiLink directoryName="network-msw" packageName="@graphql-mocks/network-msw" />
+            </li>
+            <li>
               <ApiLink directoryName="network-nock" packageName="@graphql-mocks/network-nock" />
             </li>
             <li>

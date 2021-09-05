@@ -13,6 +13,7 @@
     "build:api:mirage": "yarn --cwd ../mirage typedoc --readme none --out ../docs/static/api/mirage src/index.ts",
     "build:api:network-nock": "yarn --cwd ../network-nock typedoc --readme none --out ../docs/static/api/network-nock src/index.ts",
     "build:api:network-express": "yarn --cwd ../network-express typedoc --readme none --out ../docs/static/api/network-express src/index.ts",
+    "build:api:network-msw": "yarn --cwd ../network-msw typedoc --readme none --out ../docs/static/api/network-msw src/index.ts",
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "yarn clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
