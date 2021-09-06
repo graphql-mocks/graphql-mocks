@@ -1,0 +1,40 @@
+{
+  "name": "@graphql-mocks/faker",
+  "version": "0.0.0",
+  "author": "Chad Carbert",
+  "description": "Fake GraphQL queries with graphql-mocks and faker.js",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "unpkg": "dist/bundles/graphql-mocks-faker.umd.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "devDependencies": {
+    "@types/faker": "^5.5.8",
+    "@types/sinon": "^10.0.2",
+    "faker": "^5.5.3",
+    "graphql-mocks": "^0.7.2",
+    "sinon": "^11.1.2"
+  },
+  "peerDependencies": {
+    "faker": "^5.5.3",
+    "graphql": "^14.0.0 || ^15.0.0",
+    "graphql-mocks": "^0.7.2"
+  }
+}
