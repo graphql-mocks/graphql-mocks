@@ -20,4 +20,6 @@ Depending on the situation different network handling will be appropriate for yo
 
 ## Supported Browser Network Handlers
 
-*Browser network mocking coming soon*
+### `msw` (mock service worker)
+* `@graphql-mocks/network-msw`
+* [Documentation](/docs/network/msw)

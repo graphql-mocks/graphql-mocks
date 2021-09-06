@@ -1,0 +1,38 @@
+{
+  "name": "@graphql-mocks/network-msw",
+  "version": "0.0.0",
+  "author": "Chad Carbert",
+  "description": "Mock using graphql-mocks with msw (mock service worker)",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "unpkg": "dist/bundles/GraphQLMocksNetworkMsw.umd.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "devDependencies": {
+    "execa": "^5.1.1",
+    "graphql-mocks": "^0.7.2",
+    "msw": "^0.35.0",
+    "puppeteer": "^10.2.0"
+  },
+  "peerDependencies": {
+    "graphql-mocks": "^0.7.2",
+    "msw": "^0.35.0"
+  }
+}

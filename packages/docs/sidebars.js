@@ -51,7 +51,7 @@ module.exports = {
       ],
     },
     {
-      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/nock'],
+      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/msw', 'network/nock'],
     },
     {
       Guides: [
