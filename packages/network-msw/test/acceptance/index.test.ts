@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { execSync } from 'child_process';
 import { resolve } from 'path';
 import { env } from 'process';
 import puppeteer from 'puppeteer';
@@ -10,6 +11,13 @@ function cleanUpProcesses() {
   processes.forEach((child) => {
     child.cancel();
   });
+
+  // additional aggressive clean up for the grandchildren of server processes
+  try {
+    execSync(`kill $(ps aux | grep -i "http-server" | awk '{print $2}')`);
+  } catch {
+    // noop
+  }
 }
 
 function dummyReactApp__yarn(args = '') {
