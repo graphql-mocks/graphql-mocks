@@ -3,8 +3,8 @@
   "description": "Mono repo for core graphql-mocks packages",
   "private": true,
   "scripts": {
-    "lint": "lerna run lint",
-    "test": "lerna run test",
+    "lint": "lerna run --parallel lint",
+    "test": "lerna run --parallel test",
     "build": "lerna run build",
     "publish-packages": "yarn bootstrap && yarn test && lerna publish from-package --no-private",
     "link-packages": "node scripts/link-packages",
