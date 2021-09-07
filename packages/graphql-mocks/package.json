@@ -52,7 +52,7 @@
     "@types/lodash.isequalwith": "^4.4.6",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.mergewith": "^4.6.6",
-    "@types/sinon": "^9.0.0",
+    "@types/sinon": "^10.0.2",
     "graphql": "^14",
     "miragejs": "^0.1.40",
     "sinon": "^9.0.0"
