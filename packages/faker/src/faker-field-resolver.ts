@@ -23,20 +23,15 @@ export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolv
     }
 
     const unwrappedReturnType = unwrap(returnType);
-
-    if (isObjectType(unwrappedReturnType) || isAbstractType(unwrappedReturnType)) {
-      return;
-    }
-
     const isList = hasListType(returnType);
     const isNonNull = isNonNullType(returnType);
     const fieldOptions = options.fields?.[parentTypeName]?.[fieldName];
     let fieldValues = fieldOptions?.possibleValues ?? [];
-    const nullPercentage = fieldOptions?.nullPercentage ?? 10;
-    const nullListPercentage = fieldOptions?.nullListPercentage ?? nullPercentage;
+    const nullPercentage = fieldOptions?.nullPercentage ?? options?.nullPercentage ?? 10;
+    const nullListPercentage = fieldOptions?.nullListPercentage ?? options?.nullListPercentage ?? nullPercentage;
 
     const [defaultMin, defaultMax] = [getRandomInt(0, 10), getRandomInt(0, 10)].sort();
-    const listCountOption = fieldOptions?.listCount ?? { min: defaultMin, max: defaultMax };
+    const listCountOption = fieldOptions?.listCount ?? options?.listCount ?? { min: defaultMin, max: defaultMax };
     const { min, max } =
       typeof listCountOption === 'number' ? { min: listCountOption, max: listCountOption } : listCountOption;
     const listCount = getRandomInt(min, max);
@@ -87,6 +82,19 @@ export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolv
 
       return value;
     };
+
+    if (isObjectType(unwrappedReturnType) || isAbstractType(unwrappedReturnType)) {
+      // handles list case where the *number* to resolve is determined here
+      // but the actual data of each field is handled in follow up recursive
+      // resolving for each individual field.
+      if (isList) {
+        return new Array(listCount).fill(undefined);
+      }
+
+      // otherwise, return and let future resolvers figure
+      // out the scalar field data
+      return undefined;
+    }
 
     if (isList) {
       const allowNullListItems = !isNonNullType(listItemType(returnType));

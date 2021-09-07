@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
 import { fakerFieldResolver } from '../../src/faker-field-resolver';
-import { FakerFieldOptions } from '../../src/types';
+import { FakerFieldOptions, FakerGeneratorOptions } from '../../src/types';
 import { GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
 import faker from 'faker';
@@ -42,6 +42,7 @@ const schema = buildSchema(`
 
   type ObjectOne {
     id: ID
+    title: String
   }
 
   type ObjectTwo {
@@ -76,13 +77,16 @@ function buildInfo(fieldName: string): GraphQLResolveInfo {
 
 const TEST_DEFAULT_LIST_COUNT = 3;
 
-function buildOptions(fieldName: string, fieldOptions?: FakerFieldOptions) {
+function buildOptions(fieldName: string, generatorOptions?: FakerGeneratorOptions, fieldOptions?: FakerFieldOptions) {
   return {
+    nullPercentage: 0,
+    listCount: TEST_DEFAULT_LIST_COUNT,
+
+    ...generatorOptions,
+
     fields: {
       Query: {
         [fieldName]: {
-          nullPercentage: 0,
-          listCount: TEST_DEFAULT_LIST_COUNT,
           ...fieldOptions,
         },
       },
@@ -200,13 +204,16 @@ describe('faker-field-resolver', function () {
       expect(result).to.equal(undefined);
     });
 
-    it('skips List of Object types', async function () {
+    it('handles List of Object types with list count of undefined', async function () {
       const fieldName = 'listOfObjects';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.have.lengthOf(TEST_DEFAULT_LIST_COUNT);
+      expect(result[0]).to.equal(undefined);
+      expect(result[1]).to.equal(undefined);
+      expect(result[2]).to.equal(undefined);
     });
 
     it('skips Union types', async function () {
@@ -218,13 +225,13 @@ describe('faker-field-resolver', function () {
       expect(result).to.equal(undefined);
     });
 
-    it('skips List of Union types', async function () {
+    it('handles List of Union types with list count of undefined', async function () {
       const fieldName = 'listOfUnions';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.deep.equal([undefined, undefined, undefined]);
     });
 
     it('skips Interface types', async function () {
@@ -236,18 +243,18 @@ describe('faker-field-resolver', function () {
       expect(result).to.equal(undefined);
     });
 
-    it('skips Interface types', async function () {
+    it('handles List of Interface types with list count of undefined', async function () {
       const fieldName = 'listOfInterfaces';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.deep.equal([undefined, undefined, undefined]);
     });
   });
 
   context('options', function () {
-    it('uses nullPercentage', async function () {
+    it('uses global nullPercentage', async function () {
       const fieldName = 'string';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName, { nullPercentage: 100 });
@@ -258,7 +265,20 @@ describe('faker-field-resolver', function () {
       }
     });
 
-    it('uses nullListPercentage', async function () {
+    it('uses field nullPercentage', async function () {
+      const fieldName = 'string';
+      const info = buildInfo(fieldName);
+
+      // 100 at the field level should override 0 at the global
+      const options = buildOptions(fieldName, { nullPercentage: 0 }, { nullPercentage: 100 });
+
+      for (let i = 0; i < 100; i++) {
+        const result = fakerFieldResolver(options)(null, {}, null, info);
+        expect(result).to.equal(null);
+      }
+    });
+
+    it('uses global nullListPercentage', async function () {
       const fieldName = 'list';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName, { nullListPercentage: 100 });
@@ -269,7 +289,20 @@ describe('faker-field-resolver', function () {
       }
     });
 
-    it('uses an exact listCount', async function () {
+    it('uses field nullListPercentage', async function () {
+      const fieldName = 'list';
+      const info = buildInfo(fieldName);
+
+      // 100 at the field level should override 0 at the global
+      const options = buildOptions(fieldName, { nullListPercentage: 0 }, { nullListPercentage: 100 });
+
+      for (let i = 0; i < 100; i++) {
+        const result = fakerFieldResolver(options)(null, {}, null, info);
+        expect(result).to.deep.equal([null, null, null]);
+      }
+    });
+
+    it('uses a global exact listCount', async function () {
       const listCount = 7;
       const fieldName = 'list';
       const info = buildInfo(fieldName);
@@ -279,7 +312,19 @@ describe('faker-field-resolver', function () {
       expect(result).to.have.lengthOf(7);
     });
 
-    it('uses an exact listCount with min & max', async function () {
+    it('uses a field exact listCount', async function () {
+      const listCount = 7;
+      const fieldName = 'list';
+      const info = buildInfo(fieldName);
+
+      // list count at the field level should override 0 set at the global
+      const options = buildOptions(fieldName, { listCount: 0 }, { listCount });
+
+      const result = fakerFieldResolver(options)(null, {}, null, info);
+      expect(result).to.have.lengthOf(7);
+    });
+
+    it('uses a global exact listCount with min & max', async function () {
       const listCount = { min: 4, max: 7 };
       const fieldName = 'list';
       const info = buildInfo(fieldName);
@@ -293,21 +338,37 @@ describe('faker-field-resolver', function () {
       }
     });
 
-    it('uses possibleValues for non-list', async function () {
+    it('uses a field exact listCount with min & max', async function () {
+      const listCount = { min: 4, max: 7 };
+      const fieldName = 'list';
+      const info = buildInfo(fieldName);
+
+      // list count at the field level should override 0 set at the global
+      const options = buildOptions(fieldName, { listCount: 0 }, { listCount });
+
+      for (let i = 0; i < 100; i++) {
+        const result = fakerFieldResolver(options)(null, {}, null, info);
+        expect(result.length).to.be.gte(4);
+        expect(result.length).to.be.lte(7);
+        result.forEach((item: unknown) => expect(typeof item).to.equal('string'));
+      }
+    });
+
+    it('uses field possibleValues for non-list', async function () {
       const possibleValues = ['bonjour', 'hello', 'hej'];
       const fieldName = 'string';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, { possibleValues });
+      const options = buildOptions(fieldName, {}, { possibleValues });
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
       expect(possibleValues).include(result);
     });
 
-    it('uses possibleValues for lists', async function () {
+    it('uses field possibleValues for lists', async function () {
       const possibleValues = ['bonjour', 'hello', 'hej'];
       const fieldName = 'list';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, { possibleValues });
+      const options = buildOptions(fieldName, {}, { possibleValues });
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
       result.forEach((item: string) => {
@@ -315,22 +376,22 @@ describe('faker-field-resolver', function () {
       });
     });
 
-    it('uses fakerFn for non-lists', async function () {
+    it('uses field fakerFn for non-lists', async function () {
       const spy = sandbox.spy(faker.name, 'firstName');
       const fieldName = 'string';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, { fakerFn: 'name.firstName' });
+      const options = buildOptions(fieldName, {}, { fakerFn: 'name.firstName' });
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.equal('string');
       expect(spy.called).to.be.true;
     });
 
-    it('uses fakerFn for list', async function () {
+    it('uses field fakerFn for list', async function () {
       const spy = sandbox.spy(faker.name, 'firstName');
       const fieldName = 'list';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, { fakerFn: 'name.firstName' });
+      const options = buildOptions(fieldName, {}, { fakerFn: 'name.firstName' });
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
       expect(Array.isArray(result)).to.equal(true);

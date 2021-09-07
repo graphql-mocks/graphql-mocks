@@ -21,16 +21,20 @@ type Paths<T> = T extends object ?
         : never
     }[keyof T] : never
 
-export type FakerFieldOptions<K = Paths<Faker>> = {
+
+export type FakerGeneratorOptions = {
   nullPercentage?: number;
   nullListPercentage?: number;
   listCount?: number | { min: number; max: number };
+}
+
+export type FakerFieldOptions<K = Paths<Faker>> = FakerGeneratorOptions & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   possibleValues?: any[];
   fakerFn?: K;
 };
 
-export type FakerOptions = {
+export type FakerOptions = FakerGeneratorOptions & {
   fields?: {
     [type: string]: {
       [field: string]: FakerFieldOptions;
