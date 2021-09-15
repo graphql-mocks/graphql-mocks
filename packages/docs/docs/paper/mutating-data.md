@@ -64,7 +64,7 @@ Creating [custom operations](/docs/paper/operations#creating-custom-operations) 
 
 ### `create`
 
-* [API](/api/paper/modules/operations.html#create)
+* [API](pathname:///api/paper/modules/operations.html#create)
 
 ```js
 await paper.mutate(({ create }) => {
@@ -82,7 +82,7 @@ The `create` operation supports the ability to create connections through either
 
 ### `find`
 
-* [API](/api/paper/modules/operations.html#find)
+* [API](pathname:///api/paper/modules/operations.html#find)
 
 In order to make changes to documents it's important to have access to a version of the document that can be mutated. If there is access to a read-only/frozen/stale document in scope, a mutable version can be looked up via `find`.
 
@@ -96,7 +96,7 @@ await paper.mutate(({ find }) => {
 
 ### `remove`
 
-* [API](/api/paper/modules/operations.html#remove)
+* [API](pathname:///api/paper/modules/operations.html#remove)
 
 To remove a `Document` from the store use the `remove` operation.
 
@@ -108,7 +108,7 @@ await paper.mutate(({ remove }) => {
 
 ### `clone`
 
-* [API](/api/paper/modules/operations.html#clone)
+* [API](pathname:///api/paper/modules/operations.html#clone)
 
 Use the `clone` operation to create a new document that copies the properties and connections of an existing document.
 
@@ -120,7 +120,7 @@ await paper.mutate(({ clone }) => {
 
 ### `getStore`
 
-* [API](/api/paper/modules/operations.html#getStore)
+* [API](pathname:///api/paper/modules/operations.html#getStore)
 
 This operation gives the current **mutable** version of the `DocumentStore` available for mutating within the *Mutation Transaction* callback. This is useful for when access to underlying `DocumentStore` data structure and its `Documents` is required. It can also be useful to query by using typical javascript methods, for example:
 
@@ -137,7 +137,7 @@ If common modifications are being done via `getStore` consider making a [custom 
 
 ### `queueEvent`
 
-* [API](/api/paper/modules/operations.html#queueEvent)
+* [API](pathname:///api/paper/modules/operations.html#queueEvent)
 
 Use the `queueEvent` operation to queue an event to be dispatched after the transaction is complete. The `queueEvent` takes an instance of `Event`.
 
