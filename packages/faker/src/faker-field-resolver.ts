@@ -88,12 +88,12 @@ export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolv
       // but the actual data of each field is handled in follow up recursive
       // resolving for each individual field.
       if (isList) {
-        return new Array(listCount).fill(undefined);
+        return new Array(listCount).fill({});
       }
 
       // otherwise, return and let future resolvers figure
       // out the scalar field data
-      return undefined;
+      return {};
     }
 
     if (isList) {

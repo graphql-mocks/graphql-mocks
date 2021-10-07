@@ -201,19 +201,19 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.deep.equal({});
     });
 
-    it('handles List of Object types with list count of undefined', async function () {
+    it('handles List of Object types with list count filled with empty objects', async function () {
       const fieldName = 'listOfObjects';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
       expect(result).to.have.lengthOf(TEST_DEFAULT_LIST_COUNT);
-      expect(result[0]).to.equal(undefined);
-      expect(result[1]).to.equal(undefined);
-      expect(result[2]).to.equal(undefined);
+      expect(result[0]).to.deep.equal({});
+      expect(result[1]).to.deep.equal({});
+      expect(result[2]).to.deep.equal({});
     });
 
     it('skips Union types', async function () {
@@ -222,16 +222,16 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.deep.equal({});
     });
 
-    it('handles List of Union types with list count of undefined', async function () {
+    it('handles List of Union types with list count of empty objects', async function () {
       const fieldName = 'listOfUnions';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.deep.equal([undefined, undefined, undefined]);
+      expect(result).to.deep.equal([{}, {}, {}]);
     });
 
     it('skips Interface types', async function () {
@@ -240,16 +240,16 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.equal(undefined);
+      expect(result).to.deep.equal({});
     });
 
-    it('handles List of Interface types with list count of undefined', async function () {
+    it('handles List of Interface types with list count of empty objects', async function () {
       const fieldName = 'listOfInterfaces';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
       const result = fakerFieldResolver(options)(null, {}, null, info);
-      expect(result).to.deep.equal([undefined, undefined, undefined]);
+      expect(result).to.deep.equal([{}, {}, {}]);
     });
   });
 
