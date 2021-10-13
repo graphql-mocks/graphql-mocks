@@ -30,7 +30,7 @@ export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolv
     const nullPercentage = fieldOptions?.nullPercentage ?? options?.nullPercentage ?? 10;
     const nullListPercentage = fieldOptions?.nullListPercentage ?? options?.nullListPercentage ?? nullPercentage;
 
-    const [defaultMin, defaultMax] = [getRandomInt(0, 10), getRandomInt(0, 10)].sort();
+    const [defaultMin, defaultMax] = [0, 10];
     const listCountOption = fieldOptions?.listCount ?? options?.listCount ?? { min: defaultMin, max: defaultMax };
     const { min, max } =
       typeof listCountOption === 'number' ? { min: listCountOption, max: listCountOption } : listCountOption;

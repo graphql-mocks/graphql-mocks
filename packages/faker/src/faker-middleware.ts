@@ -4,15 +4,7 @@ import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils';
 import { fakerFieldResolver } from './faker-field-resolver';
 import { FakerMiddlewareOptions } from './types';
 import { fakerTypeResolver } from './faker-type-resolver';
-import {
-  HIGHLIGHT_ROOT_MUTATION,
-  HIGHLIGHT_ALL,
-  fromResolverMap,
-  combine,
-  union,
-  interfaces,
-  field,
-} from 'graphql-mocks/highlight';
+import { fromResolverMap, combine, union, interfaces, field } from 'graphql-mocks/highlight';
 import { coerceHighlight, walk } from 'graphql-mocks/highlight/utils';
 import { setResolver } from 'graphql-mocks/resolver-map';
 
@@ -22,10 +14,6 @@ export function fakerMiddleware(options?: FakerMiddlewareOptions): ResolverMapMi
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
     const graphqlSchema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
     let highlight = coerceHighlight(graphqlSchema, options?.highlight ?? highlightAllCallback);
-
-    // In no case do we want to add Mutation resolvers
-    // these are best handled with custom resolvers
-    highlight = highlight.exclude(field([HIGHLIGHT_ROOT_MUTATION, HIGHLIGHT_ALL]));
 
     // If we can't replace resolvers, exclude the ones that exist in the resolver map
     if (!options?.replace) {

@@ -13,6 +13,16 @@ GraphQL Paper can be used on its own but has been designed and tested to integra
 
 For more features specific to GraphQL Paper and its capabilities check out the [GraphQL Paper Documentation](/docs/paper/introducing-paper).
 
+## Installation
+
+```bash
+# npm
+npm install --save-dev graphql-paper graphql
+
+# yarn
+yarn add --dev graphql-paper graphql
+```
+
 ## Setup
 
 The only setup after installing the `graphql-paper` package is to import it, create a new instance and add it to the GraphQL Handler's dependencies.
