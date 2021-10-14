@@ -17,10 +17,10 @@ function Home() {
     <Layout title="Home" description={siteConfig.tagline}>
       <div className="container">
         <header style={{ marginTop: '2rem' }}>
-          <h1>API Documentation</h1>
+          <h1>Typescript API Documentation</h1>
         </header>
         <main>
-          <h2>Packages:</h2>
+          <h2>Packages</h2>
           <ul>
             <li>
               <ApiLink directoryName="graphql-mocks" packageName="graphql-mocks" />
@@ -36,6 +36,9 @@ function Home() {
             </li>
             <li>
               <ApiLink directoryName="network-express" packageName="@graphql-mocks/network-express" />
+            </li>
+            <li>
+              <ApiLink directoryName="faker" packageName="@graphql-mocks/faker" />
             </li>
             <li>
               <ApiLink directoryName="sinon" packageName="@graphql-mocks/sinon" />

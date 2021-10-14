@@ -1,12 +1,12 @@
 {
-  "name": "@graphql-mocks/mirage",
-  "version": "0.3.2",
+  "name": "@graphql-mocks/faker",
+  "version": "0.0.0",
   "author": "Chad Carbert",
-  "description": "Mock graphql using graphql-mocks and miragejs",
+  "description": "Fake GraphQL queries with graphql-mocks and faker.js",
   "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
-  "unpkg": "dist/bundles/graphql-mocks-mirage.umd.js",
+  "unpkg": "dist/bundles/graphql-mocks-faker.umd.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -25,20 +25,16 @@
   "engines": {
     "node": ">= 12.0.0"
   },
-  "dependencies": {
-    "lodash.intersection": "^4.4.0"
-  },
   "devDependencies": {
-    "@types/lodash.intersection": "^4.4.6",
+    "@types/faker": "^5.5.8",
     "@types/sinon": "^10.0.2",
-    "graphql": "^14",
+    "faker": "^5.5.3",
     "graphql-mocks": "^0.7.2",
-    "miragejs": "^0.1.40",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
+    "faker": "^5.5.3",
     "graphql": "^14.0.0 || ^15.0.0",
-    "graphql-mocks": "^0.5.0",
-    "miragejs": "^0.1.40"
+    "graphql-mocks": "^0.7.2"
   }
 }
