@@ -1,0 +1,67 @@
+{
+  "name": "gqlmocks",
+  "version": "0.0.0",
+  "author": "Chad Carbert @chadian",
+  "bin": {
+    "gqlmocks": "./bin/run"
+  },
+  "bugs": "https://github.com/chadian/gqlmocks/issues",
+  "dependencies": {
+    "@graphql-mocks/faker": "^0.0.0",
+    "@graphql-mocks/network-express": "^0.0.0",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^3",
+    "axios": "^0.23.0",
+    "cli-ux": "^5.6.3",
+    "express": "^4.17.1",
+    "graphql": "^15.6.1",
+    "graphql-mocks": "^0.7.2",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "eslint": "^5.13",
+    "globby": "^10",
+    "mocha": "^5",
+    "nyc": "^14",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/chadian/gqlmocks",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "gqlmocks",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "chadian/gqlmocks",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
