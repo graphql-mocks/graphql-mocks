@@ -51,7 +51,6 @@ hello world from ./src/hello.ts!
             query: getIntrospectionQuery()
           })
 
-          debugger;
           schemaString = printSchema(buildClientSchema((result as any).data));
         } catch(e) {
         }
@@ -109,7 +108,7 @@ hello world from ./src/hello.ts!
     const middlewares = [];
 
     if (flags.faker) {
-      middlewares.push(fakerMiddleware({ replace: true }));
+      middlewares.push(fakerMiddleware());
     }
 
     cli.action.start(`Launching on port ${port}`)
