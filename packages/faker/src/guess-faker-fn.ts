@@ -115,7 +115,7 @@ export function guessFakerFn(fieldName: string, returnType: GraphQLType): () => 
       return faker.time.recent;
     }
 
-    if (fieldName.includes('id')) {
+    if (fieldName.includes('id') || fieldName.includes('uuid')) {
       return faker.datatype.uuid;
     }
 
@@ -131,6 +131,10 @@ export function guessFakerFn(fieldName: string, returnType: GraphQLType): () => 
   }
 
   if (returnTypeName === 'id') {
+    return faker.datatype.uuid;
+  }
+
+  if (returnTypeName === 'uuid') {
     return faker.datatype.uuid;
   }
 

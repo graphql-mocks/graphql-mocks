@@ -15,7 +15,7 @@ function booleanChance(percentage: number) {
 
 export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolver {
   return function internalFakerResolver(parent, _args, _context, info) {
-    const parentTypeName = info.parentType.name;
+    const parentTypeName = info.parentType?.name;
     const { fieldName, returnType } = info;
 
     if (parent && fieldName in parent) {
