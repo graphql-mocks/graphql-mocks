@@ -6,6 +6,15 @@ import { HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/constants';
 const schema = buildSchema(`
   schema {
     query: Query
+    mutation: Mutation
+  }
+
+  type Mutation {
+    hello(prefix: String!): String!
+  }
+
+  input Input {
+    hello: String!
   }
 
   type Query {
@@ -45,6 +54,7 @@ describe('highlight/highlighter/field', function () {
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],
+      ['Mutation', 'hello'],
       ['Animal', 'name'],
       ['Animal', 'type'],
       ['Cat', 'name'],
@@ -56,6 +66,15 @@ describe('highlight/highlighter/field', function () {
       ['Dog', 'knowsTricks'],
       ['Dog', 'owner'],
     ]);
+  });
+
+  it('does not include input types', function () {
+    const references = field().mark(schema);
+    expect(typeof schema.getType('Input')).to.equal('object', 'input type exists in the schema');
+    expect(references.find(([type, field]) => type === 'Input' && field === 'hello')).to.equal(
+      undefined,
+      'the input type and field do not exist as a result fo the highligher',
+    );
   });
 
   it('creates field references', function () {
@@ -111,6 +130,7 @@ describe('highlight/highlighter/field', function () {
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],
+      ['Mutation', 'hello'],
       ['Animal', 'name'],
       ['Animal', 'type'],
       ['Cat', 'name'],
