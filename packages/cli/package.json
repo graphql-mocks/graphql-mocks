@@ -7,8 +7,8 @@
   },
   "bugs": "https://github.com/chadian/gqlmocks/issues",
   "dependencies": {
-    "@graphql-mocks/faker": "^0.0.0",
-    "@graphql-mocks/network-express": "^0.0.0",
+    "@graphql-mocks/faker": "^0.2.0",
+    "@graphql-mocks/network-express": "^0.1.1",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
@@ -16,7 +16,8 @@
     "cli-ux": "^5.6.3",
     "express": "^4.17.1",
     "graphql": "^15.6.1",
-    "graphql-mocks": "^0.7.2",
+    "graphql-mocks": "0.8.1",
+    "ts-node": "^10.4.0",
     "tslib": "^1"
   },
   "devDependencies": {
@@ -26,10 +27,9 @@
     "@types/mocha": "^5",
     "@types/node": "^10",
     "chai": "^4",
-    "eslint": "^5.13",
     "globby": "^10",
     "mocha": "^5",
-    "nyc": "^14",
+    "sinon": "^12.0.1",
     "ts-node": "^8",
     "typescript": "^3.3"
   },
@@ -58,9 +58,8 @@
   "repository": "chadian/gqlmocks",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts"
