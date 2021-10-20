@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[173],{1257:function(t,e){t.exports=function(t){return{name:"Plain text",aliases:["text","txt"],disableAutodetect:!0}}}}]);
