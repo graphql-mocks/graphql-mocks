@@ -21,7 +21,7 @@ try {
   execSync(`git checkout -b release-${commit}`);
   execSync(`git push -u origin release-${commit}`);
 
-  execSync('yarn lerna version --no-private', {
+  execSync('yarn lerna version', {
     cwd: process.cwd(),
     env: process.env,
     stdio: 'inherit',
