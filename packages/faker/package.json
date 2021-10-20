@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/faker",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Chad Carbert",
   "description": "Fake GraphQL queries with graphql-mocks and faker.js",
   "type": "commonjs",
@@ -29,7 +29,7 @@
     "@types/faker": "^5.5.8",
     "@types/sinon": "^10.0.2",
     "faker": "^5.5.3",
-    "graphql-mocks": "^0.7.2",
+    "graphql-mocks": "^0.8.0",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
