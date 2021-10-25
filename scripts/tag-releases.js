@@ -2,10 +2,17 @@
 
 const { execSync } = require('child_process');
 
-const gitTags = execSync(`git tag -l`).toString().split('\n');
-
 function tagCommit(commit, tag) {
-  execSync(`git tag --force ${tag} ${commit}`);
+  execSync(`git tag --force ${tag} ${commit}`, { stdio: 'ignore' });
+}
+
+function createGithubRelease(commit, tag) {
+  if (!tag || !commit) {
+    console.log(`tag and commit are required arguments, got ${tag} and ${commit} respectively`);
+    return;
+  }
+
+  execSync(`gh release create ${tag} -t "${tag}" --notes "Released \`${tag}\` in ${commit}"`);
 }
 
 const gitlog = execSync(`git log --oneline`).toString().split('\n');
@@ -34,5 +41,12 @@ publishCommits.forEach(({ hash, tags }) => {
   tags.forEach((tag) => {
     console.log(`Tagging ${hash} with ${tag}`);
     tagCommit(hash, tag);
+    console.log(`Creating github release for ${tag}`);
+
+    try {
+      createGithubRelease(hash, tag);
+    } catch (e) {
+      console.log(`Unable to create release for ${tag}, skipping...`);
+    }
   });
 });
