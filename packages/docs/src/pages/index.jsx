@@ -92,7 +92,8 @@ function Home() {
                 a mutation and see the change persist in subsequent queries)
               </li>
               <li>
-                An embedded <code>logWrapper</code> <em>highlighted on all</em> root-level Query resolvers for logging
+                An embedded <code>logWrapper</code> highlighted on <em>all root-level Query resolvers</em> for logging.
+                Check the developer console for helpful logging after each query run.
               </li>
             </ul>
             <p>Go ahead and do a few queries and mutations (see changes persist)</p>

@@ -136,7 +136,7 @@ const  searchFilmResolver = (root, args, context, info) => {
 }
 ```
 
-This resolver can be applied to the initial `resolverMap` passed into the [GraphQL Handler](/docs/getting-started/create-handler) or applied via [`embed`](/docs/resolver-map/managing-resolvers#using-embed).
+This resolver can be applied to the initial `resolverMap` passed into the [GraphQL Handler](/docs/handler/introducing-handler) or applied via [`embed`](/docs/resolver-map/managing-resolvers#using-embed).
 
 ##### Using Resolver Wrappers
 
@@ -193,4 +193,4 @@ function tripSpeedResolver(parent, args, context, info) {
 }
 ```
 
-This resolver can be applied to the initial `resolverMap` passed into the [GraphQL Handler](/docs/getting-started/create-handler) or applied via [`embed`](/docs/resolver-map/managing-resolvers#using-embed).
+This resolver can be applied to the initial `resolverMap` passed into the [GraphQL Handler](/docs/handler/introducing-handler) or applied via [`embed`](/docs/resolver-map/managing-resolvers#using-embed).

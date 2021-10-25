@@ -34,7 +34,7 @@ Call `fakerMiddleware` and pass the result to the `middlewares` option on the gr
 
 ```js
 import { GraphQLHandler } from 'graphql-mocks';
-import { fakerMiddleware } from '../../src/index';
+import { fakerMiddleware } from '@graphql-mocks/faker';
 
 const handler = new GraphQLHandler({
   middlewares: [fakerMiddleware()],

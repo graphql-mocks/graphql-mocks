@@ -25,7 +25,7 @@ Using `createWrapper` helps by providing more context about the wrapper and incl
 import { createWrapper, WrapperFor } from 'graphql-mocks/resolver';
 
 const wrapper = createWrapper('my-wrapper', WrapperFor.FIELD, function(originalResolver, wrapperOptions) {
-  return (parent, args, context, info) {
+  return async function(parent, args, context, info) {
     console.log('Inside the wrapper');
 
     // Awaiting the result of the original using the parameters

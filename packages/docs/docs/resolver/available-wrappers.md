@@ -40,9 +40,11 @@ The `spyWrapper` adds spies to the Resolver and makes them available on the `sta
 instance.
 
 ```js
+const spyMiddleware = embed({ wrappers: [spyWrapper] });
+
 const handler = new GraphQLHandler({
   resolverMap,
-  middlewares: [embed({ wrappers: [spyWrapper] })],
+  middlewares: [spyMiddleware],
   dependencies: { graphqlSchema },
 });
 

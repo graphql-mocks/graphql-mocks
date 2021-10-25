@@ -122,7 +122,7 @@ Learn the [basics of Highlight](/docs/highlight/introducing-highlight), the ones
 ## GraphQL Handler
 
 This library aims at making it easy to get setup and firing off queries by including
-[a GraphQL Handler](/docs/getting-started/create-handler). A GraphQL Handler will take a query and variables, and apply
+[a GraphQL Handler](/docs/handler/introducing-handler). A GraphQL Handler will take a query and variables, and apply
 it against a GraphQL Schema and its Resolver Map.
 
 Already have a GraphQL Handler setup, maybe from using `graphql-tools`? You can still use `pack` to create a Resolver
