@@ -3,7 +3,7 @@
 const { execSync } = require('child_process');
 
 function tagCommit(commit, tag) {
-  execSync(`git tag --force ${tag} ${commit}`, { stdio: 'ignore' });
+  execSync(`git tag -m ${tag} --force ${tag} ${commit}`, { stdio: 'ignore' });
 }
 
 function createGithubRelease(commit, tag) {
