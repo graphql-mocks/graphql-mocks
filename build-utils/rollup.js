@@ -1,5 +1,4 @@
 import * as path from 'path';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import { getBabelOutputPlugin } from '@rollup/plugin-babel';
@@ -16,7 +15,6 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
       typescript({
         ...tsOptions,
       }),
-      format === 'umd' && resolve(),
       commonjs(),
       getBabelOutputPlugin({
         plugins: [
@@ -71,26 +69,6 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
       },
       preserveModules: true,
       plugins: buildPlugins('es', { declaration: true, declarationDir: dir }),
-    });
-  }
-
-  if (formats.includes('umd')) {
-    if (!bundleGlobalName) {
-      throw new Error('No bundleName passed in but it is required for the umd build');
-    }
-
-    const file = pkg.unpkg;
-
-    builds.push({
-      input,
-      output: {
-        // final output is handled by babel as umd as passed into buildPlugins
-        format: 'es',
-        file,
-        name: bundleGlobalName,
-        sourcemap: true,
-      },
-      plugins: buildPlugins('umd'),
     });
   }
 
