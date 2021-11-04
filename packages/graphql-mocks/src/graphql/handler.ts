@@ -37,6 +37,17 @@ export class GraphQLHandler {
     this.middlewares = options.middlewares ?? [];
   }
 
+  applyMiddlewares(middlewares: ResolverMapMiddleware[], options?: { reset?: boolean }): void {
+    const reset = options?.reset ?? false;
+
+    if (!reset) {
+      middlewares = [...this.middlewares, ...middlewares];
+    }
+
+    this.middlewares = middlewares;
+    this.packed = false;
+  }
+
   async query(
     query: GraphQLArgs['source'],
     variableValues?: GraphQLArgs['variableValues'],

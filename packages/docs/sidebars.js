@@ -4,10 +4,15 @@ module.exports = {
       'Getting Started': [
         'getting-started/introduction',
         'getting-started/installation',
-        'getting-started/create-handler',
         'getting-started/concepts',
         'getting-started/quick-example',
       ],
+    },
+    {
+      'GraphQL Handler': ['handler/introducing-handler', 'handler/using-middlewares', 'handler/handler-state'],
+    },
+    {
+      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/msw', 'network/nock'],
     },
     {
       'Resolver & Wrappers ': [
@@ -51,11 +56,9 @@ module.exports = {
       ],
     },
     {
-      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/msw', 'network/nock'],
-    },
-    {
       Guides: [
         'guides/paper',
+        'guides/managing-context',
         'guides/automatic-filtering',
         'guides/relay-pagination',
         'guides/faker',

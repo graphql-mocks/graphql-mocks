@@ -2,7 +2,7 @@ import { buildSchema, parse } from 'graphql';
 import * as sinon from 'sinon';
 import { expect } from 'chai';
 import { GraphQLHandler } from '../../../src/graphql';
-import { ResolverMap } from '../../../src/types';
+import { ResolverMap, ResolverMapMiddleware } from '../../../src/types';
 import { spyWrapper } from '@graphql-mocks/sinon';
 import { embed } from '../../../src/resolver-map/embed';
 
@@ -101,6 +101,69 @@ Syntax Error: Unexpected Name "NOT"`);
     });
   });
 
+  context('middlewares', function () {
+    let middleware: ResolverMapMiddleware;
+
+    beforeEach(function () {
+      middleware = embed({ wrappers: [spyWrapper] });
+    });
+
+    it('defers packing middlewares until after first query', async function () {
+      const handler = new GraphQLHandler({
+        resolverMap,
+        middlewares: [middleware],
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      expect(handler.state?.spies?.Query?.hello).to.not.exist;
+      await handler.query(`{ hello }`);
+      expect(handler.state?.spies?.Query?.hello).to.exist;
+    });
+
+    it('accepts middlewares via options', function () {
+      const handlerWithoutMiddlewares = new GraphQLHandler({
+        middlewares: [],
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handlerWithoutMiddlewares as any).middlewares.length).to.equal(0);
+
+      const handlerWithMiddlewares = new GraphQLHandler({
+        middlewares: [middleware],
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handlerWithMiddlewares as any).middlewares.length).to.equal(1);
+    });
+
+    it('accepts middlewares via #applyMiddlewares', function () {
+      const handler = new GraphQLHandler({
+        dependencies: { graphqlSchema: schemaString },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).middlewares.length).to.equal(0);
+
+      handler.applyMiddlewares([middleware]);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).middlewares.length).to.equal(1);
+    });
+
+    it('accepts middlewares via #applyMiddlewares with reset option', function () {
+      const handler = new GraphQLHandler({
+        middlewares: [middleware],
+        dependencies: { graphqlSchema: schemaString },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).middlewares.length).to.equal(1);
+
+      handler.applyMiddlewares([middleware, middleware], { reset: true });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).middlewares.length).to.equal(2);
+    });
+  });
+
   it('returns maintains the structure of the state object argument', async function () {
     const initialState = { key: 'value' };
     const handler = new GraphQLHandler({
@@ -110,19 +173,6 @@ Syntax Error: Unexpected Name "NOT"`);
     });
 
     expect(handler.state).to.deep.equal(initialState);
-  });
-
-  it('defers packing middlewares until after first query', async function () {
-    const handler = new GraphQLHandler({
-      resolverMap,
-      middlewares: [embed({ wrappers: [spyWrapper] })],
-      dependencies: { graphqlSchema: schemaString },
-    });
-
-    expect(handler.state?.spies?.Query?.hello).to.not.exist;
-
-    await handler.query(`{ hello }`);
-    expect(handler.state?.spies?.Query?.hello).to.exist;
   });
 
   it('sets up managed context for resolvers', async function () {
