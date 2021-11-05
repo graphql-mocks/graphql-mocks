@@ -343,10 +343,10 @@ class Package {
   }
 
   loadPjson() {
-    const newPjson = require(`${this.path}/package.json`);
-    const newVersion = this.version !== newPjson.version;
+    const newPjson = JSON.parse(readFileSync(`${this.path}/package.json`).toString());
+    const newVersionExists = this.version !== newPjson.version;
 
-    if (newVersion) {
+    if (newVersionExists) {
       this.previousVersion = this.version;
     }
 
