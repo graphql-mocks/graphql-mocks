@@ -13,8 +13,10 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
     "axios": "^0.23.0",
+    "chalk": "^4.1.2",
     "cli-ux": "^5.6.3",
     "express": "^4.17.1",
+    "graphiql-middleware": "^0.0.4",
     "graphql": "^15.6.1",
     "graphql-mocks": "0.8.1",
     "ts-node": "^10.4.0",
@@ -50,6 +52,9 @@
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
+    "hooks": {
+      "init": "./lib/hooks/init"
+    },
     "bin": "gqlmocks",
     "plugins": [
       "@oclif/plugin-help"

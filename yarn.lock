@@ -9029,6 +9029,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
+graphiql-middleware@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/graphiql-middleware/-/graphiql-middleware-0.0.4.tgz#6bb92ff47308a16871fd871f042dee175d9cdcd8"
+  integrity sha512-9pl4UrgNjg+kY8hiOSl2WaB54g1nSbiBAQHwH4GJL4NXPsmjchI0njub3afVpUP7QCBZtzKVrOJSEawdYN5PYg==
+
 graphiql@0.17.5:
   version "0.17.5"
   resolved "https://registry.yarnpkg.com/graphiql/-/graphiql-0.17.5.tgz#76c553fc0d8936f77e33114ac3374f1807a718ff"

@@ -1,8 +1,3 @@
-// load ts-node to support dynamically loading and parsing
-// typescript files
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-require('ts-node').register({});
-
 import { Command, flags } from '@oclif/command';
 import { expressMiddleware } from '@graphql-mocks/network-express';
 import * as express from 'express';
@@ -17,7 +12,8 @@ import { randomBytes } from 'crypto';
 import axios from 'axios';
 import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
 import { cli } from 'cli-ux';
-
+import { graphiqlMiddleware } from 'graphiql-middleware';
+import * as chalk from 'chalk';
 export default class Serve extends Command {
   // used for mocking
   static express = express;
@@ -175,9 +171,37 @@ export default class Serve extends Command {
 
     cli.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
-    app.post('/graphql', expressMiddleware(handler));
+
+    const apiEndpointPath = '/graphql';
+    const graphiqlClientPath = '/client';
+    app.post(apiEndpointPath, expressMiddleware(handler));
+    app.use(
+      graphiqlClientPath,
+      graphiqlMiddleware(
+        {
+          endpointURL: '/graphql',
+        },
+        {
+          headerEditorEnabled: true,
+          shouldPersistHeaders: true,
+        },
+      ),
+    );
+
     app.listen(port);
     cli.action.stop();
-    this.log('Press ctrl + c to stop');
+
+    this.log();
+    this.log(
+      chalk.white('Local GraphQL API: '),
+      chalk.bold(chalk.magenta(`http://localhost:${port}${apiEndpointPath}`)),
+    );
+    this.log(
+      chalk.white('IDE client:        '),
+      chalk.bold(chalk.magenta(`http://localhost:${port}${graphiqlClientPath}`)),
+    );
+    this.log();
+    this.log(chalk.bold(chalk.whiteBright('Press Ctrl+C to stop')));
+    this.log();
   }
 }
