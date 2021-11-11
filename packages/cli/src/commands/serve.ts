@@ -4,8 +4,8 @@ import * as express from 'express';
 import { GraphQLHandler } from 'graphql-mocks';
 import { createSchema } from 'graphql-mocks/graphql/utils';
 import { cwd } from 'process';
-import { resolve, parse as pathParse } from 'path';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { resolve, parse as pathParse, isAbsolute } from 'path';
+import { existsSync, readFileSync, writeFileSync, watchFile } from 'fs';
 import { fakerMiddleware } from '@graphql-mocks/faker';
 import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
@@ -14,6 +14,30 @@ import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
 import { cli } from 'cli-ux';
 import { graphiqlMiddleware } from 'graphiql-middleware';
 import * as chalk from 'chalk';
+import { ResolverMapMiddleware } from 'graphql-mocks/types';
+
+function refreshModuleOnChange(module: string, cb: any) {
+  watchFile(resolve(module), () => {
+    let existsInCache;
+    try {
+      existsInCache = require.cache[require.resolve(module)];
+
+      if (existsInCache) {
+        delete require.cache[require.resolve(module)];
+        require(module);
+      }
+    } catch (e: any) {
+      console.log(chalk.yellow(`Error reloading:\n${e.toString()}`));
+    }
+
+    console.log(`Reloaded ${module}`);
+
+    if (cb) {
+      cb();
+    }
+  });
+}
+
 export default class Serve extends Command {
   // used for mocking
   static express = express;
@@ -50,71 +74,87 @@ export default class Serve extends Command {
       description: 'specify header(s) used in request for remote schema specified by schema flag',
       dependsOn: ['schema'],
     }),
+    watch: flags.boolean(),
   };
+
+  server: any = null;
+
+  normalizePath(path: string) {
+    if (existsSync(path)) {
+      return path;
+    }
+
+    const absolutePath = resolve(cwd(), path);
+    if (existsSync(absolutePath)) {
+      return absolutePath;
+    }
+  }
+
+  urlForPath(path: string) {
+    try {
+      return new URL(path);
+    } catch {
+      // noop
+    }
+  }
 
   async createSchema(path: string, headers: Record<string, string>) {
     const axios = Serve.axios;
 
-    if (!existsSync(path)) {
-      const absolutePath = resolve(cwd(), path);
-      let url;
+    let normalizedPath = this.normalizePath(path);
+    const url = this.urlForPath(path);
 
+    if (!normalizedPath && url) {
+      cli.action.start(`Getting schema from ${url}`);
+      let schemaString;
       try {
-        url = new URL(path);
-      } catch {
-        // noop
-      }
+        const { data: result } = await axios.post(url.toString(), {
+          query: getIntrospectionQuery(),
+          Headers: headers,
+        });
 
-      if (existsSync(absolutePath)) {
-        path = absolutePath;
-      } else if (url) {
-        cli.action.start(`Getting schema from ${url}`);
-        let schemaString;
+        schemaString = printSchema(buildClientSchema((result as any).data));
+        // eslint-disable-next-line no-empty
+      } catch (e) {}
+
+      if (!schemaString) {
         try {
-          const { data: result } = await axios.post(url.toString(), {
-            query: getIntrospectionQuery(),
-            Headers: headers,
-          });
-
-          schemaString = printSchema(buildClientSchema((result as any).data));
+          const { data: rawSchemaFile } = await axios.get(url.toString());
+          schemaString = rawSchemaFile;
           // eslint-disable-next-line no-empty
-        } catch (e) {}
-
-        if (!schemaString) {
-          try {
-            const { data: rawSchemaFile } = await axios.get(url.toString());
-            schemaString = rawSchemaFile;
-            // eslint-disable-next-line no-empty
-          } catch {}
-        }
-
-        if (typeof schemaString !== 'string') {
-          this.error(`Unable to get schema from ${schemaString} as a file or introspection query`);
-        }
-
-        const filename = randomBytes(16).toString('hex');
-        path = resolve(tmpdir(), filename);
-
-        writeFileSync(path, schemaString as any);
-        cli.action.stop();
+        } catch {}
       }
+
+      if (typeof schemaString !== 'string') {
+        this.error(`Unable to get schema from ${schemaString} as a file or introspection query`);
+      }
+
+      const filename = randomBytes(16).toString('hex');
+      normalizedPath = resolve(tmpdir(), filename);
+
+      writeFileSync(normalizedPath, schemaString as any);
+      cli.action.stop();
+    }
+
+    if (!normalizedPath) {
+      this.error(`Could not determine a local or remote schema from ${path}`);
     }
 
     let schema;
     try {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const loaded = require(path);
+      const loaded = require(normalizedPath);
       schema = createSchema(loaded?.default ?? loaded);
     } catch {
-      const rawFile = readFileSync(path).toString();
+      const rawFile = readFileSync(normalizedPath).toString();
       schema = createSchema(rawFile);
     }
 
     return schema;
   }
 
-  loadHandler(path: string) {
-    if (!existsSync(path)) {
+  findHandlerAbsolutePath(path: string) {
+    if (!isAbsolute(path)) {
       const absolutePath = resolve(cwd(), path);
 
       if (!existsSync(absolutePath)) {
@@ -124,6 +164,10 @@ export default class Serve extends Command {
       path = absolutePath;
     }
 
+    return path;
+  }
+
+  loadHandler(path: string) {
     const { dir, name } = pathParse(path);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     let loaded = require(resolve(dir, name));
@@ -136,31 +180,11 @@ export default class Serve extends Command {
     return loaded;
   }
 
-  async run() {
-    const { flags } = this.parse(Serve);
+  startServer({ flags, schema, port, middlewares }: any) {
+    const handlerPath = this.findHandlerAbsolutePath(flags.handler);
 
-    const port = Number(flags.port);
-    const headers = (flags.header ?? []).reduce((headers, flag) => {
-      const [key, value] = flag.split('=');
-
-      if (!key || !value) {
-        throw new Error(`Expected a key and value header pair, got key: ${key}, value: ${value}`);
-      }
-
-      return {
-        ...headers,
-        [key]: value,
-      };
-    }, {});
-    const schema = await this.createSchema(flags.schema, headers);
-    const middlewares = [];
-
-    if (flags.faker) {
-      middlewares.push(fakerMiddleware());
-    }
-
-    const handler: GraphQLHandler = flags.handler
-      ? this.loadHandler(flags.handler)
+    const handler: GraphQLHandler = handlerPath
+      ? this.loadHandler(handlerPath)
       : new GraphQLHandler({
           dependencies: {
             graphqlSchema: schema,
@@ -188,18 +212,69 @@ export default class Serve extends Command {
       ),
     );
 
-    app.listen(port);
+    const server = app.listen(port);
     cli.action.stop();
+    return server;
+  }
 
+  watchFiles(files: string[], start: any) {
+    files.forEach((path) => {
+      refreshModuleOnChange(path, start);
+    });
+  }
+
+  async run() {
+    const { flags } = this.parse(Serve);
+
+    const port = Number(flags.port);
+    const headers = (flags.header ?? []).reduce((headers, flag) => {
+      const [key, value] = flag.split('=');
+
+      if (!key || !value) {
+        throw new Error(`Expected a key and value header pair, got key: ${key}, value: ${value}`);
+      }
+
+      return {
+        ...headers,
+        [key]: value,
+      };
+    }, {});
+    const schema = await this.createSchema(flags.schema, headers);
+    const middlewares: ResolverMapMiddleware[] = [];
+
+    if (flags.faker) {
+      middlewares.push(fakerMiddleware());
+    }
+
+    const start = () => {
+      const up = () => {
+        this.server = this.startServer({ flags, schema, port, middlewares });
+      };
+
+      if (this.server) {
+        debugger;
+        this.server.close(() => {
+          this.log('Restarting server...');
+          up();
+        });
+      } else {
+        up();
+      }
+    };
+
+    if (flags.watch) {
+      const files = [
+        flags.schema && this.normalizePath(flags.schema),
+        flags.handler && this.findHandlerAbsolutePath(flags.handler),
+      ].filter(Boolean) as string[];
+
+      this.watchFiles(files, start);
+    }
+
+    start();
     this.log();
-    this.log(
-      chalk.white('Local GraphQL API: '),
-      chalk.bold(chalk.magenta(`http://localhost:${port}${apiEndpointPath}`)),
-    );
-    this.log(
-      chalk.white('IDE client:        '),
-      chalk.bold(chalk.magenta(`http://localhost:${port}${graphiqlClientPath}`)),
-    );
+    this.log(chalk.white(' Local GraphQL API: '), chalk.bold(chalk.magenta(`http://localhost:${port}/graphql`)));
+    this.log(chalk.white(' IDE client:        '), chalk.bold(chalk.magenta(`http://localhost:${port}/client`)));
     this.log();
     this.log(chalk.bold(chalk.whiteBright('Press Ctrl+C to stop')));
     this.log();
