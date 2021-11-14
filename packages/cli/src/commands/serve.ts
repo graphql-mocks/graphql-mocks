@@ -15,6 +15,7 @@ import { cli } from 'cli-ux';
 import { graphiqlMiddleware } from 'graphiql-middleware';
 import * as chalk from 'chalk';
 import { ResolverMapMiddleware } from 'graphql-mocks/types';
+import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -79,17 +80,6 @@ export default class Serve extends Command {
 
   server: any = null;
 
-  normalizePath(path: string) {
-    if (existsSync(path)) {
-      return path;
-    }
-
-    const absolutePath = resolve(cwd(), path);
-    if (existsSync(absolutePath)) {
-      return absolutePath;
-    }
-  }
-
   urlForPath(path: string) {
     try {
       return new URL(path);
@@ -101,7 +91,7 @@ export default class Serve extends Command {
   async createSchema(path: string, headers: Record<string, string>) {
     const axios = Serve.axios;
 
-    let normalizedPath = this.normalizePath(path);
+    let normalizedPath = normalizeAbsolutePath(path);
     const url = this.urlForPath(path);
 
     if (!normalizedPath && url) {
@@ -264,7 +254,7 @@ export default class Serve extends Command {
 
     if (flags.watch) {
       const files = [
-        flags.schema && this.normalizePath(flags.schema),
+        flags.schema && normalizeAbsolutePath(flags.schema),
         flags.handler && this.findHandlerAbsolutePath(flags.handler),
       ].filter(Boolean) as string[];
 

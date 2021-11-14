@@ -19,7 +19,7 @@ $ npm install -g gqlmocks
 $ gqlmocks COMMAND
 running command...
 $ gqlmocks (-v|--version|version)
-gqlmocks/0.0.0 darwin-x64 node-v14.17.3
+gqlmocks/0.0.0 darwin-arm64 node-v12.22.1
 $ gqlmocks --help [COMMAND]
 USAGE
   $ gqlmocks COMMAND
@@ -28,28 +28,25 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`gqlmocks hello [FILE]`](#gqlmocks-hello-file)
+* [`gqlmocks config:validate [FILE]`](#gqlmocks-configvalidate-file)
 * [`gqlmocks help [COMMAND]`](#gqlmocks-help-command)
+* [`gqlmocks serve`](#gqlmocks-serve)
 
-## `gqlmocks hello [FILE]`
+## `gqlmocks config:validate [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ gqlmocks hello [FILE]
+  $ gqlmocks config:validate [FILE]
 
 OPTIONS
   -f, --force
   -h, --help       show CLI help
   -n, --name=name  name to print
-
-EXAMPLE
-  $ gqlmocks hello
-  hello world from ./src/hello.ts!
 ```
 
-_See code: [src/commands/hello.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/hello.ts)_
+_See code: [src/commands/config/validate.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/validate.ts)_
 
 ## `gqlmocks help [COMMAND]`
 
@@ -67,4 +64,33 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.3/src/commands/help.ts)_
+
+## `gqlmocks serve`
+
+Run a local graphql server
+
+```
+USAGE
+  $ gqlmocks serve
+
+OPTIONS
+  --faker            use faker middlware for resolver fallbacks
+  --handler=handler  path to file with graphql handler (via default export)
+  --header=header    specify header(s) used in request for remote schema specified by schema flag
+  --port=port        [default: 8080]
+
+  --schema=schema    (required) local (relative or absolute) path to graphql schema, remote url (graphql schema file or
+                     graphql api endpoint)
+
+  --watch
+
+EXAMPLES
+  $ gqlmocks serve --schema ../schema.graphql
+  $ gqlmocks serve --schema ../schema.graphql --handler ../handler.ts
+  $ gqlmocks serve --schema http://s3-bucket/schema.graphql --faker
+  $ gqlmocks serve --schema http://graphql-api/ --faker
+  $ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token --faker"
+```
+
+_See code: [src/commands/serve.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/serve.ts)_
 <!-- commandsstop -->
