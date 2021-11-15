@@ -26,12 +26,25 @@ function Home() {
   return (
     <Layout title="Home" description={siteConfig.tagline}>
       <div className="container">
-        <header className="hero">
+        <header className="hero-container">
           <div className="hero__content">
             <h1 className="hero__title">
               <code>{siteConfig.title}</code>
             </h1>
-            <p className="hero__subtitle">{siteConfig.tagline}</p>
+            <div className="hero__content-tagline">
+              <strong>Build web applications today against the GraphQL APIs of tomorrow.</strong>
+              <br />
+              Setup once. Run in node, the browser, and <code>localhost</code> with tools that scale mocks with the
+              complexity of your GraphQL API.
+            </div>
+            <div>
+              <Link
+                className={classnames('button button--secondary button--lg', styles.getStarted)}
+                to={useBaseUrl('docs/getting-started/introduction')}
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
           <div className="hero__slices">
             <section className="hero__slice">
@@ -42,15 +55,16 @@ function Home() {
                 <a href="/docs/highlight/introducing-highlight">
                   <code>Highlight</code>
                 </a>{' '}
-                to flexibly select parts of the schema to operate on
+                to flexibly select parts of the schema to mock and modify
               </p>
             </section>
             <section className="hero__slice">
               <img src="img/logo.svg" className={classnames('hero__logo')} />
               <h2>Mock</h2>
               <p>
-                Mock resolvers and resolver maps using <a href="/docs/resolver/introducing-wrappers">wrappers</a> and{' '}
-                <a href="/docs/resolver-map/introducing-middlewares">middlewares</a> to cover various scenarios
+                Flexibly define resolver behavior with <a href="/docs/resolver/introducing-wrappers">wrappers</a> and{' '}
+                <a href="/docs/resolver-map/introducing-middlewares">middlewares</a> to cover even the most complex
+                mocking scenarios
               </p>
             </section>
             <section className="hero__slice">
@@ -64,16 +78,24 @@ function Home() {
                 in-memory store
               </p>
             </section>
-          </div>
-          <div className="hero__content">
-            <div>
-              <Link
-                className={classnames('button button--secondary button--lg', styles.getStarted)}
-                to={useBaseUrl('docs/getting-started/introduction')}
-              >
-                Get Started
-              </Link>
-            </div>
+            <section className="hero__slice hero__slice-resolve">
+              <img src="img/graphql-handler.png" className={classnames('hero__logo')} />
+              <h2 className="__pull">Resolve</h2>
+              <p>
+                Resolve GraphQL queries in Node and the Browser with the provided{' '}
+                <a href="/docs/handler/introducing-handler">
+                  <code>GraphQLHandler</code>
+                </a>
+              </p>
+            </section>
+            <section className="hero__slice">
+              <img src="img/network-handlers.png" className={classnames('hero__logo')} />
+              <h2>Integrate</h2>
+              <p>
+                Write once, use everywhere. <a href="/docs/network/introducing-network-handlers">Network Handlers</a>{' '}
+                bring your mocks to node, the browser, and more.
+              </p>
+            </section>
           </div>
         </header>
 

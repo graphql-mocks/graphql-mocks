@@ -29,9 +29,11 @@ p {
   padding: 0 var(--ifm-pre-padding);
 }
 
-.hero {
+.hero-container {
   display: flex;
   flex-direction: column;
+  padding: 2rem;
+  align-items: center;
 }
 
 .hero__slices {
@@ -39,12 +41,19 @@ p {
   flex-direction: row;
   width: 100%;
   text-align: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .hero__slice {
   width: 32%;
   max-width: 350px;
-  padding: 2.5rem;
+  padding: 1.5rem 2.5rem;
+}
+
+.hero__slice h2 {
+  margin-top: 2rem;
 }
 
 .hero__slice p {
@@ -65,6 +74,13 @@ p {
   display: flex;
   flex-direction: column;
   text-align: center;
+  font-size: 1.5rem;
+  max-width: 80%;
+  margin: 3rem 0;
+}
+
+.hero__content-tagline {
+  margin: 2rem 0;
 }
 
 .hero__title {

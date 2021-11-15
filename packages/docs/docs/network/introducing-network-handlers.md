@@ -7,6 +7,8 @@ GraphQL is network-agnostic and works across any protocol where requests and res
 
 Depending on the situation different network handling will be appropriate for your mocking use-case. To make things easier `graphql-mocks` provides packages to integrate with different network scenarios. These packages start with the `network` prefix (ie: `@graphql-mocks/network-*`).
 
+*More Network Handlers coming soon!*
+
 ## Supported Node Network Handlers
 
 ### Express

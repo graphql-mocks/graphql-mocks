@@ -8,7 +8,7 @@ require('event-target-polyfill');
 
 module.exports = {
   title: 'graphql-mocks',
-  tagline: 'Tools for declaratively mocking GraphQL APIs',
+  tagline: 'GraphQL Mock API Framework',
   url: 'http://www.graphql-mocks.com',
   baseUrl: '/',
   favicon: 'img/favicon.png',
