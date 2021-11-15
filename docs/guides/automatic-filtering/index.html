@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-alpha.65">
-<title data-react-helmet="true">Automatic Resolver Filtering with Wrappers | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Automatic Resolver Filtering with Wrappers | graphql-mocks"><meta data-react-helmet="true" name="description" content="A common pattern is to filter information on Field Resolvers based on arguments from a query. In the case this pattern can be applied to multiple Field Resolvers it&#x27;s useful to standardize this filtering with Resolver Wrappers. This helps separate filtering from the data resolution and allows for re-use. The nature of the filtering depends on the conventions of your GraphQL API."><meta data-react-helmet="true" property="og:description" content="A common pattern is to filter information on Field Resolvers based on arguments from a query. In the case this pattern can be applied to multiple Field Resolvers it&#x27;s useful to standardize this filtering with Resolver Wrappers. This helps separate filtering from the data resolution and allows for re-use. The nature of the filtering depends on the conventions of your GraphQL API."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/guides/automatic-filtering"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/guides/automatic-filtering"><link rel="stylesheet" href="/styles.dccba457.css">
-<link rel="preload" href="/styles.4b73e4fa.js" as="script">
-<link rel="preload" href="/runtime~main.207818fa.js" as="script">
-<link rel="preload" href="/main.c7fc866c.js" as="script">
-<link rel="preload" href="/1.a882e0f1.js" as="script">
-<link rel="preload" href="/2.d92bf464.js" as="script">
-<link rel="preload" href="/237.3ed97998.js" as="script">
-<link rel="preload" href="/238.9bc7309a.js" as="script">
+<title data-react-helmet="true">Automatic Resolver Filtering with Wrappers | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Automatic Resolver Filtering with Wrappers | graphql-mocks"><meta data-react-helmet="true" name="description" content="A common pattern is to filter information on Field Resolvers based on arguments from a query. In the case this pattern can be applied to multiple Field Resolvers it&#x27;s useful to standardize this filtering with Resolver Wrappers. This helps separate filtering from the data resolution and allows for re-use. The nature of the filtering depends on the conventions of your GraphQL API."><meta data-react-helmet="true" property="og:description" content="A common pattern is to filter information on Field Resolvers based on arguments from a query. In the case this pattern can be applied to multiple Field Resolvers it&#x27;s useful to standardize this filtering with Resolver Wrappers. This helps separate filtering from the data resolution and allows for re-use. The nature of the filtering depends on the conventions of your GraphQL API."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/guides/automatic-filtering"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/guides/automatic-filtering"><link rel="stylesheet" href="/styles.6c5d0bfb.css">
+<link rel="preload" href="/styles.761bf999.js" as="script">
+<link rel="preload" href="/runtime~main.5caec005.js" as="script">
+<link rel="preload" href="/main.3e8cd562.js" as="script">
+<link rel="preload" href="/1.86d717c5.js" as="script">
+<link rel="preload" href="/2.777d6c53.js" as="script">
+<link rel="preload" href="/237.176bbf01.js" as="script">
+<link rel="preload" href="/238.7d4f5d89.js" as="script">
 <link rel="preload" href="/935f2afb.c5ababd5.js" as="script">
-<link rel="preload" href="/17896441.b6ff3fbb.js" as="script">
-<link rel="preload" href="/7e313942.591cf036.js" as="script">
+<link rel="preload" href="/17896441.760d03e5.js" as="script">
+<link rel="preload" href="/7e313942.e6a5244a.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script>
@@ -46,15 +46,15 @@ field resolver. The <code>highlight</code> argument can be customized to specify
     ]
   }
 }</pre><p>In the result the movie &quot;La La Land&quot; was filtered out since it was released in 2016 and the query specified movies with the year <code>&#x27;2001&#x27;</code>.</p></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/guides/managing-context"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Managing Resolver Context</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/guides/relay-pagination"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Relay Pagination »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3-RU"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#example" class="table-of-contents__link">Example</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="text--center"><div>Copyright © 2021 by <a href="https://www.github.com/chadian">chadian</a></div></div></div></footer></div>
-<script src="/styles.4b73e4fa.js"></script>
-<script src="/runtime~main.207818fa.js"></script>
-<script src="/main.c7fc866c.js"></script>
-<script src="/1.a882e0f1.js"></script>
-<script src="/2.d92bf464.js"></script>
-<script src="/237.3ed97998.js"></script>
-<script src="/238.9bc7309a.js"></script>
+<script src="/styles.761bf999.js"></script>
+<script src="/runtime~main.5caec005.js"></script>
+<script src="/main.3e8cd562.js"></script>
+<script src="/1.86d717c5.js"></script>
+<script src="/2.777d6c53.js"></script>
+<script src="/237.176bbf01.js"></script>
+<script src="/238.7d4f5d89.js"></script>
 <script src="/935f2afb.c5ababd5.js"></script>
-<script src="/17896441.b6ff3fbb.js"></script>
-<script src="/7e313942.591cf036.js"></script>
+<script src="/17896441.760d03e5.js"></script>
+<script src="/7e313942.e6a5244a.js"></script>
 </body>
 </html>

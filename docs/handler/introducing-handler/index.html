@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-alpha.65">
-<title data-react-helmet="true">Introducing the GraphQL Handler | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Introducing the GraphQL Handler | graphql-mocks"><meta data-react-helmet="true" name="description" content="Ultimately, in order to be able to execute GraphQL queries you need a GraphQL handler. This handler accepts a query and variables and returns a payload of data and/or errors."><meta data-react-helmet="true" property="og:description" content="Ultimately, in order to be able to execute GraphQL queries you need a GraphQL handler. This handler accepts a query and variables and returns a payload of data and/or errors."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/handler/introducing-handler"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/handler/introducing-handler"><link rel="stylesheet" href="/styles.dccba457.css">
-<link rel="preload" href="/styles.4b73e4fa.js" as="script">
-<link rel="preload" href="/runtime~main.207818fa.js" as="script">
-<link rel="preload" href="/main.c7fc866c.js" as="script">
-<link rel="preload" href="/1.a882e0f1.js" as="script">
-<link rel="preload" href="/2.d92bf464.js" as="script">
-<link rel="preload" href="/237.3ed97998.js" as="script">
-<link rel="preload" href="/238.9bc7309a.js" as="script">
+<title data-react-helmet="true">Introducing the GraphQL Handler | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Introducing the GraphQL Handler | graphql-mocks"><meta data-react-helmet="true" name="description" content="Ultimately, in order to be able to execute GraphQL queries you need a GraphQL handler. This handler accepts a query and variables and returns a payload of data and/or errors."><meta data-react-helmet="true" property="og:description" content="Ultimately, in order to be able to execute GraphQL queries you need a GraphQL handler. This handler accepts a query and variables and returns a payload of data and/or errors."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/handler/introducing-handler"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/handler/introducing-handler"><link rel="stylesheet" href="/styles.6c5d0bfb.css">
+<link rel="preload" href="/styles.761bf999.js" as="script">
+<link rel="preload" href="/runtime~main.5caec005.js" as="script">
+<link rel="preload" href="/main.3e8cd562.js" as="script">
+<link rel="preload" href="/1.86d717c5.js" as="script">
+<link rel="preload" href="/2.777d6c53.js" as="script">
+<link rel="preload" href="/237.176bbf01.js" as="script">
+<link rel="preload" href="/238.7d4f5d89.js" as="script">
 <link rel="preload" href="/935f2afb.c5ababd5.js" as="script">
-<link rel="preload" href="/17896441.b6ff3fbb.js" as="script">
-<link rel="preload" href="/f6ae81b6.96e53c9f.js" as="script">
+<link rel="preload" href="/17896441.760d03e5.js" as="script">
+<link rel="preload" href="/f6ae81b6.b3b4aa08.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script>
@@ -36,15 +36,15 @@
     &quot;helloWorld&quot;: &quot;Hello from my first GraphQL resolver!&quot;
   }
 }</pre></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/getting-started/quick-example"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Quick Example</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/handler/using-middlewares"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Using Middlewares »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3-RU"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#installation" class="table-of-contents__link">Installation</a></li><li><a href="#getting-started" class="table-of-contents__link">Getting started</a><ul><li><a href="#graphql-schema" class="table-of-contents__link">GraphQL Schema</a></li><li><a href="#dependencies" class="table-of-contents__link">Dependencies</a></li><li><a href="#resolver-map" class="table-of-contents__link">Resolver Map</a></li></ul></li><li><a href="#querying" class="table-of-contents__link">Querying</a></li><li><a href="#example" class="table-of-contents__link">Example</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="text--center"><div>Copyright © 2021 by <a href="https://www.github.com/chadian">chadian</a></div></div></div></footer></div>
-<script src="/styles.4b73e4fa.js"></script>
-<script src="/runtime~main.207818fa.js"></script>
-<script src="/main.c7fc866c.js"></script>
-<script src="/1.a882e0f1.js"></script>
-<script src="/2.d92bf464.js"></script>
-<script src="/237.3ed97998.js"></script>
-<script src="/238.9bc7309a.js"></script>
+<script src="/styles.761bf999.js"></script>
+<script src="/runtime~main.5caec005.js"></script>
+<script src="/main.3e8cd562.js"></script>
+<script src="/1.86d717c5.js"></script>
+<script src="/2.777d6c53.js"></script>
+<script src="/237.176bbf01.js"></script>
+<script src="/238.7d4f5d89.js"></script>
 <script src="/935f2afb.c5ababd5.js"></script>
-<script src="/17896441.b6ff3fbb.js"></script>
-<script src="/f6ae81b6.96e53c9f.js"></script>
+<script src="/17896441.760d03e5.js"></script>
+<script src="/f6ae81b6.b3b4aa08.js"></script>
 </body>
 </html>
