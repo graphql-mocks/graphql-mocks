@@ -38,7 +38,12 @@ describe('serve', () => {
 
   test
     .stdout()
-    .command(['serve', '--faker', '--schema', resolve(__dirname, '../test-helpers/schema.graphql')])
+    .command([
+      'serve',
+      '--faker',
+      '--schema',
+      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
+    ])
     .it('serves with a faker middleware', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
@@ -51,7 +56,7 @@ describe('serve', () => {
     .command([
       'serve',
       '--schema',
-      resolve(__dirname, '../test-helpers/schema.graphql'),
+      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
       '--handler',
       resolve(__dirname, '../test-helpers/test-graphql-mocks-root/handler'),
     ])
@@ -64,7 +69,14 @@ describe('serve', () => {
 
   test
     .stdout()
-    .command(['serve', '--port', '8383', '--faker', '--schema', resolve(__dirname, '../test-helpers/schema.graphql')])
+    .command([
+      'serve',
+      '--port',
+      '8383',
+      '--faker',
+      '--schema',
+      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
+    ])
     .it('serves on a custom port', async (ctx) => {
       const customPort = '8383';
       expect(ctx.stdout).to.contain('Press Ctrl+C');

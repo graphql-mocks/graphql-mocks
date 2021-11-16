@@ -1,6 +1,5 @@
 import { Config, LoadableJavascriptFile } from '../types';
 import { normalizeAbsolutePath } from './normalize-absolute-path';
-import { resolve } from 'path';
 import Debug from 'debug';
 
 const debug = Debug('validate-config');
@@ -14,20 +13,10 @@ export function validateConfig(config: any): Error[] {
     return errors;
   }
 
-  if (typeof config.rootPath !== 'string') {
-    catchError(new Error(`config.rootPath must be a string, got ${typeof config.rootPath}`));
-    return errors;
-  }
-
-  const verifiedRootPath = normalizeAbsolutePath(config.rootPath);
-  if (verifiedRootPath === null) {
-    catchError(new Error(`Could not locate config.rootPath directory at ${config.rootPath}`));
-    return errors;
-  }
-
   validateSchemaConfig(config, catchError);
   validateHandlerConfig(config, catchError);
   validateResolverMapConfig(config, catchError);
+  validateResolverConfig(config, catchError);
 
   return errors;
 }
@@ -39,14 +28,6 @@ export function isConfig(config: any): config is Config {
   } catch (e) {
     return false;
   }
-}
-
-function findAbsoluteFile(pathWithoutExtension: string, extensions: string[] = ['js', 'ts']) {
-  // '' keeps file without the extension in case the path already
-  // includes an extension
-  return [...extensions.map((ext) => `.${ext}`), '']
-    .map((extension) => `${pathWithoutExtension}${extension}`)
-    .find((path) => normalizeAbsolutePath(path));
 }
 
 function validateLoadableJavascript(
@@ -62,49 +43,49 @@ function validateLoadableJavascript(
   const configEntry = configKey.reduce((config, key) => config[key], config as any) as LoadableJavascriptFile;
   debug(`Found configEntry ${JSON.stringify(configEntry)}`);
 
-  if (!('relativePath' in configEntry) || !('namedExport' in configEntry)) {
-    catchError(new Error(`config.${configKey}.relativePath and config.${configKey}.namedExport are required keys`));
+  if (!('path' in configEntry)) {
+    catchError(new Error(`config.${configKey}.path is a required key`));
     return;
   }
 
-  if (!configEntry.relativePath || !configEntry.namedExport) {
-    catchError(
-      new Error(`config.${configKey}.relativePath and config.${configKey}.namedExport require non-empty string values`),
-    );
+  if (!configEntry.path) {
+    catchError(new Error(`config.${configKey}.path must be a non-empty string value`));
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const combinedPath = resolve(config.rootPath!, configEntry.relativePath);
-  const verifiedPath = findAbsoluteFile(combinedPath);
+  const verifiedPath = normalizeAbsolutePath(configEntry.path, { extensions: ['js', 'ts'] });
 
   if (typeof verifiedPath !== 'string') {
-    catchError(new Error(`Could not locate config.${configKey} at ${configEntry.relativePath}`));
+    catchError(new Error(`Could not locate config.${configKey} at ${configEntry.path}`));
     return;
   }
 
-  let loaded;
   try {
-    loaded = require(verifiedPath!);
+    require(verifiedPath!);
   } catch (e) {
     catchError(new Error(`Unable to require file for config.${configKey} at ${verifiedPath}`));
-  }
-
-  if (!loaded || !loaded[configEntry.namedExport]) {
-    catchError(
-      new Error(
-        `Unable to find named export for config.${configKey} at ${verifiedPath} with export ${configEntry.namedExport}`,
-      ),
-    );
   }
 }
 
 function validateResolverMapConfig(config: Config, catchError: (e: Error) => void) {
   if (config.resolverMap) {
     validateLoadableJavascript('resolverMap', config, catchError);
+  }
+}
 
-    if (config.resolverMap.types) {
-      validateLoadableJavascript(['resolverMap', 'types'], config, catchError);
+function validateResolverConfig(config: Config, catchError: (e: Error) => void) {
+  if (config.resolvers) {
+    if (!config.resolvers.path) {
+      catchError(new Error('config.resolvers.path is required'));
+    } else {
+      const resolverPath = normalizeAbsolutePath(config.resolvers.path, { extensions: [''] });
+      if (!resolverPath) {
+        catchError(new Error(`Unable to find directory for config.resolvers.path at ${resolverPath}`));
+      }
+    }
+
+    if (!config.resolvers.organizedBy) {
+      catchError(new Error('config.resolvers.organizedBy is required and currently must be set to "TYPE"'));
     }
   }
 }
@@ -124,19 +105,21 @@ function validateSchemaConfig(config: Config, catchError: (e: Error) => void) {
     return;
   }
 
-  if (config.schema.url && typeof config.schema.url !== 'string') {
-    catchError(new Error('config.schema.url must be a string'));
-  } else {
-    try {
-      new URL(config.schema.url!);
-    } catch {
-      catchError(new Error(`Could not parse config.schema.url with value of "${config.schema.url}", is it valid?`));
+  if (config.schema.url) {
+    if (typeof config.schema.url !== 'string') {
+      catchError(new Error('config.schema.url must be a string'));
+    } else {
+      try {
+        new URL(config.schema.url!);
+      } catch {
+        catchError(new Error(`Could not parse config.schema.url with value of "${config.schema.url}", is it valid?`));
+      }
     }
   }
 
-  if (config.schema.relativePath) {
+  if (config.schema.path) {
     if (!config.schema.format) {
-      catchError(new Error('config.schema.format is required when config.schema.relativePath is specified'));
+      catchError(new Error('config.schema.format is required when config.schema.path is specified'));
       return;
     }
 
@@ -149,26 +132,16 @@ function validateSchemaConfig(config: Config, catchError: (e: Error) => void) {
       extensions.push('js', 'ts');
     }
 
-    const file = findAbsoluteFile(config.schema.relativePath, extensions);
+    const file = normalizeAbsolutePath(config.schema.path, { extensions });
     if (!file) {
       catchError(
         new Error(
-          `Could not find config.schema.relativePath ${
-            config.schema.relativePath
-          }, also tried with extensions ${extensions.join(', ')}`,
+          `Could not find config.schema.path ${config.schema.path}, also tried with extensions ${extensions.join(
+            ', ',
+          )}`,
         ),
       );
       return;
-    }
-
-    if (file.endsWith('.js') || file.endsWith('.ts')) {
-      if (typeof config.schema.namedExport !== 'string') {
-        catchError(
-          new Error(
-            `config.schema.relativePath that reference js or ts file require a config.schema.namedExport value`,
-          ),
-        );
-      }
     }
   }
 

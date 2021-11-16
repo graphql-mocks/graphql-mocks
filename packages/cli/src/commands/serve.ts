@@ -3,9 +3,8 @@ import { expressMiddleware } from '@graphql-mocks/network-express';
 import express = require('express');
 import { GraphQLHandler } from 'graphql-mocks';
 import { createSchema } from 'graphql-mocks/graphql/utils';
-import { cwd } from 'process';
-import { resolve, parse as pathParse, isAbsolute } from 'path';
-import { existsSync, readFileSync, writeFileSync, watchFile } from 'fs';
+import { resolve, parse as pathParse } from 'path';
+import { readFileSync, writeFileSync, watchFile } from 'fs';
 import { fakerMiddleware } from '@graphql-mocks/faker';
 import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
@@ -94,7 +93,7 @@ export default class Serve extends Command {
   async createSchema(path: string, headers: Record<string, string>) {
     const axios = Serve.axios;
 
-    let normalizedPath = normalizeAbsolutePath(path);
+    let normalizedPath = normalizeAbsolutePath(path, { cwd: true, extensions: ['gql', 'graphql'] });
     const url = this.urlForPath(path);
 
     if (!normalizedPath && url) {
@@ -146,20 +145,6 @@ export default class Serve extends Command {
     return schema;
   }
 
-  findHandlerAbsolutePath(path: string) {
-    if (!isAbsolute(path)) {
-      const absolutePath = resolve(cwd(), path);
-
-      if (!existsSync(absolutePath)) {
-        this.error(`Could not find handler at path ${path}`);
-      }
-
-      path = absolutePath;
-    }
-
-    return path;
-  }
-
   loadHandler(path: string) {
     const { dir, name } = pathParse(path);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -167,7 +152,7 @@ export default class Serve extends Command {
     loaded = loaded?.default ?? loaded;
 
     if (!loaded) {
-      this.error(`Was unable to load handler from ${path}`);
+      this.error(`Unable to load handler from ${path}`);
     }
 
     return loaded;
@@ -178,10 +163,14 @@ export default class Serve extends Command {
 
     if (flags.handler) {
       try {
-        const handlerPath = this.findHandlerAbsolutePath(flags.handler);
-        handler = this.loadHandler(handlerPath);
+        const handlerPath = normalizeAbsolutePath(flags.handler, { cwd: true, extensions: ['js', 'ts'] });
+        if (handlerPath) {
+          handler = this.loadHandler(handlerPath);
+        } else {
+          throw new Error();
+        }
       } catch (e) {
-        this.error(`Unable to find handler at ${flags.handler}`);
+        this.error(`Unable to find handler at ${flags.handler}.\n\n${e.message}`);
       }
     } else {
       handler = new GraphQLHandler({
@@ -263,8 +252,8 @@ export default class Serve extends Command {
 
     if (flags.watch) {
       const files = [
-        flags.schema && normalizeAbsolutePath(flags.schema),
-        flags.handler && this.findHandlerAbsolutePath(flags.handler),
+        flags.schema && normalizeAbsolutePath(flags.schema, { cwd: true, extensions: ['gql', 'graphql'] }),
+        flags.handler && normalizeAbsolutePath(flags.handler, { cwd: true, extensions: ['js', 'ts'] }),
       ].filter(Boolean) as string[];
 
       this.watchFiles(files, start);

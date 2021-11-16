@@ -1,11 +1,8 @@
 module.exports = {
-  rootPath: 'graphql-mocks',
   schema: {
-    relativePath: 'schema',
-    namedExport: 'graphqlSchema',
+    path: 'schema',
   },
   handler: {
-    relativePath: 'handler',
-    namedExport: 'graphqlHandler',
+    path: 'handler',
   },
 };

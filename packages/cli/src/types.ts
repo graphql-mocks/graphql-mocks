@@ -1,25 +1,17 @@
 export type LoadableJavascriptFile = {
-  relativePath: string;
-  namedExport: string;
+  path: string;
 };
 
 export type Config = {
-  rootPath: string;
-
-  schema: {
+  schema: LoadableJavascriptFile & {
     url?: string;
     format?: 'SDL' | 'SDL_STRING' | 'JSON';
-
-    // deviates from LoadableJavascriptFile because the
-    // relative path could be to a .graphql file which is
-    // not a javascript file
-    relativePath: string;
-    namedExport?: string;
   };
 
   handler: LoadableJavascriptFile;
-
-  resolverMap?: LoadableJavascriptFile & {
-    types: LoadableJavascriptFile;
+  resolverMap?: LoadableJavascriptFile;
+  resolvers?: {
+    organizedBy: 'TYPE';
+    path: string;
   };
 };

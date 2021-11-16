@@ -1,5 +1,4 @@
 import { Command, flags } from '@oclif/command';
-import { findConfigFile } from '../../lib/find-config-file';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 import { validateConfig } from '../../lib/validate-config';
 
@@ -20,7 +19,7 @@ export default class ConfigValidate extends Command {
         this.error(`Could not find a file at ${flags.file}`);
       }
     } else {
-      configFile = await findConfigFile();
+      configFile = normalizeAbsolutePath('gqlmocks.config', { extensions: ['json', 'js', 'ts'] });
       if (!configFile) {
         this.error(
           `Could not locate gqlmocks.config.js file.\nDoes one exist at the project root alongside the package.json?`,
@@ -29,12 +28,14 @@ export default class ConfigValidate extends Command {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config = require(configFile as string);
+    let config = require(configFile as string);
+    config = config.default ?? config;
+
     if (typeof config !== 'object') {
       throw new Error(`Could not import config file at ${configFile}, expected object got ${typeof config}`);
     }
 
-    const errors = validateConfig(config.default ?? config);
+    const errors = validateConfig(config);
     if (errors.length) {
       const formattedErrors = errors.map((e) => `* ${e.message}`).join('\n');
       this.error(`Validation of config failed, fix then re-run:\n ${formattedErrors}`);
