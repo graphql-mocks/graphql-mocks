@@ -2,8 +2,9 @@ import { expect, test } from '@oclif/test';
 import { resolve } from 'path';
 import * as sinon from 'sinon';
 import Serve from '../../src/commands/serve';
-import * as express from 'express';
 import axios from 'axios';
+
+const express = require('express');
 
 describe('serve', () => {
   let server: any = null;
@@ -39,7 +40,7 @@ describe('serve', () => {
     .stdout()
     .command(['serve', '--faker', '--schema', resolve(__dirname, '../test-helpers/schema.graphql')])
     .it('serves with a faker middleware', async (ctx) => {
-      expect(ctx.stdout).to.contain('Press ctrl + c to stop');
+      expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
       const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ hello }` });
       expect(typeof result.data.data.hello).to.equal('string');
@@ -52,10 +53,10 @@ describe('serve', () => {
       '--schema',
       resolve(__dirname, '../test-helpers/schema.graphql'),
       '--handler',
-      resolve(__dirname, '../test-helpers/handler.ts'),
+      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/handler'),
     ])
     .it('serves with a loaded graphql handler', async (ctx) => {
-      expect(ctx.stdout).to.contain('Press ctrl + c to stop');
+      expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
       const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ hello }` });
       expect(result.data.data.hello).to.equal('Hello World from a custom graphql handler');
@@ -66,7 +67,7 @@ describe('serve', () => {
     .command(['serve', '--port', '8383', '--faker', '--schema', resolve(__dirname, '../test-helpers/schema.graphql')])
     .it('serves on a custom port', async (ctx) => {
       const customPort = '8383';
-      expect(ctx.stdout).to.contain('Press ctrl + c to stop');
+      expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
       const result: any = await axios.post(`http://localhost:${customPort}/graphql`, { query: `{ hello }` });
       expect(typeof result.data.data.hello).to.equal('string');
@@ -85,7 +86,7 @@ describe('serve', () => {
       'OtherHeader=Other Value',
     ])
     .it('serves with fetching a custom schema with custom headers', async (ctx) => {
-      expect(ctx.stdout).to.contain('Press ctrl + c to stop');
+      expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
       const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ ships { name } }` });
 

@@ -1,6 +1,6 @@
 import { Command, flags } from '@oclif/command';
 import { expressMiddleware } from '@graphql-mocks/network-express';
-import * as express from 'express';
+import express = require('express');
 import { GraphQLHandler } from 'graphql-mocks';
 import { createSchema } from 'graphql-mocks/graphql/utils';
 import { cwd } from 'process';
@@ -12,10 +12,13 @@ import { randomBytes } from 'crypto';
 import axios from 'axios';
 import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
 import { cli } from 'cli-ux';
-import { graphiqlMiddleware } from 'graphiql-middleware';
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import { ResolverMapMiddleware } from 'graphql-mocks/types';
 import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { graphiqlMiddleware } from 'graphiql-middleware';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -27,7 +30,7 @@ function refreshModuleOnChange(module: string, cb: any) {
         delete require.cache[require.resolve(module)];
         require(module);
       }
-    } catch (e: any) {
+    } catch (e) {
       console.log(chalk.yellow(`Error reloading:\n${e.toString()}`));
     }
 
@@ -148,7 +151,7 @@ export default class Serve extends Command {
       const absolutePath = resolve(cwd(), path);
 
       if (!existsSync(absolutePath)) {
-        this.error(`Could not find schema at path ${path}`);
+        this.error(`Could not find handler at path ${path}`);
       }
 
       path = absolutePath;
@@ -171,24 +174,30 @@ export default class Serve extends Command {
   }
 
   startServer({ flags, schema, port, middlewares }: any) {
-    const handlerPath = this.findHandlerAbsolutePath(flags.handler);
+    let handler;
 
-    const handler: GraphQLHandler = handlerPath
-      ? this.loadHandler(handlerPath)
-      : new GraphQLHandler({
-          dependencies: {
-            graphqlSchema: schema,
-          },
-        });
+    if (flags.handler) {
+      try {
+        const handlerPath = this.findHandlerAbsolutePath(flags.handler);
+        handler = this.loadHandler(handlerPath);
+      } catch (e) {
+        this.error(`Unable to find handler at ${flags.handler}`);
+      }
+    } else {
+      handler = new GraphQLHandler({
+        dependencies: {
+          graphqlSchema: schema,
+        },
+      });
+    }
 
     (handler as any).middlewares = middlewares;
-
     cli.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
 
     const apiEndpointPath = '/graphql';
     const graphiqlClientPath = '/client';
-    app.post(apiEndpointPath, expressMiddleware(handler));
+    app.post(apiEndpointPath, expressMiddleware(handler as GraphQLHandler));
     app.use(
       graphiqlClientPath,
       graphiqlMiddleware(

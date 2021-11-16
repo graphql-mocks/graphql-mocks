@@ -11,10 +11,12 @@ export function validateConfig(config: any): Error[] {
 
   if (typeof config !== 'object') {
     catchError(new Error(`config must be an object, got ${typeof config}`));
+    return errors;
   }
 
   if (typeof config.rootPath !== 'string') {
     catchError(new Error(`config.rootPath must be a string, got ${typeof config.rootPath}`));
+    return errors;
   }
 
   const verifiedRootPath = normalizeAbsolutePath(config.rootPath);
@@ -108,7 +110,7 @@ function validateResolverMapConfig(config: Config, catchError: (e: Error) => voi
 }
 
 function validateHandlerConfig(config: Config, catchError: (e: Error) => void) {
-  if (!config.schema) {
+  if (!config.handler) {
     catchError(new Error('config.handler is a required entry'));
     return;
   }
