@@ -27,7 +27,7 @@ export default class ConfigValidate extends Command {
       }
     }
 
-    const { errors } = loadConfig();
+    const { errors } = loadConfig(configFile);
 
     if (errors?.length) {
       const formattedErrors = errors.map((e) => `* ${e.message}`).join('\n');
