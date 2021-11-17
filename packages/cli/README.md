@@ -19,7 +19,7 @@ $ npm install -g gqlmocks
 $ gqlmocks COMMAND
 running command...
 $ gqlmocks (-v|--version|version)
-gqlmocks/0.0.0 darwin-arm64 node-v12.22.1
+gqlmocks/0.0.0 darwin-arm64 node-v14.17.2
 $ gqlmocks --help [COMMAND]
 USAGE
   $ gqlmocks COMMAND
@@ -28,22 +28,37 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`gqlmocks config:validate [FILE]`](#gqlmocks-configvalidate-file)
+* [`gqlmocks config:generate [FILE]`](#gqlmocks-configgenerate-file)
+* [`gqlmocks config:validate`](#gqlmocks-configvalidate)
 * [`gqlmocks help [COMMAND]`](#gqlmocks-help-command)
 * [`gqlmocks serve`](#gqlmocks-serve)
 
-## `gqlmocks config:validate [FILE]`
+## `gqlmocks config:generate [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ gqlmocks config:validate [FILE]
+  $ gqlmocks config:generate [FILE]
 
 OPTIONS
   -f, --force
   -h, --help       show CLI help
   -n, --name=name  name to print
+```
+
+_See code: [src/commands/config/generate.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/generate.ts)_
+
+## `gqlmocks config:validate`
+
+Validate gqlmocks.config.js
+
+```
+USAGE
+  $ gqlmocks config:validate
+
+OPTIONS
+  -f, --file=file
 ```
 
 _See code: [src/commands/config/validate.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/validate.ts)_
@@ -79,8 +94,8 @@ OPTIONS
   --header=header    specify header(s) used in request for remote schema specified by schema flag
   --port=port        [default: 8080]
 
-  --schema=schema    (required) local (relative or absolute) path to graphql schema, remote url (graphql schema file or
-                     graphql api endpoint)
+  --schema=schema    local (relative or absolute) path to graphql schema, remote url (graphql schema file or graphql api
+                     endpoint)
 
   --watch
 
