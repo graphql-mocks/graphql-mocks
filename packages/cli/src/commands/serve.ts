@@ -18,6 +18,7 @@ import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { graphiqlMiddleware } from 'graphiql-middleware';
+import { loadConfig } from '../lib/load-config';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -66,7 +67,6 @@ export default class Serve extends Command {
       description: 'path to file with graphql handler (via default export)',
     }),
     schema: flags.string({
-      required: true,
       env: 'GQLMOCKS_SCHEMA',
       description:
         'local (relative or absolute) path to graphql schema, remote url (graphql schema file or graphql api endpoint)',
@@ -93,7 +93,7 @@ export default class Serve extends Command {
   async createSchema(path: string, headers: Record<string, string>) {
     const axios = Serve.axios;
 
-    let normalizedPath = normalizeAbsolutePath(path, { cwd: true, extensions: ['gql', 'graphql'] });
+    let normalizedPath = normalizeAbsolutePath(path, { extensions: ['gql', 'graphql', 'json', 'js', 'ts'] });
     const url = this.urlForPath(path);
 
     if (!normalizedPath && url) {
@@ -158,19 +158,14 @@ export default class Serve extends Command {
     return loaded;
   }
 
-  startServer({ flags, schema, port, middlewares }: any) {
+  startServer({ handlerPath, schema, port, middlewares }: any) {
     let handler;
 
-    if (flags.handler) {
+    if (handlerPath) {
       try {
-        const handlerPath = normalizeAbsolutePath(flags.handler, { cwd: true, extensions: ['js', 'ts'] });
-        if (handlerPath) {
-          handler = this.loadHandler(handlerPath);
-        } else {
-          throw new Error();
-        }
+        handler = this.loadHandler(handlerPath);
       } catch (e) {
-        this.error(`Unable to find handler at ${flags.handler}.\n\n${e.message}`);
+        this.error(`Unable to find handler at ${handlerPath}.\n\n${e.message}`);
       }
     } else {
       handler = new GraphQLHandler({
@@ -227,7 +222,23 @@ export default class Serve extends Command {
         [key]: value,
       };
     }, {});
-    const schema = await this.createSchema(flags.schema, headers);
+
+    const { config, errors } = loadConfig();
+    if (config && errors) {
+      this.warn(
+        `Note: Found gqlmocks config but it has validation errors:\n${errors.map((e) => ` * ${e.message}`).join('\n')}`,
+      );
+    }
+
+    const schemaPath = flags.schema ?? config?.schema.path;
+
+    if (!schemaPath) {
+      this.error('A GraphQLSchema is required, specify a schema via a gqlmocks config or --schema flag');
+    }
+
+    const handlerPath = flags.handler ?? config?.handler?.path;
+
+    const schema = await this.createSchema(schemaPath, headers);
     const middlewares: ResolverMapMiddleware[] = [];
 
     if (flags.faker) {
@@ -236,11 +247,10 @@ export default class Serve extends Command {
 
     const start = () => {
       const up = () => {
-        this.server = this.startServer({ flags, schema, port, middlewares });
+        this.server = this.startServer({ handlerPath, schema, port, middlewares });
       };
 
       if (this.server) {
-        debugger;
         this.server.close(() => {
           this.log('Restarting server...');
           up();
@@ -252,8 +262,8 @@ export default class Serve extends Command {
 
     if (flags.watch) {
       const files = [
-        flags.schema && normalizeAbsolutePath(flags.schema, { cwd: true, extensions: ['gql', 'graphql'] }),
-        flags.handler && normalizeAbsolutePath(flags.handler, { cwd: true, extensions: ['js', 'ts'] }),
+        schemaPath && normalizeAbsolutePath(schemaPath, { extensions: ['graphql', 'gql', 'json', 'js', 'ts'] }),
+        handlerPath && normalizeAbsolutePath(handlerPath, { extensions: ['js', 'ts'] }),
       ].filter(Boolean) as string[];
 
       this.watchFiles(files, start);

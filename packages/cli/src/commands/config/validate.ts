@@ -1,4 +1,5 @@
 import { Command, flags } from '@oclif/command';
+import { loadConfig } from '../../lib/load-config';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 import { validateConfig } from '../../lib/validate-config';
 
@@ -27,16 +28,9 @@ export default class ConfigValidate extends Command {
       }
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    let config = require(configFile as string);
-    config = config.default ?? config;
+    const { errors } = loadConfig();
 
-    if (typeof config !== 'object') {
-      throw new Error(`Could not import config file at ${configFile}, expected object got ${typeof config}`);
-    }
-
-    const errors = validateConfig(config);
-    if (errors.length) {
+    if (errors?.length) {
       const formattedErrors = errors.map((e) => `* ${e.message}`).join('\n');
       this.error(`Validation of config failed, fix then re-run:\n ${formattedErrors}`);
     }
