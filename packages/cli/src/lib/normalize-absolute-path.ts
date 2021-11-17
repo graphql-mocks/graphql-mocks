@@ -1,9 +1,15 @@
 import { isAbsolute, resolve } from 'path';
-import { existsSync } from 'fs';
-import { cwd } from 'process';
+import { existsSync, lstatSync } from 'fs';
 import { sync as pkgDir } from 'pkg-dir';
+import cwd from './cwd';
 
-export function normalizeAbsolutePath(path: string, options?: { extensions?: string[] }): string | undefined {
+export function normalizeAbsolutePath(
+  path: string,
+  options?: { isFile?: boolean; extensions?: string[] },
+): string | undefined {
+  const extensions = [...(options?.extensions ?? []), ''];
+  const isFile = options?.isFile ?? true;
+
   const pkgRoot = pkgDir(cwd());
   const paths: string[] = isAbsolute(path) ? [path] : [resolve(cwd(), path)];
 
@@ -13,10 +19,20 @@ export function normalizeAbsolutePath(path: string, options?: { extensions?: str
 
   // also check for each previous path with each extension
   paths.forEach((path) => {
-    options?.extensions?.forEach((ext) => {
+    extensions?.forEach((ext) => {
       paths.push(`${path}.${ext}`);
     });
   });
 
-  return paths.find((path) => existsSync(path));
+  return paths.find((path) => {
+    let pathIsFile;
+
+    try {
+      pathIsFile = !lstatSync(path).isDirectory();
+    } catch {
+      return false;
+    }
+
+    return isFile ? existsSync(path) && pathIsFile : existsSync(path) && !pathIsFile;
+  });
 }

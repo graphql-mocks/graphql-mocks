@@ -31,8 +31,8 @@ describe('serve', () => {
     axiosPostSpy = sinon.spy(Serve.axios, 'post');
   });
 
-  afterEach(function () {
-    server.close();
+  afterEach(async function () {
+    await new Promise((resolve) => (console.log('Stopping server...'), server.close(resolve)));
     Serve.express = express;
     axiosPostSpy.restore();
   });
@@ -101,13 +101,11 @@ describe('serve', () => {
     .it('serves with fetching a custom schema with custom headers', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
-      const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ ships { name } }` });
-
-      // using the public api space x api with faker, should generate some fake ships data
-      expect(result.data.data.ships.length).to.be.greaterThan(0);
-
+      const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ ships { id } }` });
       const axiosCallArgs = (axios.post as any).firstCall.args;
       expect(axiosCallArgs[0]).to.equal('https://api.spacex.land/graphql');
       expect(axiosCallArgs[1].Headers).to.deep.equal({ OtherHeader: 'Other Value', Authorization: 'Bearer Token' });
+      // using the public api space x api with faker, should generate some fake ships data
+      expect(result.data.data.ships.length).to.be.greaterThan(0);
     });
 });

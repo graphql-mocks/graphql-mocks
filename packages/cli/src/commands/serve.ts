@@ -224,13 +224,13 @@ export default class Serve extends Command {
     }, {});
 
     const { config, errors } = loadConfig();
-    if (config && errors) {
+    if (config && errors && errors.length) {
       this.warn(
-        `Note: Found gqlmocks config but it has validation errors:\n${errors.map((e) => ` * ${e.message}`).join('\n')}`,
+        `Found gqlmocks config but it has validation errors:\n${errors.map((e) => ` * ${e.message}`).join('\n')}`,
       );
     }
 
-    const schemaPath = flags.schema ?? config?.schema.path;
+    const schemaPath = flags.schema ?? config?.schema?.path;
 
     if (!schemaPath) {
       this.error('A GraphQLSchema is required, specify a schema via a gqlmocks config or --schema flag');

@@ -1,9 +1,9 @@
 import { Config, LoadableJavascriptFile } from '../types';
 import { normalizeAbsolutePath } from './normalize-absolute-path';
 import Debug from 'debug';
-import { cwd } from 'process';
 import { resolve } from 'path';
 import { sync as pkgDir } from 'pkg-dir';
+import cwd from './cwd';
 
 const debug = Debug('validate-config');
 
