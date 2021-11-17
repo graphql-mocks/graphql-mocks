@@ -1,7 +1,6 @@
 import { Command, flags } from '@oclif/command';
 import { loadConfig } from '../../lib/load-config';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
-import { validateConfig } from '../../lib/validate-config';
 
 export default class ConfigValidate extends Command {
   static description = 'Validate gqlmocks.config.js';
@@ -23,7 +22,7 @@ export default class ConfigValidate extends Command {
       configFile = normalizeAbsolutePath('gqlmocks.config', { extensions: ['json', 'js', 'ts'] });
       if (!configFile) {
         this.error(
-          `Could not locate gqlmocks.config.js file.\nDoes one exist at the project root alongside the package.json?`,
+          `Could not locate gqlmocks config file.\nDoes one exist at the project root alongside the package.json?`,
         );
       }
     }
@@ -32,7 +31,9 @@ export default class ConfigValidate extends Command {
 
     if (errors?.length) {
       const formattedErrors = errors.map((e) => `* ${e.message}`).join('\n');
-      this.error(`Validation of config failed, fix then re-run:\n ${formattedErrors}`);
+      this.error(`Validation of config failed, fix then re-run:\n\n ${formattedErrors}`);
+    } else {
+      this.log('✅ gqlmocks config is valid.');
     }
   }
 }
