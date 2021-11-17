@@ -4,6 +4,7 @@ import * as sinon from 'sinon';
 import Serve from '../../src/commands/serve';
 import axios from 'axios';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const express = require('express');
 
 describe('serve', () => {
@@ -42,7 +43,7 @@ describe('serve', () => {
       'serve',
       '--faker',
       '--schema',
-      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/schema.graphql'),
     ])
     .it('serves with a faker middleware', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
@@ -56,9 +57,9 @@ describe('serve', () => {
     .command([
       'serve',
       '--schema',
-      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/schema.graphql'),
       '--handler',
-      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/handler'),
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/handler'),
     ])
     .it('serves with a loaded graphql handler', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
@@ -75,7 +76,7 @@ describe('serve', () => {
       '8383',
       '--faker',
       '--schema',
-      resolve(__dirname, '../test-helpers/test-graphql-mocks-root/schema.graphql'),
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/schema.graphql'),
     ])
     .it('serves on a custom port', async (ctx) => {
       const customPort = '8383';

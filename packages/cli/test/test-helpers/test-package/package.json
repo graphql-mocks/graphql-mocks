@@ -1,0 +1,3 @@
+{
+  "comment": "this package.json is used for test purposes to denote the root of a project and to find a gqlmocks.config file relative to it"
+}
