@@ -19,7 +19,7 @@ $ npm install -g gqlmocks
 $ gqlmocks COMMAND
 running command...
 $ gqlmocks (-v|--version|version)
-gqlmocks/0.0.0 darwin-arm64 node-v14.17.2
+gqlmocks/0.0.0 darwin-x64 node-v14.17.3
 $ gqlmocks --help [COMMAND]
 USAGE
   $ gqlmocks COMMAND
@@ -28,18 +28,41 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`gqlmocks config:generate [FILE]`](#gqlmocks-configgenerate-file)
+* [`gqlmocks config:generate`](#gqlmocks-configgenerate)
+* [`gqlmocks config:info [FILE]`](#gqlmocks-configinfo-file)
 * [`gqlmocks config:validate`](#gqlmocks-configvalidate)
 * [`gqlmocks help [COMMAND]`](#gqlmocks-help-command)
 * [`gqlmocks serve`](#gqlmocks-serve)
 
-## `gqlmocks config:generate [FILE]`
+## `gqlmocks config:generate`
+
+Generate a basic gqlmocks config file
+
+```
+USAGE
+  $ gqlmocks config:generate
+
+OPTIONS
+  --force                              overwrite config if one exists
+  --format=ts|js|json                  specify the output format of the gqlmocks config
+  --handler.path=handler.path
+  --out=out                            path to write generated config to
+  --schema.format=SDL|SDL_STRING|JSON
+  --schema.path=schema.path            path to GraphQL schema
+
+DESCRIPTION
+  See more config options at www.graphql-mocks.com/docs/cli
+```
+
+_See code: [src/commands/config/generate.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/generate.ts)_
+
+## `gqlmocks config:info [FILE]`
 
 describe the command here
 
 ```
 USAGE
-  $ gqlmocks config:generate [FILE]
+  $ gqlmocks config:info [FILE]
 
 OPTIONS
   -f, --force
@@ -47,7 +70,7 @@ OPTIONS
   -n, --name=name  name to print
 ```
 
-_See code: [src/commands/config/generate.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/generate.ts)_
+_See code: [src/commands/config/info.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/config/info.ts)_
 
 ## `gqlmocks config:validate`
 

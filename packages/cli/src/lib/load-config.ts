@@ -2,8 +2,9 @@ import { Config } from '../types';
 import { normalizeAbsolutePath } from './normalize-absolute-path';
 import { validateConfig } from './validate-config';
 import { resolve } from 'path';
+import cwd from './cwd';
 
-export function loadConfig(path?: string): { config?: Config; errors?: Error[] } {
+export function loadConfig(path?: string): { config?: Config; path?: string; errors?: Error[] } {
   let filePath: string | undefined;
   const extensions = ['json', 'js', 'ts'];
 
@@ -16,7 +17,7 @@ export function loadConfig(path?: string): { config?: Config; errors?: Error[] }
   }
 
   if (!filePath) {
-    return { errors: [new Error(`Could not find config at ${path}`)] };
+    return { path: filePath, errors: [new Error(`Could not find config at ${path}`)] };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -24,5 +25,5 @@ export function loadConfig(path?: string): { config?: Config; errors?: Error[] }
   config = config.default ?? config;
 
   const errors = validateConfig(config, filePath);
-  return { config, errors };
+  return { config, errors, path: filePath };
 }
