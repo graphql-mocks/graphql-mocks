@@ -25,7 +25,9 @@ export default class ConfigInfo extends Command {
     if (!config) {
       const checkedPath = flags.config ?? path ?? pkgDir(cwd());
       const checkedMessage = checkedPath ? `\nChecked ${checkedPath}` : '';
-      this.error(`Could not find gqlmocks config${checkedMessage}`);
+      this.error(
+        `Could not find gqlmocks config${checkedMessage}\nCreate a gqlmocks config by running \`gqlmocks config:generate\``,
+      );
     }
 
     this.log();

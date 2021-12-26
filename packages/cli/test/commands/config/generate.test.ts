@@ -49,7 +49,7 @@ describe('config/generate', () => {
       writeFileSync(existingConfig, '');
     })
     .command(['config:generate', ...configContentFlags])
-    .catch((e) => expect(e.message).include('Cannot write config, file already exists'))
+    .catch((e) => expect(e.message).include('Bailing, file already exists'))
     .it('fails with error when config already exists');
 
   test
