@@ -1,3 +1,4 @@
+import process from 'process';
 let mock: string | undefined;
 
 export function setMockCwd(value: string): void {
