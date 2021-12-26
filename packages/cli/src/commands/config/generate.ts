@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command';
-import loadBlueprint from '../../lib/loadBlueprint';
+import loadBlueprint from '../../lib/load-blueprint';
 import { cli } from 'cli-ux';
 import { sync as pkgDir } from 'pkg-dir';
 import { tmpdir } from 'os';
@@ -40,36 +40,63 @@ export default class ConfigGenerate extends Command {
     };
 
     const root = pkgDir(cwd());
+    const { config: existingConfig } = loadConfig();
+
+    const format = flags.format ?? isTypeScriptProject(flags.out) ? 'ts' : 'js';
+    let configPath;
+    if (flags.out) {
+      const { ext } = parse(flags.out);
+      configPath = ext ? flags.out : `${flags.out}.${format}`;
+    } else {
+      if (!root) {
+        this.error(
+          'Unable to find root package.json. Double-check command is being ran inside a js/ts project with a package.json',
+        );
+      }
+
+      configPath = resolve(root, `gqlmocks.config.${format}`);
+    }
+
+    if (!flags.force && existsSync(configPath)) {
+      this.error(`Bailing, file already exists at ${configPath}, use --force to overwrite`);
+    }
 
     if (!flags.out) {
       this.warn(`All paths in the config are relative to:\n${root}\n`);
     }
 
     if (!config.schema.format) {
-      const defaultz = 'graphql-mocks/';
-      const format = await cli.prompt(`Format of GraphQL Schema? (default: ${defaultz})`, { required: false });
-      config.schema.format = format ?? defaultz;
+      const defaultz = existingConfig?.schema.format || 'SDL';
+      const format = await cli.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' 'JSON' (default: ${defaultz})`, {
+        required: false,
+      });
+      config.schema.format = format || defaultz;
     }
 
     if (!config.schema.path) {
-      const defaultz = 'graphql-mocks/schema.graphql';
+      const defaultz = existingConfig?.schema?.path || 'graphql-mocks/schema.graphql';
       const schemaPath = await cli.prompt(`Path to GraphQL Schema? (default: ${defaultz})`, { required: false });
-      config.schema.path = schemaPath ?? defaultz;
+      config.schema.path = schemaPath || defaultz;
     }
 
     if (!config.handler.path) {
-      const defaultz = 'graphql-mocks/handler.ts';
-      const handlerPath = await cli.prompt(`Path to GraphQL Schema? (default: ${defaultz})`, { required: false });
-      config.handler.path = handlerPath ?? defaultz;
+      const defaultz = existingConfig?.handler?.path || 'graphql-mocks/handler.ts';
+      const handlerPath = await cli.prompt(`Path to GraphQL Mocks Handler? (default: ${defaultz})`, {
+        required: false,
+      });
+      config.handler.path = handlerPath || defaultz;
     }
 
-    const format = flags.format ?? isTypeScriptProject(flags.out) ? 'ts' : 'js';
     if (!flags.format) {
-      this.warn(`Using format of ".${format}" for config. To specify the format use the --format flag\n`);
+      this.warn(
+        `Detected ${format} project, using ".${format}" for config. Format can be specified explicitly using the --format flag\n`,
+      );
     }
     const template = loadBlueprint(`config.${format}`);
 
-    const configFileContents = template(config);
+    const squashedConfig = { ...existingConfig, ...config };
+    const configFileContents = template(squashedConfig);
+    this.log(configFileContents);
     const tmpConfig = resolve(tmpdir(), `${randomBytes(16).toString('hex')}.${format}`);
     writeFileSync(tmpConfig, configFileContents);
     const { errors } = loadConfig(tmpConfig);
@@ -79,24 +106,6 @@ export default class ConfigGenerate extends Command {
       this.warn(
         `Found the follow validation errors, fix them and verify by running:\ngqlmocks config:validate\n\nValidation Errors:\n${formattedErrors}\n`,
       );
-    }
-
-    let configPath;
-    if (flags.out) {
-      const { ext } = parse(flags.out);
-      configPath = ext ? flags.out : `${flags.out}.${format}`;
-    } else {
-      if (!root) {
-        this.error(
-          'Unable to find root package.json. Double-check command is being ran inside a js or ts project with a package.json',
-        );
-      }
-
-      configPath = resolve(root, `gqlmocks.config.${format}`);
-    }
-
-    if (!flags.force && existsSync(configPath)) {
-      this.error(`Cannot write config, file already exists at ${configPath}`);
     }
 
     writeFileSync(configPath, configFileContents);
