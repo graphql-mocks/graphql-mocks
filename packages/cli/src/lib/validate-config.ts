@@ -1,4 +1,4 @@
-import { Config, LoadableJavascriptFile } from '../types';
+import { GqlMocksConfig, LoadableJavascriptFile } from '../types';
 import { normalizeAbsolutePath } from './normalize-absolute-path';
 import Debug from 'debug';
 import { resolve } from 'path';
@@ -38,7 +38,7 @@ class Validator {
     return normalizeAbsolutePath(resolve(this.root, path), options);
   }
 
-  validateLoadableJavascript(configKey: string | string[], config: Partial<Config>, catchError: (e: Error) => void) {
+  validateLoadableJavascript(configKey: string | string[], config: Partial<GqlMocksConfig>, catchError: (e: Error) => void) {
     if (typeof configKey === 'string') {
       configKey = [configKey];
     }
@@ -71,13 +71,13 @@ class Validator {
     }
   }
 
-  validateResolverMapConfig(config: Config, catchError: (e: Error) => void) {
+  validateResolverMapConfig(config: GqlMocksConfig, catchError: (e: Error) => void) {
     if (config.resolverMap) {
       this.validateLoadableJavascript('resolverMap', config, catchError);
     }
   }
 
-  validateResolverConfig(config: Config, catchError: (e: Error) => void) {
+  validateResolverConfig(config: GqlMocksConfig, catchError: (e: Error) => void) {
     if (config.resolvers) {
       if (!config.resolvers.path) {
         catchError(new Error('config.resolvers.path is required'));
@@ -94,7 +94,7 @@ class Validator {
     }
   }
 
-  validateHandlerConfig(config: Config, catchError: (e: Error) => void) {
+  validateHandlerConfig(config: GqlMocksConfig, catchError: (e: Error) => void) {
     if (!config.handler) {
       catchError(new Error('config.handler is a required entry'));
       return;
@@ -103,7 +103,7 @@ class Validator {
     this.validateLoadableJavascript('handler', config, catchError);
   }
 
-  validateSchemaConfig(config: Config, catchError: (e: Error) => void) {
+  validateSchemaConfig(config: GqlMocksConfig, catchError: (e: Error) => void) {
     if (!config.schema) {
       catchError(new Error('config.schema is a required entry'));
       return;

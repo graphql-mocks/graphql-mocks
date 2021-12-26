@@ -1,10 +1,9 @@
-import { Config } from '../types';
+import { GqlMocksConfig } from '../types';
 import { normalizeAbsolutePath } from './normalize-absolute-path';
 import { validateConfig } from './validate-config';
 import { resolve } from 'path';
-import cwd from './cwd';
 
-export function loadConfig(path?: string): { config?: Config; path?: string; errors?: Error[] } {
+export function loadConfig(path?: string): { config?: GqlMocksConfig; path?: string; errors?: Error[] } {
   let filePath: string | undefined;
   const extensions = ['json', 'js', 'ts'];
 

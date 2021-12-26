@@ -2,7 +2,7 @@ export type LoadableJavascriptFile = {
   path: string;
 };
 
-export type Config = {
+export type GqlMocksConfig = {
   schema: LoadableJavascriptFile & {
     url?: string;
     format?: 'SDL' | 'SDL_STRING' | 'JSON';
