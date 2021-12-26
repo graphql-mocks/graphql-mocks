@@ -96,7 +96,6 @@ export default class ConfigGenerate extends Command {
 
     const squashedConfig = { ...existingConfig, ...config };
     const configFileContents = template(squashedConfig);
-    this.log(configFileContents);
     const tmpConfig = resolve(tmpdir(), `${randomBytes(16).toString('hex')}.${format}`);
     writeFileSync(tmpConfig, configFileContents);
     const { errors } = loadConfig(tmpConfig);
