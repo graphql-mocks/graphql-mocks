@@ -5,7 +5,9 @@ import { setMockCwd, restoreCwd } from '../../../src/lib/cwd';
 import { normalizeAbsolutePath } from '../../../src/lib/normalize-absolute-path';
 import { unlinkSync as rm } from 'fs';
 
-describe('config/generate', () => {
+describe('config/generate', function () {
+  this.timeout(10000);
+
   const generateTestPkgDir = resolve(__dirname, '../../test-helpers/test-package-generate');
   const findGeneratedConfig = () =>
     normalizeAbsolutePath(resolve(generateTestPkgDir, 'gqlmocks.config'), {
