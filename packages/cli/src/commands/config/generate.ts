@@ -88,12 +88,12 @@ export default class ConfigGenerate extends Command {
     }
 
     if (!flags.format) {
-      this.warn(
-        `Detected ${format} project, using ".${format}" for config. Format can be specified explicitly using the --format flag\n`,
+      this.log(
+        `ℹ️   Detected ${format} project, using ".${format}" for config. Format can be specified explicitly using the --format flag\n`,
       );
     }
-    const template = loadBlueprint(`config.${format}`);
 
+    const template = loadBlueprint(`config.${format}`);
     const squashedConfig = { ...existingConfig, ...config };
     const configFileContents = template(squashedConfig);
     const tmpConfig = resolve(tmpdir(), `${randomBytes(16).toString('hex')}.${format}`);
@@ -107,6 +107,7 @@ export default class ConfigGenerate extends Command {
       );
     }
 
+    // TODO: mkdirp path for file (same for writing config in config:generate)
     writeFileSync(configPath, configFileContents);
     this.log(`✅ Done. Wrote gqlmock config to ${configPath}`);
   }

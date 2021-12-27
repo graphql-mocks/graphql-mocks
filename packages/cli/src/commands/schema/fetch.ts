@@ -29,6 +29,7 @@ export default class SchemaFetch extends Command {
 
     let source = config?.schema.url ?? '';
     let out = config?.schema.path;
+    let headers = config?.schema.headers ?? {};
 
     if (flags.source) {
       this.log(' ℹ️   Source specified via flag');
@@ -38,6 +39,11 @@ export default class SchemaFetch extends Command {
     if (flags.out) {
       this.log(' ℹ️   Out filepath specified via flag');
       out = flags.out;
+    }
+
+    if (flags.header) {
+      this.log(' ℹ️   Fetch headers specified via flag');
+      headers = collapseHeaders(flags.header);
     }
 
     if (!source) {
@@ -53,8 +59,6 @@ export default class SchemaFetch extends Command {
     }
 
     source = new URL(source).href;
-
-    const headers = collapseHeaders(flags.header);
     let schema: GraphQLSchema;
 
     try {
