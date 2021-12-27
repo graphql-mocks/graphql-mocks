@@ -6,7 +6,7 @@ import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
 import { parse, resolve } from 'path';
 import { existsSync, writeFileSync } from 'fs';
-import { loadConfig } from '../../lib/load-config';
+import { loadConfig } from '../../lib/config/load-config';
 import { isTypeScriptProject } from '../../lib/is-typescript-project';
 import cwd from '../../lib/cwd';
 

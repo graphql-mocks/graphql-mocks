@@ -1,5 +1,5 @@
-import { GqlMocksConfig } from '../types';
-import { normalizeAbsolutePath } from './normalize-absolute-path';
+import { GqlMocksConfig } from '../../types';
+import { normalizeAbsolutePath } from '../normalize-absolute-path';
 import { validateConfig } from './validate-config';
 import { resolve } from 'path';
 

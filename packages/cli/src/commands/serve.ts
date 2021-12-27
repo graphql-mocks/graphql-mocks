@@ -2,23 +2,19 @@ import { Command, flags } from '@oclif/command';
 import { expressMiddleware } from '@graphql-mocks/network-express';
 import express = require('express');
 import { GraphQLHandler } from 'graphql-mocks';
-import { createSchema } from 'graphql-mocks/graphql/utils';
 import { resolve, parse as pathParse } from 'path';
-import { readFileSync, writeFileSync, watchFile } from 'fs';
 import { fakerMiddleware } from '@graphql-mocks/faker';
-import { tmpdir } from 'os';
-import { randomBytes } from 'crypto';
 import axios from 'axios';
-import { buildClientSchema, getIntrospectionQuery, printSchema } from 'graphql';
 import { cli } from 'cli-ux';
 import chalk from 'chalk';
 import { ResolverMapMiddleware } from 'graphql-mocks/types';
 import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { graphiqlMiddleware } from 'graphiql-middleware';
-import { loadConfig } from '../lib/load-config';
+import { loadConfig } from '../lib/config/load-config';
+import { watchFile } from 'fs';
+import { createSchemaFromLocation } from '../lib/schema/create-schema-from-location';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -81,69 +77,6 @@ export default class Serve extends Command {
   };
 
   server: any = null;
-
-  urlForPath(path: string) {
-    try {
-      return new URL(path);
-    } catch {
-      // noop
-    }
-  }
-
-  async createSchema(path: string, headers: Record<string, string>) {
-    const axios = Serve.axios;
-
-    let normalizedPath = normalizeAbsolutePath(path, { extensions: ['gql', 'graphql', 'json', 'js', 'ts'] });
-    const url = this.urlForPath(path);
-
-    if (!normalizedPath && url) {
-      cli.action.start(`Getting schema from ${url}`);
-      let schemaString;
-      try {
-        const { data: result } = await axios.post(url.toString(), {
-          query: getIntrospectionQuery(),
-          Headers: headers,
-        });
-
-        schemaString = printSchema(buildClientSchema((result as any).data));
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-
-      if (!schemaString) {
-        try {
-          const { data: rawSchemaFile } = await axios.get(url.toString());
-          schemaString = rawSchemaFile;
-          // eslint-disable-next-line no-empty
-        } catch {}
-      }
-
-      if (typeof schemaString !== 'string') {
-        this.error(`Unable to get schema from ${schemaString} as a file or introspection query`);
-      }
-
-      const filename = randomBytes(16).toString('hex');
-      normalizedPath = resolve(tmpdir(), filename);
-
-      writeFileSync(normalizedPath, schemaString as any);
-      cli.action.stop();
-    }
-
-    if (!normalizedPath) {
-      this.error(`Could not determine a local or remote schema from ${path}`);
-    }
-
-    let schema;
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const loaded = require(normalizedPath);
-      schema = createSchema(loaded?.default ?? loaded);
-    } catch {
-      const rawFile = readFileSync(normalizedPath).toString();
-      schema = createSchema(rawFile);
-    }
-
-    return schema;
-  }
 
   loadHandler(path: string) {
     const { dir, name } = pathParse(path);
@@ -238,7 +171,7 @@ export default class Serve extends Command {
 
     const handlerPath = flags.handler ?? config?.handler?.path;
 
-    const schema = await this.createSchema(schemaPath, headers);
+    const schema = await createSchemaFromLocation(schemaPath, headers);
     const middlewares: ResolverMapMiddleware[] = [];
 
     if (flags.faker) {

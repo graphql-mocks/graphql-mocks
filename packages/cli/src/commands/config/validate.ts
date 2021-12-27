@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command';
-import { loadConfig } from '../../lib/load-config';
+import { loadConfig } from '../../lib/config/load-config';
 
 export default class ConfigValidate extends Command {
   static description = 'Validate gqlmocks.config.js';

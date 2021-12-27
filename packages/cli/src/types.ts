@@ -6,6 +6,7 @@ export type GqlMocksConfig = {
   schema: LoadableJavascriptFile & {
     url?: string;
     format?: 'SDL' | 'SDL_STRING' | 'JSON';
+    path: string;
   };
 
   handler: LoadableJavascriptFile;

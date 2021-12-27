@@ -1,7 +1,7 @@
 import { Command, flags } from '@oclif/command';
 import chalk from 'chalk';
 import cwd from '../../lib/cwd';
-import { loadConfig } from '../../lib/load-config';
+import { loadConfig } from '../../lib/config/load-config';
 import { sync as pkgDir } from 'pkg-dir';
 
 function heading(str: string) {

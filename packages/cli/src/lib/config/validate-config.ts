@@ -1,9 +1,9 @@
-import { GqlMocksConfig, LoadableJavascriptFile } from '../types';
-import { normalizeAbsolutePath } from './normalize-absolute-path';
+import { GqlMocksConfig, LoadableJavascriptFile } from '../../types';
+import { normalizeAbsolutePath } from '../normalize-absolute-path';
 import Debug from 'debug';
 import { resolve } from 'path';
 import { sync as pkgDir } from 'pkg-dir';
-import cwd from './cwd';
+import cwd from '../cwd';
 
 const debug = Debug('validate-config');
 
@@ -38,7 +38,11 @@ class Validator {
     return normalizeAbsolutePath(resolve(this.root, path), options);
   }
 
-  validateLoadableJavascript(configKey: string | string[], config: Partial<GqlMocksConfig>, catchError: (e: Error) => void) {
+  validateLoadableJavascript(
+    configKey: string | string[],
+    config: Partial<GqlMocksConfig>,
+    catchError: (e: Error) => void,
+  ) {
     if (typeof configKey === 'string') {
       configKey = [configKey];
     }
@@ -114,9 +118,11 @@ class Validator {
         catchError(new Error('config.schema.url must be a string'));
       } else {
         try {
-          new URL(config.schema.url!);
+          new URL(config.schema.url);
         } catch {
-          catchError(new Error(`Could not parse config.schema.url with value of "${config.schema.url}", is it valid?`));
+          catchError(
+            new Error(`Could not parse config.schema.url with value of "${config.schema.url}", is it a valid url?`),
+          );
         }
       }
     }
