@@ -30,13 +30,13 @@
     "short-unique-id": "^4.3.3"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0"
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "optionalDependencies": {
     "event-target-polyfill": "^0.0.3"
   },
   "devDependencies": {
-    "graphql": "^14",
+    "graphql": "^16.2.0",
     "graphql-mocks": "^0.8.2"
   }
 }

@@ -35,7 +35,7 @@
     "lodash.mergewith": "^4.6.2"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0"
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "optionalDependencies": {
     "sinon": "^9.0.0"
@@ -51,7 +51,7 @@
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.mergewith": "^4.6.6",
     "@types/sinon": "^10.0.2",
-    "graphql": "^14",
+    "graphql": "^16.2.0",
     "miragejs": "^0.1.40",
     "sinon": "^9.0.0"
   }

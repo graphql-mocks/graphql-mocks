@@ -26,13 +26,13 @@
   "devDependencies": {
     "@types/nock": "^11.1.0",
     "@types/node-fetch": "^2.5.12",
-    "graphql": "^14",
+    "graphql": "^16.2.0",
     "graphql-mocks": "^0.8.2",
     "nock": "^13.1.2",
     "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0",
-    "graphql-mocks": ">=0.8.1"
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
+    "graphql-mocks": "^0.8.1"
   }
 }
