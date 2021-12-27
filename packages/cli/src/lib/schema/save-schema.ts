@@ -1,5 +1,6 @@
 import { existsSync, writeFileSync } from 'fs';
 import { GraphQLSchema, printSchema } from 'graphql';
+import { isTypeScriptProject } from '../is-typescript-project';
 import { normalizeAbsolutePath } from '../normalize-absolute-path';
 
 export function saveSchema(options: {
@@ -17,9 +18,19 @@ export function saveSchema(options: {
   const printed = printSchema(options.schema);
 
   if (!options.force && existsSync(savedPath)) {
-    throw new Error(`Bailing, file already exists at ${options.out}. Use \`force\` flag to `);
+    throw new Error(`Bailing, file already exists at ${options.out}. Re-run with \`force\` flag to overwrite.`);
   }
 
-  writeFileSync(savedPath, printed);
+  let fileContents = printed;
+
+  if (options.format === 'SDL_STRING') {
+    const stringified = printed.replace(new RegExp('/`*/', 'g'), '\\`');
+    const exportExpression = isTypeScriptProject(savedPath) ? `export default` : `module.exports =`;
+    fileContents = `${exportExpression} \`
+${stringified}
+\`;`;
+  }
+
+  writeFileSync(savedPath, fileContents);
   return { savedPath };
 }

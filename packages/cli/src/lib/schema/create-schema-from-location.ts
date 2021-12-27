@@ -23,7 +23,7 @@ export async function createSchemaFromLocation(path: string, headers: Record<str
   const url = urlForPath(path);
 
   if (!normalizedPath && url) {
-    cli.action.start(`Getting schema from ${url}`);
+    cli.action.start(`Fetching schema from ${url}`);
     let schemaString;
     try {
       const { data: result } = await axios.post(url.toString(), {

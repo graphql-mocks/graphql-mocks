@@ -53,7 +53,6 @@ export default class SchemaFetch extends Command {
     }
 
     source = new URL(source).href;
-    this.log(`Fetching from ${source}`);
 
     const headers = collapseHeaders(flags.header);
     let schema: GraphQLSchema;
