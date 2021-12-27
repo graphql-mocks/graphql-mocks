@@ -1,4 +1,4 @@
-import { GqlMocksConfig, LoadableJavascriptFile } from '../../types';
+import { GqlMocksConfig, PathableAsset } from '../../types';
 import { normalizeAbsolutePath } from '../normalize-absolute-path';
 import Debug from 'debug';
 import { resolve } from 'path';
@@ -48,7 +48,7 @@ class Validator {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const configEntry = configKey.reduce((config, key) => config[key], config as any) as LoadableJavascriptFile;
+    const configEntry = configKey.reduce((config, key) => config[key], config as any) as PathableAsset;
     debug(`Found configEntry ${JSON.stringify(configEntry)}`);
 
     if (!('path' in configEntry)) {
@@ -134,9 +134,7 @@ class Validator {
       }
 
       const extensions: string[] = [];
-      if (config.schema.format === 'JSON') {
-        extensions.push('json');
-      } else if (config.schema.format === 'SDL') {
+      if (config.schema.format === 'SDL') {
         extensions.push('graphql', 'gql');
       } else if (config.schema.format === 'SDL_STRING') {
         extensions.push('js', 'ts');

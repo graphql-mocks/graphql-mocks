@@ -1,5 +1,5 @@
 import { expect, test } from '@oclif/test';
-import { validateConfig } from '../../src/lib/validate-config';
+import { validateConfig } from '../../src/lib/config/validate-config';
 
 function errorsToMessages(errors: Error[]) {
   return errors.map((e) => e.message);

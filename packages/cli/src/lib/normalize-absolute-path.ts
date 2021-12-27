@@ -5,10 +5,11 @@ import cwd from './cwd';
 
 export function normalizeAbsolutePath(
   path: string,
-  options?: { isFile?: boolean; extensions?: string[] },
+  options?: { isFile?: boolean; extensions?: string[]; allowNonExisting?: boolean },
 ): string | undefined {
   const extensions = [...(options?.extensions ?? []), ''];
   const isFile = options?.isFile ?? true;
+  const allowNonExisting = options?.allowNonExisting ?? false;
 
   const pkgRoot = pkgDir(cwd());
   const paths: string[] = isAbsolute(path) ? [path] : [resolve(cwd(), path)];
@@ -27,10 +28,14 @@ export function normalizeAbsolutePath(
   return paths.find((path) => {
     let pathIsFile;
 
+    if (allowNonExisting) {
+      return true;
+    }
+
     try {
       pathIsFile = !lstatSync(path).isDirectory();
     } catch {
-      return false;
+      pathIsFile = false;
     }
 
     return isFile ? existsSync(path) && pathIsFile : existsSync(path) && !pathIsFile;

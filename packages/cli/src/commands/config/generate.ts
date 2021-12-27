@@ -21,7 +21,7 @@ export default class ConfigGenerate extends Command {
       description: 'specify the output format of the gqlmocks config',
     }),
     ['schema.path']: flags.string({ description: 'path to GraphQL schema' }),
-    ['schema.format']: flags.string({ options: ['SDL', 'SDL_STRING', 'JSON'] }),
+    ['schema.format']: flags.string({ options: ['SDL', 'SDL_STRING'] }),
     ['handler.path']: flags.string(),
     force: flags.boolean({ default: false, description: 'overwrite config if one exists' }),
   };
@@ -67,7 +67,7 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.format) {
       const defaultz = existingConfig?.schema.format || 'SDL';
-      const format = await cli.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' 'JSON' (default: ${defaultz})`, {
+      const format = await cli.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' (default: ${defaultz})`, {
         required: false,
       });
       config.schema.format = format || defaultz;

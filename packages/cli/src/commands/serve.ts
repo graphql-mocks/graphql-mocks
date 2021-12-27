@@ -15,6 +15,7 @@ import { graphiqlMiddleware } from 'graphiql-middleware';
 import { loadConfig } from '../lib/config/load-config';
 import { watchFile } from 'fs';
 import { createSchemaFromLocation } from '../lib/schema/create-schema-from-location';
+import { collapseHeaders } from '../lib/schema/collapse-headers';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -50,7 +51,7 @@ export default class Serve extends Command {
     `$ gqlmocks serve --schema ../schema.graphql --handler ../handler.ts`,
     `$ gqlmocks serve --schema http://s3-bucket/schema.graphql --faker`,
     `$ gqlmocks serve --schema http://graphql-api/ --faker`,
-    `$ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token --faker"`,
+    `$ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --faker`,
   ];
 
   static flags = {
@@ -98,7 +99,7 @@ export default class Serve extends Command {
       try {
         handler = this.loadHandler(handlerPath);
       } catch (e) {
-        this.error(`Unable to find handler at ${handlerPath}.\n\n${e.message}`);
+        this.error(`Unable to find handler at ${handlerPath}.\n\n${(e as Error).message}`);
       }
     } else {
       handler = new GraphQLHandler({
@@ -143,18 +144,7 @@ export default class Serve extends Command {
     const { flags } = this.parse(Serve);
 
     const port = Number(flags.port);
-    const headers = (flags.header ?? []).reduce((headers, flag) => {
-      const [key, value] = flag.split('=');
-
-      if (!key || !value) {
-        throw new Error(`Expected a key and value header pair, got key: ${key}, value: ${value}`);
-      }
-
-      return {
-        ...headers,
-        [key]: value,
-      };
-    }, {});
+    const headers = collapseHeaders(flags.header);
 
     const { config, errors } = loadConfig();
     if (config && errors && errors.length) {

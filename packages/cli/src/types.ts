@@ -1,18 +1,17 @@
-export type LoadableJavascriptFile = {
+export type PathableAsset = {
   path: string;
 };
 
 export type GqlMocksConfig = {
-  schema: LoadableJavascriptFile & {
+  schema: PathableAsset & {
     url?: string;
-    format?: 'SDL' | 'SDL_STRING' | 'JSON';
-    path: string;
+    headers: Record<string, string>;
+    format?: 'SDL' | 'SDL_STRING';
   };
 
-  handler: LoadableJavascriptFile;
-  resolverMap?: LoadableJavascriptFile;
-  resolvers?: {
+  handler: PathableAsset;
+  resolverMap?: PathableAsset;
+  resolvers?: PathableAsset & {
     organizedBy: 'TYPE';
-    path: string;
   };
 };
