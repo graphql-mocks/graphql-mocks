@@ -6,7 +6,8 @@ import { normalizeAbsolutePath } from '../../../src/lib/normalize-absolute-path'
 import { unlinkSync as rm } from 'fs';
 
 describe('config/generate', function () {
-  this.timeout(10000);
+  // necessary for CI
+  this.timeout(20000);
 
   const generateTestPkgDir = resolve(__dirname, '../../test-helpers/test-package-generate');
   const findGeneratedConfig = () =>
