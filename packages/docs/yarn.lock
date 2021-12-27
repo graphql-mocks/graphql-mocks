@@ -2369,10 +2369,10 @@
     url "^0.11.0"
     webpack-sources "^1.4.3"
 
-"@graphql-mocks/mirage@^0.3.0":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@graphql-mocks/mirage/-/mirage-0.3.2.tgz#24254f12bdf8492781fa3d5b673706167afa55b2"
-  integrity sha512-EZbKgxooL5dVRaLLRXpc1OJFwIOoVeXNHX9RDBJUHhpfVZQ1n1rW9JhWVb3RFi3ssMvyDxkmH0O9XKhitHIOGA==
+"@graphql-mocks/mirage@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@graphql-mocks/mirage/-/mirage-0.4.0.tgz#c1c26ffed0e999d90b0440c51a9045ba9a98cc95"
+  integrity sha512-itG83uCD22Au4OKhbaSWfK2zSG0eRzr0eK/pdO0tXdRvxlmNW7KZchvrZEJWKtevf9AOFg4FqBGLEiFTFbu4rw==
   dependencies:
     lodash.intersection "^4.4.0"
 
@@ -3230,9 +3230,9 @@ ajv@^6.12.5:
     uri-js "^4.2.2"
 
 algoliasearch-helper@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/algoliasearch-helper/-/algoliasearch-helper-3.1.1.tgz#4cdfbaed6670d82626ac1fae001ccbf53192f497"
-  integrity sha512-Jkqlp8jezQRixf7sbQ2zFXHpdaT41g9sHBqT6pztv5nfDmg94K+pwesAy6UbxRY78IL54LIaV1FLttMtT+IzzA==
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/algoliasearch-helper/-/algoliasearch-helper-3.6.2.tgz#45e19b12589cfa0c611b573287f65266ea2cc14a"
+  integrity sha512-Xx0NOA6k4ySn+R2l3UMSONAaMkyfmrZ3AP1geEMo32MxDJQJesZABZYsldO9fa6FKQxH91afhi4hO1G0Zc2opg==
   dependencies:
     events "^1.1.1"
 
@@ -6485,10 +6485,10 @@ graphql-language-service-utils@^2.4.1:
   dependencies:
     graphql-language-service-types "^1.6.1"
 
-graphql-mocks@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/graphql-mocks/-/graphql-mocks-0.8.0.tgz#97b04221a8e21e1ebbb75424977b2a3d330887fc"
-  integrity sha512-fA2WrwJNW5QySCWwIRpPSpWImmA6A3QPNCh4DvJl9fZIwmS0oVJmATHFL3gPGRw+t+valRVPR1m1sUhHAslCQA==
+graphql-mocks@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/graphql-mocks/-/graphql-mocks-0.8.1.tgz#a4b25b1e855fa001b6426f11d81b037f6a9d35fa"
+  integrity sha512-HiiqnkUlAHrKevP44T6f3nJbNhpN7poJ+nE3rNJJzeaDmMqYO0e2AoDBrKNGaPSGYvpSu1MhtRhVU1TGdOkexA==
   dependencies:
     lodash.clonedeep "^4.5.0"
     lodash.difference "^4.5.0"
@@ -6502,12 +6502,12 @@ graphql-mocks@^0.8.0:
   optionalDependencies:
     sinon "^9.0.0"
 
-graphql-paper@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/graphql-paper/-/graphql-paper-0.1.1.tgz#55386f643dab36b06805b7041c3e85d55aee4c24"
-  integrity sha512-RmkowZT4BjUSbMuzQRzeVH+0SGi3M1ZauPEVXKdPFV70bFPwUPHvGah33T/WkYRCZuuz0LqIvNFfGSqArP04bw==
+graphql-paper@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/graphql-paper/-/graphql-paper-0.1.3.tgz#81629a386412049ccd652b36680c05cb25c1a200"
+  integrity sha512-7YIMQJZ5/pOaD1pa6RVWvnnqpgFt3WKzSwG+SKdU3AFVUsynXVqEEwQwHNPzonwgxn5fNF69kybUBLb15rrgPA==
   dependencies:
-    immer "^8.0.0"
+    immer "^9.0.6"
     just-diff "^3.1.1"
     lodash.merge "^4.6.2"
     short-unique-id "^4.3.3"
@@ -7012,10 +7012,10 @@ immer@1.10.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.10.0.tgz#bad67605ba9c810275d91e1c2a47d4582e98286d"
   integrity sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
 
-immer@^8.0.0:
-  version "8.0.4"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.4.tgz#3a21605a4e2dded852fb2afd208ad50969737b7a"
-  integrity sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==
+immer@^9.0.6:
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
+  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
 
 immutable@~3.7.6:
   version "3.7.6"
