@@ -48,7 +48,7 @@ describe('serve', () => {
     .it('serves with a faker middleware', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
-      const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ hello }` });
+      const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ hello }` });
       expect(typeof result.data.data.hello).to.equal('string');
     });
 
@@ -64,7 +64,7 @@ describe('serve', () => {
     .it('serves with a loaded graphql handler', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
-      const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ hello }` });
+      const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ hello }` });
       expect(result.data.data.hello).to.equal('Hello World from a custom graphql handler');
     });
 
@@ -101,7 +101,7 @@ describe('serve', () => {
     .it('serves with fetching a custom schema with custom headers', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
-      const result: any = await axios.post(`http://localhost:8080/graphql`, { query: `{ ships { id } }` });
+      const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ ships { id } }` });
       const axiosCallArgs = (axios.post as any).firstCall.args;
       expect(axiosCallArgs[0]).to.equal('https://api.spacex.land/graphql');
       expect(axiosCallArgs[1].Headers).to.deep.equal({ OtherHeader: 'Other Value', Authorization: 'Bearer Token' });

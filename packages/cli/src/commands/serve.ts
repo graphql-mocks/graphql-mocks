@@ -68,7 +68,7 @@ export default class Serve extends Command {
       description:
         'local (relative or absolute) path to graphql schema, remote url (graphql schema file or graphql api endpoint)',
     }),
-    port: flags.string({ default: '8080', env: 'GQLMOCKS_PORT' }),
+    port: flags.string({ default: '4444', env: 'GQLMOCKS_PORT' }),
     header: flags.string({
       multiple: true,
       description: 'specify header(s) used in request for remote schema specified by schema flag',
