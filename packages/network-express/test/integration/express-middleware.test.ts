@@ -105,7 +105,7 @@ describe('express-middleware', function () {
       );
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect((result as any).errors[0].message).to.equal('Syntax Error: Cannot parse the unexpected character "*".');
+      expect((result as any).errors[0].message.toLowerCase()).to.contain('unexpected character: "*"');
     });
   });
 
