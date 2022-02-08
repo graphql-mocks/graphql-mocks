@@ -92,7 +92,7 @@ export default class Serve extends Command {
     return loaded;
   }
 
-  startServer({ handlerPath, schema, port, middlewares }: any) {
+  async startServer({ handlerPath, schema, port, middlewares }: any) {
     let handler;
 
     if (handlerPath) {
@@ -129,7 +129,12 @@ export default class Serve extends Command {
       ),
     );
 
-    const server = app.listen(port);
+    const server = await new Promise((resolve) => {
+      const server = app.listen(port, () => {
+        resolve(server);
+      });
+    });
+
     cli.ux.action.stop();
     return server;
   }
@@ -168,18 +173,19 @@ export default class Serve extends Command {
       middlewares.push(fakerMiddleware());
     }
 
-    const start = () => {
-      const up = () => {
-        this.server = this.startServer({ handlerPath, schema, port, middlewares });
+    const start = async () => {
+      const up = async () => {
+        this.server = await this.startServer({ handlerPath, schema, port, middlewares });
       };
 
       if (this.server) {
-        this.server.close(() => {
-          this.log('Restarting server...');
-          up();
+        await new Promise((resolve) => {
+          this.server.close(resolve);
         });
+        this.log('Restarting server...');
+        await up();
       } else {
-        up();
+        await up();
       }
     };
 
@@ -192,7 +198,7 @@ export default class Serve extends Command {
       this.watchFiles(files, start);
     }
 
-    start();
+    await start();
     this.log();
     this.log(chalk.white(' Local GraphQL API: '), chalk.bold(chalk.magenta(`http://localhost:${port}/graphql`)));
     this.log(chalk.white(' IDE client:        '), chalk.bold(chalk.magenta(`http://localhost:${port}/client`)));
