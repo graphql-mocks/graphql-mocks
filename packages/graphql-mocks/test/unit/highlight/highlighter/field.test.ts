@@ -51,10 +51,10 @@ const schema = buildSchema(`
 describe('highlight/highlighter/field', function () {
   it('defaults to field references for all fields', function () {
     expect(field().mark(schema)).to.deep.equal([
+      ['Mutation', 'hello'],
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],
-      ['Mutation', 'hello'],
       ['Animal', 'name'],
       ['Animal', 'type'],
       ['Cat', 'name'],
@@ -127,10 +127,10 @@ describe('highlight/highlighter/field', function () {
 
   it('can use HIGHLIGHT_ALL for type and fields to highlight everything with a field', function () {
     expect(field([HIGHLIGHT_ALL, HIGHLIGHT_ALL]).mark(schema)).to.deep.equal([
+      ['Mutation', 'hello'],
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],
-      ['Mutation', 'hello'],
       ['Animal', 'name'],
       ['Animal', 'type'],
       ['Cat', 'name'],

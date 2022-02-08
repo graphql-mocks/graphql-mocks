@@ -48,6 +48,7 @@ export class GraphQLHandler {
     this.packed = false;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async query<DataResult = any>(
     query: GraphQLArgs['source'],
     variableValues?: GraphQLArgs['variableValues'],
