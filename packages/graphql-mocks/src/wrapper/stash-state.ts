@@ -35,7 +35,7 @@ export const stashStateWrapper = createWrapper('stash-state', WrapperFor.FIELD, 
         result,
       };
 
-      result[stashKey] = stash;
+      (result as any)[stashKey] = stash;
     }
 
     return result;
