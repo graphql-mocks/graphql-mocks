@@ -48,12 +48,12 @@ export class GraphQLHandler {
     this.packed = false;
   }
 
-  async query(
+  async query<DataResult = any>(
     query: GraphQLArgs['source'],
     variableValues?: GraphQLArgs['variableValues'],
     queryContext?: GraphQLArgs['contextValue'],
     graphqlArgs?: Partial<GraphQLArgs>,
-  ): Promise<ExecutionResult> {
+  ): Promise<ExecutionResult<DataResult>> {
     const initialContext = this.initialContext;
     const packOptions = this.packOptions;
     const schema = this.graphqlSchema;
@@ -75,7 +75,7 @@ export class GraphQLHandler {
       schema,
       variableValues,
       contextValue,
-    });
+    }) as ExecutionResult<DataResult>;
   }
 
   protected async pack(): Promise<void> {
