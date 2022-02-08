@@ -1,5 +1,5 @@
 import { normalizeAbsolutePath } from '../normalize-absolute-path';
-import { cli } from 'cli-ux';
+import { CliUx as cli } from '@oclif/core';
 import Serve from '../../commands/serve';
 import { buildClientSchema, getIntrospectionQuery, GraphQLSchema, printSchema } from 'graphql';
 import { createSchema } from 'graphql-mocks/graphql/utils';
@@ -23,7 +23,7 @@ export async function createSchemaFromLocation(path: string, headers: Record<str
   const url = urlForPath(path);
 
   if (!normalizedPath && url) {
-    cli.action.start(`Fetching schema from ${url}`);
+    cli.ux.action.start(`Fetching schema from ${url}`);
     let schemaString;
     try {
       const { data: result } = await axios.post(url.toString(), {
@@ -51,7 +51,7 @@ export async function createSchemaFromLocation(path: string, headers: Record<str
     normalizedPath = resolve(tmpdir(), filename);
 
     writeFileSync(normalizedPath, schemaString as any);
-    cli.action.stop();
+    cli.ux.action.stop();
   }
 
   if (!normalizedPath) {

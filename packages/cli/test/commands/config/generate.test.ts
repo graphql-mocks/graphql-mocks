@@ -1,6 +1,6 @@
 import { expect, test } from '@oclif/test';
 import { existsSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
+import path, { resolve } from 'path';
 import { setMockCwd, restoreCwd } from '../../../src/lib/cwd';
 import { normalizeAbsolutePath } from '../../../src/lib/normalize-absolute-path';
 import { unlinkSync as rm } from 'fs';

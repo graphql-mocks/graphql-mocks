@@ -1,15 +1,15 @@
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { loadConfig } from '../../lib/config/load-config';
 
 export default class ConfigValidate extends Command {
   static description = 'Validate gqlmocks.config.js';
 
   static flags = {
-    file: flags.string({ char: 'f' }),
+    file: Flags.string({ char: 'f' }),
   };
 
   async run(): Promise<void> {
-    const { flags } = this.parse(ConfigValidate);
+    const { flags } = await this.parse(ConfigValidate);
     const { errors } = loadConfig(flags.file);
 
     if (errors?.length) {

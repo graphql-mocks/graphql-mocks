@@ -1,6 +1,6 @@
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import loadBlueprint from '../../lib/load-blueprint';
-import { cli } from 'cli-ux';
+import { CliUx as cli } from '@oclif/core';
 import { sync as pkgDir } from 'pkg-dir';
 import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
@@ -15,19 +15,19 @@ export default class ConfigGenerate extends Command {
     'Generate a basic gqlmocks config file\nSee more config options at www.graphql-mocks.com/docs/cli';
 
   static flags = {
-    out: flags.string({ description: 'path to write generated config to' }),
-    format: flags.string({
+    out: Flags.string({ description: 'path to write generated config to' }),
+    format: Flags.string({
       options: ['ts', 'js', 'json'],
       description: 'specify the output format of the gqlmocks config',
     }),
-    ['schema.path']: flags.string({ description: 'path to GraphQL schema' }),
-    ['schema.format']: flags.string({ options: ['SDL', 'SDL_STRING'] }),
-    ['handler.path']: flags.string(),
-    force: flags.boolean({ default: false, description: 'overwrite config if one exists' }),
+    ['schema.path']: Flags.string({ description: 'path to GraphQL schema' }),
+    ['schema.format']: Flags.string({ options: ['SDL', 'SDL_STRING'] }),
+    ['handler.path']: Flags.string(),
+    force: Flags.boolean({ default: false, description: 'overwrite config if one exists' }),
   };
 
   async run() {
-    const { flags } = this.parse(ConfigGenerate);
+    const { flags } = await this.parse(ConfigGenerate);
 
     const config = {
       schema: {
@@ -67,7 +67,7 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.format) {
       const defaultz = existingConfig?.schema.format || 'SDL';
-      const format = await cli.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' (default: ${defaultz})`, {
+      const format = await cli.ux.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' (default: ${defaultz})`, {
         required: false,
       });
       config.schema.format = format || defaultz;
@@ -75,13 +75,13 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.path) {
       const defaultz = existingConfig?.schema?.path || 'graphql-mocks/schema.graphql';
-      const schemaPath = await cli.prompt(`Path to GraphQL Schema? (default: ${defaultz})`, { required: false });
+      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema? (default: ${defaultz})`, { required: false });
       config.schema.path = schemaPath || defaultz;
     }
 
     if (!config.handler.path) {
       const defaultz = existingConfig?.handler?.path || 'graphql-mocks/handler.ts';
-      const handlerPath = await cli.prompt(`Path to GraphQL Mocks Handler? (default: ${defaultz})`, {
+      const handlerPath = await cli.ux.prompt(`Path to GraphQL Mocks Handler? (default: ${defaultz})`, {
         required: false,
       });
       config.handler.path = handlerPath || defaultz;

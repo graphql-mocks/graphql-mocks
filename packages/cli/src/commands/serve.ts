@@ -1,11 +1,11 @@
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { expressMiddleware } from '@graphql-mocks/network-express';
 import express = require('express');
 import { GraphQLHandler } from 'graphql-mocks';
 import { resolve, parse as pathParse } from 'path';
 import { fakerMiddleware } from '@graphql-mocks/faker';
 import axios from 'axios';
-import { cli } from 'cli-ux';
+import { CliUx as cli } from '@oclif/core';
 import chalk from 'chalk';
 import { ResolverMapMiddleware } from 'graphql-mocks/types';
 import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
@@ -55,26 +55,26 @@ export default class Serve extends Command {
   ];
 
   static flags = {
-    faker: flags.boolean({
+    faker: Flags.boolean({
       env: 'GQLMOCKS_FAKER',
       description: 'use faker middlware for resolver fallbacks',
     }),
-    handler: flags.string({
+    handler: Flags.string({
       env: 'GQLMOCKS_HANDLER',
       description: 'path to file with graphql handler (via default export)',
     }),
-    schema: flags.string({
+    schema: Flags.string({
       env: 'GQLMOCKS_SCHEMA',
       description:
         'local (relative or absolute) path to graphql schema, remote url (graphql schema file or graphql api endpoint)',
     }),
-    port: flags.string({ default: '4444', env: 'GQLMOCKS_PORT' }),
-    header: flags.string({
+    port: Flags.string({ default: '4444', env: 'GQLMOCKS_PORT' }),
+    header: Flags.string({
       multiple: true,
       description: 'specify header(s) used in request for remote schema specified by schema flag',
       dependsOn: ['schema'],
     }),
-    watch: flags.boolean(),
+    watch: Flags.boolean(),
   };
 
   server: any = null;
@@ -110,7 +110,7 @@ export default class Serve extends Command {
     }
 
     (handler as any).middlewares = middlewares;
-    cli.action.start(`Starting graphql api server on port ${port}`);
+    cli.ux.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
 
     const apiEndpointPath = '/graphql';
@@ -130,7 +130,7 @@ export default class Serve extends Command {
     );
 
     const server = app.listen(port);
-    cli.action.stop();
+    cli.ux.action.stop();
     return server;
   }
 
@@ -141,7 +141,7 @@ export default class Serve extends Command {
   }
 
   async run() {
-    const { flags } = this.parse(Serve);
+    const { flags } = await this.parse(Serve);
 
     const port = Number(flags.port);
     const headers = collapseHeaders(flags.header);

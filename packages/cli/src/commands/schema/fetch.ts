@@ -1,4 +1,4 @@
-import { Command, flags } from '@oclif/command';
+import { Command, Flags } from '@oclif/core';
 import { GraphQLSchema } from 'graphql';
 import { loadConfig } from '../../lib/config/load-config';
 import { collapseHeaders } from '../../lib/schema/collapse-headers';
@@ -9,14 +9,14 @@ export default class SchemaFetch extends Command {
   static description = 'Fetch and save a GraphQL Schema';
 
   static flags = {
-    out: flags.string(),
-    force: flags.boolean({ default: false }),
-    format: flags.string({ options: ['SDL', 'SDL_STRING'], default: 'SDL' }),
-    source: flags.string({
+    out: Flags.string(),
+    force: Flags.boolean({ default: false }),
+    format: Flags.string({ options: ['SDL', 'SDL_STRING'], default: 'SDL' }),
+    source: Flags.string({
       description: 'URL of GraphQL API server or `.graphql` file',
-      parse: (str) => new URL(str).href,
+      parse: async (str) => new URL(str).href,
     }),
-    header: flags.string({
+    header: Flags.string({
       multiple: true,
       description: 'specify header(s) used in request for remote schema specified by schema flag',
       dependsOn: ['source'],
@@ -24,7 +24,7 @@ export default class SchemaFetch extends Command {
   };
 
   async run() {
-    const { flags } = this.parse(SchemaFetch);
+    const { flags } = await this.parse(SchemaFetch);
     const { config } = loadConfig();
 
     let source = config?.schema.url ?? '';
