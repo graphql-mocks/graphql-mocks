@@ -2,7 +2,7 @@ import { FakerMiddlewareOptions } from './types';
 import { FieldResolver } from 'graphql-mocks/types';
 import { hasListType, listItemType, unwrap } from 'graphql-mocks/graphql/type-utils';
 import faker from 'faker';
-import { isObjectType, isNonNullType, isEnumType, isAbstractType } from 'graphql';
+import { isObjectType, isNonNullType, isEnumType, isAbstractType, GraphQLType } from 'graphql';
 import { guessFakerFn } from './guess-faker-fn';
 
 function getRandomInt(min: number, max: number) {
@@ -16,7 +16,7 @@ function booleanChance(percentage: number) {
 export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolver {
   return function internalFakerResolver(parent, _args, _context, info) {
     const parentTypeName = info.parentType?.name;
-    const { fieldName, returnType } = info;
+    const { fieldName, returnType }: { fieldName: string; returnType: GraphQLType } = info;
 
     if (parent && fieldName in parent) {
       return parent[fieldName];

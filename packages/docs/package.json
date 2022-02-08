@@ -26,6 +26,7 @@
     "@graphql-mocks/mirage": "^0.4.1",
     "classnames": "^2.2.6",
     "graphiql": "0.17.5",
+    "graphql": "14.6.0",
     "graphql-mocks": "^0.8.2",
     "graphql-paper": "^0.1.4",
     "graphql-tools": "^6.0.11",

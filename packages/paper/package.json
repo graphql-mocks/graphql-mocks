@@ -36,7 +36,6 @@
     "event-target-polyfill": "^0.0.3"
   },
   "devDependencies": {
-    "graphql": "^16.2.0",
     "graphql-mocks": "^0.8.2"
   }
 }

@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/lodash.intersection": "^4.4.6",
     "@types/sinon": "^10.0.2",
-    "graphql": "^16.2.0",
     "graphql-mocks": "^0.8.2",
     "miragejs": "^0.1.40",
     "sinon": "^11.1.2"
