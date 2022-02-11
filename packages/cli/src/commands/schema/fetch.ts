@@ -9,11 +9,11 @@ export default class SchemaFetch extends Command {
   static description = 'Fetch and save a GraphQL Schema';
 
   static flags = {
-    out: Flags.string(),
+    out: Flags.string({ description: 'path of file to save schema to' }),
     force: Flags.boolean({ default: false }),
     format: Flags.string({ options: ['SDL', 'SDL_STRING'], default: 'SDL' }),
     source: Flags.string({
-      description: 'URL of GraphQL API server or `.graphql` file',
+      description: 'Url of GraphQL API server or url of remote .graphql file',
       parse: async (str) => new URL(str).href,
     }),
     header: Flags.string({
