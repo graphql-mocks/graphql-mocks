@@ -3,7 +3,7 @@ import { normalizeAbsolutePath } from '../normalize-absolute-path';
 import { validateConfig } from './validate-config';
 import { resolve } from 'path';
 
-export function loadConfig(path?: string): { config?: GqlMocksConfig; path?: string; errors?: Error[] } {
+export function loadConfig(path?: string): { config?: GqlMocksConfig; path?: string; errors: Error[] } {
   let filePath: string | undefined;
   const extensions = ['json', 'js', 'ts'];
 

@@ -9,7 +9,7 @@ export default class SchemaFetch extends Command {
   static description = 'Fetch and save a GraphQL Schema';
 
   static flags = {
-    out: Flags.string({ description: 'path of file to save schema to' }),
+    ['save-schema-file']: Flags.string({ description: 'path of file to save schema to' }),
     force: Flags.boolean({ default: false }),
     format: Flags.string({ options: ['SDL', 'SDL_STRING'], default: 'SDL' }),
     source: Flags.string({
@@ -36,9 +36,9 @@ export default class SchemaFetch extends Command {
       source = flags.source;
     }
 
-    if (flags.out) {
+    if (flags['save-schema-file']) {
       this.log(' ℹ️   Out filepath specified via flag');
-      out = flags.out;
+      out = flags['save-schema-file'];
     }
 
     if (flags.header) {

@@ -14,6 +14,11 @@ export function normalizeAbsolutePath(
   const pkgRoot = pkgDir(cwd());
   const paths: string[] = isAbsolute(path) ? [path] : [resolve(cwd(), path)];
 
+  // return the first absolute version
+  if (allowNonExisting) {
+    return paths[0];
+  }
+
   if (pkgRoot && !isAbsolute(path)) {
     paths.push(resolve(pkgRoot, path));
   }
@@ -27,10 +32,6 @@ export function normalizeAbsolutePath(
 
   return paths.find((path) => {
     let pathIsFile;
-
-    if (allowNonExisting) {
-      return true;
-    }
 
     try {
       pathIsFile = !lstatSync(path).isDirectory();

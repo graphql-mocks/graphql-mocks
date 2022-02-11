@@ -1,13 +1,9 @@
 import { Command, Flags } from '@oclif/core';
-import chalk from 'chalk';
 import cwd from '../../lib/cwd';
 import { loadConfig } from '../../lib/config/load-config';
 import { sync as pkgDir } from 'pkg-dir';
-
-function heading(str: string) {
-  const underline = '-'.repeat(str.length);
-  return chalk.bold(chalk.blueBright(`${str}\n${underline}`));
-}
+import { heading } from '../../lib/info/heading';
+import { errors as formatErrors } from '../../lib/info/errors';
 
 export default class ConfigInfo extends Command {
   static description = 'display info about a gqlmocks config file';
@@ -19,7 +15,7 @@ export default class ConfigInfo extends Command {
   async run() {
     const { flags } = await this.parse(ConfigInfo);
     const { config, errors, path } = loadConfig(flags.config);
-    const formattedErrors = errors?.map((error) => ` * ${chalk.yellow(error.message)}`).join('\n');
+    const formattedErrors = formatErrors(errors);
     const formattedConfig = JSON.stringify(config, null, 2);
 
     if (!config) {
