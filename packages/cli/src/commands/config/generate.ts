@@ -75,13 +75,13 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.path) {
       const defaultz = existingConfig?.schema?.path || 'graphql-mocks/schema.graphql';
-      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema? (default: ${defaultz})`, { required: false });
+      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema file? (default: ${defaultz})`, { required: false });
       config.schema.path = schemaPath || defaultz;
     }
 
     if (!config.handler.path) {
       const defaultz = existingConfig?.handler?.path || 'graphql-mocks/handler.ts';
-      const handlerPath = await cli.ux.prompt(`Path to GraphQL Mocks Handler? (default: ${defaultz})`, {
+      const handlerPath = await cli.ux.prompt(`Path to GraphQL Mocks Handler file? (default: ${defaultz})`, {
         required: false,
       });
       config.handler.path = handlerPath || defaultz;
