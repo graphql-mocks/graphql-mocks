@@ -1,15 +1,9 @@
 import { expect, test } from '@oclif/test';
 import { resolve } from 'path';
-import { setMockCwd, restoreCwd } from '../../../src/lib/cwd';
+import { useTestPackage } from '../../test-helpers/package';
 
 describe('config:validate', () => {
-  beforeEach(() => {
-    setMockCwd(resolve(__dirname, '../../test-helpers/test-package/gqlmocks.config.js'));
-  });
-
-  afterEach(() => {
-    restoreCwd();
-  });
+  useTestPackage('test-package', { eachTest: true });
 
   test
     .stdout()

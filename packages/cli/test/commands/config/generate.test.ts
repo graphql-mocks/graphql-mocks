@@ -1,22 +1,23 @@
 import { expect, test } from '@oclif/test';
 import { existsSync, writeFileSync } from 'fs';
-import path, { resolve } from 'path';
-import { setMockCwd, restoreCwd } from '../../../src/lib/cwd';
+import { resolve } from 'path';
 import { normalizeAbsolutePath } from '../../../src/lib/normalize-absolute-path';
 import { unlinkSync as rm } from 'fs';
+import { testPackagePath, useTestPackage } from '../../test-helpers/package';
 
 describe('config/generate', function () {
   // necessary for CI
   this.timeout(20000);
 
-  const generateTestPkgDir = resolve(__dirname, '../../test-helpers/test-package-generate');
+  const testPackage = 'test-package-generate';
+  const generateTestPkgDir = testPackagePath(testPackage);
   const findGeneratedConfig = () =>
     normalizeAbsolutePath(resolve(generateTestPkgDir, 'gqlmocks.config'), {
       extensions: ['js', 'json', 'ts'],
     });
 
-  beforeEach(() => setMockCwd(generateTestPkgDir));
-  afterEach(() => restoreCwd());
+  useTestPackage('test-package-generate', { eachTest: true });
+
   afterEach(() => {
     const generatedConfig = findGeneratedConfig();
     if (generatedConfig && existsSync(generatedConfig)) {
