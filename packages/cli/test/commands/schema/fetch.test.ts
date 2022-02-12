@@ -11,7 +11,7 @@ function makeEmptyFile(filePath: string) {
 }
 
 describe('schema:fetch', () => {
-  describe('using --out to specify the location', () => {
+  describe('using --save-schema-file to specify the location', () => {
     const tempDir = tmpdir();
     const tempFile = 'schema.temp.graphql';
     const tempFilePath = resolve(tempDir, tempFile);
@@ -22,7 +22,7 @@ describe('schema:fetch', () => {
 
     test
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--out', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema-file', tempFilePath])
       .it('fetches a schema', (ctx) => {
         expect(ctx.stdout).to.contain(`✅ Saved GraphQL Schema to ${tempFilePath}`);
       });
@@ -34,7 +34,7 @@ describe('schema:fetch', () => {
         }
       })
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--out', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema-file', tempFilePath])
       .catch((e) => {
         expect(e.message).to.contain(`Bailing, file already exists at ${tempFilePath}`);
         expect(e.message).to.contain('Re-run with `force` flag to overwrite.');
@@ -48,7 +48,14 @@ describe('schema:fetch', () => {
         }
       })
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--out', tempFilePath, '--force'])
+      .command([
+        'schema:fetch',
+        '--source',
+        'https://api.spacex.land/graphql',
+        '--save-schema-file',
+        tempFilePath,
+        '--force',
+      ])
       .it('fetches a schema when the file already exists using --force', (ctx) => {
         expect(ctx.stdout).to.contain(`✅ Saved GraphQL Schema to ${tempFilePath}`);
       });
