@@ -22,6 +22,33 @@ function formatTypes(schema: GraphQLSchema) {
   return output.join('\n');
 }
 
+export function findSchema(flagPath?: string) {
+  const { config, path: configPath } = loadConfig();
+
+  let schemaPath;
+  if (flagPath) {
+    schemaPath = normalizeAbsolutePath(flagPath, { isFile: true });
+
+    if (!schemaPath) {
+      throw new Error(`No schema could be found at ${flagPath}`);
+    }
+  } else {
+    if (!config) {
+      throw new Error(
+        `No config file could be found, either specify a --schema-file flag or use command within a project with a gqlmocks config`,
+      );
+    }
+
+    schemaPath = normalizeAbsolutePath(config.schema.path, { isFile: true });
+
+    if (!schemaPath) {
+      throw new Error(`Could not find a schema at ${config.schema.path} as specified in the config at ${configPath}`);
+    }
+  }
+
+  return schemaPath;
+}
+
 export default class SchemaInfo extends Command {
   static description = 'display info about a GraphQL schema';
 
@@ -31,27 +58,12 @@ export default class SchemaInfo extends Command {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(SchemaInfo);
-    const { config, path: configPath } = loadConfig();
 
     let schemaPath;
-    if (flags['schema-file']) {
-      schemaPath = normalizeAbsolutePath(flags['schema-file'], { isFile: true });
-
-      if (!schemaPath) {
-        this.error(`No schema could be found at ${flags['schema-file']}`);
-      }
-    } else {
-      if (!config) {
-        this.error(
-          `No config file could be found, either specify a --schema-file flag or use command within a project with a gqlmocks config`,
-        );
-      }
-
-      schemaPath = normalizeAbsolutePath(config.schema.path, { isFile: true });
-
-      if (!schemaPath) {
-        this.error(`Could not find a schema at ${config.schema.path} as specified in the config at ${configPath}`);
-      }
+    try {
+      schemaPath = findSchema(flags['schema-file']);
+    } catch (e) {
+      this.error(e as Error);
     }
 
     const { schema, errors, path } = loadSchema(schemaPath);
