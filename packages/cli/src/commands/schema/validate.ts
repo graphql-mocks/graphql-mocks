@@ -8,7 +8,7 @@ export default class SchemaValidate extends Command {
     ['schema-file']: Flags.string(),
   };
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = await this.parse(SchemaValidate);
 
     let schemaPath;
@@ -27,7 +27,7 @@ export default class SchemaValidate extends Command {
         return `  * ${e.message}`;
       });
 
-      this.error(`❌ Invalid schema. Errors:\n${errorList}`);
+      this.error(`❌ Invalid schema.\n\nErrors:\n${errorList}`);
     }
   }
 }

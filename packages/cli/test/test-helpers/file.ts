@@ -1,4 +1,4 @@
-import { existsSync, copyFileSync } from 'fs';
+import { existsSync, copyFileSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { resolve, parse } from 'path';
 import { before, after, beforeEach, afterEach } from 'mocha';
@@ -38,4 +38,14 @@ export function backup(file: string | string[], { eachTest } = { eachTest: false
   _after(restoreAll);
 
   return restoreAll;
+}
+
+export function writeInvalidSchema(path: string) {
+  writeFileSync(
+    path,
+    `
+    # empty schema declaration is invalid!
+    schema {}
+  `,
+  );
 }
