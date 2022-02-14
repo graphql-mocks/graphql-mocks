@@ -15,5 +15,5 @@ export function isTypeScriptProject(path?: string): boolean {
     return false;
   }
 
-  return Boolean(pkgJson.dependencies.typescript ?? pkgJson.devDependencies.typescript ?? false);
+  return Boolean(pkgJson?.dependencies?.typescript ?? pkgJson?.devDependencies?.typescript ?? false);
 }

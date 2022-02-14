@@ -1,0 +1,8 @@
+const { GraphQLHandler } = require("graphql-mocks");
+const graphqlSchema = require("{{schema.relativePath}}");
+
+module.exports = new GraphQLHandler({
+  dependencies: {
+    graphqlSchema
+  }
+});
