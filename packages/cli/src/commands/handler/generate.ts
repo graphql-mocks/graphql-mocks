@@ -22,7 +22,7 @@ export default class HandlerGenerate extends Command {
     const { flags } = await this.parse(HandlerGenerate);
     let format = flags.format;
     const { config, path: configPath } = loadConfig();
-    debugger;
+
     let out =
       flags.out ?? (configPath && config?.handler.path && resolve(parse(configPath!).dir, config!.handler.path!));
 
