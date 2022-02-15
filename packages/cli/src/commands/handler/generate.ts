@@ -22,7 +22,7 @@ export default class HandlerGenerate extends Command {
     const { flags } = await this.parse(HandlerGenerate);
     let format = flags.format;
     const { config, path: configPath } = loadConfig();
-
+    debugger;
     let out =
       flags.out ?? (configPath && config?.handler.path && resolve(parse(configPath!).dir, config!.handler.path!));
 
@@ -32,10 +32,11 @@ export default class HandlerGenerate extends Command {
       );
     }
 
-    out = normalizeAbsolutePath(out, { isFile: true, allowNonExisting: true });
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    out = normalizeAbsolutePath(out, { isFile: true, allowNonExisting: true })!;
 
-    const { dir: outDirPath } = parse(out!);
-    if (!out || !existsSync(outDirPath)) {
+    const { dir: outDirPath } = parse(out);
+    if (!existsSync(outDirPath)) {
       this.error(
         `The following path doesn't exist:\n${outDirPath}\n\nEnsure these directories exist so the handler file can be created`,
       );
@@ -46,7 +47,7 @@ export default class HandlerGenerate extends Command {
     }
 
     if (!flags.format) {
-      format = isTypeScriptProject(out) ? 'ts' : 'js';
+      format = isTypeScriptProject(out) || config?.handler.path.endsWith('.ts') ? 'ts' : 'js';
       this.log(
         `ℹ️   Detected ${format} project, using ".${format}" for handler. Format can be specified explicitly using the --format flag`,
       );
