@@ -1,10 +1,8 @@
 import { Command, Flags } from '@oclif/core';
 import { loadConfig } from '../../lib/config/load-config';
-import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
-import { loadSchema } from '../../lib/schema/load-schema';
-import { errors as formatErrors } from '../../lib/info/errors';
 import { heading } from '../../lib/info/heading';
 import { existsSync } from 'fs';
+import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 
 export default class HandlerInfo extends Command {
   static description = 'display info about a GraphQL schema';
@@ -16,23 +14,35 @@ export default class HandlerInfo extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(HandlerInfo);
     const { config } = loadConfig();
-    const handlerPath = flags['handler-file'] ?? config?.handler?.path;
-
     const errors: Error[] = [];
+    const handlerPath = flags['handler-file'] ?? config?.handler?.path;
+    let absoluteHandlerPath;
+
+    if (!handlerPath) {
+      errors.push(
+        new Error(
+          `Could not determine the handler path, either pass the path with the --handler-path flag or run in a project with a gqlmocks config with a handler.path entry`,
+        ),
+      );
+    } else {
+      absoluteHandlerPath = normalizeAbsolutePath(handlerPath, { isFile: true });
+    }
+
+    console.log(absoluteHandlerPath, handlerPath);
 
     let handler;
-    if (handlerPath && existsSync(handlerPath)) {
+    if (absoluteHandlerPath && existsSync(absoluteHandlerPath)) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        handler = require(handlerPath);
+        handler = require(absoluteHandlerPath);
       } catch (e) {
         errors.push(new Error(`Tried to load handler but failed with error:\n${(e as Error).message}`));
       }
     } else {
-      errors.push(new Error(`Could not find handler at ${handlerPath}`));
+      errors.push(new Error(`Could not find handler at ${absoluteHandlerPath ?? handlerPath}`));
     }
 
-    if (handler && !handler.query) {
+    if (handler && !handler?.query && !handler?.default?.query) {
       errors.push(
         new Error(
           `Exported handler doesn't appear to be a graphql mocks GraphQLHandler instance, missing #query method.\nDouble-check that it's the default export and an instance of GraphQLHandler`,
@@ -46,10 +56,10 @@ export default class HandlerInfo extends Command {
       })
       .join('\n');
 
-    if (handlerPath) {
+    if (absoluteHandlerPath) {
       this.log();
       this.log(heading('Location'));
-      this.log(handlerPath);
+      this.log(absoluteHandlerPath);
       this.log();
     }
 

@@ -28,7 +28,7 @@ function refreshModuleOnChange(module: string, cb: any) {
         require(module);
       }
     } catch (e) {
-      console.log(chalk.yellow(`Error reloading:\n${e.toString()}`));
+      console.log(chalk.yellow(`Error reloading:\n${(e as Error).toString()}`));
     }
 
     console.log(`Reloaded ${module}`);
