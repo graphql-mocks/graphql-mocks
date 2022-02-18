@@ -13,6 +13,11 @@ export const schema = {
 
 export const handler = {
   handler: Flags.string({
+    char: 'h',
     description: 'path to file with graphql handler',
   }),
+};
+
+export const config = {
+  config: Flags.string({ char: 'c', description: 'path to config file' }),
 };

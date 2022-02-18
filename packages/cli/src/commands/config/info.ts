@@ -4,15 +4,17 @@ import { loadConfig } from '../../lib/config/load-config';
 import { sync as pkgDir } from 'pkg-dir';
 import { heading } from '../../lib/info/heading';
 import { errors as formatErrors } from '../../lib/info/errors';
+import { config as configFlag } from '../../lib/common-flags';
 
 export default class ConfigInfo extends Command {
   static description = 'display info about a gqlmocks config file';
+  static examples = [`$ gqlmocks config info`, `$ gqlmocks config info --config "../gqlmocks.config.js"`];
 
   static flags = {
-    config: Flags.string({ char: 'c' }),
+    ...configFlag,
   };
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = await this.parse(ConfigInfo);
     const { config, errors, path } = loadConfig(flags.config);
     const formattedErrors = formatErrors(errors);
