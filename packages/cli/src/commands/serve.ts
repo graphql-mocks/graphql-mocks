@@ -16,6 +16,7 @@ import { loadConfig } from '../lib/config/load-config';
 import { watchFile } from 'fs';
 import { createSchemaFromLocation } from '../lib/schema/create-schema-from-location';
 import { collapseHeaders } from '../lib/schema/collapse-headers';
+import { schema as schemaFlag, handler as handlerFlag } from '../lib/common-flags';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -55,26 +56,28 @@ export default class Serve extends Command {
   ];
 
   static flags = {
+    ...schemaFlag,
+    ...handlerFlag,
     faker: Flags.boolean({
-      env: 'GQLMOCKS_FAKER',
-      description: 'use faker middlware for resolver fallbacks',
+      char: 'f',
+      description: 'use faker middlware for resolvers',
     }),
-    handler: Flags.string({
-      env: 'GQLMOCKS_HANDLER',
-      description: 'path to file with graphql handler (via default export)',
+    port: Flags.string({
+      char: 'p',
+      default: '4444',
+      description: 'Port to serve over',
     }),
-    schema: Flags.string({
-      env: 'GQLMOCKS_SCHEMA',
-      description:
-        'local (relative or absolute) path to graphql schema, remote url (graphql schema file or graphql api endpoint)',
-    }),
-    port: Flags.string({ default: '4444', env: 'GQLMOCKS_PORT' }),
     header: Flags.string({
+      char: 'h',
       multiple: true,
-      description: 'specify header(s) used in request for remote schema specified by schema flag',
+      description: 'specify header(s) used in the request for remote schema specified by --schema flag',
       dependsOn: ['schema'],
     }),
-    watch: Flags.boolean(),
+    watch: Flags.boolean({
+      char: 'w',
+      hidden: true,
+      description: '(experimental) watch changes made to the handler or schema and reload',
+    }),
   };
 
   server: any = null;
@@ -191,8 +194,8 @@ export default class Serve extends Command {
 
     if (flags.watch) {
       const files = [
-        schemaPath && normalizeAbsolutePath(schemaPath, { extensions: ['graphql', 'gql', 'json', 'js', 'ts'] }),
-        handlerPath && normalizeAbsolutePath(handlerPath, { extensions: ['js', 'ts'] }),
+        schemaPath && normalizeAbsolutePath(schemaPath),
+        handlerPath && normalizeAbsolutePath(handlerPath),
       ].filter(Boolean) as string[];
 
       this.watchFiles(files, start);
