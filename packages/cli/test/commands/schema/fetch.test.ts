@@ -1,7 +1,7 @@
 import { expect, test } from '@oclif/test';
 import { resolve } from 'path';
 import { tmpdir } from 'os';
-import { closeSync, openSync, existsSync, unlinkSync as rm, writeFileSync, readFileSync } from 'fs';
+import { closeSync, openSync, existsSync, unlinkSync as rm, writeFileSync } from 'fs';
 import { testPackagePath, useTestPackage } from '../../test-helpers/package';
 import { describe } from 'mocha';
 import { backup } from '../../test-helpers/file';
@@ -11,7 +11,7 @@ function makeEmptyFile(filePath: string) {
 }
 
 describe('schema:fetch', () => {
-  describe('using --save-schema-file to specify the location', () => {
+  describe('using --save-schema to specify the location', () => {
     const tempDir = tmpdir();
     const tempFile = 'schema.temp.graphql';
     const tempFilePath = resolve(tempDir, tempFile);
@@ -22,7 +22,7 @@ describe('schema:fetch', () => {
 
     test
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema-file', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema', tempFilePath])
       .it('fetches a schema', (ctx) => {
         expect(ctx.stdout).to.contain(`✅ Saved GraphQL Schema to ${tempFilePath}`);
       });
@@ -34,7 +34,7 @@ describe('schema:fetch', () => {
         }
       })
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema-file', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema', tempFilePath])
       .catch((e) => {
         expect(e.message).to.contain(`Bailing, file already exists at ${tempFilePath}`);
         expect(e.message).to.contain('Re-run with `force` flag to overwrite.');
@@ -52,7 +52,7 @@ describe('schema:fetch', () => {
         'schema:fetch',
         '--source',
         'https://api.spacex.land/graphql',
-        '--save-schema-file',
+        '--save-schema',
         tempFilePath,
         '--force',
       ])

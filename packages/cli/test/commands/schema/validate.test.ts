@@ -10,12 +10,12 @@ describe('schema:validate', () => {
   const testPackage = 'test-package';
   const packagePath = testPackagePath(testPackage);
 
-  describe('when the schema is specified by the --schema-file flag', () => {
+  describe('when the schema is specified by the --schema flag', () => {
     const schemaFilePath = resolve(packagePath, 'graphql-mocks/schema.graphql');
 
     test
       .stdout()
-      .command(['schema:validate', '--schema-file', schemaFilePath])
+      .command(['schema:validate', '--schema', schemaFilePath])
       .it('validates the schema', (ctx) => {
         expect(ctx.stdout).to.contain('✅ Schema is valid.');
       });
@@ -26,7 +26,7 @@ describe('schema:validate', () => {
       .do(() => {
         writeInvalidSchema(errorSchemaFile);
       })
-      .command(['schema:validate', '--schema-file', errorSchemaFile])
+      .command(['schema:validate', '--schema', errorSchemaFile])
       .catch((e) => {
         expect(e.message).to.contain('❌ Invalid schema.');
         expect(e.message).to.contain('Syntax Error: Expected Name, found "}"');

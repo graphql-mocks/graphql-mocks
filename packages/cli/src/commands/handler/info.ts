@@ -1,27 +1,29 @@
-import { Command, Flags } from '@oclif/core';
+import { Command } from '@oclif/core';
 import { loadConfig } from '../../lib/config/load-config';
 import { heading } from '../../lib/info/heading';
 import { existsSync } from 'fs';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
+import { handler } from '../../lib/common-flags';
 
 export default class HandlerInfo extends Command {
-  static description = 'display info about a GraphQL schema';
+  static description = 'display info about a graphql schema';
+  static examples = ['$ gqlmocks handler info', '$ gqlmocks handler info --handler path/to/handler.js'];
 
   static flags = {
-    ['handler-file']: Flags.string(),
+    ...handler,
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(HandlerInfo);
     const { config } = loadConfig();
     const errors: Error[] = [];
-    const handlerPath = flags['handler-file'] ?? config?.handler?.path;
+    const handlerPath = flags.handler ?? config?.handler?.path;
     let absoluteHandlerPath;
 
     if (!handlerPath) {
       errors.push(
         new Error(
-          `Could not determine the handler path, either pass the path with the --handler-path flag or run in a project with a gqlmocks config with a handler.path entry`,
+          `Could not determine the handler path, either pass the path with the --handler flag or run in a project with a gqlmocks config with a handler.path entry`,
         ),
       );
     } else {

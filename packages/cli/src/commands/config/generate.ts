@@ -15,7 +15,7 @@ export default class ConfigGenerate extends Command {
     'Generate a basic gqlmocks config file\nSee more config options at www.graphql-mocks.com/docs/cli';
 
   static flags = {
-    out: Flags.string({ description: 'path to write generated config to' }),
+    ['save-config']: Flags.string({ description: 'path to write generated config to' }),
     format: Flags.string({
       options: ['ts', 'js', 'json'],
       description: 'specify the output format of the gqlmocks config',
@@ -26,7 +26,7 @@ export default class ConfigGenerate extends Command {
     force: Flags.boolean({ default: false, description: 'overwrite config if one exists' }),
   };
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = await this.parse(ConfigGenerate);
 
     const config = {
@@ -42,11 +42,11 @@ export default class ConfigGenerate extends Command {
     const root = pkgDir(cwd());
     const { config: existingConfig } = loadConfig();
 
-    const format = flags.format ?? isTypeScriptProject(flags.out) ? 'ts' : 'js';
+    const format = flags.format ?? isTypeScriptProject(flags['save-config']) ? 'ts' : 'js';
     let configPath;
-    if (flags.out) {
-      const { ext } = parse(flags.out);
-      configPath = ext ? flags.out : `${flags.out}.${format}`;
+    if (flags['save-config']) {
+      const { ext } = parse(flags['save-config']);
+      configPath = ext ? flags['save-config'] : `${flags['save-config']}.${format}`;
     } else {
       if (!root) {
         this.error(
@@ -61,7 +61,7 @@ export default class ConfigGenerate extends Command {
       this.error(`Bailing, file already exists at ${configPath}, use --force to overwrite`);
     }
 
-    if (!flags.out) {
+    if (!flags['save-config']) {
       this.warn(`All paths in the config are relative to:\n${root}\n`);
     }
 

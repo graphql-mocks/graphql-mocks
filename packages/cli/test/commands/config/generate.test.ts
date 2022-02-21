@@ -71,8 +71,13 @@ describe('config/generate', function () {
   test
     .stdout()
     .stderr()
-    .command(['config:generate', '--out', resolve(generateTestPkgDir, 'custom-config.hello'), ...configContentFlags])
-    .it('generates a config file at the location specified by the --out flag', (ctx) => {
+    .command([
+      'config:generate',
+      '--save-config',
+      resolve(generateTestPkgDir, 'custom-config.hello'),
+      ...configContentFlags,
+    ])
+    .it('generates a config file at the location specified by the --save-config flag', (ctx) => {
       expect(ctx.stdout).to.contain('Wrote gqlmock config');
       expect(existsSync(resolve(generateTestPkgDir, 'custom-config.hello'))).to.exist;
 

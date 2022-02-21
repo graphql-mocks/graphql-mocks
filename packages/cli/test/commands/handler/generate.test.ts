@@ -48,7 +48,7 @@ describe('handler/generate', function () {
       });
   });
 
-  describe('specifying the output location with the --out flag', () => {
+  describe('specifying the output location with the --save-handler flag', () => {
     const outHandlerPath = resolve(tmpdir(), 'test-graphql-handler.js');
 
     beforeEach(() => {
@@ -59,8 +59,8 @@ describe('handler/generate', function () {
 
     test
       .stdout()
-      .command(['handler:generate', '--out', outHandlerPath])
-      .it('generates a handler at the path specified by the --out flag', (ctx) => {
+      .command(['handler:generate', '--save-handler', outHandlerPath])
+      .it('generates a handler at the path specified by the --save-handler flag', (ctx) => {
         expect(existsSync(outHandlerPath)).to.be.true;
         expect(ctx.stdout).includes('✅ Wrote handler file');
       });
@@ -70,7 +70,7 @@ describe('handler/generate', function () {
       .do(() => {
         writeFileSync(outHandlerPath, '');
       })
-      .command(['handler:generate', '--out', outHandlerPath])
+      .command(['handler:generate', '--save-handler', outHandlerPath])
       .catch((e) => expect(e.message).includes('Bailing, file already exists'))
       .it('shows an error when the file already exists');
 
@@ -79,7 +79,7 @@ describe('handler/generate', function () {
       .do(() => {
         writeFileSync(outHandlerPath, '');
       })
-      .command(['handler:generate', '--out', outHandlerPath, '--force'])
+      .command(['handler:generate', '--save-handler', outHandlerPath, '--force'])
       .it('overwrites the handler file with --force', (ctx) => {
         expect(existsSync(outHandlerPath)).to.be.true;
         expect(ctx.stdout).includes('✅ Wrote handler file');

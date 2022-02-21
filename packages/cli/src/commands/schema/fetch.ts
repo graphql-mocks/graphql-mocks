@@ -1,29 +1,39 @@
 import { Command, Flags } from '@oclif/core';
 import { GraphQLSchema } from 'graphql';
+import { header } from '../../lib/common-flags';
 import { loadConfig } from '../../lib/config/load-config';
 import { collapseHeaders } from '../../lib/schema/collapse-headers';
 import { createSchemaFromLocation } from '../../lib/schema/create-schema-from-location';
 import { saveSchema } from '../../lib/schema/save-schema';
 
 export default class SchemaFetch extends Command {
-  static description = 'Fetch and save a GraphQL Schema';
+  static description = 'fetch and save a graphql schema locally';
+
+  static examples = [
+    '$ gqlmocks schema fetch',
+    '$ gqlmocks schema fetch --force',
+    '$ gqlmocks schema fetch --source "http://remote.com/schema.graphql"',
+    '$ gqlmocks schema fetch --source "http://remote-gql-api.com"',
+    '$ gqlmocks schema fetch --source "http://remote-gql-api.com" --header "Authorization=Bearer abc123" --header "Header=Text"',
+    '$ gqlmocks schema fetch --format "SDL_STRING"',
+  ];
 
   static flags = {
-    ['save-schema-file']: Flags.string({ description: 'path of file to save schema to' }),
-    force: Flags.boolean({ default: false }),
-    format: Flags.string({ options: ['SDL', 'SDL_STRING'], default: 'SDL' }),
-    source: Flags.string({
-      description: 'Url of GraphQL API server or url of remote .graphql file',
-      parse: async (str) => new URL(str).href,
+    ...header,
+    ['save-schema']: Flags.string({ description: 'path of file to save schema to' }),
+    force: Flags.boolean({ description: 'overwrite a schema file if one already exists', default: false }),
+    format: Flags.string({
+      description: 'format to save the schema as',
+      options: ['SDL', 'SDL_STRING'],
+      default: 'SDL',
     }),
-    header: Flags.string({
-      multiple: true,
-      description: 'specify header(s) used in request for remote schema specified by schema flag',
-      dependsOn: ['source'],
+    source: Flags.string({
+      description: 'url of graphql api server or url of remote .graphql file',
+      parse: async (str) => new URL(str).href,
     }),
   };
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = await this.parse(SchemaFetch);
     const { config } = loadConfig();
 
@@ -36,9 +46,9 @@ export default class SchemaFetch extends Command {
       source = flags.source;
     }
 
-    if (flags['save-schema-file']) {
+    if (flags['save-schema']) {
       this.log(' ℹ️   Out filepath specified via flag');
-      out = flags['save-schema-file'];
+      out = flags['save-schema'];
     }
 
     if (flags.header) {
@@ -54,7 +64,7 @@ export default class SchemaFetch extends Command {
 
     if (!out) {
       this.error(
-        'Could not determine an out filepath to save the schema to, either specify `--out` flag or `schema.path` property in gqlmocks config',
+        'Could not determine an out filepath to save the schema to, either specify `--save-schema` flag or `schema.path` property in gqlmocks config',
       );
     }
 

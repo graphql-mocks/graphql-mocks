@@ -7,11 +7,18 @@ import loadBlueprint from '../../lib/load-blueprint';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 
 export default class HandlerGenerate extends Command {
-  static description = 'Generate a GraphQLHandler';
+  static description = 'Generate a graphql handler';
+
+  static examples = [
+    '$ gqlconfig handler generate',
+    '$ gqlconfig handler generate --force',
+    '$ gqlconfig handler generate --save-handler "path/to/gqlmocks.config.js"',
+    '$ gqlconfig handler generate --format "ts"',
+  ];
 
   static flags = {
-    out: Flags.string({ description: 'path to write generated config to' }),
-    force: Flags.boolean({ default: false, description: 'overwrite config if one exists' }),
+    ['save-handler']: Flags.string({ description: 'path to write generated config to' }),
+    force: Flags.boolean({ default: false, description: 'overwrite config if one already exists' }),
     format: Flags.string({
       options: ['ts', 'js'],
       description: 'specify the file format of the created handler file',
@@ -24,11 +31,12 @@ export default class HandlerGenerate extends Command {
     const { config, path: configPath } = loadConfig();
 
     let out =
-      flags.out ?? (configPath && config?.handler.path && resolve(parse(configPath!).dir, config!.handler.path!));
+      flags['save-handler'] ??
+      (configPath && config?.handler.path && resolve(parse(configPath!).dir, config!.handler.path!));
 
     if (!out) {
       this.error(
-        'Run command within a project with a gqlmocks config with a handler.path set, or specify the path with the --out flag',
+        'Run command within a project with a gqlmocks config with a handler.path set, or specify the path with the --save-handler flag',
       );
     }
 

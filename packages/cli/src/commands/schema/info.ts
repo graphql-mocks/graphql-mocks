@@ -1,4 +1,4 @@
-import { Command, Flags } from '@oclif/core';
+import { Command } from '@oclif/core';
 import { loadConfig } from '../../lib/config/load-config';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 import { loadSchema } from '../../lib/schema/load-schema';
@@ -6,8 +6,9 @@ import { errors as formatErrors } from '../../lib/info/errors';
 import { heading } from '../../lib/info/heading';
 import { GraphQLSchema, isObjectType } from 'graphql';
 import chalk from 'chalk';
+import { schema } from '../../lib/common-flags';
 
-function formatTypes(schema: GraphQLSchema) {
+function formatTypes(schema: GraphQLSchema): string {
   const types = Object.entries(schema.getTypeMap());
   const output: string[] = [];
 
@@ -22,7 +23,7 @@ function formatTypes(schema: GraphQLSchema) {
   return output.join('\n');
 }
 
-export function findSchema(flagPath?: string) {
+export function findSchema(flagPath?: string): string {
   const { config, path: configPath } = loadConfig();
 
   let schemaPath;
@@ -35,7 +36,7 @@ export function findSchema(flagPath?: string) {
   } else {
     if (!config) {
       throw new Error(
-        `No config file could be found, either specify a --schema-file flag or use command within a project with a gqlmocks config`,
+        `No config file could be found, either specify a --schema flag or use command within a project with a gqlmocks config`,
       );
     }
 
@@ -51,9 +52,10 @@ export function findSchema(flagPath?: string) {
 
 export default class SchemaInfo extends Command {
   static description = 'display info about a GraphQL schema';
+  static examples = ['$ gqlmocks schema info', '$ gqlmocks schema info --schema "path/to/schema.graphql"'];
 
   static flags = {
-    ['schema-file']: Flags.string(),
+    ...schema,
   };
 
   async run(): Promise<void> {
@@ -61,7 +63,7 @@ export default class SchemaInfo extends Command {
 
     let schemaPath;
     try {
-      schemaPath = findSchema(flags['schema-file']);
+      schemaPath = findSchema(flags.schema);
     } catch (e) {
       this.error(e as Error);
     }

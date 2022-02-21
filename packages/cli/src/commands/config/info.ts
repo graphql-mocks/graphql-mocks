@@ -1,4 +1,4 @@
-import { Command, Flags } from '@oclif/core';
+import { Command } from '@oclif/core';
 import cwd from '../../lib/cwd';
 import { loadConfig } from '../../lib/config/load-config';
 import { sync as pkgDir } from 'pkg-dir';

@@ -21,3 +21,12 @@ export const handler = {
 export const config = {
   config: Flags.string({ char: 'c', description: 'path to config file' }),
 };
+
+export const header = {
+  header: Flags.string({
+    char: 'h',
+    multiple: true,
+    description: 'specify header(s) used in the request for remote schema specified by --schema flag',
+    dependsOn: ['schema'],
+  }),
+};

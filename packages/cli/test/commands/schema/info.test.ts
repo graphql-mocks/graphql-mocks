@@ -9,12 +9,12 @@ describe('schema:info', () => {
   const testPackage = 'test-package';
   const packagePath = testPackagePath(testPackage);
 
-  describe('when the schema is specified by the --schema-file flag', () => {
+  describe('when the schema is specified by the --schema flag', () => {
     const schemaFilePath = resolve(packagePath, 'graphql-mocks/schema.graphql');
 
     test
       .stdout()
-      .command(['schema:info', '--schema-file', schemaFilePath])
+      .command(['schema:info', '--schema', schemaFilePath])
       .it('shows info about the schema', (ctx) => {
         expect(ctx.stdout).to.contain('packages/cli/test/test-helpers/test-package/graphql-mocks/schema.graphql');
         expect(ctx.stdout).to.contain('✅ No errors');
@@ -27,7 +27,7 @@ describe('schema:info', () => {
       .do(() => {
         writeInvalidSchema(errorSchemaFile);
       })
-      .command(['schema:info', '--schema-file', errorSchemaFile])
+      .command(['schema:info', '--schema', errorSchemaFile])
       .it('shows an error when the schema is invalid', (ctx) => {
         expect(ctx.stdout).to.contain('error-schema.graphql');
         expect(ctx.stdout).to.contain('Syntax Error: Expected Name, found "}"');

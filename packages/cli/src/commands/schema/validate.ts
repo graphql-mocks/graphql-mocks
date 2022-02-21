@@ -1,11 +1,13 @@
-import { Command, Flags } from '@oclif/core';
+import { Command } from '@oclif/core';
+import { schema } from '../../lib/common-flags';
 import { loadSchema } from '../../lib/schema/load-schema';
 import { findSchema } from './info';
 export default class SchemaValidate extends Command {
   static description = 'display info about a gqlmocks config file';
+  static examples = ['$ gqlmocks schema validate', '$ gqlmocks schema validate --schema "path/to/schema.graphql"'];
 
   static flags = {
-    ['schema-file']: Flags.string(),
+    ...schema,
   };
 
   async run(): Promise<void> {
@@ -13,7 +15,7 @@ export default class SchemaValidate extends Command {
 
     let schemaPath;
     try {
-      schemaPath = findSchema(flags['schema-file']);
+      schemaPath = findSchema(flags.schema);
     } catch (e) {
       this.error(e as Error);
     }

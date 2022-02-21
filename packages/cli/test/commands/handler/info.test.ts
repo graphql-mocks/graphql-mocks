@@ -1,7 +1,6 @@
 import { test } from '@oclif/test';
 import { expect } from 'chai';
 import { testPackagePath, useTestPackage } from '../../test-helpers/package';
-import { backup } from '../../test-helpers/file';
 import { resolve } from 'path';
 import { copyFileSync, existsSync, unlinkSync as rm } from 'fs';
 
@@ -22,7 +21,7 @@ describe('handler/info', function () {
       });
   });
 
-  describe('specifying the output location with the --out flag', () => {
+  describe('specifying the location with the --handler flag', () => {
     const tempHandlerFile = resolve(testPackageDir, 'graphql-mocks/test-graphql-handler.ts');
 
     before(() => {
@@ -39,7 +38,7 @@ describe('handler/info', function () {
 
     test
       .stdout()
-      .command(['handler:info', '--handler-file', tempHandlerFile])
+      .command(['handler:info', '--handler', tempHandlerFile])
       .it('outputs info about the handler', (ctx) => {
         expect(ctx.stdout).includes('test/test-helpers/test-package/graphql-mocks/test-graphql-handler.ts');
         expect(ctx.stdout).includes('✅ No errors.');

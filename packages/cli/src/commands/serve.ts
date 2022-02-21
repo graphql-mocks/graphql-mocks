@@ -16,7 +16,7 @@ import { loadConfig } from '../lib/config/load-config';
 import { watchFile } from 'fs';
 import { createSchemaFromLocation } from '../lib/schema/create-schema-from-location';
 import { collapseHeaders } from '../lib/schema/collapse-headers';
-import { schema as schemaFlag, handler as handlerFlag } from '../lib/common-flags';
+import { header as headerFlag, schema as schemaFlag, handler as handlerFlag } from '../lib/common-flags';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -58,6 +58,8 @@ export default class Serve extends Command {
   static flags = {
     ...schemaFlag,
     ...handlerFlag,
+    ...headerFlag,
+
     faker: Flags.boolean({
       char: 'f',
       description: 'use faker middlware for resolvers',
@@ -65,13 +67,7 @@ export default class Serve extends Command {
     port: Flags.string({
       char: 'p',
       default: '4444',
-      description: 'Port to serve over',
-    }),
-    header: Flags.string({
-      char: 'h',
-      multiple: true,
-      description: 'specify header(s) used in the request for remote schema specified by --schema flag',
-      dependsOn: ['schema'],
+      description: 'Port to serve on',
     }),
     watch: Flags.boolean({
       char: 'w',
@@ -142,19 +138,21 @@ export default class Serve extends Command {
     return server;
   }
 
-  watchFiles(files: string[], start: any) {
+  watchFiles(files: string[], start: any): void {
     files.forEach((path) => {
       refreshModuleOnChange(path, start);
     });
   }
 
-  async run() {
+  async run(): Promise<void> {
     const { flags } = await this.parse(Serve);
 
     const port = Number(flags.port);
-    const headers = collapseHeaders(flags.header);
 
     const { config, errors } = loadConfig();
+
+    const headers = { ...config?.schema?.headers, ...collapseHeaders(flags.header) };
+
     if (config && errors && errors.length) {
       this.warn(
         `Found gqlmocks config but it has validation errors:\n${errors.map((e) => ` * ${e.message}`).join('\n')}`,
