@@ -59,7 +59,7 @@ describe('serve', () => {
       '--schema',
       resolve(__dirname, '../test-helpers/test-package/graphql-mocks/schema.graphql'),
       '--handler',
-      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/handler'),
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/handler.js'),
     ])
     .it('serves with a loaded graphql handler', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');

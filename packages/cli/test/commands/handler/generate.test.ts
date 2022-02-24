@@ -12,7 +12,7 @@ describe('handler/generate', function () {
     useTestPackage(testPackage, { eachTest: true });
 
     const testPackageDir = testPackagePath(testPackage);
-    const packageHandlerFile = resolve(testPackageDir, 'graphql-mocks/handler.ts');
+    const packageHandlerFile = resolve(testPackageDir, 'graphql-mocks/handler.js');
     backup(packageHandlerFile, { eachTest: true });
 
     beforeEach(() => {

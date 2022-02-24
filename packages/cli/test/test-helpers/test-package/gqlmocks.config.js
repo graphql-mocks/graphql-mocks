@@ -4,6 +4,6 @@ module.exports = {
     format: 'SDL',
   },
   handler: {
-    path: 'graphql-mocks/handler.ts',
+    path: 'graphql-mocks/handler.js',
   },
 };

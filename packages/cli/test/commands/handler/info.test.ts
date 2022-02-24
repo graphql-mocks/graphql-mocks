@@ -7,7 +7,7 @@ import { copyFileSync, existsSync, unlinkSync as rm } from 'fs';
 describe('handler/info', function () {
   const testPackage = 'test-package';
   const testPackageDir = testPackagePath(testPackage);
-  const packageHandlerFile = resolve(testPackageDir, 'graphql-mocks/handler.ts');
+  const packageHandlerFile = resolve(testPackageDir, 'graphql-mocks/handler.js');
 
   describe('within a package with a gqlmocks config and handler.path entry', () => {
     useTestPackage(testPackage, { eachTest: true });
@@ -16,7 +16,7 @@ describe('handler/info', function () {
       .stdout()
       .command(['handler:info'])
       .it('outputs info about the handler', (ctx) => {
-        expect(ctx.stdout).includes('test-helpers/test-package/graphql-mocks/handler.ts');
+        expect(ctx.stdout).includes('test-helpers/test-package/graphql-mocks/handler.js');
         expect(ctx.stdout).includes('✅ No errors.');
       });
   });

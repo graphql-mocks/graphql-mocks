@@ -23,6 +23,7 @@
     "git-root-dir": "^1.0.2",
     "graphiql-middleware": "^0.0.4",
     "graphql": "^16.2.0",
+    "graphql-import-node": "^0.0.4",
     "graphql-mocks": "0.8.1",
     "handlebars": "^4.7.7",
     "pkg-dir": "^5",

@@ -1,10 +1,12 @@
+// load node registers to support dynamically loading and parsing
+// typescript and graphql files
+
 module.exports = async function () {
-  // load babel to support dynamically loading and parsing
-  // typescript and graphql files
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('@babel/register')({
-    plugins: ['import-graphql'],
-    presets: ['@babel/preset-typescript'],
-    extensions: ['.ts', '.graphql', '.gql'],
+    presets: ['@babel/preset-typescript', ['@babel/preset-env', { modules: 'commonjs' }]],
+    extensions: ['.js', '.ts'],
   });
+
+  require('graphql-import-node/register');
 };
