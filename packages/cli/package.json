@@ -7,9 +7,10 @@
   },
   "bugs": "https://github.com/chadian/gqlmocks/issues",
   "dependencies": {
-    "@babel/core": "^7.16.0",
+    "@babel/core": "^7.17.5",
     "@babel/node": "^7.16.0",
-    "@babel/register": "^7.16.0",
+    "@babel/plugin-transform-typescript": "^7.16.8",
+    "@babel/register": "^7.17.0",
     "@graphql-mocks/faker": "^0.2.0",
     "@graphql-mocks/network-express": "^0.1.1",
     "@oclif/core": "^1",
@@ -71,6 +72,8 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme && yarn copy-blueprints",
     "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
+    "build": "tsc && mkdir -p lib/blueprints && cp -R src/blueprints/ lib/blueprints",
+    "test-build": "mocha \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib"
   },
