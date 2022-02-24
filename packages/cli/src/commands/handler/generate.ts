@@ -7,7 +7,7 @@ import loadBlueprint from '../../lib/load-blueprint';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 
 export default class HandlerGenerate extends Command {
-  static description = 'Generate a graphql handler';
+  static description = 'generate a graphql handler';
 
   static examples = [
     '$ gqlconfig handler generate',

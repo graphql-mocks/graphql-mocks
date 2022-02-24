@@ -6,7 +6,7 @@ import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
 import { handler } from '../../lib/common-flags';
 
 export default class HandlerInfo extends Command {
-  static description = 'display info about a graphql schema';
+  static description = 'display info about a graphql handler';
   static examples = ['$ gqlmocks handler info', '$ gqlmocks handler info --handler path/to/handler.js'];
 
   static flags = {

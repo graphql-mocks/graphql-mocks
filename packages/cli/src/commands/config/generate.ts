@@ -11,8 +11,15 @@ import { isTypeScriptProject } from '../../lib/is-typescript-project';
 import cwd from '../../lib/cwd';
 
 export default class ConfigGenerate extends Command {
-  static description =
-    'Generate a basic gqlmocks config file\nSee more config options at www.graphql-mocks.com/docs/cli';
+  static description = 'Generate or update a gqlmocks config file';
+
+  static examples = [
+    '$ gqlmocks config generate',
+    '$ gqlmocks config generate --force',
+    '$ gqlmocks config generate --save-config "./path/to/gqlmocks.config.js"',
+    '$ gqlmocks config generate --schema.path "./graphql-mocks/schema.graphql" --schema.format "SDL_STRING"',
+    '$ gqlmocks config generate --handler.path "./graphql-mocks/handler.js"',
+  ];
 
   static flags = {
     ['save-config']: Flags.string({ description: 'path to write generated config to' }),
@@ -75,7 +82,9 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.path) {
       const defaultz = existingConfig?.schema?.path || 'graphql-mocks/schema.graphql';
-      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema file? (default: ${defaultz})`, { required: false });
+      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema file? (default: ${defaultz})`, {
+        required: false,
+      });
       config.schema.path = schemaPath || defaultz;
     }
 

@@ -3,7 +3,7 @@ import { config } from '../../lib/common-flags';
 import { loadConfig } from '../../lib/config/load-config';
 
 export default class ConfigValidate extends Command {
-  static description = 'Validate a gqlmocks config file';
+  static description = 'validate a gqlmocks config file';
   static examples = ['$ gqlmocks config validate', '$ gqlmocks config validate --config "path/to/gqlmocks.config.js"'];
 
   static flags = {
