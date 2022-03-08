@@ -45,7 +45,7 @@ export default class Serve extends Command {
   static express = express;
   static axios = axios;
 
-  static description = 'Run a local graphql server';
+  static description = 'run a local graphql server';
 
   static examples = [
     `$ gqlmocks serve --schema ../schema.graphql`,

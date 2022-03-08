@@ -11,7 +11,7 @@ import { isTypeScriptProject } from '../../lib/is-typescript-project';
 import cwd from '../../lib/cwd';
 
 export default class ConfigGenerate extends Command {
-  static description = 'Generate or update a gqlmocks config file';
+  static description = 'generate or update a gqlmocks config file';
 
   static examples = [
     '$ gqlmocks config generate',
