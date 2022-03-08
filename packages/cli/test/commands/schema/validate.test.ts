@@ -5,7 +5,6 @@ import { resolve } from 'path';
 import { testPackagePath, useTestPackage } from '../../test-helpers/package';
 import { backup, writeInvalidSchema } from '../../test-helpers/file';
 
-
 describe('schema:validate', () => {
   const testPackage = 'test-package';
   const packagePath = testPackagePath(testPackage);

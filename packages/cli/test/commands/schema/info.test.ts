@@ -36,8 +36,8 @@ describe('schema:info', () => {
 
   describe('within a project with a graphql config', () => {
     const packageSchemaFile = resolve(packagePath, 'graphql-mocks/schema.graphql');
-    useTestPackage(testPackage, { eachTest: true });
     backup(packageSchemaFile, { eachTest: true });
+    useTestPackage(testPackage, { eachTest: true });
 
     test
       .stdout()
