@@ -24,7 +24,6 @@ export const config = {
 
 export const header = {
   header: Flags.string({
-    char: 'h',
     multiple: true,
     description: 'specify header(s) used in the request for remote schema specified by --schema flag',
     dependsOn: ['schema'],
