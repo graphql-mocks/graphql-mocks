@@ -51,7 +51,7 @@ export function findSchema(flagPath?: string): string {
 }
 
 export default class SchemaInfo extends Command {
-  static description = 'display info about a GraphQL schema';
+  static description = 'display info about a graphql schema';
   static examples = ['$ gqlmocks schema info', '$ gqlmocks schema info --schema "path/to/schema.graphql"'];
 
   static flags = {

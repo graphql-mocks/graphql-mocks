@@ -3,7 +3,7 @@ import { schema } from '../../lib/common-flags';
 import { loadSchema } from '../../lib/schema/load-schema';
 import { findSchema } from './info';
 export default class SchemaValidate extends Command {
-  static description = 'display info about a gqlmocks config file';
+  static description = 'validate a graphql schema file';
   static examples = ['$ gqlmocks schema validate', '$ gqlmocks schema validate --schema "path/to/schema.graphql"'];
 
   static flags = {
