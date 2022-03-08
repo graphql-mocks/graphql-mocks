@@ -1,6 +1,7 @@
 import { Command, Flags } from '@oclif/core';
 import { existsSync, writeFileSync } from 'fs';
 import { resolve, parse } from 'path';
+import { config } from '../../lib/common-flags';
 import { loadConfig } from '../../lib/config/load-config';
 import { isTypeScriptProject } from '../../lib/is-typescript-project';
 import loadBlueprint from '../../lib/load-blueprint';
@@ -17,6 +18,7 @@ export default class HandlerGenerate extends Command {
   ];
 
   static flags = {
+    ...config,
     ['save-handler']: Flags.string({ description: 'path to write generated config to' }),
     force: Flags.boolean({ default: false, description: 'overwrite config if one already exists' }),
     format: Flags.string({
@@ -28,7 +30,7 @@ export default class HandlerGenerate extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(HandlerGenerate);
     let format = flags.format;
-    const { config, path: configPath } = loadConfig();
+    const { config, path: configPath } = loadConfig(flags.config);
 
     let out =
       flags['save-handler'] ??

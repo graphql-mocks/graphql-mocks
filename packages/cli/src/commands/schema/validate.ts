@@ -1,12 +1,14 @@
 import { Command } from '@oclif/core';
-import { schema } from '../../lib/common-flags';
+import { schema, config } from '../../lib/common-flags';
 import { loadSchema } from '../../lib/schema/load-schema';
 import { findSchema } from './info';
+
 export default class SchemaValidate extends Command {
   static description = 'validate a graphql schema file';
   static examples = ['$ gqlmocks schema validate', '$ gqlmocks schema validate --schema "path/to/schema.graphql"'];
 
   static flags = {
+    ...config,
     ...schema,
   };
 

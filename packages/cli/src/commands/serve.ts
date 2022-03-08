@@ -16,7 +16,12 @@ import { loadConfig } from '../lib/config/load-config';
 import { watchFile } from 'fs';
 import { createSchemaFromLocation } from '../lib/schema/create-schema-from-location';
 import { collapseHeaders } from '../lib/schema/collapse-headers';
-import { header as headerFlag, schema as schemaFlag, handler as handlerFlag } from '../lib/common-flags';
+import {
+  config as configFlag,
+  header as headerFlag,
+  schema as schemaFlag,
+  handler as handlerFlag,
+} from '../lib/common-flags';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -56,6 +61,7 @@ export default class Serve extends Command {
   ];
 
   static flags = {
+    ...configFlag,
     ...schemaFlag,
     ...handlerFlag,
     ...headerFlag,
@@ -149,7 +155,7 @@ export default class Serve extends Command {
 
     const port = Number(flags.port);
 
-    const { config, errors } = loadConfig();
+    const { config, errors } = loadConfig(flags.config);
 
     const headers = { ...config?.schema?.headers, ...collapseHeaders(flags.header) };
 

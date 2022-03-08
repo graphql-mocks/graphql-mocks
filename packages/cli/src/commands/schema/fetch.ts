@@ -1,6 +1,6 @@
 import { Command, Flags } from '@oclif/core';
 import { GraphQLSchema } from 'graphql';
-import { header } from '../../lib/common-flags';
+import { header, config } from '../../lib/common-flags';
 import { loadConfig } from '../../lib/config/load-config';
 import { collapseHeaders } from '../../lib/schema/collapse-headers';
 import { createSchemaFromLocation } from '../../lib/schema/create-schema-from-location';
@@ -20,6 +20,7 @@ export default class SchemaFetch extends Command {
 
   static flags = {
     ...header,
+    ...config,
     ['save-schema']: Flags.string({ description: 'path of file to save schema to' }),
     force: Flags.boolean({ description: 'overwrite a schema file if one already exists', default: false }),
     format: Flags.string({
@@ -35,7 +36,7 @@ export default class SchemaFetch extends Command {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(SchemaFetch);
-    const { config } = loadConfig();
+    const { config } = loadConfig(flags.config);
 
     let source = config?.schema.url ?? '';
     let out = config?.schema.path;

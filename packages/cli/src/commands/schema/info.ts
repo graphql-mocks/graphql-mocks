@@ -6,7 +6,7 @@ import { errors as formatErrors } from '../../lib/info/errors';
 import { heading } from '../../lib/info/heading';
 import { GraphQLSchema, isObjectType } from 'graphql';
 import chalk from 'chalk';
-import { schema } from '../../lib/common-flags';
+import { schema, config } from '../../lib/common-flags';
 
 function formatTypes(schema: GraphQLSchema): string {
   const types = Object.entries(schema.getTypeMap());
@@ -23,17 +23,17 @@ function formatTypes(schema: GraphQLSchema): string {
   return output.join('\n');
 }
 
-export function findSchema(flagPath?: string): string {
-  const { config, path: configPath } = loadConfig();
-
+export function findSchema(flagSchemaPath?: string, flagConfigPath?: string): string {
   let schemaPath;
-  if (flagPath) {
-    schemaPath = normalizeAbsolutePath(flagPath, { isFile: true });
+  if (flagSchemaPath) {
+    schemaPath = normalizeAbsolutePath(flagSchemaPath, { isFile: true });
 
     if (!schemaPath) {
-      throw new Error(`No schema could be found at ${flagPath}`);
+      throw new Error(`No schema could be found at ${flagSchemaPath}`);
     }
   } else {
+    const { config, path: configPath } = loadConfig(flagConfigPath);
+
     if (!config) {
       throw new Error(
         `No config file could be found, either specify a --schema flag or use command within a project with a gqlmocks config`,
@@ -56,6 +56,7 @@ export default class SchemaInfo extends Command {
 
   static flags = {
     ...schema,
+    ...config,
   };
 
   async run(): Promise<void> {
@@ -63,7 +64,7 @@ export default class SchemaInfo extends Command {
 
     let schemaPath;
     try {
-      schemaPath = findSchema(flags.schema);
+      schemaPath = findSchema(flags.schema, flags.config);
     } catch (e) {
       this.error(e as Error);
     }

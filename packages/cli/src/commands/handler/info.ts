@@ -3,19 +3,20 @@ import { loadConfig } from '../../lib/config/load-config';
 import { heading } from '../../lib/info/heading';
 import { existsSync } from 'fs';
 import { normalizeAbsolutePath } from '../../lib/normalize-absolute-path';
-import { handler } from '../../lib/common-flags';
+import { handler, config } from '../../lib/common-flags';
 
 export default class HandlerInfo extends Command {
   static description = 'display info about a graphql handler';
   static examples = ['$ gqlmocks handler info', '$ gqlmocks handler info --handler path/to/handler.js'];
 
   static flags = {
+    ...config,
     ...handler,
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(HandlerInfo);
-    const { config } = loadConfig();
+    const { config } = loadConfig(flags.config);
     const errors: Error[] = [];
     const handlerPath = flags.handler ?? config?.handler?.path;
     let absoluteHandlerPath;
@@ -29,8 +30,6 @@ export default class HandlerInfo extends Command {
     } else {
       absoluteHandlerPath = normalizeAbsolutePath(handlerPath, { isFile: true });
     }
-
-    console.log(absoluteHandlerPath, handlerPath);
 
     let handler;
     if (absoluteHandlerPath && existsSync(absoluteHandlerPath)) {
