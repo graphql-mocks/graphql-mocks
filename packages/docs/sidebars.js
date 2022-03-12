@@ -9,6 +9,9 @@ module.exports = {
       ],
     },
     {
+      CLI: ['cli/introducing-gqlmocks', 'cli/commands', 'cli/gqlmocks-config', 'cli/graphql-handler'],
+    },
+    {
       'GraphQL Handler': ['handler/introducing-handler', 'handler/using-middlewares', 'handler/handler-state'],
     },
     {
