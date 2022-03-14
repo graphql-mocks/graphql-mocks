@@ -8,23 +8,16 @@ The `gqlmocks` cli provides a handy way to get started with generating graphql-m
 
 ## Installation
 
-The easiest way to get started is to run `gqlmocks` via npx where it'll download, install, and run on demand.
+Ensure that the core package `graphql-mocks` is installed, it will include a compatible version of the CLI.
 
-```
+Then using `npx` or `yarn` to evoke the CLI:
+
+```shell
+# via npm
 npx gqlmocks --help
-```
 
-It can also be installed globally via npm or yarn.
-
-```
-# yarn
-yarn global add gqlmocks
-
-# npm
-npm install -g gqlmocks
-
-# then run via gqlmocks
-gqlmocks --help
+# via yarn
+yarn gqlmocks --help
 ```
 
 ## Next Steps
