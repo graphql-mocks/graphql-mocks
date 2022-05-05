@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/mirage",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Chad Carbert",
   "description": "Mock graphql using graphql-mocks and miragejs",
   "main": "dist/index.js",
@@ -30,13 +30,13 @@
     "@types/lodash.intersection": "^4.4.6",
     "@types/sinon": "^10.0.2",
     "graphql": "^14",
-    "graphql-mocks": "^0.8.1",
+    "graphql-mocks": "^0.8.2",
     "miragejs": "^0.1.40",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0",
-    "graphql-mocks": "^0.8.1",
+    "graphql-mocks": ">=0.8.1",
     "miragejs": "^0.1.40"
   }
 }
