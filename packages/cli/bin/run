@@ -1,6 +1,4 @@
 #!/usr/bin/env node
 
-require('@oclif/core')
-    .run()
-    .then(require('@oclif/command/flush'))
-    .catch(require('@oclif/errors/handle'));
+const oclif = require('@oclif/core')
+oclif.run().then(oclif.flush).catch(oclif.Errors.handle)
