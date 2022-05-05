@@ -2,9 +2,10 @@ import { expect } from 'chai';
 import { execSync } from 'child_process';
 import { resolve } from 'path';
 import { env } from 'process';
-import puppeteer from 'puppeteer';
+import puppeteer, { Browser, Page } from 'puppeteer';
 import execa from 'execa';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const processes: any[] = [];
 
 function cleanUpProcesses() {
@@ -21,7 +22,7 @@ function cleanUpProcesses() {
 }
 
 function dummyReactApp__yarn(args = '') {
-  const reactAppDirectory = resolve(__dirname, './dummy-react-app');
+  const reactAppDirectory = resolve(__dirname, '../dummy-react-app');
 
   console.log(`spawning yarn with ${args}`);
 
@@ -57,8 +58,8 @@ function dummyReactApp__yarn(args = '') {
 }
 
 describe('acceptance', function () {
-  let browser: any;
-  let page: any;
+  let browser: Browser;
+  let page: Page;
 
   before(async function () {
     this.timeout(1000 * 60 * 3);
@@ -97,8 +98,9 @@ describe('acceptance', function () {
 
     await page.reload({ waitUntil: ['networkidle0', 'domcontentloaded'] });
 
-    const payload = await page.$eval('#payload', (el: any) => el.textContent);
-    expect(JSON.parse(payload)).to.deep.equal({
+    const payload = await page.$eval('#payload', (el: Element) => el.textContent);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    expect(JSON.parse(payload!)).to.deep.equal({
       data: {
         helloWorld: 'Hello !!!',
       },
