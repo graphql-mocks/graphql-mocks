@@ -3,7 +3,6 @@
   "version": "0.2.0",
   "author": "Chad Carbert",
   "description": "Fake GraphQL queries with graphql-mocks and faker.js",
-  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",

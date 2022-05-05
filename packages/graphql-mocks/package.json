@@ -3,7 +3,6 @@
   "version": "0.8.1",
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
-  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",

@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with Express",
-  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",

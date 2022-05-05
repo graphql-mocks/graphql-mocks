@@ -3,7 +3,6 @@
   "version": "0.3.0",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with Nock",
-  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
