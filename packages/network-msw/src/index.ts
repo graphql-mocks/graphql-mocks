@@ -13,6 +13,7 @@ export function mswResolver(graphqlHandler: GraphQLHandler): MswResponseResolver
       throw new Error(`No request body provided, received "${typeof body}" with:\n ${JSON.stringify(body)}`);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { query, variables, operationName } = body as any;
 
     if (!query) {
