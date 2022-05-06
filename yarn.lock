@@ -9764,23 +9764,6 @@ graphql-sse@^1.0.1:
   resolved "https://registry.yarnpkg.com/graphql-sse/-/graphql-sse-1.0.6.tgz#4f98e0a06f2020542ed054399116108491263224"
   integrity sha512-y2mVBN2KwNrzxX2KBncQ6kzc6JWvecxuBernrl0j65hsr6MAS3+Yn8PTFSOgRmtolxugepxveyZVQEuaNEbw3w==
 
-graphql-mocks@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/graphql-mocks/-/graphql-mocks-0.8.1.tgz#a4b25b1e855fa001b6426f11d81b037f6a9d35fa"
-  integrity sha512-HiiqnkUlAHrKevP44T6f3nJbNhpN7poJ+nE3rNJJzeaDmMqYO0e2AoDBrKNGaPSGYvpSu1MhtRhVU1TGdOkexA==
-  dependencies:
-    lodash.clonedeep "^4.5.0"
-    lodash.difference "^4.5.0"
-    lodash.differencewith "^4.5.0"
-    lodash.flattendepth "^4.7.0"
-    lodash.intersection "^4.4.0"
-    lodash.isequal "^4.5.0"
-    lodash.isequalwith "^4.4.0"
-    lodash.merge "^4.6.2"
-    lodash.mergewith "^4.6.2"
-  optionalDependencies:
-    sinon "^9.0.0"
-
 graphql-tag@^2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.11.0.tgz#1deb53a01c46a7eb401d6cb59dec86fa1cccbffd"

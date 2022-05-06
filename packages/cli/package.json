@@ -24,7 +24,7 @@
     "graphiql-middleware": "^0.0.4",
     "graphql": "^16.2.0",
     "graphql-import-node": "^0.0.4",
-    "graphql-mocks": "0.8.1",
+    "graphql-mocks": "0.8.2",
     "handlebars": "^4.7.7",
     "pkg-dir": "^5",
     "ts-node": "^10.5.0",
