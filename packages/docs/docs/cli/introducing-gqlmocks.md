@@ -1,26 +1,19 @@
 ---
 id: introducing-gqlmocks
-title: Introducing the gqlmocks cli
+title: Introducing the gqlmocks CLI
 ---
 
-As developers we've come to enjoy quick assistance from the command line and graphql-mocks is no different.
-The `gqlmocks` cli provides a handy way to get started with generating graphql-mocks boilerplate files (like a GraphQL Handler), quickly run a mock local server on `localhost`, and more.
+The `gqlmocks` makes mocking easy with `localhost` mocking, setting up configuration defaults, generating file boilerplate, and verifying project setup. It's currently in beta as it's usage is tested and more integrations are added.
 
-## Installation
+## Usage
 
-Ensure that the core package `graphql-mocks` is installed, it will include a compatible version of the CLI.
-
-Then using `npx` or `yarn` to evoke the CLI:
+The easiest way to use the cli is by using `npx` which will download and evoke commands from the package directly.
 
 ```shell
-# via npm
 npx gqlmocks --help
-
-# via yarn
-yarn gqlmocks --help
 ```
 
 ## Next Steps
-
-* Sensible defaults can be used by the CLI with a `gqlmocks.config` file, learn how to set one up
-* To get an overview of all the commands and their flags, take a look at the Command List documentation
+* [Quickly mock](/docs/cli/quick-mocking) using the `serve` command with zero setup
+* Sensible defaults can be used by the CLI with a [gqlmocks config file](/docs/cli/gqlmocks-config)
+* To get an overview of all the commands and their flags, take a look at the [Command List](/docs/cli/commands).

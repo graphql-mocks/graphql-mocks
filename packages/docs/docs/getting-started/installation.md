@@ -3,22 +3,12 @@ id: installation
 title: Installation
 ---
 
-Install `graphql-mocks`
+Install `graphql-mocks` along with the `graphql` peer dependency
 
 ```bash
 # npm
-npm install --save-dev graphql-mocks
+npm install --save-dev graphql-mocks graphql
 
 # yarn
-yarn add --dev graphql-mocks
-```
-
-You will also need to install `graphql` as a peer dependency if it has not already been installed.
-
-```bash
-# npm
-npm install --save-dev graphql
-
-# yarn
-yarn add --dev graphql
+yarn add --dev graphql-mocks graphql
 ```

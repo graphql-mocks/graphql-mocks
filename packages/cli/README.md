@@ -1,23 +1,3 @@
-## gqlmocks
-
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g gqlmocks
-$ gqlmocks COMMAND
-running command...
-$ gqlmocks (--version)
-gqlmocks/0.0.0 darwin-x64 node-v14.18.0
-$ gqlmocks --help [COMMAND]
-USAGE
-  $ gqlmocks COMMAND
-...
-```
-<!-- usagestop -->
 # Commands
 <!-- commands -->
 * [`gqlmocks config generate`](#gqlmocks-config-generate)
@@ -34,7 +14,7 @@ USAGE
 
 ## `gqlmocks config generate`
 
-Generate a basic gqlmocks config file
+generate or update a gqlmocks config file
 
 ```
 USAGE
@@ -51,9 +31,18 @@ FLAGS
   --schema.path=<value>     path to GraphQL schema
 
 DESCRIPTION
-  Generate a basic gqlmocks config file
+  generate or update a gqlmocks config file
 
-  See more config options at www.graphql-mocks.com/docs/cli
+EXAMPLES
+  $ gqlmocks config generate
+
+  $ gqlmocks config generate --force
+
+  $ gqlmocks config generate --save-config "./path/to/gqlmocks.config.js"
+
+  $ gqlmocks config generate --schema.path "./graphql-mocks/schema.graphql" --schema.format "SDL_STRING"
+
+  $ gqlmocks config generate --handler.path "./graphql-mocks/handler.js"
 ```
 
 ## `gqlmocks config info`
@@ -78,7 +67,7 @@ EXAMPLES
 
 ## `gqlmocks config validate`
 
-Validate a gqlmocks config file
+validate a gqlmocks config file
 
 ```
 USAGE
@@ -88,7 +77,7 @@ FLAGS
   -c, --config=<value>  path to config file
 
 DESCRIPTION
-  Validate a gqlmocks config file
+  validate a gqlmocks config file
 
 EXAMPLES
   $ gqlmocks config validate
@@ -98,20 +87,21 @@ EXAMPLES
 
 ## `gqlmocks handler generate`
 
-Generate a graphql handler
+generate a graphql handler
 
 ```
 USAGE
-  $ gqlmocks handler generate [--save-handler <value>] [--force] [--format ts|js]
+  $ gqlmocks handler generate [-c <value>] [--save-handler <value>] [--force] [--format ts|js]
 
 FLAGS
+  -c, --config=<value>    path to config file
   --force                 overwrite config if one already exists
   --format=<option>       specify the file format of the created handler file
                           <options: ts|js>
   --save-handler=<value>  path to write generated config to
 
 DESCRIPTION
-  Generate a graphql handler
+  generate a graphql handler
 
 EXAMPLES
   $ gqlconfig handler generate
@@ -125,17 +115,18 @@ EXAMPLES
 
 ## `gqlmocks handler info`
 
-display info about a graphql schema
+display info about a graphql handler
 
 ```
 USAGE
-  $ gqlmocks handler info [-h <value>]
+  $ gqlmocks handler info [-c <value>] [-h <value>]
 
 FLAGS
+  -c, --config=<value>   path to config file
   -h, --handler=<value>  path to file with graphql handler
 
 DESCRIPTION
-  display info about a graphql schema
+  display info about a graphql handler
 
 EXAMPLES
   $ gqlmocks handler info
@@ -169,16 +160,17 @@ fetch and save a graphql schema locally
 
 ```
 USAGE
-  $ gqlmocks schema fetch [-h <value> ] [--save-schema <value>] [--force] [--format SDL|SDL_STRING] [--source
-    <value>]
+  $ gqlmocks schema fetch [--header <value> ] [-c <value>] [--save-schema <value>] [--force] [--format
+    SDL|SDL_STRING] [--source <value>]
 
 FLAGS
-  -h, --header=<value>...  specify header(s) used in the request for remote schema specified by --schema flag
-  --force                  overwrite a schema file if one already exists
-  --format=<option>        [default: SDL] format to save the schema as
-                           <options: SDL|SDL_STRING>
-  --save-schema=<value>    path of file to save schema to
-  --source=<value>         url of graphql api server or url of remote .graphql file
+  -c, --config=<value>   path to config file
+  --force                overwrite a schema file if one already exists
+  --format=<option>      [default: SDL] format to save the schema as
+                         <options: SDL|SDL_STRING>
+  --header=<value>...    specify header(s) used in the request for remote schema specified by --schema flag
+  --save-schema=<value>  path of file to save schema to
+  --source=<value>       url of graphql api server or url of remote .graphql file
 
 DESCRIPTION
   fetch and save a graphql schema locally
@@ -199,18 +191,19 @@ EXAMPLES
 
 ## `gqlmocks schema info`
 
-display info about a GraphQL schema
+display info about a graphql schema
 
 ```
 USAGE
-  $ gqlmocks schema info [-s <value>]
+  $ gqlmocks schema info [-s <value>] [-c <value>]
 
 FLAGS
+  -c, --config=<value>  path to config file
   -s, --schema=<value>  local path to graphql schema (relative or absolute), remote url (graphql schema file or graphql
                         api endpoint)
 
 DESCRIPTION
-  display info about a GraphQL schema
+  display info about a graphql schema
 
 EXAMPLES
   $ gqlmocks schema info
@@ -220,18 +213,19 @@ EXAMPLES
 
 ## `gqlmocks schema validate`
 
-display info about a gqlmocks config file
+validate a graphql schema file
 
 ```
 USAGE
-  $ gqlmocks schema validate [-s <value>]
+  $ gqlmocks schema validate [-c <value>] [-s <value>]
 
 FLAGS
+  -c, --config=<value>  path to config file
   -s, --schema=<value>  local path to graphql schema (relative or absolute), remote url (graphql schema file or graphql
                         api endpoint)
 
 DESCRIPTION
-  display info about a gqlmocks config file
+  validate a graphql schema file
 
 EXAMPLES
   $ gqlmocks schema validate
@@ -241,22 +235,23 @@ EXAMPLES
 
 ## `gqlmocks serve`
 
-Run a local graphql server
+run a local graphql server
 
 ```
 USAGE
-  $ gqlmocks serve [-h <value>] [-h <value> -s <value>] [-f] [-p <value>]
+  $ gqlmocks serve [-c <value>] [-h <value>] [--header <value> -s <value>] [-f] [-p <value>]
 
 FLAGS
-  -f, --faker              use faker middlware for resolvers
-  -h, --handler=<value>    path to file with graphql handler
-  -h, --header=<value>...  specify header(s) used in the request for remote schema specified by --schema flag
-  -p, --port=<value>       [default: 4444] Port to serve on
-  -s, --schema=<value>     local path to graphql schema (relative or absolute), remote url (graphql schema file or
-                           graphql api endpoint)
+  -c, --config=<value>   path to config file
+  -f, --faker            use faker middlware for resolvers
+  -h, --handler=<value>  path to file with graphql handler
+  -p, --port=<value>     [default: 4444] Port to serve on
+  -s, --schema=<value>   local path to graphql schema (relative or absolute), remote url (graphql schema file or graphql
+                         api endpoint)
+  --header=<value>...    specify header(s) used in the request for remote schema specified by --schema flag
 
 DESCRIPTION
-  Run a local graphql server
+  run a local graphql server
 
 EXAMPLES
   $ gqlmocks serve --schema ../schema.graphql
@@ -270,7 +265,7 @@ EXAMPLES
   $ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --faker
 ```
 
-_See code: [src/commands/serve.ts](https://github.com/chadian/gqlmocks/blob/v0.0.0/src/commands/serve.ts)_
+_See code: [src/commands/serve.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/serve.ts)_
 
 ## `gqlmocks version`
 

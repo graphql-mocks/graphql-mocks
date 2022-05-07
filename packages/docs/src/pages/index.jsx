@@ -90,10 +90,25 @@ function Home() {
             </section>
             <section className="hero__slice">
               <img src="img/network-handlers.png" className={classnames('hero__logo')} />
-              <h2>Integrate</h2>
+              <h2>Network</h2>
               <p>
                 Write once, use everywhere. <a href="/docs/network/introducing-network-handlers">Network Handlers</a>{' '}
                 bring your mocks to node, the browser, and more.
+              </p>
+            </section>
+            <section className="hero__slice">
+              <img src="img/gqlmocks-cli.png" className={classnames('hero__logo')} />
+              <h2>CLI</h2>
+              <p>
+                Use the{' '}
+                <a href="/docs/cli/introducing-gqlmocks">
+                  <code>gqlmocks</code>
+                </a>{' '}
+                CLI to fetch remote schemas, generate boilerplate and{' '}
+                <a href="/docs/cli/quick-mocking">
+                  run mock servers on <code>localhost</code>
+                </a>
+                .
               </p>
             </section>
           </div>

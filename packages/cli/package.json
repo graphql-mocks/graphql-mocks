@@ -5,7 +5,7 @@
   "bin": {
     "gqlmocks": "./bin/run"
   },
-  "bugs": "https://github.com/chadian/gqlmocks/issues",
+  "bugs": "https://github.com/graphql-mocks/graphql-mocks/issues",
   "dependencies": {
     "@babel/core": "^7.17.5",
     "@babel/node": "^7.16.0",
@@ -53,13 +53,14 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
-  "homepage": "https://github.com/chadian/gqlmocks",
+  "homepage": "https://github.com/graphql-mocks/graphql-mocks",
   "keywords": [
     "oclif"
   ],
   "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
+    "repositoryPrefix": "<%- repo %>/blob/main/packages/cli/<%- commandPath %>",
     "topicSeparator": " ",
     "commands": "./lib/commands",
     "bin": "gqlmocks",
@@ -68,7 +69,7 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "chadian/gqlmocks",
+  "repository": "https://github.com/graphql-mocks/graphql-mocks",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme && yarn copy-blueprints",

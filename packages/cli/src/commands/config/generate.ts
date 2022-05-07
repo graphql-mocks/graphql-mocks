@@ -112,11 +112,17 @@ export default class ConfigGenerate extends Command {
     if (errors?.length) {
       const formattedErrors = errors.map((error: any) => ` * ${error.message}`).join('\n');
       this.warn(
-        `Found the follow validation errors, fix them and verify by running:\ngqlmocks config:validate\n\nValidation Errors:\n${formattedErrors}\n`,
+        `Found the follow validation errors, fix them and verify by running:\ngqlmocks config validate\n\nValidation Errors:\n${formattedErrors}\n`,
       );
     }
 
-    // TODO: mkdirp path for file (same for writing config in config:generate)
+    const { dir: configDirPath } = parse(configPath);
+    if (!existsSync(configDirPath)) {
+      this.error(
+        `The following path doesn't exist:\n${configDirPath}\n\nEnsure these directories exist so the config file can be created`,
+      );
+    }
+
     writeFileSync(configPath, configFileContents);
     this.log(`✅ Done. Wrote gqlmock config to ${configPath}`);
   }
