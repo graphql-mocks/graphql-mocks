@@ -1,6 +1,6 @@
 {
   "name": "graphql-paper",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Chad Carbert",
   "description": "A flexible in-memory store based on a GraphQL Schema",
   "main": "dist/index.js",
@@ -36,6 +36,6 @@
     "event-target-polyfill": "^0.0.3"
   },
   "devDependencies": {
-    "graphql-mocks": "^0.8.2"
+    "graphql-mocks": "^0.8.3"
   }
 }
