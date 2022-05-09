@@ -203,6 +203,12 @@ function yarnBootstrap() {
   console.log(chalk.green('✅ finished running yarn bootstrap'));
 }
 
+function yarnBuild() {
+  console.log(chalk.blue('running yarn build'));
+  execSync(`yarn build`);
+  console.log(chalk.green('✅ finished running yarn build'));
+}
+
 function createReleaseBranch() {
   const commit = execSync('git rev-parse --short HEAD').toString().trim();
   execSync(`git checkout -b release-${commit}`);
@@ -360,10 +366,12 @@ class Package {
 }
 
 try {
-  yarnAndLink();
-  yarnBootstrap();
   checkMainBranch();
   checkCleanBranch();
+  createReleaseBranch();
+  yarnAndLink();
+  yarnBootstrap();
+  yarnBuild();
 
   const packages = getLernaPackages().map((lernaPackage) => {
     const { name, location: path } = lernaPackage;
@@ -374,7 +382,7 @@ try {
   announceBrokenPeerDependencies(packages);
   attachChangelogs(packages);
   announcePackageChangelogs(packages);
-  createReleaseBranch();
+
   lernaVersion();
 
   // lerna version will have updated package.json versions

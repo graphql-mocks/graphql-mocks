@@ -6,11 +6,12 @@
     "lint": "lerna run --parallel lint",
     "test": "lerna run --parallel test",
     "build": "lerna run build",
-    "publish-packages": "yarn bootstrap && yarn test && lerna publish from-package --no-private",
     "link-packages": "node scripts/link-packages",
     "postinstall": "yarn link-packages",
     "bootstrap": "lerna bootstrap && yarn build",
-    "create-release": "node scripts/create-release"
+    "create-release": "node scripts/create-release",
+    "publish-packages": "yarn bootstrap && yarn test && lerna publish from-package --no-private",
+    "tag-releases": "node scripts/tag-releases"
   },
   "author": "Chad Carbert",
   "repository": "github:graphql-mocks/graphql-mocks",
