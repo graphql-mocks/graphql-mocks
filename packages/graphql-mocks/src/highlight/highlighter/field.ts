@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLNamedType } from 'graphql';
+import { GraphQLSchema, GraphQLNamedType, isInputType } from 'graphql';
 import { FieldReference, HighlighterFactory, Highlighter } from '../types';
 import { HIGHLIGHT_ALL, HIGHLIGHT_ROOT_QUERY, HIGHLIGHT_ROOT_MUTATION } from './constants';
 
@@ -38,7 +38,7 @@ export class FieldHighlighter implements Highlighter {
       const expanded = (allTypes
         .filter((type) => !type.name.startsWith('__'))
         .map((type: GraphQLNamedType) => {
-          const hasFields = type && 'getFields' in type;
+          const hasFields = type && 'getFields' in type && !isInputType(type);
           return hasFields ? this.expandTarget(schema, [type.name, fieldTarget]) : undefined;
         })
         .filter(Boolean) as FieldReference[][]).reduce(concat, []);
@@ -48,12 +48,28 @@ export class FieldHighlighter implements Highlighter {
 
     let type = schema.getType(typeTarget);
 
+    if (!type) {
+      return [];
+    }
+
     if (typeTarget === HIGHLIGHT_ROOT_QUERY) {
-      type = schema.getQueryType();
+      const queryType = schema.getQueryType();
+
+      if (!queryType) {
+        return [];
+      }
+
+      type = queryType;
     }
 
     if (typeTarget === HIGHLIGHT_ROOT_MUTATION) {
-      type = schema.getMutationType();
+      const mutationType = schema.getMutationType();
+
+      if (!mutationType) {
+        return [];
+      }
+
+      type = mutationType;
     }
 
     if (!type || !type?.name || !('getFields' in type)) {

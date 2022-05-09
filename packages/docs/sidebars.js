@@ -12,9 +12,6 @@ module.exports = {
       'GraphQL Handler': ['handler/introducing-handler', 'handler/using-middlewares', 'handler/handler-state'],
     },
     {
-      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/msw', 'network/nock'],
-    },
-    {
       'Resolver & Wrappers ': [
         'resolver/using-resolvers',
         'resolver/introducing-wrappers',
@@ -31,6 +28,9 @@ module.exports = {
         'resolver-map/available-middlewares',
         'resolver-map/creating-middlewares',
       ],
+    },
+    {
+      ['Network Handling']: ['network/introducing-network-handlers', 'network/express', 'network/msw', 'network/nock'],
     },
     {
       Highlight: [
@@ -56,13 +56,15 @@ module.exports = {
       ],
     },
     {
+      'CLI (beta)': ['cli/introducing-gqlmocks', 'cli/commands', 'cli/quick-mocking', 'cli/gqlmocks-config'],
+    },
+    {
       Guides: [
         'guides/paper',
         'guides/managing-context',
         'guides/automatic-filtering',
         'guides/relay-pagination',
         'guides/faker',
-        'guides/pack',
         'guides/mirage-js',
       ],
     },

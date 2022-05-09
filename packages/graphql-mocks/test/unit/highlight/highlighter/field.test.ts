@@ -6,6 +6,15 @@ import { HIGHLIGHT_ALL } from '../../../../src/highlight/highlighter/constants';
 const schema = buildSchema(`
   schema {
     query: Query
+    mutation: Mutation
+  }
+
+  type Mutation {
+    hello(prefix: String!): String!
+  }
+
+  input Input {
+    hello: String!
   }
 
   type Query {
@@ -42,6 +51,7 @@ const schema = buildSchema(`
 describe('highlight/highlighter/field', function () {
   it('defaults to field references for all fields', function () {
     expect(field().mark(schema)).to.deep.equal([
+      ['Mutation', 'hello'],
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],
@@ -56,6 +66,15 @@ describe('highlight/highlighter/field', function () {
       ['Dog', 'knowsTricks'],
       ['Dog', 'owner'],
     ]);
+  });
+
+  it('does not include input types', function () {
+    const references = field().mark(schema);
+    expect(typeof schema.getType('Input')).to.equal('object', 'input type exists in the schema');
+    expect(references.find(([type, field]) => type === 'Input' && field === 'hello')).to.equal(
+      undefined,
+      'the input type and field do not exist as a result fo the highligher',
+    );
   });
 
   it('creates field references', function () {
@@ -108,6 +127,7 @@ describe('highlight/highlighter/field', function () {
 
   it('can use HIGHLIGHT_ALL for type and fields to highlight everything with a field', function () {
     expect(field([HIGHLIGHT_ALL, HIGHLIGHT_ALL]).mark(schema)).to.deep.equal([
+      ['Mutation', 'hello'],
       ['Query', 'person'],
       ['Person', 'name'],
       ['Person', 'age'],

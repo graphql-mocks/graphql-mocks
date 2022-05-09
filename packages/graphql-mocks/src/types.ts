@@ -12,12 +12,17 @@ type ManagedContext = {
 };
 
 export type ObjectField = GraphQLField<any, any>;
-export type FieldResolver = GraphQLFieldResolver<any, any>;
-export type TypeResolver = GraphQLTypeResolver<any, any>;
-export type ResolverParent = Parameters<FieldResolver>[0];
-export type ResolverArgs = Parameters<FieldResolver>[1];
+export type FieldResolver<Source = any, Context = any, Args = any, Result = any> = GraphQLFieldResolver<
+  Source,
+  Context,
+  Args,
+  Result
+>;
+export type TypeResolver<Source = any, Context = any> = GraphQLTypeResolver<Source, Context>;
+export type ResolverParent<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[0];
+export type ResolverArgs<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[1];
 export type ResolverContext = ManagedContext;
-export type ResolverInfo = Parameters<FieldResolver>[3];
+export type ResolverInfo<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[3];
 
 // Library Abstractions
 

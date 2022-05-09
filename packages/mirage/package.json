@@ -29,14 +29,13 @@
   "devDependencies": {
     "@types/lodash.intersection": "^4.4.6",
     "@types/sinon": "^10.0.2",
-    "graphql": "^14",
     "graphql-mocks": "^0.8.2",
     "miragejs": "^0.1.40",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0",
-    "graphql-mocks": ">=0.8.1",
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
+    "graphql-mocks": "^0.8.1",
     "miragejs": "^0.1.40"
   }
 }

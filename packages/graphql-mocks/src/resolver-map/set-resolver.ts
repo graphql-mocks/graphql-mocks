@@ -43,7 +43,10 @@ export function setResolver(
     }
 
     if (isFieldReference(reference) && Array.isArray(instance) && !isObjectType(instance[0])) {
-      throw new Error(`Expected reference ${reference} to reference a GraphQLObject type with field ${reference[1]}`);
+      const [typename, fieldname] = reference;
+      throw new Error(
+        `Could not find reference [${typename}, ${fieldname}] ([type name, field name]) in the GraphQL Schema`,
+      );
     }
   }
 

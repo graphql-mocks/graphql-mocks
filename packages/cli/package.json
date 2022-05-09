@@ -1,0 +1,83 @@
+{
+  "name": "gqlmocks",
+  "version": "0.0.0",
+  "author": "Chad Carbert @chadian",
+  "bin": {
+    "gqlmocks": "./bin/run"
+  },
+  "bugs": "https://github.com/graphql-mocks/graphql-mocks/issues",
+  "dependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.0",
+    "@babel/plugin-transform-typescript": "^7.16.8",
+    "@babel/register": "^7.17.0",
+    "@graphql-mocks/faker": "^0.2.0",
+    "@graphql-mocks/network-express": "^0.1.1",
+    "@oclif/core": "^1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-version": "^1.0.4",
+    "axios": "^0.23.0",
+    "chalk": "^4.1.2",
+    "config": "^3.3.6",
+    "express": "^4.17.1",
+    "git-root-dir": "^1.0.2",
+    "graphiql-middleware": "^0.0.4",
+    "graphql": "^16.2.0",
+    "graphql-import-node": "^0.0.4",
+    "graphql-mocks": "0.8.2",
+    "handlebars": "^4.7.7",
+    "pkg-dir": "^5",
+    "ts-node": "^10.5.0",
+    "tslib": "^2.3.1"
+  },
+  "devDependencies": {
+    "@oclif/test": "^2",
+    "@types/chai": "^4",
+    "@types/config": "^0.0.40",
+    "@types/debug": "^4.1.7",
+    "@types/git-root-dir": "^1.0.0",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
+    "chai": "^4",
+    "globby": "^10",
+    "mocha": "^5",
+    "sinon": "^12.0.1",
+    "typescript": "^4.5.5"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/graphql-mocks/graphql-mocks",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "repositoryPrefix": "<%- repo %>/blob/main/packages/cli/<%- commandPath %>",
+    "topicSeparator": " ",
+    "commands": "./lib/commands",
+    "bin": "gqlmocks",
+    "plugins": [
+      "@oclif/plugin-version",
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "https://github.com/graphql-mocks/graphql-mocks",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme && yarn copy-blueprints",
+    "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
+    "build": "tsc && mkdir -p lib/blueprints && cp -R src/blueprints/ lib/blueprints",
+    "test-build": "mocha \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md",
+    "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib"
+  },
+  "types": "lib/index.d.ts"
+}

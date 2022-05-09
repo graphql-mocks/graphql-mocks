@@ -115,7 +115,7 @@ describe('resolver-map/set-resolver', function () {
       // can't attach field resolvers to fields on inputs
       // this is a pretty niche case...
       expect(() => setResolver(resolverMap, ['PersonInput', 'name'], sampleResolver, { graphqlSchema })).to.throw(
-        /Expected reference PersonInput,name to reference a GraphQLObject type with field name/,
+        /Could not find reference \[PersonInput, name\] \(\[type name, field name\]\) in the GraphQL Schema/,
       );
     });
   });

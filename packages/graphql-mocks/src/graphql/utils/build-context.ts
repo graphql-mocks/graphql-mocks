@@ -12,8 +12,8 @@ export function buildContext({
   packOptions: PackOptions;
 }): ResolverContext {
   return {
-    ...initialContext,
-    ...queryContext,
+    ...(initialContext as Record<string, unknown>),
+    ...(queryContext as Record<string, unknown>),
     pack: packOptions,
   };
 }

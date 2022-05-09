@@ -92,7 +92,7 @@ describe('acceptance', function () {
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     );
 
-    await page.goto('http://localhost:8080', {
+    await page.goto('http://localhost:5555', {
       waitUntil: 'networkidle0',
     });
 

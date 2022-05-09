@@ -38,6 +38,15 @@ const handler = new GraphQLHandler({
 });
 ```
 
+### Using the CLI
+
+To speed the process of creating a GraphQL Handler the `gqlmocks` cli can be used:
+
+```
+npx gqlmocks handler generate
+```
+
+See the [CLI docs](/docs/cli/commands#gqlmocks-handler-generate) for more information.
 ### GraphQL Schema
 
 A GraphQL Schema is a required dependency for setting up the handler.
@@ -58,6 +67,16 @@ const handler = new GraphQLHandler({
   }
 });
 ```
+#### Using the CLI
+
+The `gqlmocks` cli can be used to fetch, validate and print info about a GraphQL Schemas. The `fetch` command is particularly useful to download a GraphQL Schema locally from either a remote GraphQL API or a url to an `.gql`/`.graphql` file formatted in the SDL (Schema Definition Language) where the file can be downloaded from.
+
+For example:
+```
+npx gqlmocks fetch --source "http://remote-gql-api.com"
+```
+
+To see the available `gqlmocks` schema commands check out the [CLI documentation](/docs/cli/commands#gqlmocks-schema-fetch).
 
 ### Dependencies
 
