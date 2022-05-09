@@ -41,6 +41,7 @@
     "chai": "^4",
     "globby": "^10",
     "mocha": "^5",
+    "oclif": "^2",
     "sinon": "^12.0.1",
     "typescript": "^4.5.5"
   },
@@ -72,11 +73,10 @@
   "repository": "https://github.com/graphql-mocks/graphql-mocks",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme && yarn copy-blueprints",
+    "prepack": "rm -rf lib &&  oclif readme && yarn build",
     "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
-    "build": "tsc && mkdir -p lib/blueprints && cp -R src/blueprints/ lib/blueprints",
+    "build": "tsc && yarn copy-blueprints",
     "test-build": "mocha \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && git add README.md",
     "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib"
   },
   "types": "lib/index.d.ts"
