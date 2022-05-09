@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/sinon",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with sinon spy",
   "main": "dist/index.js",
@@ -25,12 +25,12 @@
   },
   "devDependencies": {
     "@types/sinon": "^10.0.2",
-    "graphql-mocks": "^0.8.2",
+    "graphql-mocks": "^0.8.3",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-mocks": "^0.8.2",
+    "graphql-mocks": ">=0.8.2",
     "sinon": "^9.0.0"
   }
 }
