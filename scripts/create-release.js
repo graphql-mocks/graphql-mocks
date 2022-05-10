@@ -244,7 +244,7 @@ function checkCleanBranch() {
 }
 
 function updatePeerDependencies(package, allPackages) {
-  Object.keys(package.peerDependencies).forEach((peerName) => {
+  Object.keys(package.peerDependencies ?? {}).forEach((peerName) => {
     const lernaPackageNames = getLernaPackages().map(({ name }) => name);
     if (!lernaPackageNames.includes(peerName)) {
       // peer package is not a managed graphql-mocks package, skip.
@@ -366,23 +366,23 @@ class Package {
 }
 
 try {
-  checkMainBranch();
-  checkCleanBranch();
-  createReleaseBranch();
-  yarnAndLink();
-  yarnBootstrap();
+  // checkMainBranch();
+  // checkCleanBranch();
+  // createReleaseBranch();
+  // yarnAndLink();
+  // yarnBootstrap();
 
   const packages = getLernaPackages().map((lernaPackage) => {
     const { name, location: path } = lernaPackage;
     return new Package({ name, path });
   });
 
-  packages.forEach((package) => checkPackagePeerDependencies(package, packages));
-  announceBrokenPeerDependencies(packages);
-  attachChangelogs(packages);
-  announcePackageChangelogs(packages);
+  // packages.forEach((package) => checkPackagePeerDependencies(package, packages));
+  // announceBrokenPeerDependencies(packages);
+  // attachChangelogs(packages);
+  // announcePackageChangelogs(packages);
 
-  lernaVersion();
+  // lernaVersion();
 
   // lerna version will have updated package.json versions
   // the pjson loaded on each `Package` should be updated
