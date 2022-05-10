@@ -13,7 +13,8 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "copy-readme": "cp README.md dist/README.md",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {
