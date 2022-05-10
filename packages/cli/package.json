@@ -73,9 +73,9 @@
   "repository": "https://github.com/graphql-mocks/graphql-mocks",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "rm -rf lib &&  oclif readme && yarn build",
+    "prepack": "rm -rf lib && oclif readme && yarn build",
     "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
-    "build": "tsc && yarn copy-blueprints",
+    "build": "tsc && yarn copy-blueprints && oclif manifest",
     "test-build": "mocha \"test/**/*.test.ts\"",
     "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib"
   },
