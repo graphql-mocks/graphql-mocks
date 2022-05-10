@@ -10,7 +10,7 @@ function ApiLink({ directoryName, packageName }) {
   );
 }
 
-function Home() {
+function Packages() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
   return (
