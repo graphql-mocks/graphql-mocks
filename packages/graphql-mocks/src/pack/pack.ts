@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
+import { cloneDeep } from 'lodash-es';
 import { embed } from '../resolver-map/embed';
 import { embedPackOptionsWrapper } from './utils';
 import { PackOptions, Packer, PackState } from './types';

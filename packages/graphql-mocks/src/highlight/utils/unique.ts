@@ -1,5 +1,5 @@
 import { Reference } from '../types';
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash-es';
 
 export function unique(fieldReferences: Reference[]): Reference[] {
   const uniques: Reference[] = [];

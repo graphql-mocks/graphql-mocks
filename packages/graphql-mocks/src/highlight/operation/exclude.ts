@@ -1,4 +1,4 @@
-import differenceWith from 'lodash.differencewith';
+import { differenceWith } from 'lodash-es';
 import { Reference } from '../types';
 import { isEqual } from '../utils/is-equal';
 

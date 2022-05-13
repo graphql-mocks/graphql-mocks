@@ -1,7 +1,7 @@
 import { ResolverMapMiddleware, ResolverMap, ObjectField } from '../types';
 import { ReplaceableResolverOption, WrappableOption } from './types';
 import { pack } from '../pack';
-import merge from 'lodash.merge';
+import { merge } from 'lodash-es';
 import { hi, fromResolverMap } from '../highlight';
 import { GraphQLSchema, GraphQLObjectType, GraphQLAbstractType } from 'graphql';
 import { walk } from '../highlight/utils';
