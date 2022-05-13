@@ -6,6 +6,10 @@ Thank you for considering a contribution to graphql-mocks. Open source is always
 
 In most cases we want your contributions! This includes bug fixes, documentation tweaks, and your ideas. If you have a feature addition or improvement open an issue first or jump on Discord to discuss if it is a good fit for the project.
 
+### Local Development
+
+See the `DEVELOPMENT.md` doc for guidance on setting up and running this project locally
+
 ## Project Layout
 
 This project is using lerna and is a monorepo for several separate packages. You can find these packages in the `packages` folder.
@@ -16,7 +20,7 @@ Please double-check in an issue or by jumping on discord to discuss if a pull re
 
 ## Found a bug?
 
-Open an issue and let's chat.
+Open an issue and let's chat or start a conversation on discord.
 
 ## Respect
 

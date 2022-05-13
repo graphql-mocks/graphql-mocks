@@ -75,9 +75,10 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && oclif readme && yarn build",
     "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
-    "build": "tsc && yarn copy-blueprints && oclif manifest",
+    "build": "tsc && yarn copy-blueprints && yarn copy-readme && oclif manifest",
     "test-build": "mocha \"test/**/*.test.ts\"",
-    "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib"
+    "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib",
+    "copy-readme": "cp README.md lib/README.md"
   },
   "types": "lib/index.d.ts"
 }

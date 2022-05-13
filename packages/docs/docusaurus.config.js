@@ -35,8 +35,8 @@ module.exports = {
           position: 'right',
         },
         {
-          href: '/api',
-          label: 'API',
+          href: '/packages',
+          label: 'Packages & API',
           position: 'right',
         },
         {
