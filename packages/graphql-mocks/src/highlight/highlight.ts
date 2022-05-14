@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import clone from 'lodash.clonedeep';
+import { clone } from 'ramda';
 import { include } from './operation/include';
 import { exclude } from './operation/exclude';
 import { filter } from './operation/filter';

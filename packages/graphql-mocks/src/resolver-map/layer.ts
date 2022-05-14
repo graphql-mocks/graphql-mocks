@@ -1,7 +1,7 @@
 import { ResolverMapMiddleware, ResolverMap, ObjectField } from '../types';
 import { ReplaceableResolverOption, WrappableOption } from './types';
 import { pack } from '../pack';
-import merge from 'lodash.merge';
+import { mergeDeepRight } from 'ramda';
 import { hi, fromResolverMap } from '../highlight';
 import { GraphQLSchema, GraphQLObjectType, GraphQLAbstractType } from 'graphql';
 import { walk } from '../highlight/utils';
@@ -20,7 +20,7 @@ export function layer(partials: ResolverMap[], options?: LayerOptions): Resolver
   };
 
   const layerMiddlewares = partials.map((resolverMap) => (previous: ResolverMap): ResolverMap => {
-    return merge({}, previous, resolverMap);
+    return mergeDeepRight(previous, resolverMap);
   });
 
   const middleware: ResolverMapMiddleware = async function layerMiddleware(resolverMap, packOptions) {

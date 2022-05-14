@@ -1,4 +1,4 @@
-import cloneDeep from 'lodash.clonedeep';
+import { clone } from 'ramda';
 import { embed } from '../resolver-map/embed';
 import { embedPackOptionsWrapper } from './utils';
 import { PackOptions, Packer, PackState } from './types';
@@ -12,7 +12,7 @@ export const pack: Packer = async function pack(
   middlewares = [...middlewares, embed({ wrappers: [embedPackOptionsWrapper] })];
 
   // make an initial copy
-  let wrappedMap = cloneDeep(initialResolversMap);
+  let wrappedMap = clone(initialResolversMap);
   packOptions = normalizePackOptions(packOptions);
 
   for (const middleware of middlewares) {

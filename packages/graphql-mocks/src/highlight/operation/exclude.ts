@@ -1,7 +1,7 @@
-import differenceWith from 'lodash.differencewith';
+import { differenceWith } from 'ramda';
 import { Reference } from '../types';
 import { isEqual } from '../utils/is-equal';
 
 export function exclude(source: Reference[], update: Reference[]): Reference[] {
-  return differenceWith(source, update, isEqual);
+  return differenceWith(isEqual)(source, update);
 }
