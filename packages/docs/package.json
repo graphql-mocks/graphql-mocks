@@ -53,7 +53,7 @@
     "core-js": "^3.6.5",
     "event-target-polyfill": "^0.0.3",
     "globby": "^11.0.1",
-    "lodash.uniq": "^4.5.0",
+    "ramda": "^0.28.0",
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",
     "react-syntax-highlighter": "^15.4.3",
