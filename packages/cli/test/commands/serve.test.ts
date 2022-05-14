@@ -7,10 +7,12 @@ import axios from 'axios';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const express = require('express');
 
-describe('serve', () => {
+describe('serve', function () {
   let server: any = null;
   let listenSpy: any = null;
   let axiosPostSpy: any = null;
+
+  this.timeout(10000);
 
   beforeEach(function spyOnExpress() {
     Serve.express = (() => {

@@ -39,8 +39,6 @@ function getResolvableAST(resolveString: string): NamedTypeNode | undefined {
 
 type WrapperTypeNode = ListTypeNode | NonNullTypeNode;
 function compareTypeNodes(a: TypeNode, b: TypeNode): boolean {
-  // console.log(a, b);
-
   const aHasType = a && 'type' in a;
   const bHasType = b && 'type' in b;
 
