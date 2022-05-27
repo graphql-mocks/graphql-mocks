@@ -9,7 +9,17 @@ Depending on the situation different network handling will be appropriate for yo
 
 *More Network Handlers coming soon!*
 
-## Supported Node Network Handlers
+## `localhost` Network Handlers
+
+### `gqlmocks` cli
+* `gqlmocks serve` command
+* [Documentation](/docs/cli/commands/#gqlmocks-serve)
+
+### Express
+* `@graphql-mocks/network-express`
+* [Documentation](/docs/network/express)
+
+## Node Network Handlers
 
 ### Express
 * `@graphql-mocks/network-express`
@@ -20,7 +30,7 @@ Depending on the situation different network handling will be appropriate for yo
 * [Documentation](/docs/network/nock)
 
 
-## Supported Browser Network Handlers
+## Browser Network Handlers
 
 ### `msw` (mock service worker)
 * `@graphql-mocks/network-msw`
