@@ -1,5 +1,5 @@
 <!--
-  Assign any relevent github labels, including the packages affected.
+  Assign any relevant github labels, including the packages affected.
 -->
 
 ## CHANGELOG
@@ -14,6 +14,7 @@
   * (fix) fixed bug
 -->
 
+### `package-name`
 ```markdown changelog(package-name)
 * (feature) Added a new feature
 ```
