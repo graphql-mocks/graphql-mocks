@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
-import { fakerFieldResolver } from '../../src/faker-field-resolver';
-import { FakerFieldOptions, FakerGeneratorOptions } from '../../src/types';
+import { falsoFieldResolver } from '../../src/falso-field-resolver';
+import { FalsoFieldOptions, FalsoGeneratorOptions } from '../../src/types';
 import { GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
-import faker from 'faker';
+import falso from '@ngneat/falso';
 
 const schema = buildSchema(`
   schema {
@@ -30,7 +30,7 @@ const schema = buildSchema(`
     union: Union
     listOfUnions: [Union]
 
-    # for guess-faker-fn
+    # for guess-falso-fn
     url: String
     randomURL: String
   }
@@ -77,7 +77,7 @@ function buildInfo(fieldName: string): GraphQLResolveInfo {
 
 const TEST_DEFAULT_LIST_COUNT = 3;
 
-function buildOptions(fieldName: string, generatorOptions?: FakerGeneratorOptions, fieldOptions?: FakerFieldOptions) {
+function buildOptions(fieldName: string, generatorOptions?: FalsoGeneratorOptions, fieldOptions?: FalsoFieldOptions) {
   return {
     nullPercentage: 0,
     listCount: TEST_DEFAULT_LIST_COUNT,
@@ -94,7 +94,7 @@ function buildOptions(fieldName: string, generatorOptions?: FakerGeneratorOption
   };
 }
 
-describe('faker-field-resolver', function () {
+describe('falso-field-resolver', function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let sandbox: any;
 
@@ -111,7 +111,7 @@ describe('faker-field-resolver', function () {
     const info = buildInfo(fieldName);
     const options = buildOptions(fieldName);
 
-    const result = fakerFieldResolver(options)({ id: 'USE PARENT ID FIELD' }, {}, null, info);
+    const result = falsoFieldResolver(options)({ id: 'USE PARENT ID FIELD' }, {}, null, info);
     expect(result).to.be.equal('USE PARENT ID FIELD');
   });
 
@@ -121,7 +121,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('string');
     });
 
@@ -130,7 +130,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('number');
       expect(Math.round(result)).to.be.equal(result);
     });
@@ -140,7 +140,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('number');
       expect(Math.round(result)).to.not.be.equal(result);
     });
@@ -150,7 +150,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('boolean');
     });
 
@@ -159,7 +159,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('string');
       expect(result.length).to.be.greaterThan(0);
     });
@@ -169,7 +169,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(Array.isArray(result)).to.be.equal(true);
       expect(result.length).to.equal(TEST_DEFAULT_LIST_COUNT);
     });
@@ -179,7 +179,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.be.equal('string');
       expect(['HELLO', 'WORLD']).to.include(result);
     });
@@ -189,7 +189,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(Array.isArray(result)).to.be.equal(true);
       expect(result.length).to.equal(TEST_DEFAULT_LIST_COUNT);
       result.forEach((item: string) => expect(['HELLO', 'WORLD']).includes(item));
@@ -200,7 +200,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.deep.equal({});
     });
 
@@ -209,7 +209,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.have.lengthOf(TEST_DEFAULT_LIST_COUNT);
       expect(result[0]).to.deep.equal({});
       expect(result[1]).to.deep.equal({});
@@ -221,7 +221,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.deep.equal({});
     });
 
@@ -230,7 +230,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.deep.equal([{}, {}, {}]);
     });
 
@@ -239,7 +239,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.deep.equal({});
     });
 
@@ -248,7 +248,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.deep.equal([{}, {}, {}]);
     });
   });
@@ -260,7 +260,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { nullPercentage: 100 });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result).to.equal(null);
       }
     });
@@ -273,7 +273,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { nullPercentage: 0 }, { nullPercentage: 100 });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result).to.equal(null);
       }
     });
@@ -284,7 +284,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { nullListPercentage: 100 });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result).to.deep.equal([null, null, null]);
       }
     });
@@ -297,7 +297,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { nullListPercentage: 0 }, { nullListPercentage: 100 });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result).to.deep.equal([null, null, null]);
       }
     });
@@ -308,7 +308,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName, { listCount });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.have.lengthOf(7);
     });
 
@@ -320,7 +320,7 @@ describe('faker-field-resolver', function () {
       // list count at the field level should override 0 set at the global
       const options = buildOptions(fieldName, { listCount: 0 }, { listCount });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(result).to.have.lengthOf(7);
     });
 
@@ -331,7 +331,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { listCount });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result.length).to.be.gte(4);
         expect(result.length).to.be.lte(7);
         result.forEach((item: unknown) => expect(typeof item).to.equal('string'));
@@ -347,7 +347,7 @@ describe('faker-field-resolver', function () {
       const options = buildOptions(fieldName, { listCount: 0 }, { listCount });
 
       for (let i = 0; i < 100; i++) {
-        const result = fakerFieldResolver(options)(null, {}, null, info);
+        const result = falsoFieldResolver(options)(null, {}, null, info);
         expect(result.length).to.be.gte(4);
         expect(result.length).to.be.lte(7);
         result.forEach((item: unknown) => expect(typeof item).to.equal('string'));
@@ -360,7 +360,7 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName, {}, { possibleValues });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(possibleValues).include(result);
     });
 
@@ -370,55 +370,55 @@ describe('faker-field-resolver', function () {
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName, {}, { possibleValues });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       result.forEach((item: string) => {
         expect(possibleValues).to.include(item);
       });
     });
 
-    it('uses field fakerFn for non-lists', async function () {
-      const spy = sandbox.spy(faker.name, 'firstName');
+    it('uses field falsoFn for non-lists', async function () {
+      const spy = sandbox.spy(falso, 'randFirstName');
       const fieldName = 'string';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, {}, { fakerFn: 'name.firstName' });
+      const options = buildOptions(fieldName, {}, { falsoFn: 'randFirstName' });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(typeof result).to.equal('string');
       expect(spy.called).to.be.true;
     });
 
-    it('uses field fakerFn for list', async function () {
-      const spy = sandbox.spy(faker.name, 'firstName');
+    it('uses field falsoFn for list', async function () {
+      const spy = sandbox.spy(falso, 'randFirstName');
       const fieldName = 'list';
       const info = buildInfo(fieldName);
-      const options = buildOptions(fieldName, {}, { fakerFn: 'name.firstName' });
+      const options = buildOptions(fieldName, {}, { falsoFn: 'randFirstName' });
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(Array.isArray(result)).to.equal(true);
       expect(result).to.have.lengthOf(TEST_DEFAULT_LIST_COUNT);
       expect(spy.callCount).to.equal(3);
     });
   });
 
-  context('guess-faker-fn', async function () {
-    it('guesses the faker fn to use based on the exact field name', async function () {
-      const spy = sandbox.spy(faker.internet, 'url');
+  context('guess-falso-fn', async function () {
+    it('guesses the falso fn to use based on the exact field name', async function () {
+      const spy = sandbox.spy(falso, 'randUrl');
       const fieldName = 'url';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(spy.called).to.have.be.true;
       expect(() => new URL(result)).to.not.throw();
     });
 
-    it('guesses the faker fn to use based on a containing field name', async function () {
-      const spy = sandbox.spy(faker.internet, 'url');
+    it('guesses the falso fn to use based on a containing field name', async function () {
+      const spy = sandbox.spy(falso, 'randUrl');
       const fieldName = 'randomURL';
       const info = buildInfo(fieldName);
       const options = buildOptions(fieldName);
 
-      const result = fakerFieldResolver(options)(null, {}, null, info);
+      const result = falsoFieldResolver(options)(null, {}, null, info);
       expect(spy.called).to.have.be.true;
       expect(() => new URL(result)).to.not.throw();
     });

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { buildSchema } from 'graphql';
-import { fakerTypeResolver } from '../../src/faker-type-resolver';
+import { falsoTypeResolver } from '../../src/falso-type-resolver';
 import { GraphQLAbstractType } from 'graphql';
 
 const graphqlSchema = buildSchema(`
@@ -47,9 +47,9 @@ const mockTypeResolverContext = { pack: { dependencies: { graphqlSchema } } };
 const unionTypeNames = ['ObjectOne', 'ObjectTwo'];
 const interfaceTypeNames = ['ObjectThree', 'ObjectFour'];
 
-describe('faker-type-resolver', function () {
+describe('falso-type-resolver', function () {
   it('uses the __typename if specified', function () {
-    const result = fakerTypeResolver()(
+    const result = falsoTypeResolver()(
       { __typename: 'UseThisTypeName' },
       mockTypeResolverContext,
       mockTypeResolverInfo,
@@ -60,14 +60,14 @@ describe('faker-type-resolver', function () {
 
   it('chooses randomly for union types from possible concrete types', function () {
     for (let i = 0; i < 100; i++) {
-      const result = fakerTypeResolver()({}, mockTypeResolverContext, mockTypeResolverInfo, getAbstractType('Union'));
+      const result = falsoTypeResolver()({}, mockTypeResolverContext, mockTypeResolverInfo, getAbstractType('Union'));
       expect(unionTypeNames).to.include(result);
     }
   });
 
   it('chooses randomly for interfaces types from possible concrete types', function () {
     for (let i = 0; i < 100; i++) {
-      const result = fakerTypeResolver()(
+      const result = falsoTypeResolver()(
         {},
         mockTypeResolverContext,
         mockTypeResolverInfo,

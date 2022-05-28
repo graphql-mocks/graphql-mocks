@@ -1,8 +1,8 @@
 {
-  "name": "@graphql-mocks/faker",
+  "name": "@graphql-mocks/falso",
   "version": "0.3.0",
   "author": "Chad Carbert",
-  "description": "Fake GraphQL queries with graphql-mocks and faker.js",
+  "description": "Fake GraphQL queries with graphql-mocks and Falso",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
@@ -25,14 +25,12 @@
     "node": ">= 12.0.0"
   },
   "devDependencies": {
-    "@types/faker": "^5.5.8",
+    "@ngneat/falso": "^5.3.0",
     "@types/sinon": "^10.0.2",
-    "faker": "^5.5.3",
     "graphql-mocks": "^0.8.3",
     "sinon": "^11.1.2"
   },
   "peerDependencies": {
-    "faker": "^5.5.3",
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
     "graphql-mocks": ">=0.8.1"
   }

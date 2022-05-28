@@ -1,3 +1,3 @@
-export { fakerMiddleware } from './faker-middleware';
-export { fakerFieldResolver } from './faker-field-resolver';
+export { falsoMiddleware } from './falso-middleware';
+export { falsoFieldResolver } from './falso-field-resolver';
 export * as types from './types';
