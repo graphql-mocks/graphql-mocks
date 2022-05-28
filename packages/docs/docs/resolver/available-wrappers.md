@@ -7,6 +7,48 @@ The following is a list of Resolver Wrappers. If you create one that could be us
 Issue or Pull Request so that it can be added. Also, learn how to [create your own](/docs/resolver/creating-wrappers) and
 [apply Resolver Wrappers](/docs/resolver/applying-wrappers) to a Resolver Map.
 
+## Latency Wrapper
+
+Package: `graphql-mocks`
+
+```js
+import { latencyWrapper } from 'graphql-mocks/wrapper';
+```
+
+Use the `latencyWrapper` to provide more realistic latency to resolvers. This can be useful to simulate resolvers that might take a bit longer.
+
+This wrapper can take either a number (in milliseconds), or an array of a lower bound and upper bound and a number will be chosen at random between these.
+
+```js
+// will wait 200 milliseconds
+latencyWrapper(200)
+
+// will wait between 200 and 800 milliseconds
+latencyWrapper([200, 800])
+```
+
+This is what the latency wrapper would like applied to resolvers using the `embed` middleware, applying a delay of 200 milliseconds to all top-level Query resolvers.
+```js
+// specified in milliseconds
+const latencyDelay = 200;
+
+// create a Resolver Map Middleware that applies the
+// latency wrapper to all top-level Query resolvers
+const latencyMiddleware = embed({
+  wrappers: [latencyWrapper(latencyDelay)],
+  h: (h) => h.include(field(['Query', '*']))
+});
+
+const handler = new GraphQLHandler({
+  resolverMap,
+  middlewares: [latencyMiddleware],
+  dependencies: { graphqlSchema },
+});
+
+// this will take at least 200 milliseconds
+await handler.query(`{ hello }`);
+```
+
 ## Log Wrapper
 
 Package: `graphql-mocks`
