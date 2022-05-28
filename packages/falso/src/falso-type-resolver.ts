@@ -1,7 +1,7 @@
 import { TypeResolver } from 'graphql-mocks/types';
 import { extractDependencies } from 'graphql-mocks/resolver';
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import falso from '@ngneat/falso';
+import * as falso from '@ngneat/falso';
 
 export function falsoTypeResolver(): TypeResolver {
   return function (value, context, _info, abstractType) {

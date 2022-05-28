@@ -1,4 +1,4 @@
-import falso from '@ngneat/falso';
+import * as falso from '@ngneat/falso';
 import { GraphQLType } from 'graphql';
 import { unwrap } from 'graphql-mocks/graphql/type-utils';
 

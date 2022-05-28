@@ -1,4 +1,4 @@
-import falso from '@ngneat/falso';
+import * as falso from '@ngneat/falso';
 import {
   ReplaceableResolverOption,
   HighlightableOption,

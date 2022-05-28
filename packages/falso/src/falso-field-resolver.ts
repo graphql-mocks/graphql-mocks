@@ -1,7 +1,7 @@
 import { FalsoMiddlewareOptions } from './types';
 import { FieldResolver } from 'graphql-mocks/types';
 import { hasListType, listItemType, unwrap } from 'graphql-mocks/graphql/type-utils';
-import falso from '@ngneat/falso';
+import * as falso from '@ngneat/falso';
 import { isObjectType, isNonNullType, isEnumType, isAbstractType, GraphQLType } from 'graphql';
 import { guessFalsoFn } from './guess-falso-fn';
 

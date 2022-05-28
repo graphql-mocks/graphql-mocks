@@ -4,7 +4,7 @@ import { falsoFieldResolver } from '../../src/falso-field-resolver';
 import { FalsoFieldOptions, FalsoGeneratorOptions } from '../../src/types';
 import { GraphQLResolveInfo } from 'graphql';
 import sinon from 'sinon';
-import falso from '@ngneat/falso';
+import * as falso from '@ngneat/falso';
 
 const schema = buildSchema(`
   schema {
