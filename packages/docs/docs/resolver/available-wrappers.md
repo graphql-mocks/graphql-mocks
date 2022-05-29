@@ -7,6 +7,47 @@ The following is a list of Resolver Wrappers. If you create one that could be us
 Issue or Pull Request so that it can be added. Also, learn how to [create your own](/docs/resolver/creating-wrappers) and
 [apply Resolver Wrappers](/docs/resolver/applying-wrappers) to a Resolver Map.
 
+## Debugger Wrapper
+
+Package: `graphql-mocks`
+
+```js
+import { debuggerWrapper } from 'graphql-mocks/wrapper';
+```
+
+The `debuggerWrapper` allows you to insert `debugger` statements before and/or after the wrapped resolver has ran. This would allow to step into the wrapped resolver also, or anything else you could do while in a paused state of execution.
+
+```js
+// by default will add a debugger before and after the resolver
+debuggerWrapper();
+
+// otherwise specify before and/or after as booleans
+debuggerWrapper({ before: true, after: true });
+```
+
+This is a full example creating a middleware that applies the debugger wrapper
+with the `before` case, to all top-level Query resolvers.
+
+```js
+// create a Resolver Map Middleware that applies the
+// debugger wrapper to all top-level Query resolvers
+// before the resolvers execute
+const debuggerMiddleware = embed({
+  wrappers: [debuggerWrapper({ before: true })],
+  h: (h) => h.include(field(['Query', '*']))
+});
+
+const handler = new GraphQLHandler({
+  resolverMap,
+  middlewares: [debuggerMiddleware],
+  dependencies: { graphqlSchema },
+});
+
+// with dev tools opened a debugger would trigger just before
+// the execution of the Query.hello resolver
+await handler.query(`{ hello }`);
+```
+
 ## Latency Wrapper
 
 Package: `graphql-mocks`
@@ -21,10 +62,10 @@ This wrapper can take either a number (in milliseconds), or an array of a lower 
 
 ```js
 // will wait 200 milliseconds
-latencyWrapper(200)
+latencyWrapper(200);
 
 // will wait between 200 and 800 milliseconds
-latencyWrapper([200, 800])
+latencyWrapper([200, 800]);
 ```
 
 This is what the latency wrapper would like applied to resolvers using the `embed` middleware, applying a delay of 200 milliseconds to all top-level Query resolvers.
