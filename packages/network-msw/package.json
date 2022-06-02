@@ -8,9 +8,9 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
+    "lint": "eslint \"./src/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\" --exclude \"./test/acceptance/dummy-react-app/node_modules/**/*.*\"",
+    "test": "echo \"See browser-acceptance-tests\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "copy-readme": "cp README.md dist/README.md",

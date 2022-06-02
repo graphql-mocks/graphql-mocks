@@ -2,9 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { setup as setupPretender } from './mocks';
+import { setup } from './mocks/setup';
 
-setupPretender();
+setup();
 
 ReactDOM.render(
   <React.StrictMode>

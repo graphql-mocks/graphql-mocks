@@ -1,6 +1,6 @@
 import Pretender from 'pretender';
 import { pretenderHandler } from '@graphql-mocks/network-pretender';
-import { graphqlHandler } from './browser-handler';
+import { graphqlHandler } from '../graphql-handler';
 
 export function setup() {
   const server = new Pretender(function () {
