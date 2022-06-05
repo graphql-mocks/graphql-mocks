@@ -3562,11 +3562,6 @@
     "@n1ru4l/push-pull-async-iterable-iterator" "^3.1.0"
     meros "^1.1.4"
 
-"@graphql-mocks/faker@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@graphql-mocks/faker/-/faker-0.3.0.tgz#6d48af59f167fcc8b4cf1026e5c6b8d0ca25022a"
-  integrity sha512-NiC4PRMdkqdZ+CDu+Fm5SJF+qH4LC3yRCBZ33HPmtqrXLX3ArHviENuQwQjJC5HZDEFoRZWE/NgBYqhGgtQQCQ==
-
 "@graphql-tools/batch-delegate@^6.2.4":
   version "6.2.4"
   resolved "https://registry.yarnpkg.com/@graphql-tools/batch-delegate/-/batch-delegate-6.2.4.tgz#8aab19ff69939c1a8bd3bebb4b1a3ff13c933559"
