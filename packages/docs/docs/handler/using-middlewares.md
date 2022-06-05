@@ -34,7 +34,7 @@ const handler = new GraphQLHandler({
   dependencies: { graphqlSchema }
 });
 
-handler.applyMiddlewares([fakerMiddleware, loggingMiddleware], { reset: false });
+handler.applyMiddlewares([falsoMiddleware, loggingMiddleware], { reset: false });
 ```
 
 ### Options

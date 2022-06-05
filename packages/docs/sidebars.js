@@ -70,7 +70,7 @@ module.exports = {
         'guides/managing-context',
         'guides/automatic-filtering',
         'guides/relay-pagination',
-        'guides/faker',
+        'guides/fake-data',
         'guides/mirage-js',
       ],
     },

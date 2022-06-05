@@ -63,7 +63,7 @@ function Packages() {
                 <Package directoryName="cli" packageName="gqlmocks" apiDocsHref="/docs/cli/commands" />
               </tr>
               <tr>
-                <Package directoryName="faker" packageName="@graphql-mocks/faker" />
+                <Package directoryName="falso" packageName="@graphql-mocks/falso" />
               </tr>
               <tr>
                 <Package directoryName="sinon" packageName="@graphql-mocks/sinon" />
