@@ -1,8 +1,8 @@
 {
-  "name": "@graphql-mocks/network-msw",
-  "version": "0.1.3",
+  "name": "@graphql-mocks/network-pretender",
+  "version": "0.0.0",
   "author": "Chad Carbert",
-  "description": "Mock using graphql-mocks with msw (mock service worker)",
+  "description": "Mock using graphql-mocks with pretender.js",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
@@ -13,8 +13,7 @@
     "test": "echo \"See browser-acceptance-tests\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {
@@ -25,13 +24,9 @@
     "node": ">= 12.0.0"
   },
   "devDependencies": {
-    "execa": "^5.1.1",
-    "graphql-mocks": "^0.8.3",
-    "msw": "^0.35.0",
-    "puppeteer": "^10.2.0"
+    "pretender": "^3.4.7"
   },
   "peerDependencies": {
-    "graphql-mocks": "0.7.2 || >=0.8.1",
-    "msw": "^0.35.0"
+    "pretender": "^3.4.7"
   }
 }
