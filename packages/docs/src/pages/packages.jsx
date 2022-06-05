@@ -51,6 +51,9 @@ function Packages() {
                 <Package directoryName="network-msw" packageName="@graphql-mocks/network-msw" />
               </tr>
               <tr>
+                <Package directoryName="network-pretender" packageName="@graphql-mocks/network-pretender" />
+              </tr>
+              <tr>
                 <Package directoryName="network-nock" packageName="@graphql-mocks/network-nock" />
               </tr>
               <tr>

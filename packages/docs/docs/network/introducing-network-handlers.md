@@ -19,6 +19,16 @@ Depending on the situation different network handling will be appropriate for yo
 * `@graphql-mocks/network-express`
 * [Documentation](/docs/network/express)
 
+## Browser Network Handlers
+
+### `msw` (mock service worker)
+* `@graphql-mocks/network-msw`
+* [Documentation](/docs/network/msw)
+
+### Pretender
+* `@graphql-mocks/network-pretender`
+* [Documentation](/docs/network/pretender)
+
 ## Node Network Handlers
 
 ### Express
@@ -28,10 +38,3 @@ Depending on the situation different network handling will be appropriate for yo
 ### Nock
 * `@graphql-mocks/network-nock`
 * [Documentation](/docs/network/nock)
-
-
-## Browser Network Handlers
-
-### `msw` (mock service worker)
-* `@graphql-mocks/network-msw`
-* [Documentation](/docs/network/msw)
