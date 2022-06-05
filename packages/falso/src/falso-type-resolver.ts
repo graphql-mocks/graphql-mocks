@@ -1,9 +1,9 @@
 import { TypeResolver } from 'graphql-mocks/types';
 import { extractDependencies } from 'graphql-mocks/resolver';
-import { GraphQLSchema } from 'graphql';
-import faker from 'faker';
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import * as falso from '@ngneat/falso';
 
-export function fakerTypeResolver(): TypeResolver {
+export function falsoTypeResolver(): TypeResolver {
   return function (value, context, _info, abstractType) {
     const { graphqlSchema } = extractDependencies<{ graphqlSchema: GraphQLSchema }>(context, ['graphqlSchema']);
 
@@ -11,8 +11,8 @@ export function fakerTypeResolver(): TypeResolver {
       return value.__typename;
     }
 
-    const possibleTypes = graphqlSchema.getPossibleTypes(abstractType);
-    const chosenType = faker.random.arrayElement(possibleTypes);
+    const possibleTypes = graphqlSchema.getPossibleTypes(abstractType) as GraphQLObjectType[];
+    const chosenType = falso.rand(possibleTypes);
     return chosenType.name;
   };
 }

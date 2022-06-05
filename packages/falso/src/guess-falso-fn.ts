@@ -1,145 +1,144 @@
-import faker from 'faker';
+import * as falso from '@ngneat/falso';
 import { GraphQLType } from 'graphql';
 import { unwrap } from 'graphql-mocks/graphql/type-utils';
 
-export function guessFakerFn(fieldName: string, returnType: GraphQLType): () => string | number | boolean | undefined {
+export function guessFalsoFn(fieldName: string, returnType: GraphQLType): () => string | number | boolean | undefined {
   fieldName = fieldName.toLowerCase();
   const returnTypeName = unwrap(returnType).name.toLowerCase();
 
   if (returnTypeName === 'string') {
     if (fieldName.includes('name')) {
-      return faker.address.cityName;
+      return falso.randCity;
     }
 
     if (fieldName.includes('firstname')) {
-      return faker.name.firstName;
+      return falso.randFirstName;
     }
 
     if (fieldName.includes('lastname')) {
-      return faker.name.lastName;
+      return falso.randLastName;
     }
 
     if (fieldName.includes('email')) {
-      return faker.internet.email;
+      return falso.randEmail;
     }
 
     if (fieldName.includes('gender') || fieldName.includes('sex')) {
-      return faker.name.gender;
+      return falso.randGender;
     }
 
     if (fieldName.includes('city')) {
-      return faker.address.cityName;
+      return falso.randCity;
     }
 
     if (fieldName.includes('zipcode')) {
-      return faker.address.zipCode;
+      return falso.randZipCode;
     }
 
     if (fieldName.includes('country')) {
-      return faker.address.country;
+      return falso.randCountry;
     }
 
     if (fieldName.includes('street')) {
-      return faker.address.streetName;
+      return falso.randStreetName;
     }
 
     if (fieldName.includes('color')) {
-      return faker.commerce.color;
+      return falso.randColor;
     }
 
     if (fieldName.includes('price')) {
-      return faker.commerce.price;
+      return falso.randAmount;
     }
 
     if (fieldName.includes('date')) {
-      return () => faker.date.past.toString();
+      return () => falso.randSoonDate().toString();
     }
 
     if (fieldName.includes('currency')) {
-      return faker.finance.currencyName;
+      return falso.randCurrencyName;
     }
 
     if (fieldName.includes('creditcard')) {
-      return faker.finance.creditCardNumber;
-    }
-
-    if (fieldName.includes('sha')) {
-      return faker.git.commitSha;
+      return falso.randCurrencyName;
     }
 
     if (fieldName.includes('image')) {
-      return faker.image.imageUrl;
+      return falso.randImg;
     }
 
     if (fieldName.includes('avatar')) {
-      return faker.image.avatar;
+      return falso.randAvatar;
     }
 
     if (fieldName.includes('username')) {
-      return faker.internet.userName;
+      return falso.randUserName;
     }
 
     if (fieldName.includes('password')) {
-      return faker.internet.password;
+      return falso.randPassword;
     }
 
     if (fieldName.includes('ip')) {
-      return faker.internet.ip;
+      return falso.randIp;
     }
 
     if (fieldName.includes('url')) {
-      return faker.internet.url;
+      return falso.randUrl;
     }
 
     if (fieldName.includes('phonenumber')) {
-      return faker.phone.phoneNumber;
+      return falso.randPhoneNumber;
     }
 
     if (fieldName.includes('locale')) {
-      return faker.random.locale;
+      return falso.randLocale;
     }
 
     if (fieldName.includes('desc')) {
-      return faker.lorem.paragraph;
+      return falso.randParagraph;
     }
 
     if (fieldName.includes('filename')) {
-      return faker.system.fileName;
+      return falso.randFileName;
     }
 
     if (fieldName.includes('filetype')) {
-      return faker.system.fileType;
+      return falso.randFileType;
     }
 
     if (fieldName.includes('time')) {
-      return faker.time.recent;
+      return () => {
+        const date = falso.randRecentDate();
+        return `${date.getHours()}:${date.getMinutes()} ${falso.rand(['am', 'pm'])}`;
+      };
     }
 
     if (fieldName.includes('id') || fieldName.includes('uuid')) {
-      return faker.datatype.uuid;
+      return falso.randUuid;
     }
 
-    return faker.lorem.word;
+    return falso.randWord;
   }
 
   if (returnTypeName === 'float') {
-    return faker.datatype.float;
+    return falso.randFloat;
   }
 
   if (returnTypeName === 'int') {
-    return faker.datatype.number;
+    return falso.randNumber;
   }
 
   if (returnTypeName === 'id') {
-    return faker.datatype.uuid;
+    return falso.randUuid;
   }
 
   if (returnTypeName === 'uuid') {
-    return faker.datatype.uuid;
+    return falso.randUuid;
   }
 
   if (returnTypeName === 'boolean') {
-    return faker.datatype.boolean;
+    return falso.randBoolean;
   }
 
   return () => void 0;

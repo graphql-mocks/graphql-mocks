@@ -1,5 +1,5 @@
 import { GraphQLHandler } from 'graphql-mocks';
-import { fakerMiddleware } from '../../src/index';
+import { falsoMiddleware } from '../../src/index';
 import { expect } from 'chai';
 
 const graphqlSchema = `
@@ -25,7 +25,7 @@ const graphqlSchema = `
   }
 `;
 
-describe('faker-middleware', () => {
+describe('falso-middleware', () => {
   it('resolves with a graphql handler', async () => {
     const handler = new GraphQLHandler({
       resolverMap: {
@@ -47,7 +47,7 @@ describe('faker-middleware', () => {
           },
         },
       },
-      middlewares: [fakerMiddleware()],
+      middlewares: [falsoMiddleware()],
       dependencies: {
         graphqlSchema,
       },

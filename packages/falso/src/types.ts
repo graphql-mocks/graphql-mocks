@@ -1,10 +1,10 @@
-import faker from 'faker';
+import * as falso from '@ngneat/falso';
 import {
   ReplaceableResolverOption,
   HighlightableOption,
 } from 'graphql-mocks/resolver-map/types';
 
-export type Faker = typeof faker;
+export type Falso = typeof falso;
 
 // https://newbedev.com/typescript-deep-keyof-of-a-nested-object
 type Join<K, P> = K extends string | number ?
@@ -22,24 +22,24 @@ type Paths<T> = T extends object ?
     }[keyof T] : never
 
 
-export type FakerGeneratorOptions = {
+export type FalsoGeneratorOptions = {
   nullPercentage?: number;
   nullListPercentage?: number;
   listCount?: number | { min: number; max: number };
 }
 
-export type FakerFieldOptions<K = Paths<Faker>> = FakerGeneratorOptions & {
+export type FalsoFieldOptions<K = Paths<Falso>> = FalsoGeneratorOptions & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   possibleValues?: any[];
-  fakerFn?: K;
+  falsoFn?: K;
 };
 
-export type FakerOptions = FakerGeneratorOptions & {
+export type FalsoOptions = FalsoGeneratorOptions & {
   fields?: {
     [type: string]: {
-      [field: string]: FakerFieldOptions;
+      [field: string]: FalsoFieldOptions;
     };
   };
 };
 
-export type FakerMiddlewareOptions = FakerOptions & ReplaceableResolverOption & HighlightableOption;
+export type FalsoMiddlewareOptions = FalsoOptions & ReplaceableResolverOption & HighlightableOption;

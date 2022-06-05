@@ -16,17 +16,17 @@ type Actor {
 }
 ```
 
-we could create a factory using the [faker js](https://github.com/marak/Faker.js/) package:
+we could create a factory using the [Falso](https://github.com/ngneat/falso) package:
 
 ```js
-import faker from 'faker';
+import { randFirstName, randLastName, randCity } from '@ngneat/falso';
 
 // alternatively the factory function could also take arguments
 export function actorFactory() {
   return {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    city: faker.address.cityName(),
+    firstName: randFirstName(),
+    lastName: randLastName(),
+    city: randCity(),
   };
 }
 ```

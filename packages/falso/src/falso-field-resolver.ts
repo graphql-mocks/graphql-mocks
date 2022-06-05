@@ -1,9 +1,9 @@
-import { FakerMiddlewareOptions } from './types';
+import { FalsoMiddlewareOptions } from './types';
 import { FieldResolver } from 'graphql-mocks/types';
 import { hasListType, listItemType, unwrap } from 'graphql-mocks/graphql/type-utils';
-import faker from 'faker';
+import * as falso from '@ngneat/falso';
 import { isObjectType, isNonNullType, isEnumType, isAbstractType, GraphQLType } from 'graphql';
-import { guessFakerFn } from './guess-faker-fn';
+import { guessFalsoFn } from './guess-falso-fn';
 
 function getRandomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -13,8 +13,8 @@ function booleanChance(percentage: number) {
   return getRandomInt(0, 100) < Math.floor(percentage);
 }
 
-export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolver {
-  return function internalFakerResolver(parent, _args, _context, info) {
+export function falsoFieldResolver(options: FalsoMiddlewareOptions): FieldResolver {
+  return function internalFalsoResolver(parent, _args, _context, info) {
     const parentTypeName = info.parentType?.name;
     const { fieldName, returnType }: { fieldName: string; returnType: GraphQLType } = info;
 
@@ -50,34 +50,27 @@ export function fakerFieldResolver(options: FakerMiddlewareOptions): FieldResolv
 
       if (options?.length) {
         // use random option from specified values
-        value = faker.random.arrayElement(options);
-      } else if (typeof fieldOptions?.fakerFn === 'string') {
-        // use a specified faker function
-        const [fakerCategory, fakerMethod] = fieldOptions.fakerFn.split('.');
+        value = falso.rand(options);
+      } else if (typeof fieldOptions?.falsoFn === 'string') {
+        // use a specified falso function
+        const { falsoFn } = fieldOptions;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!(faker as any)[fakerCategory]) {
-          throw new Error(`Could not find faker category of ${fakerCategory}`);
+        if (!(falso as any)[falsoFn]) {
+          throw new Error(`Could not find falso function at "falso.${falsoFn}", double-check the falso docs`);
         }
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if (!(faker as any)[fakerCategory][fakerMethod]) {
-          throw new Error(
-            `Could not find faker function at "${fakerCategory}.${fakerMethod}", double-check the faker js docs`,
-          );
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fn = (faker as any)[fakerCategory][fakerMethod];
+        const fn = (falso as any)[falsoFn];
         value = fn();
       } else {
-        value = guessFakerFn(fieldName, returnType)();
+        value = guessFalsoFn(fieldName, returnType)();
       }
 
       if (allowNull) {
         value = booleanChance(nullPercentage) ? null : value;
       } else if (value == null) {
-        value = guessFakerFn(fieldName, returnType)();
+        value = guessFalsoFn(fieldName, returnType)();
       }
 
       return value;

@@ -7,9 +7,9 @@ Using the `gqlmocks serve` command is the fastest way to get mocking only a Grap
 
 The `serve` command provides:
 * Running server at `localhost`
-* A graphiql ide for browsing the schema 
+* A graphiql ide for browsing the schema
 * Automatic remote schema fetching with the `--schema` flag
-* Bundled faker middleware for automatic mocking
+* Bundled falso middleware for automatic mocking with fake data
 
 See the [gqlmocks command documentation](/docs/cli/commands) for more information and available flags.
 
@@ -18,7 +18,7 @@ See the [gqlmocks command documentation](/docs/cli/commands) for more informatio
 Having a mock GraphQL Server available at `localhost` is valuable for testing against other GraphQL tools and integrating with other locally running services.
 
 ```
-npx gqlmocks serve --schema https://s3.aws/schema.graphql --faker
+npx gqlmocks serve --schema https://s3.aws/schema.graphql --fake
 Fetching schema from https://s3.aws/schema.graphql... done
 Starting graphql api server on port 4444... done
 
@@ -34,16 +34,16 @@ The provided the `/client` path available on the server provides a fully running
 
 ![Screenshot of GraphiQL IDE](/img/cli-graphiql.png)
 
-## Fast Mocking with Remote Schema and Faker
+## Fast Mocking with Remote Schema and Falso
 
-The fastest way to mocking a GraphQL API without any setup is to use the faker middleware and specifying a remote url to a GraphQL Schema file or remote GraphQL API. The faker middleware will handle 
+The fastest way to mocking a GraphQL API without any setup is to use the Falso middleware and specifying a remote url to a GraphQL Schema file or remote GraphQL API. The Falso middleware will handle
 
 ```
 # Fetching schema from a running GraphQL API server
-npx gqlmocks serve --faker --schema "http://remote-api.com/graphql"
+npx gqlmocks serve --fake --schema "http://remote-api.com/graphql"
 
 # Fetching .graphql file from url
-npx gqlmocks serve --faker --schema "http://s3.aws.com/schema.graphql"
+npx gqlmocks serve --fake --schema "http://s3.aws.com/schema.graphql"
 ```
 
 Additional `--header` flags can be used to specify any headers required to fetch the remote schema.

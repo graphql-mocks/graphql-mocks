@@ -17,15 +17,15 @@ Manage and manipulate Resolver Maps by using `embed` to add Resolvers and/or Res
 
 Lazily add layering of Resolvers via Resolver Map partials with `layer`, optionally applying Resolver Wrappers. See the [guide](/docs/resolver-map/managing-resolvers#using-layer) for examples.
 
-## faker.js
-* Package: `@graphql-mocks/faker`
-* [Documentation](/docs/guides/faker)
+## Falso
+* Package: `@graphql-mocks/falso`
+* [Documentation](/docs/guides/fake-data)
 
-Using [faker.js](https://github.com/marak/Faker.js/) with the Resolver Map Middleware from `@graphql-mocks/faker` provides an extremely quick way to automatically mock any GraphQL schema.
+Using [Falso](https://github.com/ngneat/falso) with the Resolver Map Middleware from `@graphql-mocks/falso` provides an extremely quick way to automatically mock any GraphQL schema.
 
 * Automatically mock an entire schema
-* Fallbacks to faker data based on field-name heuristics
-* Configurable faker functions per GraphQL field
+* Fallbacks to Falso data based on field-name heuristics
+* Configurable Falso functions per GraphQL field
 * Provide dynamic ranges for list types
 
 ## Mirage JS
