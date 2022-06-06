@@ -15,6 +15,12 @@ function yarnAndLink() {
   console.log(chalk.green(`✅ finished running \`yarn\` and \`yarn link-packages\``));
 }
 
+function yarnClean() {
+  console.log(chalk.blue(`running \`yarn clean\``));
+  execSync(`yarn clean`);
+  console.log(chalk.green(`✅ finished running \`yarn clean\``));
+}
+
 function getLernaPackages({ changed } = { changed: false }) {
   if (changed) {
     return JSON.parse(execSync('yarn --silent run lerna changed --json').toString());
@@ -169,6 +175,11 @@ function attachChangelogs(packages) {
 
   changelogs.forEach(({ package: packageName, entry, pr }) => {
     const package = packages.find(({ name }) => name === packageName);
+
+    if (!package) {
+      throw new Error(`Couldn't find package ${packageName} to attach changelog to`);
+    }
+
     package.changelogEntries.push({ entry, pr });
   });
 }
@@ -369,6 +380,7 @@ try {
   checkMainBranch();
   checkCleanBranch();
   createReleaseBranch();
+  yarnClean();
   yarnAndLink();
   yarnBootstrap();
 
@@ -378,6 +390,12 @@ try {
   });
 
   packages.forEach((package) => checkPackagePeerDependencies(package, packages));
+
+  // after checking peer dependencies, node_modules need to be restored to a
+  // clean slate for the remaining of the release
+  yarnClean();
+  yarnBootstrap();
+
   announceBrokenPeerDependencies(packages);
   attachChangelogs(packages);
   announcePackageChangelogs(packages);
