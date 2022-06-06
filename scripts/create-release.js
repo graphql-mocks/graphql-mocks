@@ -15,9 +15,9 @@ function yarnAndLink() {
   console.log(chalk.green(`✅ finished running \`yarn\` and \`yarn link-packages\``));
 }
 
-function yarnClean() {
+function yarnLernaClean() {
   console.log(chalk.blue(`running \`yarn clean\``));
-  execSync(`yarn clean`);
+  execSync(`yarn lerna clean --yes`);
   console.log(chalk.green(`✅ finished running \`yarn clean\``));
 }
 
@@ -380,7 +380,7 @@ try {
   checkMainBranch();
   checkCleanBranch();
   createReleaseBranch();
-  yarnClean();
+  yarnLernaClean();
   yarnAndLink();
   yarnBootstrap();
 
@@ -393,7 +393,7 @@ try {
 
   // after checking peer dependencies, node_modules need to be restored to a
   // clean slate for the remaining of the release
-  yarnClean();
+  yarnLernaClean();
   yarnBootstrap();
 
   announceBrokenPeerDependencies(packages);
