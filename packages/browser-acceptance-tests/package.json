@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build": "echo \"No build required for browser-acceptance-tests, only for testing\"",
