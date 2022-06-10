@@ -1,17 +1,18 @@
 import { GraphQLSchema, isObjectType } from 'graphql';
-import { DocumentStore } from '../types';
+import { DocumentStore, SchemaTypes } from '../types';
 
-export function createDocumentStore(schema?: GraphQLSchema): DocumentStore {
+export function createDocumentStore<T extends SchemaTypes = SchemaTypes>(schema: GraphQLSchema): DocumentStore<T> {
   const store: DocumentStore = {};
 
   if (!schema) {
-    return store;
+    throw new Error('A GraphQLSchema is a required argument');
   }
 
   const typeMap = schema.getTypeMap();
   for (const typeName in typeMap) {
     const type = typeMap[typeName];
     const isInternalType = type.name.startsWith('__');
+
     const rootTypeNames = [
       schema.getQueryType()?.name,
       schema.getMutationType()?.name,
@@ -23,5 +24,5 @@ export function createDocumentStore(schema?: GraphQLSchema): DocumentStore {
     }
   }
 
-  return store;
+  return store as DocumentStore<T>;
 }

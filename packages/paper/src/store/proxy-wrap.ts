@@ -1,16 +1,21 @@
 import { GraphQLSchema } from 'graphql';
-import { DocumentStore } from '../types';
+import { DocumentStore, SchemaTypes } from '../types';
 import { createConnectionProxy } from '../document/create-connection-proxy';
 
-export function proxyWrap(schema: GraphQLSchema, originalStore: DocumentStore): DocumentStore {
+export function proxyWrap<T extends SchemaTypes = SchemaTypes>(
+  schema: GraphQLSchema,
+  originalStore: DocumentStore<T>,
+): DocumentStore<T> {
   const store = {
     ...originalStore,
   };
 
-  for (const type in store) {
-    if (Array.isArray(store[type])) {
-      store[type] = store[type].map((document) => createConnectionProxy(schema, store, document));
-      Object.freeze(store[type]);
+  for (const typename in store) {
+    if (Array.isArray(store[typename])) {
+      store[typename] = store[typename].map((document) =>
+        createConnectionProxy(schema, store, document),
+      ) as typeof store[typeof typename];
+      Object.freeze(store[typename]);
     }
   }
 

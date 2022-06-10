@@ -7,15 +7,14 @@ export type DocumentKey = string;
 export type GraphQLTypeName = string;
 export type KeyOrDocument = DocumentKey | Document;
 
-export type Document = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [k: string]: any;
+type DocumentBase = {
   [DOCUMENT_KEY_SYMBOL]: DocumentKey;
   [DOCUMENT_CONNECTIONS_SYMBOL]: ConnectionsMap;
   [DOCUMENT_GRAPHQL_TYPENAME]: GraphQLTypeName;
   __typename: string;
 };
 
+export type Document<T extends SchemaTypeDefinition = SchemaTypeDefinition> = T & DocumentBase;
 export type DocumentPartial = Partial<Document>;
 
 // connections
@@ -24,13 +23,15 @@ export type ConnectionsMap = Record<ConnectionFieldName, Connections>;
 type Connections = Array<DocumentKey>;
 
 // store
-
-export type DocumentStore<Typename extends string = string> = Record<Typename, Document[]>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SchemaTypeDefinition = Record<string, any>;
+export type SchemaTypes = Record<string, SchemaTypeDefinition>;
+export type DocumentStore<T extends SchemaTypes = SchemaTypes> = { [P in keyof T]: Document<T[P]>[] };
 
 // operations
 
-export type OperationContext = {
-  store: DocumentStore;
+export type OperationContext<ST extends SchemaTypes = SchemaTypes> = {
+  store: DocumentStore<ST>;
   schema: GraphQLSchema;
   eventQueue: Event[];
 };

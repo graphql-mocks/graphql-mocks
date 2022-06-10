@@ -12,6 +12,7 @@ import {
   HooksMap,
   KeyOrDocument,
   OperationMap,
+  SchemaTypes,
   TransactionCallback,
 } from './types';
 import { createDocumentStore } from './store/create-document-store';
@@ -36,9 +37,9 @@ import {
 // > https://exploringjs.com/deep-js/ch_proxies.html
 setAutoFreeze(false);
 
-export class Paper<UserOperations extends OperationMap = OperationMap> {
-  protected history: DocumentStore[] = [];
-  protected current: DocumentStore;
+export class Paper<ST extends SchemaTypes = SchemaTypes, UserOperations extends OperationMap = OperationMap> {
+  protected history: DocumentStore<ST>[] = [];
+  protected current: DocumentStore<ST>;
   protected sourceGraphQLSchema: GraphQLSchema;
   protected mutateQueue: Queue = new Queue();
 
@@ -57,7 +58,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
   constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: { operations?: UserOperations }) {
     const schema = createSchema(graphqlSchema);
-    this.current = createDocumentStore(schema);
+    this.current = createDocumentStore<ST>(schema);
     this.sourceGraphQLSchema = schema;
 
     this.operations = {
@@ -66,7 +67,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     };
   }
 
-  get data(): DocumentStore {
+  get data(): DocumentStore<ST> {
     return proxyWrap(this.sourceGraphQLSchema, this.current);
   }
 
@@ -107,8 +108,8 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     let customEvents: Event[] = [];
 
     const next = await produce(current, async (draft) => {
-      const { transactionResult, eventQueue } = await transaction<typeof operations>(
-        draft,
+      const { transactionResult, eventQueue } = await transaction<typeof operations, ST>(
+        draft as DocumentStore<ST>,
         schema,
         operations,
         hooks,
