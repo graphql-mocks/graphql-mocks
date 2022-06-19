@@ -1,4 +1,3 @@
-// import { expect } from 'chai';
 import { Paper } from '../../src/paper';
 import { Document } from '../../src/types';
 import { buildSchema } from 'graphql';
