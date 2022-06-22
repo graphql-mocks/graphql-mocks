@@ -2,7 +2,7 @@ import type { GraphQLHandler } from 'graphql-mocks';
 import type { RouteHandlerController } from 'cypress/types/net-stubbing';
 
 export function cypressHandler(graphqlHandler: GraphQLHandler): RouteHandlerController {
-  const routeHandler: RouteHandlerController = async (request) => {
+  return async (request) => {
     const { body } = request;
 
     if (!body) {
@@ -11,7 +11,7 @@ export function cypressHandler(graphqlHandler: GraphQLHandler): RouteHandlerCont
         body: {
           errors: [
             {
-              message: `No request body provided`,
+              message: `No request body provided in the request but it's required for querying with graphql-mocks`,
             },
           ],
         },
@@ -26,8 +26,7 @@ export function cypressHandler(graphqlHandler: GraphQLHandler): RouteHandlerCont
         body: {
           errors: [
             {
-              message:
-                'No "query" provided in request body but is required for querying with graphql-mocks graphql handler',
+              message: `No "query" provided in request body but it's required for querying with graphql-mocks`,
             },
           ],
         },
@@ -37,6 +36,4 @@ export function cypressHandler(graphqlHandler: GraphQLHandler): RouteHandlerCont
     const result = await graphqlHandler.query(query, variables, { cypress: { request } }, { operationName });
     request.reply(200, result);
   };
-
-  return routeHandler;
 }

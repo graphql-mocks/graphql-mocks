@@ -10,7 +10,8 @@
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "echo \"See browser-acceptance-tests\"",
+    "test": "cypress run --component",
+    "cypress": "cypress open",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "copy-readme": "cp README.md dist/README.md",
@@ -25,8 +26,10 @@
     "node": ">= 12.0.0"
   },
   "devDependencies": {
+    "axios": "^0.27.2",
     "graphql-mocks": "^0.8.4",
-    "cypress": "^10.0.3"
+    "cypress": "^10.0.3",
+    "vite": "^2.9.0"
   },
   "peerDependencies": {
     "graphql-mocks": "0.7.2 || >=0.8.1",
