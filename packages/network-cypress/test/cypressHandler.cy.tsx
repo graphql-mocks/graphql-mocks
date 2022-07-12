@@ -1,3 +1,5 @@
+/// <reference types="cypress" />
+
 import axios from 'axios';
 import { GraphQLHandler } from 'graphql-mocks';
 import { cypressHandler } from '../src';
