@@ -1,0 +1,38 @@
+{
+  "name": "@graphql-mocks/network-cypress",
+  "version": "0.0.0",
+  "author": "Mohammad Ataei",
+  "description": "Mock using graphql-mocks with cypress",
+  "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "cypress run --component",
+    "cypress": "cypress open",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "copy-readme": "cp README.md dist/README.md",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
+    "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "devDependencies": {
+    "axios": "^0.27.2",
+    "graphql-mocks": "^0.8.4",
+    "cypress": "^10.0.3",
+    "vite": "^2.9.0"
+  },
+  "peerDependencies": {
+    "graphql-mocks": "0.7.2 || >=0.8.1",
+    "cypress": "^8.0.0 || ^ 9.0.0 || ^10.0.0"
+  }
+}
