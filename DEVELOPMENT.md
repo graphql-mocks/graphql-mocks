@@ -5,7 +5,7 @@ This document covers how to locally develop on the GraphQL Mocks.
 ## System Requirements
 
 * [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-* [Node >= 12](https://nodejs.org/en/download/)
+* [Node >= 14](https://nodejs.org/en/download/)
 * [`yarn`](https://yarnpkg.com/)
 
 ## Repo Structure
