@@ -4,7 +4,6 @@ import {
   HooksMap,
   OperationContext,
   OperationMap,
-  SchemaTypes,
   TransactionCallback,
 } from '../types';
 import { GraphQLSchema } from 'graphql';
@@ -13,19 +12,19 @@ import { expandConnections } from '../document/expand-connections';
 import { sequential } from '../hooks/sequential';
 import { createBoundOperations } from './create-bound-operations';
 
-export async function transaction<OM extends OperationMap, ST extends SchemaTypes = SchemaTypes>(
-  store: DocumentStore<ST>,
+export async function transaction<T extends OperationMap>(
+  store: DocumentStore,
   schema: GraphQLSchema,
-  operations: OM,
-  hooks: HooksMap<OM>,
-  fn: TransactionCallback<OM>,
-): Promise<{ eventQueue: Event[]; transactionResult: ReturnType<TransactionCallback<OM>> }> {
+  operations: T,
+  hooks: HooksMap<T>,
+  fn: TransactionCallback<T>,
+): Promise<{ eventQueue: Event[]; transactionResult: ReturnType<TransactionCallback<T>> }> {
   expandConnections(schema, store);
   const eventQueue: Event[] = [];
   hooks = Object.freeze({ ...hooks });
-  const context: OperationContext<ST> = { schema, store, eventQueue };
+  const context: OperationContext = { schema, store, eventQueue };
 
-  const boundOperations = createBoundOperations(operations, context) as BoundOperationMap<OM>;
+  const boundOperations = createBoundOperations(operations, context) as BoundOperationMap<T>;
   await sequential(hooks.beforeTransaction, boundOperations);
   // perform transaction
   const transactionResult = await fn(boundOperations);

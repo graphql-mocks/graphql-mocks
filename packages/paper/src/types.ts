@@ -1,6 +1,12 @@
 import { GraphQLField, GraphQLObjectType, GraphQLSchema } from 'graphql';
 import { DOCUMENT_CONNECTIONS_SYMBOL, DOCUMENT_KEY_SYMBOL, DOCUMENT_GRAPHQL_TYPENAME } from './constants';
 
+// utility
+
+export type AfterFirstArgs<ST extends SchemaTypes, F> = F extends (c: OperationContext<ST>, ...args: infer P) => unknown
+  ? P
+  : never;
+
 // documents
 
 export type DocumentKey = string;
@@ -14,8 +20,9 @@ type DocumentBase = {
   __typename: string;
 };
 
-export type Document<T extends SchemaTypeDefinition = SchemaTypeDefinition> = T & DocumentBase;
-export type DocumentPartial = Partial<Document>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Document<T extends SchemaTypeDefintion = SchemaTypeDefintion> = T & DocumentBase;
+export type DocumentPartial = Partial<Document> & DocumentBase;
 
 // connections
 type ConnectionFieldName = string;
@@ -23,35 +30,33 @@ export type ConnectionsMap = Record<ConnectionFieldName, Connections>;
 type Connections = Array<DocumentKey>;
 
 // store
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SchemaTypeDefinition = Record<string, any>;
-export type SchemaTypes = Record<string, SchemaTypeDefinition>;
+export type SchemaTypeDefintion = Record<string, any>;
+export type SchemaTypes = Record<string, SchemaTypeDefintion>;
 export type DocumentStore<T extends SchemaTypes = SchemaTypes> = { [P in keyof T]: Document<T[P]>[] };
 
 // operations
 
-export type OperationContext<ST extends SchemaTypes = SchemaTypes> = {
+export type OperationContext<ST extends SchemaTypes> = {
   store: DocumentStore<ST>;
   schema: GraphQLSchema;
   eventQueue: Event[];
 };
 
-export interface Operation {
+export interface Operation<ST extends SchemaTypes> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (context: OperationContext, ...operationArgs: any[]): any;
+  (context: OperationContext<ST>, ...operationArgs: any[]): any;
 }
 
-export interface OperationMap {
-  [key: string]: Operation;
+export interface OperationMap<ST extends SchemaTypes> {
+  [key: string]: Operation<ST>;
 }
 
 // transaction
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R ? (...args: P) => R : never;
-
-export type BoundOperationMap<T extends OperationMap> = {
-  [P in keyof T]: OmitFirstArg<T[P]>;
+export type BoundOperationMap<OM extends OperationMap<ST>, ST extends SchemaTypes, C extends OperationContext<ST>> = {
+  [P in keyof OM]: (
+    ...args: AfterFirstArgs<ST, OM[P]>
+  ) => (c: C, ...args: AfterFirstArgs<ST, OM[P]>) => ReturnType<OM[P]>;
 };
 
 export type AllowedTransactionCallbackReturnTypes =
@@ -62,8 +67,12 @@ export type AllowedTransactionCallbackReturnTypes =
   | (Document | null | undefined)[]
   | Record<string, Document | null | undefined>;
 
-export interface TransactionCallback<T extends OperationMap> {
-  (operations: BoundOperationMap<T>):
+export interface TransactionCallback<
+  OM extends OperationMap<ST>,
+  ST extends SchemaTypes,
+  C extends OperationContext<ST> = OperationContext<ST>
+> {
+  (operations: BoundOperationMap<OM, ST, C>):
     | AllowedTransactionCallbackReturnTypes
     | Promise<AllowedTransactionCallbackReturnTypes>;
 }
@@ -123,9 +132,20 @@ export type PaperDocumentEvent = PaperEvent & {
 
 // hooks
 
-export interface Hook<T extends OperationMap> {
+export interface Hook<
+  OM extends OperationMap<ST>,
+  ST extends SchemaTypes,
+  C extends OperationContext<ST> = OperationContext<ST>
+> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (operations: BoundOperationMap<T>): any | Promise<any>;
+  (operations: BoundOperationMap<OM, ST, C>): any | Promise<any>;
 }
 
-export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[]; afterTransaction: Hook<OM>[] };
+export type HooksMap<
+  OM extends OperationMap<ST>,
+  ST extends SchemaTypes,
+  C extends OperationContext<ST> = OperationContext<ST>
+> = {
+  beforeTransaction: Hook<OM, ST, C>[];
+  afterTransaction: Hook<OM, ST, C>[];
+};

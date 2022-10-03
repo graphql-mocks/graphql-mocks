@@ -28,7 +28,7 @@ export type Query = {
 
 export enum Pet {
   Dog = 'DOG',
-  Cat = 'CAT'
+  Cat = 'CAT',
 }
 
 export type Named = {

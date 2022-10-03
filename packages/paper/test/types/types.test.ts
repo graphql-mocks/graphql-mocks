@@ -49,8 +49,9 @@ describe('typescript types check', async () => {
 
   describe('operations', () => {
     it('shows type completion within operations', async () => {
-      await paper.mutate(({ create }) => {
+      await paper.mutate((a) => {
         // first argument create should show typename options
+        a.create();
       });
     });
   });
