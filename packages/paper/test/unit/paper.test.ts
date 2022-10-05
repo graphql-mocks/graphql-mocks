@@ -129,3 +129,26 @@ describe('data', () => {
     expect(paper.data.Person[0].bestFriend.bestFriend.name).to.equal('Ronald');
   });
 });
+
+describe('truncate', () => {
+  it('should purge all documents', async () => {
+    const paper = new Paper(graphqlSchema);
+
+    await paper.mutate(({ create }) => {
+      const ronald = create('Person', {
+        name: 'Ronald',
+      });
+
+      const jessica = create('Person', {
+        name: 'Jessica',
+      });
+
+      ronald.bestFriend = jessica;
+      jessica.bestFriend = ronald;
+    });
+
+    expect(paper.data.Person).to.have.length(2);
+    paper.truncate();
+    expect(paper.data.Person).to.have.length(0);
+  });
+});
