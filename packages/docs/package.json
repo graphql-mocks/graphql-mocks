@@ -15,6 +15,7 @@
     "build:api:network-express": "yarn --cwd ../network-express typedoc --readme none --out ../docs/static/api/network-express src/index.ts",
     "build:api:network-msw": "yarn --cwd ../network-msw typedoc --readme none --out ../docs/static/api/network-msw src/index.ts",
     "build:api:network-pretender": "yarn --cwd ../network-pretender typedoc --readme none --out ../docs/static/api/network-pretender src/index.ts",
+    "build:api:network-cypress": "yarn --cwd ../network-cypress typedoc --readme none --out ../docs/static/api/network-cypress src/index.ts",
     "build:api:falso": "yarn --cwd ../falso typedoc --readme none --out ../docs/static/api/falso src/index.ts",
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",

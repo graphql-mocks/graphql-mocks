@@ -35,6 +35,7 @@ module.exports = {
         'network/msw',
         'network/pretender',
         'network/express',
+        'network/cypress',
         'network/nock',
       ],
     },

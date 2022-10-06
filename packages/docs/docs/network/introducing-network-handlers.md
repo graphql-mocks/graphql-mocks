@@ -29,6 +29,10 @@ Depending on the situation different network handling will be appropriate for yo
 * `@graphql-mocks/network-pretender`
 * [Documentation](/docs/network/pretender)
 
+### Cypress
+* `@graphql-mocks/network-cypress`
+* [Documentation](/docs/network/cypress)
+
 ## Node Network Handlers
 
 ### Express
