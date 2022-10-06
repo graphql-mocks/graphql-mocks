@@ -74,7 +74,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     return findDocument(this.data, documentOrKey);
   }
 
-  truncate(): void {
+  clear(): void {
     this.current = createDocumentStore(this.sourceGraphQLSchema);
     this.history = [];
   }

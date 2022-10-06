@@ -130,7 +130,7 @@ describe('data', () => {
   });
 });
 
-describe('truncate', () => {
+describe('clear', () => {
   it('should purge all documents', async () => {
     const paper = new Paper(graphqlSchema);
 
@@ -148,7 +148,7 @@ describe('truncate', () => {
     });
 
     expect(paper.data.Person).to.have.length(2);
-    paper.truncate();
+    paper.clear();
     expect(paper.data.Person).to.have.length(0);
   });
 });
