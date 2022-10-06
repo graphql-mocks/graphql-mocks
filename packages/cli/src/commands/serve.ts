@@ -22,6 +22,7 @@ import {
   schema as schemaFlag,
   handler as handlerFlag,
 } from '../lib/common-flags';
+const cors = require('cors');
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -117,6 +118,8 @@ export default class Serve extends Command {
     (handler as any).middlewares = middlewares;
     cli.ux.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
+
+    app.use(cors());
 
     const apiEndpointPath = '/graphql';
     const graphiqlClientPath = '/client';
