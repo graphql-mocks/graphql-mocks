@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-mocks": "^0.8.4",
+    "graphql-mocks": ">=0.8.4",
     "miragejs": "^0.1.40"
   }
 }

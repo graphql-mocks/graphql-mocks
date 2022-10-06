@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-cypress",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Mohammad Ataei",
   "description": "Mock using graphql-mocks with cypress",
   "main": "dist/index.js",
@@ -27,12 +27,12 @@
   },
   "devDependencies": {
     "axios": "^0.27.2",
-    "graphql-mocks": "^0.8.4",
     "cypress": "^10.0.3",
+    "graphql-mocks": "^0.8.4",
     "vite": "^2.9.0"
   },
   "peerDependencies": {
-    "graphql-mocks": "0.7.2 || >=0.8.1",
-    "cypress": "^8.0.0 || ^ 9.0.0 || ^10.0.0"
+    "cypress": "^8.0.0 || ^ 9.0.0 || ^10.0.0",
+    "graphql-mocks": "0.7.2 || >=0.8.1"
   }
 }

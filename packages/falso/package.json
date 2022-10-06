@@ -33,6 +33,6 @@
   "peerDependencies": {
     "@ngneat/falso": "^5.3.0",
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-mocks": "^0.8.4"
+    "graphql-mocks": ">=0.8.4"
   }
 }
