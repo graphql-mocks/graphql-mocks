@@ -76,6 +76,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
   truncate(): void {
     this.current = createDocumentStore(this.sourceGraphQLSchema);
+    this.history = [];
   }
 
   private validate(_store?: DocumentStore): void {
