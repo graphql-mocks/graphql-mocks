@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-alpha.65">
 <title data-react-helmet="true">Using Resolvers | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Using Resolvers | graphql-mocks"><meta data-react-helmet="true" name="description" content="Resolvers are functions that make up the basis for how data is determined in resolving queries in GraphQL APIs. There"><meta data-react-helmet="true" property="og:description" content="Resolvers are functions that make up the basis for how data is determined in resolving queries in GraphQL APIs. There"><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/resolver/using-resolvers"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/resolver/using-resolvers"><link rel="stylesheet" href="/styles.405527d7.css">
-<link rel="preload" href="/styles.70f6f652.js" as="script">
-<link rel="preload" href="/runtime~main.65658b1b.js" as="script">
-<link rel="preload" href="/main.166ec37d.js" as="script">
-<link rel="preload" href="/1.760658ea.js" as="script">
-<link rel="preload" href="/2.becc4053.js" as="script">
-<link rel="preload" href="/242.dd63d926.js" as="script">
-<link rel="preload" href="/243.005cdddc.js" as="script">
+<link rel="preload" href="/styles.05a2ce51.js" as="script">
+<link rel="preload" href="/runtime~main.15979572.js" as="script">
+<link rel="preload" href="/main.c9f818cd.js" as="script">
+<link rel="preload" href="/1.c32a0505.js" as="script">
+<link rel="preload" href="/2.3578634f.js" as="script">
+<link rel="preload" href="/243.682dfa47.js" as="script">
+<link rel="preload" href="/244.e3edd48d.js" as="script">
 <link rel="preload" href="/935f2afb.2c0d7468.js" as="script">
-<link rel="preload" href="/17896441.d046d9dd.js" as="script">
-<link rel="preload" href="/dfbaa39d.aa3ac724.js" as="script">
+<link rel="preload" href="/17896441.72f1c918.js" as="script">
+<link rel="preload" href="/dfbaa39d.d9b3239d.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script>
@@ -83,15 +83,15 @@ assigned. This is the role of a Resolver Map which organized these Resolver Func
 <code>GraphQLSchema</code> and executed against queries and mutations, check out the
 <a href="/docs/resolver-map/using-resolver-maps">Resolver Map</a> to understand the next step in applying Resolver functions.</p><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="extending-resolvers-with-resolver-wrappers"></a>Extending Resolvers with Resolver Wrappers<a aria-hidden="true" tabindex="-1" class="hash-link" href="#extending-resolvers-with-resolver-wrappers" title="Direct link to heading">#</a></h2><p>The next section will introduce Resolver Wrappers from this library and how they can be used to allow Resolvers
 functions to be extended.</p><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="additional-resources"></a>Additional Resources<a aria-hidden="true" tabindex="-1" class="hash-link" href="#additional-resources" title="Direct link to heading">#</a></h2><ul><li><a href="https://www.apollographql.com/docs/apollo-server/data/resolvers/" target="_blank" rel="noopener noreferrer">Apollo.js Resolver Documentation</a></li><li><a href="https://graphql.org/learn/execution/" target="_blank" rel="noopener noreferrer">Official graphql.js Query Execution Documentation</a></li></ul></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/handler/handler-state"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Handler State</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/resolver/introducing-wrappers"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Introducing Resolver Wrappers »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3-RU"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#field-resolvers" class="table-of-contents__link">Field Resolvers</a><ul><li><a href="#root-query-and-mutation-field-resolvers" class="table-of-contents__link">Root (Query and Mutation) Field Resolvers</a></li><li><a href="#non-root-field-resolvers" class="table-of-contents__link">Non-Root Field Resolvers</a></li><li><a href="#default-field-resolver" class="table-of-contents__link">Default Field Resolver</a></li><li><a href="#parent-parameter-first" class="table-of-contents__link"><code>parent</code> parameter (first)</a></li><li><a href="#arg-parameter-second" class="table-of-contents__link"><code>arg</code> parameter (second)</a></li><li><a href="#context-parameter-third" class="table-of-contents__link"><code>context</code> parameter (third)</a></li><li><a href="#info-parameter-fourth" class="table-of-contents__link"><code>info</code> parameter (fourth)</a></li></ul></li><li><a href="#type-resolvers" class="table-of-contents__link">Type Resolvers</a><ul><li><a href="#value-parameter-first" class="table-of-contents__link"><code>value</code> parameter (first)</a></li><li><a href="#context-parameter-second" class="table-of-contents__link"><code>context</code> parameter (second)</a></li><li><a href="#info-parameter-third" class="table-of-contents__link"><code>info</code> parameter (third)</a></li><li><a href="#abstracttype-parameter-fourth" class="table-of-contents__link"><code>abstractType</code> parameter (fourth)</a></li><li><a href="#default-type-resolver" class="table-of-contents__link">Default Type Resolver</a></li></ul></li><li><a href="#organizing-resolvers-for-executing-graphql-queries" class="table-of-contents__link">Organizing Resolvers for Executing GraphQL queries</a></li><li><a href="#extending-resolvers-with-resolver-wrappers" class="table-of-contents__link">Extending Resolvers with Resolver Wrappers</a></li><li><a href="#additional-resources" class="table-of-contents__link">Additional Resources</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="text--center"><div>Copyright © 2022 by <a href="https://www.github.com/chadian">chadian</a></div></div></div></footer></div>
-<script src="/styles.70f6f652.js"></script>
-<script src="/runtime~main.65658b1b.js"></script>
-<script src="/main.166ec37d.js"></script>
-<script src="/1.760658ea.js"></script>
-<script src="/2.becc4053.js"></script>
-<script src="/242.dd63d926.js"></script>
-<script src="/243.005cdddc.js"></script>
+<script src="/styles.05a2ce51.js"></script>
+<script src="/runtime~main.15979572.js"></script>
+<script src="/main.c9f818cd.js"></script>
+<script src="/1.c32a0505.js"></script>
+<script src="/2.3578634f.js"></script>
+<script src="/243.682dfa47.js"></script>
+<script src="/244.e3edd48d.js"></script>
 <script src="/935f2afb.2c0d7468.js"></script>
-<script src="/17896441.d046d9dd.js"></script>
-<script src="/dfbaa39d.aa3ac724.js"></script>
+<script src="/17896441.72f1c918.js"></script>
+<script src="/dfbaa39d.d9b3239d.js"></script>
 </body>
 </html>

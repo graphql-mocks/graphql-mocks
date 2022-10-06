@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-alpha.65">
 <title data-react-helmet="true">Managing IDs | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Managing IDs | graphql-mocks"><meta data-react-helmet="true" name="description" content="IDs that exist as scalars on a GraphQL Schema are considered part of the data of a Document. GraphQL Paper doesn&#x27;t use them for tracking uniqueness although it does have ways of helping ensure that data for ID fields are kept unique and also help in generating ID values."><meta data-react-helmet="true" property="og:description" content="IDs that exist as scalars on a GraphQL Schema are considered part of the data of a Document. GraphQL Paper doesn&#x27;t use them for tracking uniqueness although it does have ways of helping ensure that data for ID fields are kept unique and also help in generating ID values."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/paper/guides/managing-ids"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/paper/guides/managing-ids"><link rel="stylesheet" href="/styles.405527d7.css">
-<link rel="preload" href="/styles.70f6f652.js" as="script">
-<link rel="preload" href="/runtime~main.65658b1b.js" as="script">
-<link rel="preload" href="/main.166ec37d.js" as="script">
-<link rel="preload" href="/1.760658ea.js" as="script">
-<link rel="preload" href="/2.becc4053.js" as="script">
-<link rel="preload" href="/242.dd63d926.js" as="script">
-<link rel="preload" href="/243.005cdddc.js" as="script">
+<link rel="preload" href="/styles.05a2ce51.js" as="script">
+<link rel="preload" href="/runtime~main.15979572.js" as="script">
+<link rel="preload" href="/main.c9f818cd.js" as="script">
+<link rel="preload" href="/1.c32a0505.js" as="script">
+<link rel="preload" href="/2.3578634f.js" as="script">
+<link rel="preload" href="/243.682dfa47.js" as="script">
+<link rel="preload" href="/244.e3edd48d.js" as="script">
 <link rel="preload" href="/935f2afb.2c0d7468.js" as="script">
-<link rel="preload" href="/17896441.d046d9dd.js" as="script">
-<link rel="preload" href="/e930a1e2.373ec42b.js" as="script">
+<link rel="preload" href="/17896441.72f1c918.js" as="script">
+<link rel="preload" href="/e930a1e2.a89db6b8.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script>
@@ -29,15 +29,15 @@
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token comment" style="color:#999988;font-style:italic">// set incremented id</span><span class="token plain"></span></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token dom variable" style="color:#36acaa">document</span><span class="token punctuation" style="color:#393A34">.</span><span class="token property-access">id</span><span class="token plain"> </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token known-class-name class-name">String</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">ids</span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain">typename</span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block">
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token dom variable" style="color:#36acaa">document</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block">
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> paper </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">Paper</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">graphqlSchema</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> operations</span><span class="token punctuation" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> customCreate </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span></div></div></div></div></div><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="validating-unique-ids"></a>Validating Unique IDs<a aria-hidden="true" tabindex="-1" class="hash-link" href="#validating-unique-ids" title="Direct link to heading">#</a></h2><p>By default GraphQL Paper is checking for unique IDs on a per-type basis with the <a href="/docs/paper/validations#uniqueidfieldvalidator"><code>uniqueIdFieldValidator</code></a>. If the ID constraint is more complicated than per type then it&#x27;s recommended to create a custom field validator. <a href="/docs/paper/validations#creating-custom-field-validators">Learn more about creating custom field validators</a>.</p></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/paper/guides/with-graphql"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« Using GraphQL Paper with GraphQL</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/cli/introducing-gqlmocks"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Introducing the gqlmocks CLI »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3-RU"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#automatically-generating-ids" class="table-of-contents__link">Automatically Generating IDs</a><ul><li><a href="#using-a-custom-hook" class="table-of-contents__link">Using a Custom Hook</a></li><li><a href="#using-a-custom-operation" class="table-of-contents__link">Using a Custom Operation</a></li></ul></li><li><a href="#validating-unique-ids" class="table-of-contents__link">Validating Unique IDs</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="text--center"><div>Copyright © 2022 by <a href="https://www.github.com/chadian">chadian</a></div></div></div></footer></div>
-<script src="/styles.70f6f652.js"></script>
-<script src="/runtime~main.65658b1b.js"></script>
-<script src="/main.166ec37d.js"></script>
-<script src="/1.760658ea.js"></script>
-<script src="/2.becc4053.js"></script>
-<script src="/242.dd63d926.js"></script>
-<script src="/243.005cdddc.js"></script>
+<script src="/styles.05a2ce51.js"></script>
+<script src="/runtime~main.15979572.js"></script>
+<script src="/main.c9f818cd.js"></script>
+<script src="/1.c32a0505.js"></script>
+<script src="/2.3578634f.js"></script>
+<script src="/243.682dfa47.js"></script>
+<script src="/244.e3edd48d.js"></script>
 <script src="/935f2afb.2c0d7468.js"></script>
-<script src="/17896441.d046d9dd.js"></script>
-<script src="/e930a1e2.373ec42b.js"></script>
+<script src="/17896441.72f1c918.js"></script>
+<script src="/e930a1e2.a89db6b8.js"></script>
 </body>
 </html>

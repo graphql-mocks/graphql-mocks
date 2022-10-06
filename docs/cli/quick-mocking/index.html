@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="Docusaurus v2.0.0-alpha.65">
 <title data-react-helmet="true">Quick Mocking with Serve | graphql-mocks</title><meta data-react-helmet="true" name="docsearch:version" content="current,latest"><meta data-react-helmet="true" name="twitter:card" content="summary_large_image"><meta data-react-helmet="true" property="og:title" content="Quick Mocking with Serve | graphql-mocks"><meta data-react-helmet="true" name="description" content="Using the gqlmocks serve command is the fastest way to get mocking only a GraphQL Schema."><meta data-react-helmet="true" property="og:description" content="Using the gqlmocks serve command is the fastest way to get mocking only a GraphQL Schema."><meta data-react-helmet="true" property="og:url" content="http://www.graphql-mocks.com/docs/cli/quick-mocking"><link data-react-helmet="true" rel="shortcut icon" href="/img/favicon.png"><link data-react-helmet="true" rel="canonical" href="http://www.graphql-mocks.com/docs/cli/quick-mocking"><link rel="stylesheet" href="/styles.405527d7.css">
-<link rel="preload" href="/styles.70f6f652.js" as="script">
-<link rel="preload" href="/runtime~main.65658b1b.js" as="script">
-<link rel="preload" href="/main.166ec37d.js" as="script">
-<link rel="preload" href="/1.760658ea.js" as="script">
-<link rel="preload" href="/2.becc4053.js" as="script">
-<link rel="preload" href="/242.dd63d926.js" as="script">
-<link rel="preload" href="/243.005cdddc.js" as="script">
+<link rel="preload" href="/styles.05a2ce51.js" as="script">
+<link rel="preload" href="/runtime~main.15979572.js" as="script">
+<link rel="preload" href="/main.c9f818cd.js" as="script">
+<link rel="preload" href="/1.c32a0505.js" as="script">
+<link rel="preload" href="/2.3578634f.js" as="script">
+<link rel="preload" href="/243.682dfa47.js" as="script">
+<link rel="preload" href="/244.e3edd48d.js" as="script">
 <link rel="preload" href="/935f2afb.2c0d7468.js" as="script">
-<link rel="preload" href="/17896441.d046d9dd.js" as="script">
-<link rel="preload" href="/522099a6.53a50839.js" as="script">
+<link rel="preload" href="/17896441.72f1c918.js" as="script">
+<link rel="preload" href="/522099a6.2fde1fb5.js" as="script">
 </head>
 <body>
 <script>!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){var t=null;try{t=localStorage.getItem("theme")}catch(t){}return t}();t(null!==e?e:"light")}()</script>
@@ -23,15 +23,15 @@
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain"> Local GraphQL API:  http://localhost:4444/graphql</span></div><div class="token-line" style="color:#393A34"><span class="token plain"> IDE client:         http://localhost:4444/client</span></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block">
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain">Press Ctrl+C to stop</span></div></div></div></div></div><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="local-ide"></a>Local IDE<a aria-hidden="true" tabindex="-1" class="hash-link" href="#local-ide" title="Direct link to heading">#</a></h2><p>The provided the <code>/client</code> path available on the server provides a fully running GraphiQL IDE.</p><p><img alt="Screenshot of GraphiQL IDE" src="/assets/images/cli-graphiql-a12763b5229e852fd78fe77e6085ef93.png"></p><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="fast-mocking-with-remote-schema-and-falso"></a>Fast Mocking with Remote Schema and Falso<a aria-hidden="true" tabindex="-1" class="hash-link" href="#fast-mocking-with-remote-schema-and-falso" title="Direct link to heading">#</a></h2><p>The fastest way to mocking a GraphQL API without any setup is to use the Falso middleware and specifying a remote url to a GraphQL Schema file or remote GraphQL API. The Falso middleware will handle</p><div class="mdxCodeBlock_24uS"><div class="codeBlockContent_142n"><button type="button" aria-label="Copy code to clipboard" class="copyButton_1-Hy">Copy</button><div tabindex="0" class="prism-code language-undefined codeBlock_196X"><div class="codeBlockLines_1yEX" style="color:#393A34;background-color:#f6f8fa"><div class="token-line" style="color:#393A34"><span class="token plain"># Fetching schema from a running GraphQL API server</span></div><div class="token-line" style="color:#393A34"><span class="token plain">npx gqlmocks serve --fake --schema &quot;http://remote-api.com/graphql&quot;</span></div><div class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block">
 </span></div><div class="token-line" style="color:#393A34"><span class="token plain"># Fetching .graphql file from url</span></div><div class="token-line" style="color:#393A34"><span class="token plain">npx gqlmocks serve --fake --schema &quot;http://s3.aws.com/schema.graphql&quot;</span></div></div></div></div></div><p>Additional <code>--header</code> flags can be used to specify any headers required to fetch the remote schema.</p><h2><a aria-hidden="true" tabindex="-1" class="anchor enhancedAnchor_1YVU" id="using-serve-with-a-local-handler-or-config"></a>Using <code>serve</code> with a Local Handler or Config<a aria-hidden="true" tabindex="-1" class="hash-link" href="#using-serve-with-a-local-handler-or-config" title="Direct link to heading">#</a></h2><p>If a more refined mocking is setup locally the <code>gqlmocks serve</code> command will look for a local project config file to serve. Additionally a specific handler or config file can be served with the <code>--handle</code> and <code>--config</code> flags respectively.</p></div></article><div class="margin-vert--lg"><nav class="pagination-nav" aria-label="Blog list page navigation"><div class="pagination-nav__item"><a class="pagination-nav__link" href="/docs/cli/commands"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">« CLI Commands</div></a></div><div class="pagination-nav__item pagination-nav__item--next"><a class="pagination-nav__link" href="/docs/cli/gqlmocks-config"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">gqlmocks Config File »</div></a></div></nav></div></div></div><div class="col col--3"><div class="tableOfContents_3-RU"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#local-server" class="table-of-contents__link">Local Server</a></li><li><a href="#local-ide" class="table-of-contents__link">Local IDE</a></li><li><a href="#fast-mocking-with-remote-schema-and-falso" class="table-of-contents__link">Fast Mocking with Remote Schema and Falso</a></li><li><a href="#using-serve-with-a-local-handler-or-config" class="table-of-contents__link">Using <code>serve</code> with a Local Handler or Config</a></li></ul></div></div></div></div></main></div></div><footer class="footer footer--dark"><div class="container"><div class="text--center"><div>Copyright © 2022 by <a href="https://www.github.com/chadian">chadian</a></div></div></div></footer></div>
-<script src="/styles.70f6f652.js"></script>
-<script src="/runtime~main.65658b1b.js"></script>
-<script src="/main.166ec37d.js"></script>
-<script src="/1.760658ea.js"></script>
-<script src="/2.becc4053.js"></script>
-<script src="/242.dd63d926.js"></script>
-<script src="/243.005cdddc.js"></script>
+<script src="/styles.05a2ce51.js"></script>
+<script src="/runtime~main.15979572.js"></script>
+<script src="/main.c9f818cd.js"></script>
+<script src="/1.c32a0505.js"></script>
+<script src="/2.3578634f.js"></script>
+<script src="/243.682dfa47.js"></script>
+<script src="/244.e3edd48d.js"></script>
 <script src="/935f2afb.2c0d7468.js"></script>
-<script src="/17896441.d046d9dd.js"></script>
-<script src="/522099a6.53a50839.js"></script>
+<script src="/17896441.72f1c918.js"></script>
+<script src="/522099a6.2fde1fb5.js"></script>
 </body>
 </html>
