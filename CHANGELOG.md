@@ -148,3 +148,11 @@
 #### Update READMEs and package documentation ([#170](https://github.com/graphql-mocks/graphql-mocks/pull/170))
 
 * (feature) Added package README
+
+## @graphql-mocks/network-cypress
+
+### @graphql-mocks/network-cypress@0.1.0
+
+#### feat: add `@graphql-mocks/network-cypress` package ([#196](https://github.com/graphql-mocks/graphql-mocks/pull/196))
+
+* (feature) Introducing `@graphql-mocks/network-cypress`, a new network handler for cypress
