@@ -92,6 +92,21 @@ describe('serve', function () {
     .stdout()
     .command([
       'serve',
+      '--schema',
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/schema.graphql'),
+      '--handler',
+      resolve(__dirname, '../test-helpers/test-package/graphql-mocks/handler.js'),
+    ])
+    .it('allows CORS by default', async (ctx) => {
+      expect(ctx.stdout).to.contain('Press Ctrl+C');
+      const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ hello }` });
+      expect(result.headers['access-control-allow-origin']).to.equal('*');
+    });
+
+  test
+    .stdout()
+    .command([
+      'serve',
       '--fake',
       '--schema',
       'https://api.spacex.land/graphql',
@@ -104,7 +119,7 @@ describe('serve', function () {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
       const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ ships { id } }` });
-      const axiosCallArgs = (axios.post as any).firstCall.args;
+      const axiosCallArgs = axiosPostSpy.firstCall.args;
       expect(axiosCallArgs[0]).to.equal('https://api.spacex.land/graphql');
       expect(axiosCallArgs[1].Headers).to.deep.equal({ OtherHeader: 'Other Value', Authorization: 'Bearer Token' });
       // using the public api space x api with fake, should generate some fake ships data
