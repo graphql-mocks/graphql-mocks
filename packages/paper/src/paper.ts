@@ -74,6 +74,11 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     return findDocument(this.data, documentOrKey);
   }
 
+  clear(): void {
+    this.current = createDocumentStore(this.sourceGraphQLSchema);
+    this.history = [];
+  }
+
   private validate(_store?: DocumentStore): void {
     const store = _store ?? this.current;
 
