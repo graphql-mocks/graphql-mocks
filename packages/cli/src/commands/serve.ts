@@ -22,7 +22,7 @@ import {
   schema as schemaFlag,
   handler as handlerFlag,
 } from '../lib/common-flags';
-const cors = require('cors');
+import cors from 'cors';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {

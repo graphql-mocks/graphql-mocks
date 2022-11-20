@@ -17,6 +17,7 @@
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-version": "^1.0.4",
+    "@types/cors": "^2.8.12",
     "axios": "^0.23.0",
     "chalk": "^4.1.2",
     "config": "^3.3.6",
