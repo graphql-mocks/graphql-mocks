@@ -22,7 +22,7 @@ import {
   schema as schemaFlag,
   handler as handlerFlag,
 } from '../lib/common-flags';
-const cors = require('cors');
+import cors from 'cors';
 
 function refreshModuleOnChange(module: string, cb: any) {
   watchFile(resolve(module), () => {
@@ -55,7 +55,7 @@ export default class Serve extends Command {
 
   static examples = [
     `$ gqlmocks serve --schema ../schema.graphql`,
-    `$ gqlmocks serve --schema ../schema.graphql --handler ../handler.ts`,
+    `$ gqlmocks serve --handler ../handler.ts`,
     `$ gqlmocks serve --schema http://s3-bucket/schema.graphql --fake`,
     `$ gqlmocks serve --schema http://graphql-api/ --fake`,
     `$ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --fake`,
@@ -98,7 +98,7 @@ export default class Serve extends Command {
     return loaded;
   }
 
-  async startServer({ handlerPath, schema, port, middlewares }: any) {
+  async startServer({ handlerPath, schemaPath, schemaHeaders, port, middlewares }: any) {
     let handler;
 
     if (handlerPath) {
@@ -107,15 +107,22 @@ export default class Serve extends Command {
       } catch (e) {
         this.error(`Unable to find handler at ${handlerPath}.\n\n${(e as Error).message}`);
       }
-    } else {
+    } else if (schemaPath) {
+      const schema = await createSchemaFromLocation(schemaPath, schemaHeaders);
+
       handler = new GraphQLHandler({
         dependencies: {
           graphqlSchema: schema,
         },
       });
+    } else {
+      this.error(
+        'A graphql schema or handler path is required, specify a schema or handler via a gqlmocks config, or --schema or --handler flag',
+      );
     }
 
-    (handler as any).middlewares = middlewares;
+    (handler as any).middlewares = [...(handler as any).middlewares, ...middlewares];
+
     cli.ux.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
 
@@ -124,6 +131,7 @@ export default class Serve extends Command {
     const apiEndpointPath = '/graphql';
     const graphiqlClientPath = '/client';
     app.post(apiEndpointPath, expressMiddleware(handler as GraphQLHandler));
+
     app.use(
       graphiqlClientPath,
       graphiqlMiddleware(
@@ -160,7 +168,7 @@ export default class Serve extends Command {
 
     const { config, errors } = loadConfig(flags.config);
 
-    const headers = { ...config?.schema?.headers, ...collapseHeaders(flags.header) };
+    const schemaHeaders = { ...config?.schema?.headers, ...collapseHeaders(flags.header) };
 
     if (config && errors && errors.length) {
       this.warn(
@@ -169,14 +177,8 @@ export default class Serve extends Command {
     }
 
     const schemaPath = flags.schema ?? config?.schema?.path;
-
-    if (!schemaPath) {
-      this.error('A GraphQLSchema is required, specify a schema via a gqlmocks config or --schema flag');
-    }
-
     const handlerPath = flags.handler ?? config?.handler?.path;
 
-    const schema = await createSchemaFromLocation(schemaPath, headers);
     const middlewares: ResolverMapMiddleware[] = [];
 
     if (flags.fake) {
@@ -185,7 +187,7 @@ export default class Serve extends Command {
 
     const start = async () => {
       const up = async () => {
-        this.server = await this.startServer({ handlerPath, schema, port, middlewares });
+        this.server = await this.startServer({ handlerPath, schemaPath, schemaHeaders, port, middlewares });
       };
 
       if (this.server) {
