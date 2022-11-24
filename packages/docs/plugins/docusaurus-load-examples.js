@@ -72,9 +72,20 @@ module.exports = function (context, options) {
     },
 
     configureWebpack(config, isServer, utils) {
-      const { getBabelLoader, getCacheLoader } = utils;
-      const { rehypePlugins, remarkPlugins } = options;
+      const { siteDir, siteConfig } = context;
+      const { getJSLoader } = utils;
       const pluginCacheDir = path.resolve(config.resolve.alias['@generated'], 'docusaurus-load-examples/default');
+
+      const mdxLoaderOptions = {
+        admonitions: true,
+        staticDirs: siteConfig.staticDirectories.map((dir) => path.resolve(siteDir, dir)),
+        siteDir,
+        // External MDX files are always meant to be imported as partials
+        isMDXPartial: () => true,
+        // External MDX files might have front matter, just disable the warning
+        isMDXPartialFrontMatterWarningDisabled: true,
+        markdownConfig: siteConfig.markdown,
+      };
 
       return {
         resolve: {
@@ -88,14 +99,10 @@ module.exports = function (context, options) {
               test: /(\.md|\.mdx)?$/,
               include: [pluginCacheDir],
               use: [
-                getCacheLoader(isServer),
-                getBabelLoader(isServer),
+                getJSLoader({ isServer }),
                 {
                   loader: require.resolve('@docusaurus/mdx-loader'),
-                  options: {
-                    remarkPlugins,
-                    rehypePlugins,
-                  },
+                  options: mdxLoaderOptions,
                 },
               ].filter(Boolean),
             },
