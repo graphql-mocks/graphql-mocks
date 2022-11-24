@@ -24,8 +24,8 @@
     "copy-cli-readme": "cp ../cli/README.md docs/cli/_readme.md"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.65",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.65",
+    "@docusaurus/core": "^2.2.0",
+    "@docusaurus/preset-classic": "^2.2.0",
     "@graphql-mocks/mirage": "^0.6.0",
     "classnames": "^2.2.6",
     "graphiql": "1.5.17",
