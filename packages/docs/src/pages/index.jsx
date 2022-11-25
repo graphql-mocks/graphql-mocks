@@ -8,7 +8,6 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 import GraphiQL from 'graphiql';
 import 'graphiql/graphiql.css';
-import graphqlHandler from '../../code-examples/home/handler.source';
 
 const defaultQuery = `{
   movies(name:"Mo") {
@@ -19,6 +18,9 @@ const defaultQuery = `{
     }
   }
 }`;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function, valid-typeof
+let Handler = typeof window === 'undefined' ? () => {} : import('../../code-examples/home/handler.source');
 
 function Home() {
   const context = useDocusaurusContext();
@@ -149,7 +151,8 @@ function Home() {
                 }}
                 query={defaultQuery}
                 docExplorerOpen={false}
-                fetcher={(data) => {
+                fetcher={async (data) => {
+                  let graphqlHandler = (await Handler).createHandler();
                   return graphqlHandler.query(data.query).then((result) => {
                     return result;
                   });
