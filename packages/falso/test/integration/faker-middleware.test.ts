@@ -8,36 +8,40 @@ const graphqlSchema = `
   }
 
   type Query {
-    person: Person!,
-    animal: Animal!,
+    person: Person!
+    animal: Animal!
+    alive: Alive!
+    alives: [Alive!]!
+    people: [Person!]!
   }
 
-  type Person {
+  type Person implements HasLegs {
     id: ID!
     name: String!
     city: String!
     pet: Animal!
+    numberOfLegs: Int!
   }
 
-  type Animal {
+  type Animal implements HasLegs {
     id: ID!
     kind: String!
+    numberOfLegs: Int!
   }
+
+  interface HasLegs {
+    numberOfLegs: Int!
+  }
+
+  union Alive = Person | Animal
 `;
 
 describe('falso-middleware', () => {
-  it('resolves with a graphql handler', async () => {
-    const handler = new GraphQLHandler({
-      resolverMap: {
-        Person: {
-          pets() {
-            return {
-              id: 'resolved static person.animal.id',
-              kind: 'resolved static person.animal.kind',
-            };
-          },
-        },
+  let handler: GraphQLHandler;
 
+  beforeEach(() => {
+    handler = new GraphQLHandler({
+      resolverMap: {
         Animal: {
           id() {
             return 'resolved static animal.id';
@@ -52,7 +56,9 @@ describe('falso-middleware', () => {
         graphqlSchema,
       },
     });
+  });
 
+  it('resolves with a graphql handler', async () => {
     const result = await handler.query(`
       {
         person {
@@ -88,5 +94,85 @@ describe('falso-middleware', () => {
       },
       'it uses static resolvers for connected types',
     );
+  });
+
+  it('resolves with abstract types', async () => {
+    const result = await handler.query(`
+      {
+        person {
+          numberOfLegs
+        }
+
+        people {
+          numberOfLegs
+          pet {
+            numberOfLegs
+          }
+        }
+
+
+        animal {
+          numberOfLegs
+        }
+
+        alive {
+          __typename
+
+          ... on Person {
+            name
+            city
+            numberOfLegs
+          }
+
+          ... on Animal {
+            kind
+            numberOfLegs
+          }
+        }
+
+        alives {
+          __typename
+
+          ... on Person {
+            name
+            city
+            numberOfLegs
+          }
+
+          ... on Animal {
+            kind
+            numberOfLegs
+          }
+        }
+      }
+    `);
+
+    expect(typeof result.data.person.numberOfLegs).to.equal('number');
+    expect(typeof result.data.animal.numberOfLegs).to.equal('number');
+    expect(typeof result.data.people[0].numberOfLegs).to.equal('number');
+    expect(typeof result.data.people[0].pet.numberOfLegs).to.equal('number');
+
+    const typenames = ['Person', 'Animal'];
+    const [personTypeName, animalTypeName] = typenames;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const testAliveType = (alive: Record<string, any>) => {
+      expect(alive.__typename).to.be.oneOf(typenames);
+
+      if (alive.__typename === personTypeName) {
+        expect(alive.name).to.exist;
+        expect(alive.city).to.exist;
+        expect(alive.numberOfLegs).to.exist;
+      }
+
+      if (alive.__typename === animalTypeName) {
+        expect(alive.kind).to.exist;
+        expect(alive.numberOfLegs).to.exist;
+      }
+    };
+
+    testAliveType(result.data.alive);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    result.data.alives.forEach((alive: Record<string, any>) => testAliveType(alive));
   });
 });
