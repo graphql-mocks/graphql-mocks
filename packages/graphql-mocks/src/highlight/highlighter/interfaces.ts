@@ -3,9 +3,9 @@ import { TypeReference, HighlighterFactory, Highlighter } from '../types';
 import { HIGHLIGHT_ALL } from './constants';
 
 export class InterfaceHighlighter implements Highlighter {
-  targets: string[];
+  targets: TypeReference[];
 
-  constructor(targets: string[]) {
+  constructor(targets: TypeReference[]) {
     if (targets.length === 0) {
       targets = [HIGHLIGHT_ALL];
     }
@@ -17,7 +17,7 @@ export class InterfaceHighlighter implements Highlighter {
     return InterfaceHighlighter.expandTargets(schema, this.targets);
   }
 
-  static expandTargets(schema: GraphQLSchema, targets: string[]): TypeReference[] {
+  static expandTargets(schema: GraphQLSchema, targets: TypeReference[]): TypeReference[] {
     const interfaceTypeNames = Object.values(schema.getTypeMap())
       .filter(isInterfaceType)
       .map((i) => i.name);
@@ -30,6 +30,6 @@ export class InterfaceHighlighter implements Highlighter {
   }
 }
 
-export const interfaces: HighlighterFactory = function type(...interfaceNames: string[]) {
+export const interfaces: HighlighterFactory = function type(...interfaceNames: TypeReference[]) {
   return new InterfaceHighlighter(interfaceNames);
 };

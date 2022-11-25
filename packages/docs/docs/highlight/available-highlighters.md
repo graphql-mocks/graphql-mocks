@@ -165,16 +165,45 @@ This can be done by either calling the highlighter with no arguments, or by prov
 
 ```js
 import { HIGHLIGHT_ALL } from 'graphql-mocks/highlight';
-
 hi(graphqlSchema).include(
   // by specifying no arguments, all interfaces are highlighted
   interfaces(),
-
   // alternatively, the HIGHLIGHT_ALL will explicitly
   // highlight all interfaces also
   interfaces(HIGHLIGHT_ALL)
 );
 ```
+
+## `interfaceField`
+Package: `graphql-mocks`
+
+```js
+import { interfaceField } from 'graphql-mocks/highlight';
+```
+
+This highlighter highlights interfaces *with their fields* on the GraphQL Schema.
+
+**Note:** This is different than the `interfaces` highlighter which highlights the interface type name only.
+
+By default all interfaces with their fields will be highlighted when no arguments passed in:
+
+```js
+hi(graphqlSchema).include(
+  interfaceField()
+);
+```
+
+Specific interfaces with fields can be highlighted:
+
+```js
+hi(graphqlSchema).include(
+  interfaceField(['Purchasable', 'cost'], ['Commentable', 'comment'])
+);
+```
+
+### Highlight All
+`interfaceField` supports the same options for wildcard highlighting all as the [`field` highligher](/docs/highlight/available-highlighters#wildcard-highlighting).
+
 
 ## `union`
 Package: `graphql-mocks`

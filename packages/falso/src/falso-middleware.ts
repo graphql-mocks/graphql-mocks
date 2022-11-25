@@ -4,7 +4,7 @@ import { highlightAllCallback } from 'graphql-mocks/resolver-map/utils';
 import { falsoFieldResolver } from './falso-field-resolver';
 import { FalsoMiddlewareOptions } from './types';
 import { falsoTypeResolver } from './falso-type-resolver';
-import { fromResolverMap, combine, union, interfaces, field } from 'graphql-mocks/highlight';
+import { fromResolverMap, combine, union, interfaces, interfaceField, field } from 'graphql-mocks/highlight';
 import { coerceHighlight, walk } from 'graphql-mocks/highlight/utils';
 import { setResolver } from 'graphql-mocks/resolver-map';
 
@@ -20,8 +20,9 @@ export function falsoMiddleware(options?: FalsoMiddlewareOptions): ResolverMapMi
       highlight = highlight.exclude(fromResolverMap(resolverMap));
     }
 
-    const fieldResolvableHighlight = highlight.filter(field());
+    const fieldResolvableHighlight = highlight.filter(field()).exclude(interfaceField());
     const fieldResolver = falsoFieldResolver(falsoOptions);
+
     await walk(graphqlSchema, fieldResolvableHighlight.references, ({ reference }) => {
       setResolver(resolverMap, reference, fieldResolver, {
         graphqlSchema,
