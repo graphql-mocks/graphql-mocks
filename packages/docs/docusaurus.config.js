@@ -3,9 +3,6 @@
 
 const path = require('path');
 
-// needed to polyfill Events on the server
-require('event-target-polyfill');
-
 module.exports = {
   title: 'graphql-mocks',
   tagline: 'GraphQL Mock API Framework',

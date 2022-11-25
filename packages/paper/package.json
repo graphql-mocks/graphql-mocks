@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
     "pretest": "tsc --noEmit && yarn lint",
-    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r \"event-target-polyfill\" -r ts-node/register \"./test/**/*.test.ts\"",
+    "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "copy-readme": "cp README.md dist/README.md",
@@ -22,7 +22,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 14.0.0"
+    "node": ">= 16.0.0"
   },
   "dependencies": {
     "immer": "^9.0.6",
@@ -32,9 +32,6 @@
   },
   "peerDependencies": {
     "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
-  },
-  "optionalDependencies": {
-    "event-target-polyfill": "^0.0.3"
   },
   "devDependencies": {
     "@types/ramda": "^0.28.12",
