@@ -18,28 +18,6 @@ paper.events.addEventListener('create', (event) => {
 
 [`removeEventListener`](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener) is also available to stop listening for an event for a particular listener.
 
-### Polyfilling `EventTarget` for Node.js
-
-If using a Node.js version 14 and higher `EventTarget` should be supported, otherwise install the [`event-target-polyfill`](https://www.npmjs.com/package/event-target-polyfill) package.
-
-```shell
-# npm
-npm install --save-dev event-target-polyfill
-
-# yarn
-yarn add --dev event-target-polyfill
-```
-
-Then include it early on in a top-level file before using GraphQL Paper
-
-```js
-// using common js
-require('event-target-polyfill');
-
-// using ES Module imports
-import 'event-target-polyfill';
-```
-
 ## Library Events
 
 The following events are provided by default from GraphQL Paper when a document is created, removed, or modified.
