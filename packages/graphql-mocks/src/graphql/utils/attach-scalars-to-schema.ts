@@ -23,6 +23,7 @@ export function attachScalarsToSchema(schema: GraphQLSchema, scalarMap: ScalarMa
     const schemaScalar = scalarTypeMap[scalarName];
 
     for (const key in scalarDefinition) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (schemaScalar as any)[key] = (scalarDefinition as any)[key];
     }
   }

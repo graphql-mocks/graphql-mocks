@@ -49,6 +49,7 @@ describe('wrapper/latency', function () {
 
   it('delays for a specific amount of milliseconds', async function () {
     const latency = 1000;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const wrappedResolver = await latencyWrapper(latency).wrap(resolverSpy, {} as any);
     timer.start();
     await wrappedResolver(anyArg, anyArg, anyArg, anyArg);
@@ -60,6 +61,7 @@ describe('wrapper/latency', function () {
 
   it('delays for a range of milliseconds', async function () {
     const latency: [number, number] = [1000, 1500];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const wrappedResolver = await latencyWrapper(latency).wrap(resolverSpy, {} as any);
     timer.start();
     await wrappedResolver(anyArg, anyArg, anyArg, anyArg);

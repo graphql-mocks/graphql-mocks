@@ -128,11 +128,11 @@ describe('graphql/utils', function () {
     });
 
     it('adds a custom scalar by scalar definition', function () {
-      let serialize = spy();
-      let parseLiteral = spy();
-      let parseValue = spy();
+      const serialize = spy();
+      const parseLiteral = spy();
+      const parseValue = spy();
 
-      let scalarDefinition = {
+      const scalarDefinition = {
         serialize,
         parseLiteral,
         parseValue,
@@ -149,9 +149,9 @@ describe('graphql/utils', function () {
     });
 
     it('adds a custom scalar by GraphQLScalarType instance', function () {
-      let serialize = spy();
-      let parseLiteral = spy();
-      let parseValue = spy();
+      const serialize = spy();
+      const parseLiteral = spy();
+      const parseValue = spy();
 
       const scalarType = new GraphQLScalarType({
         name: 'JSON',
