@@ -8,10 +8,22 @@ const chalk = require('chalk');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
-function yarnAndLink() {
+function yarnAndLink({ retry }) {
   console.log(chalk.blue(`running \`yarn\` and \`yarn link-packages\``));
-  execSync(`yarn`);
-  execSync(`yarn link-packages`);
+  retry = retry ?? true;
+  try {
+    execSync(`yarn`);
+    execSync(`yarn link-packages`);
+  } catch (e) {
+    if (retry) {
+      console.error(e);
+      console.log('Cleaning cache and retrying');
+      execSync(`yarn cache clean`);
+      yarnAndLink({ retry: false });
+    } else {
+      throw e;
+    }
+  }
   console.log(chalk.green(`✅ finished running \`yarn\` and \`yarn link-packages\``));
 }
 
