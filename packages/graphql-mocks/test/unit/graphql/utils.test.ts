@@ -1,6 +1,7 @@
-import { buildSchema, GraphQLSchema, GraphQLObjectType, GraphQLFieldMap } from 'graphql';
-import { attachFieldResolversToSchema } from '../../../src/graphql/utils';
+import { buildSchema, GraphQLSchema, GraphQLObjectType, GraphQLFieldMap, GraphQLScalarType } from 'graphql';
+import { attachFieldResolversToSchema, attachScalarsToSchema } from '../../../src/graphql/utils';
 import { expect } from 'chai';
+import { spy } from 'sinon';
 
 describe('graphql/utils', function () {
   context('#attachFieldResolversToSchema', function () {
@@ -106,6 +107,67 @@ describe('graphql/utils', function () {
       });
 
       expect(queryFields.object.resolve, 'skips adding a resolver that is not a function').to.equal(undefined);
+    });
+  });
+
+  context('#attachScalarsToSchema', function () {
+    let schema: GraphQLSchema;
+
+    beforeEach(function () {
+      schema = buildSchema(`
+        schema {
+          query: Query
+        }
+
+        scalar JSON
+
+        type Query {
+          json: JSON!
+        }
+      `);
+    });
+
+    it('adds a custom scalar by scalar definition', function () {
+      let serialize = spy();
+      let parseLiteral = spy();
+      let parseValue = spy();
+
+      let scalarDefinition = {
+        serialize,
+        parseLiteral,
+        parseValue,
+      };
+
+      attachScalarsToSchema(schema, {
+        JSON: scalarDefinition,
+      });
+
+      const jsonScalar = schema.getType('JSON') as GraphQLScalarType;
+      expect(jsonScalar.serialize).to.equal(serialize);
+      expect(jsonScalar.parseLiteral).to.equal(parseLiteral);
+      expect(jsonScalar.parseValue).to.equal(parseValue);
+    });
+
+    it('adds a custom scalar by GraphQLScalarType instance', function () {
+      let serialize = spy();
+      let parseLiteral = spy();
+      let parseValue = spy();
+
+      const scalarType = new GraphQLScalarType({
+        name: 'JSON',
+        serialize,
+        parseLiteral,
+        parseValue,
+      });
+
+      attachScalarsToSchema(schema, {
+        JSON: scalarType,
+      });
+
+      const jsonScalar = schema.getType('JSON') as GraphQLScalarType;
+      expect(jsonScalar.serialize).to.equal(serialize);
+      expect(jsonScalar.parseLiteral).to.equal(parseLiteral);
+      expect(jsonScalar.parseValue).to.equal(parseValue);
     });
   });
 });
