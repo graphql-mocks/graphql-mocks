@@ -8,9 +8,8 @@ const chalk = require('chalk');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
-function yarnAndLink({ retry }) {
+function yarnAndLink({ retry } = { retry: true }) {
   console.log(chalk.blue(`running \`yarn\` and \`yarn link-packages\``));
-  retry = retry ?? true;
   try {
     execSync(`yarn`);
     execSync(`yarn link-packages`);
