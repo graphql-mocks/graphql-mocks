@@ -5,6 +5,7 @@ import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap, ResolverMapMiddleware } from '../../../src/types';
 import { spyWrapper } from '@graphql-mocks/sinon';
 import { embed } from '../../../src/resolver-map/embed';
+import { GraphQLScalarType } from 'graphql';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -161,6 +162,85 @@ Syntax Error: Unexpected Name "NOT"`);
       handler.applyMiddlewares([middleware, middleware], { reset: true });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((handler as any).middlewares.length).to.equal(2);
+    });
+  });
+
+  context('scalars', function () {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let createHandler: any;
+    const queryDateReturn = new Date('July 4, 2022');
+
+    const serialize = (value: unknown) => {
+      if (!(value instanceof Date)) {
+        throw new TypeError();
+      }
+
+      return value.getTime(); // Convert outgoing Date to integer for JSON
+    };
+
+    beforeEach(function () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      createHandler = (dateScalar: any) => {
+        const handler = new GraphQLHandler({
+          scalarMap: {
+            Date: dateScalar,
+          },
+
+          resolverMap: {
+            Query: {
+              date: () => queryDateReturn,
+            },
+          },
+
+          dependencies: {
+            graphqlSchema: `
+              schema {
+                query: Query
+              }
+  
+              scalar Date
+            
+              type Query {
+                date: Date!
+              }
+            `,
+          },
+        });
+
+        return handler;
+      };
+    });
+
+    it('uses a custom GraphQLScalarType', async function () {
+      const scalarType = new GraphQLScalarType({
+        name: 'Date',
+        serialize: serialize,
+      });
+
+      const handler = createHandler(scalarType);
+      const result = await handler.query(`
+        {
+          date
+        }
+      `);
+
+      expect(typeof result.data.date).to.equal('number');
+      expect(result.data.date).to.equal(queryDateReturn.getTime());
+    });
+
+    it('uses a custom bare scalar definition', async function () {
+      const handler = createHandler({
+        serialize,
+      });
+
+      const result = await handler.query(`
+        {
+          date
+        }
+      `);
+
+      expect(typeof result.data.date).to.equal('number');
+      expect(result.data.date).to.equal(queryDateReturn.getTime());
     });
   });
 

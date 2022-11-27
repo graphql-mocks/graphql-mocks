@@ -10,8 +10,9 @@ export function isScalarDefinition(
 
   const hasRequiredScalarDefinitionProperties =
     possibleScalarDefinition &&
-    'parseValue' in possibleScalarDefinition &&
-    'parseLiteral' in possibleScalarDefinition &&
-    'serialize' in possibleScalarDefinition;
+    ('parseValue' in possibleScalarDefinition ||
+      'parseLiteral' in possibleScalarDefinition ||
+      'serialize' in possibleScalarDefinition);
+
   return isScalarType(possibleScalarDefinition) || Boolean(hasRequiredScalarDefinitionProperties);
 }

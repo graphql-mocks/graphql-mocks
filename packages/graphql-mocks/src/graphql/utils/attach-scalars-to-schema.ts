@@ -10,6 +10,7 @@ export function attachScalarsToSchema(schema: GraphQLSchema, scalarMap: ScalarMa
       [scalar.name]: scalar,
     };
   }, {});
+
   const resolverMapScalars = Object.keys(scalarMap).filter((type) => Object.keys(scalarTypeMap).includes(type));
 
   for (const scalarName of resolverMapScalars) {
