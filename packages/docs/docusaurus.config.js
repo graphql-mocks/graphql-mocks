@@ -53,6 +53,21 @@ module.exports = {
       links: [],
       copyright: `Copyright © ${new Date().getFullYear()} by <a href="https://www.github.com/chadian">chadian</a>`,
     },
+    algolia: {
+      // The application ID provided by Algolia
+      appId: 'H5WXPPVPWY',
+
+      // Public API key: it is safe to commit it
+      apiKey: 'd102935101e504f1d5bcfac06a9aced0',
+
+      indexName: 'graphql-mocks',
+
+      // Optional: see doc section below
+      contextualSearch: true,
+
+      // Optional: path for search page that enabled by default (`false` to disable it)
+      searchPagePath: 'search',
+    },
   },
   presets: [
     [
