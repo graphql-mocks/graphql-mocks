@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_graphql_mocks_docs=self.webpackChunk_graphql_mocks_docs||[]).push([[7146],{7146:function(s,c,k){k.r(c)}}]);
