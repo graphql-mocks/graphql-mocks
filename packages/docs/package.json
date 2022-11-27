@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/docs",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "clean": "docusaurus clear",
@@ -26,11 +26,11 @@
   "dependencies": {
     "@docusaurus/core": "^2.2.0",
     "@docusaurus/preset-classic": "^2.2.0",
-    "@graphql-mocks/mirage": "^0.6.0",
+    "@graphql-mocks/mirage": "^0.7.0",
     "classnames": "^2.2.6",
     "graphiql": "1.5.17",
-    "graphql-mocks": "^0.8.4",
-    "graphql-paper": "^0.1.6",
+    "graphql-mocks": "^0.9.0",
+    "graphql-paper": "^0.2.0",
     "graphql-tools": "^6.0.11",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
