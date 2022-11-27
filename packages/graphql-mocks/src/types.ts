@@ -27,9 +27,9 @@ export type ResolverInfo<Resolver extends FieldResolver = FieldResolver> = Param
 // Library Abstractions
 
 export type BasicScalarDefinition = {
-  serialize: GraphQLScalarType['serialize'];
-  parseValue: GraphQLScalarType['parseValue'];
-  parseLiteral: GraphQLScalarType['parseLiteral'];
+  serialize?: GraphQLScalarType['serialize'];
+  parseValue?: GraphQLScalarType['parseValue'];
+  parseLiteral?: GraphQLScalarType['parseLiteral'];
 };
 
 export type ScalarMap = {
