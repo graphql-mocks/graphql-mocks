@@ -9,7 +9,12 @@ module.exports = {
       ],
     },
     {
-      'GraphQL Handler': ['handler/introducing-handler', 'handler/using-middlewares', 'handler/handler-state'],
+      'GraphQL Handler': [
+        'handler/introducing-handler',
+        'handler/using-middlewares',
+        'handler/handler-state',
+        'handler/custom-scalars',
+      ],
     },
     {
       'Resolver & Wrappers ': [
