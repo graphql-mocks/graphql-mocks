@@ -1,8 +1,8 @@
 import { graphql, GraphQLSchema, ExecutionResult, GraphQLArgs } from 'graphql';
 import { pack } from '../pack';
-import { createSchema, attachResolversToSchema } from './utils';
+import { createSchema, attachResolversToSchema, attachScalarsToSchema } from './utils';
 import { CreateGraphQLHandlerOptions } from './types';
-import { ResolverMapMiddleware, ResolverMap } from '../types';
+import { ResolverMapMiddleware, ResolverMap, ScalarMap } from '../types';
 import { PackOptions } from '../pack/types';
 import { buildContext } from './utils/build-context';
 import { normalizePackOptions } from '../pack/utils/normalize-pack-options';
@@ -16,6 +16,7 @@ export class GraphQLHandler {
   protected graphqlSchema: GraphQLSchema;
   protected initialContext: GraphQLArgs['contextValue'];
   protected initialResolverMap: ResolverMap;
+  protected scalarMap: ScalarMap;
 
   constructor(options: CreateGraphQLHandlerOptions) {
     const graphqlSchema = createSchema(options.dependencies?.graphqlSchema);
@@ -35,6 +36,7 @@ export class GraphQLHandler {
     this.initialResolverMap = options.resolverMap ?? {};
     this.state = options.state ?? {};
     this.middlewares = options.middlewares ?? [];
+    this.scalarMap = options.scalarMap ?? {};
   }
 
   applyMiddlewares(middlewares: ResolverMapMiddleware[], options?: { reset?: boolean }): void {
@@ -80,12 +82,13 @@ export class GraphQLHandler {
   }
 
   protected async pack(): Promise<void> {
-    const { initialResolverMap, middlewares, packOptions, graphqlSchema } = this;
+    const { initialResolverMap, middlewares, packOptions, graphqlSchema, scalarMap } = this;
 
     if (!this.packed) {
       const { resolverMap, state } = await pack(initialResolverMap, middlewares, packOptions);
       this.state = state;
       attachResolversToSchema(graphqlSchema, resolverMap);
+      attachScalarsToSchema(graphqlSchema, scalarMap);
     }
 
     this.packed = true;

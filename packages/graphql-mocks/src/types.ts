@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { GraphQLFieldResolver, GraphQLField, GraphQLTypeResolver } from 'graphql';
+import { GraphQLFieldResolver, GraphQLField, GraphQLTypeResolver, GraphQLScalarType } from 'graphql';
 
 import { PackOptions } from './pack/types';
 
@@ -25,6 +25,16 @@ export type ResolverContext = ManagedContext;
 export type ResolverInfo<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[3];
 
 // Library Abstractions
+
+export type BasicScalarDefinition = {
+  serialize?: GraphQLScalarType['serialize'];
+  parseValue?: GraphQLScalarType['parseValue'];
+  parseLiteral?: GraphQLScalarType['parseLiteral'];
+};
+
+export type ScalarMap = {
+  [typename: string]: GraphQLScalarType | BasicScalarDefinition;
+};
 
 // the convention of using __resolveType on a ResolverMap is borrowed from `graphql-tools`
 export type ResolverMap<TFieldResolver = FieldResolver, TTypeResolver = TypeResolver> = {
