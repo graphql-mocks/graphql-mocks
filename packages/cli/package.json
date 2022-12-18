@@ -9,6 +9,7 @@
   "dependencies": {
     "@babel/core": "^7.17.5",
     "@babel/node": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@babel/plugin-transform-typescript": "^7.16.8",
     "@babel/register": "^7.17.0",
     "@graphql-mocks/falso": "^0.5.1",
@@ -68,6 +69,9 @@
     "topicSeparator": " ",
     "commands": "./lib/commands",
     "bin": "gqlmocks",
+    "hooks": {
+      "init": "./lib/hooks/init"
+    },
     "plugins": [
       "@oclif/plugin-version",
       "@oclif/plugin-help"

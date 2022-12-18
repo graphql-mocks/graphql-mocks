@@ -6,9 +6,6 @@ import { unlinkSync as rm } from 'fs';
 import { testPackagePath, useTestPackage } from '../../test-helpers/package';
 
 describe('config/generate', function () {
-  // necessary for CI
-  this.timeout(20000);
-
   const testPackage = 'test-package-generate';
   const generateTestPkgDir = testPackagePath(testPackage);
   const findGeneratedConfig = () =>
@@ -35,7 +32,11 @@ describe('config/generate', function () {
     '/handler/path',
   ];
 
+  // 👋 Unfortunately this test takes a long time in CI even though it
+  // is quick locally.
+  // TODO: Investigate! And see if this timeout can be dropped somehow
   test
+    .timeout(30000)
     .stdout()
     .stderr()
     .command(['config:generate', ...configContentFlags])
