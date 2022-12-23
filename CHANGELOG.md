@@ -2,6 +2,12 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.9.2
+
+#### Add custom scalar support ([#221](https://github.com/graphql-mocks/graphql-mocks/pull/221))
+
+* (feature) Add support for custom scalars
+
 ### graphql-mocks@0.9.0
 
 #### Fix falso middleware handling of abstract types (interfaces and unions) ([#219](https://github.com/graphql-mocks/graphql-mocks/pull/219))
@@ -74,6 +80,12 @@
 
 
 ## gqlmocks
+
+### gqlmocks@0.3.2
+
+#### Fix gqlmocks cli dynamic handling of typescript files ([#231](https://github.com/graphql-mocks/graphql-mocks/pull/231))
+
+* (fix) Fixed typescript support within the cli where `require` is used on a `.ts` file
 
 ### gqlmocks@0.3.0
 
