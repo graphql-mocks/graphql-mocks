@@ -152,7 +152,7 @@ DESCRIPTION
   Display help for gqlmocks.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.11/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
 
 ## `gqlmocks schema fetch`
 
@@ -243,7 +243,7 @@ USAGE
 
 FLAGS
   -c, --config=<value>   path to config file
-  -f, --faker            use faker middlware for resolvers
+  -f, --fake             use @graphql-mocks/falso to fill in missing resolvers with fake data
   -h, --handler=<value>  path to file with graphql handler
   -p, --port=<value>     [default: 4444] Port to serve on
   -s, --schema=<value>   local path to graphql schema (relative or absolute), remote url (graphql schema file or graphql
@@ -256,13 +256,13 @@ DESCRIPTION
 EXAMPLES
   $ gqlmocks serve --schema ../schema.graphql
 
-  $ gqlmocks serve --schema ../schema.graphql --handler ../handler.ts
+  $ gqlmocks serve --handler ../handler.ts
 
-  $ gqlmocks serve --schema http://s3-bucket/schema.graphql --faker
+  $ gqlmocks serve --schema http://s3-bucket/schema.graphql --fake
 
-  $ gqlmocks serve --schema http://graphql-api/ --faker
+  $ gqlmocks serve --schema http://graphql-api/ --fake
 
-  $ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --faker
+  $ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --fake
 ```
 
 _See code: [src/commands/serve.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/serve.ts)_
