@@ -1,5 +1,5 @@
 import { createWrapper } from '../../../src/resolver/create-wrapper';
-import { WrapperFor } from '../../../src/resolver/constants';
+import { WrapperFor } from '../../../src/resolver';
 import { TypeResolver, FieldResolver, ObjectField } from '../../../src/types';
 import { spy } from 'sinon';
 import { nameableInterfaceType, userObjectType, userObjectNameField, schema } from '../../mocks';
