@@ -6,6 +6,12 @@
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
@@ -13,8 +19,9 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {

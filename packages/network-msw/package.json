@@ -5,6 +5,12 @@
   "description": "Mock using graphql-mocks with msw (mock service worker)",
   "main": "dist/index.js",
   "module": "dist/es/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
@@ -13,8 +19,9 @@
     "test": "echo \"See browser-acceptance-tests\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "publishConfig": {
