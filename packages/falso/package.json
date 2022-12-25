@@ -12,9 +12,16 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
     "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/whole-lib.browser.js",
+      "require": "./lib/whole-lib.browser.js"
+    }
   },
   "publishConfig": {
     "directory": "dist",
