@@ -17,6 +17,15 @@
     "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "graphql-mocks",
+    "graphql",
+    "mocking"
+  ],
   "publishConfig": {
     "directory": "dist",
     "access": "public"
