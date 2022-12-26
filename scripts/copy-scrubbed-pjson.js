@@ -5,6 +5,22 @@ const path = require('path');
 const fs = require('fs-extra');
 const process = require('process');
 
+function removeDist(path) {
+  if (typeof path !== 'string') {
+    return path;
+  }
+
+  if (path.startsWith('dist/')) {
+    return path.replace('dist/', '');
+  }
+
+  if (path.startsWith('./dist/')) {
+    return path.replace('./dist/', './');
+  }
+
+  return path;
+}
+
 function cleanPackageJson(pjson) {
   const copy = {
     ...pjson,
@@ -14,9 +30,19 @@ function cleanPackageJson(pjson) {
   delete copy.scripts;
   delete copy.publishConfig;
 
-  copy.main = copy.main?.replace('dist/', '');
-  copy.module = copy.module?.replace('dist/', '');
-  copy.types = copy.types?.replace('dist/', '');
+  copy.main = removeDist(copy.main);
+  copy.module = removeDist(copy.module);
+  copy.types = removeDist(copy.types);
+
+  Object.values(copy.exports).forEach((map) => {
+    if (map.require) {
+      map.require = removeDist(map.require);
+    }
+
+    if (map.import) {
+      map.import = removeDist(map.import);
+    }
+  });
 
   return copy;
 }

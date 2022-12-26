@@ -6,6 +6,12 @@
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
@@ -13,9 +19,21 @@
     "test": "echo \"See browser-acceptance-tests\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
+    "copy-readme": "cp README.md dist/README.md",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "graphql-mocks",
+    "graphql",
+    "pretenderjs",
+    "mocking"
+  ],
   "publishConfig": {
     "directory": "dist",
     "access": "public"

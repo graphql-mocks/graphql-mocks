@@ -6,6 +6,64 @@
   "main": "dist/index.js",
   "module": "dist/es/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/index.js"
+    },
+    "./graphql": {
+      "import": "./dist/es/graphql/index.js",
+      "require": "./dist/graphql/index.js"
+    },
+    "./graphql/type-utils": {
+      "import": "./dist/es/graphql/type-utils/index.js",
+      "require": "./dist/graphql/type-utils/index.js"
+    },
+    "./graphql/utils": {
+      "import": "./dist/es/graphql/utils/index.js",
+      "require": "./dist/graphql/utils/index.js"
+    },
+    "./highlight": {
+      "import": "./dist/es/highlight/index.js",
+      "require": "./dist/highlight/index.js"
+    },
+    "./highlight/utils": {
+      "import": "./dist/es/highlight/utils/index.js",
+      "require": "./dist/highlight/utils/index.js"
+    },
+    "./resolver-map": {
+      "import": "./dist/es/resolver-map/index.js",
+      "require": "./dist/resolver-map/index.js"
+    },
+    "./resolver-map/utils": {
+      "import": "./dist/es/resolver-map/utils/index.js",
+      "require": "./dist/resolver-map/utils/index.js"
+    },
+    "./resolver": {
+      "import": "./dist/es/resolver/index.js",
+      "require": "./dist/resolver/index.js"
+    },
+    "./resolver/utils": {
+      "import": "./dist/es/resolver/utils/index.js",
+      "require": "./dist/resolver/utils/index.js"
+    },
+    "./relay": {
+      "import": "./dist/es/relay/index.js",
+      "require": "./dist/relay/index.js"
+    },
+    "./pack": {
+      "import": "./dist/es/pack/index.js",
+      "require": "./dist/pack/index.js"
+    },
+    "./pack/utils": {
+      "import": "./dist/es/pack/utils/index.js",
+      "require": "./dist/pack/utils/index.js"
+    },
+    "./wrapper": {
+      "import": "./dist/es/wrapper/index.js",
+      "require": "./dist/wrapper/index.js"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
@@ -13,10 +71,20 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn copy-readme",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "graphql-mocks",
+    "graphql",
+    "mocking"
+  ],
   "publishConfig": {
     "directory": "dist",
     "access": "public"

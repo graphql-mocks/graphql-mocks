@@ -13,9 +13,19 @@
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "graphql-mocks",
+    "graphql",
+    "mocking"
+  ],
   "publishConfig": {
     "directory": "dist",
     "access": "public"

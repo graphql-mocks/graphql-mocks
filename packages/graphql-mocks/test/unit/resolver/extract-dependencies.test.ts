@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { extractDependencies, extractAllDependencies } from '../../../src/resolver/extract-dependencies';
+import { extractDependencies, extractAllDependencies } from '../../../src/resolver';
 import { generatePackOptions } from '../../mocks';
 import { ResolverContext } from '../../../src/types';
 

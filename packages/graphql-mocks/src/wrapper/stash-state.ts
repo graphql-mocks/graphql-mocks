@@ -1,7 +1,7 @@
 import { FieldResolver } from '../types';
 import { GraphQLResolveInfo } from 'graphql';
 import { createWrapper } from '../resolver';
-import { WrapperFor } from '../resolver/constants';
+import { WrapperFor } from '../resolver';
 
 type ResolverStash = {
   parent: unknown;

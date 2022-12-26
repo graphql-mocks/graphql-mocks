@@ -1,5 +1,5 @@
 import { createWrapper } from '../resolver';
-import { WrapperFor } from '../resolver/constants';
+import { WrapperFor } from '../resolver';
 import { FieldResolver, TypeResolver } from '../types';
 import { isFieldResolver, isTypeResolver } from '../resolver/utils';
 

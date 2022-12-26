@@ -59,9 +59,6 @@
     "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/graphql-mocks/graphql-mocks",
-  "keywords": [
-    "oclif"
-  ],
   "license": "MIT",
   "main": "lib/index.js",
   "oclif": {
@@ -77,7 +74,17 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "https://github.com/graphql-mocks/graphql-mocks",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "oclif",
+    "graphql-mocks",
+    "cli",
+    "gqlmocks",
+    "graphql"
+  ],
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && oclif readme && yarn build",

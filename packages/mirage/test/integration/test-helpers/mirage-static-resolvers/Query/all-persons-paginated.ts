@@ -1,4 +1,4 @@
-import { extractDependencies } from 'graphql-mocks/resolver/extract-dependencies';
+import { extractDependencies } from 'graphql-mocks/resolver';
 import { paginateNodes } from 'graphql-mocks/relay';
 import { Server } from 'miragejs';
 
