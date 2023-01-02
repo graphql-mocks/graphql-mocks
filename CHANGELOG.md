@@ -2,6 +2,12 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.10.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### graphql-mocks@0.9.2
 
 #### Add custom scalar support ([#221](https://github.com/graphql-mocks/graphql-mocks/pull/221))
@@ -53,6 +59,12 @@
 * (feature) Add `applyMiddlewares` method to `GraphQLHandler`
 
 ## graphql-paper
+
+### graphql-paper@0.3.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
 
 ### graphql-paper@0.2.0
 
@@ -144,6 +156,12 @@
 
 ## @graphql-mocks/mirage
 
+### @graphql-mocks/mirage@0.8.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### @graphql-mocks/mirage@0.7.0
 
 #### Bump to node 16 ([#218](https://github.com/graphql-mocks/graphql-mocks/pull/218))
@@ -172,6 +190,12 @@
 
 ## @graphql-mocks/falso
 
+### @graphql-mocks/falso@0.6.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### @graphql-mocks/falso@0.5.0
 
 #### Bump to node 16 ([#218](https://github.com/graphql-mocks/graphql-mocks/pull/218))
@@ -189,6 +213,12 @@
 * (feature) Introducing `@graphql-mocks/falso`, replacing @graphql-mocks/faker, as the package to provide fake data across an entire schema. [Falso](https://github.com/ngneat/falso) benefits from being esmodule-first and being actively developed and supported.
 
 ## @graphql-mocks/network-express
+
+### @graphql-mocks/network-express@0.3.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
 
 ### @graphql-mocks/network-express@0.2.0
 
@@ -212,6 +242,12 @@
 
 ## @graphql-mocks/network-msw
 
+### @graphql-mocks/network-msw@0.3.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### @graphql-mocks/network-msw@0.2.0
 
 #### Bump node from version 12 to 14 ([#214](https://github.com/graphql-mocks/graphql-mocks/pull/214))
@@ -225,6 +261,12 @@
 * (feature) Added package README
 
 ## @graphql-mocks/network-nock
+
+### @graphql-mocks/network-nock@0.5.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
 
 ### @graphql-mocks/network-nock@0.4.0
 
@@ -244,6 +286,12 @@
 
 ## @graphql-mocks/network-pretender
 
+### @graphql-mocks/network-pretender@0.3.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### @graphql-mocks/network-pretender@0.2.0
 
 #### Bump to node 16 ([#218](https://github.com/graphql-mocks/graphql-mocks/pull/218))
@@ -262,6 +310,12 @@
 
 ## @graphql-mocks/sinon
 
+### @graphql-mocks/sinon@0.4.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
+
 ### @graphql-mocks/sinon@0.3.0
 
 #### Bump to node 16 ([#218](https://github.com/graphql-mocks/graphql-mocks/pull/218))
@@ -279,6 +333,12 @@
 * (feature) Added package README
 
 ## @graphql-mocks/network-cypress
+
+### @graphql-mocks/network-cypress@0.3.0
+
+#### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
+
+* (breaking) Add export map to package.json, existing imports might need to be updated to use nearest index from export map.
 
 ### @graphql-mocks/network-cypress@0.2.0
 
