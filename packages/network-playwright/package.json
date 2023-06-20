@@ -1,0 +1,54 @@
+{
+  "name": "@graphql-mocks/network-playwright",
+  "version": "0.1.0",
+  "author": "Roland Németh",
+  "description": "Mock using graphql-mocks with Playwright",
+  "main": "dist/index.js",
+  "module": "dist/es/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"./src/**/*.ts\"",
+    "pretest": "tsc --noEmit && yarn lint",
+    "test": "playwright test",
+    "test:server": "serve public",
+    "clean": "rimraf ./dist",
+    "copy-pjson": "node scripts/copy-scrubbed-pjson",
+    "check-exports-map": "node scripts/check-exports-map",
+    "copy-readme": "cp README.md dist/README.md",
+    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
+    "watch": "rollup --watch -c rollup-watch.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/graphql-mocks/graphql-mocks"
+  },
+  "keywords": [
+    "graphql-mocks",
+    "graphql",
+    "playwright",
+    "mocking"
+  ],
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 16.0.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0",
+    "@playwright/test": "^1.35.0",
+    "graphql-mocks": "^0.10.0"
+  },
+  "peerDependencies": {
+    "@playwright/test": "^1.35.0",
+    "graphql-mocks": ">=0.9.2"
+  }
+}
