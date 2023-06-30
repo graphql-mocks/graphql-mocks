@@ -41,6 +41,7 @@ module.exports = {
         'network/pretender',
         'network/express',
         'network/cypress',
+        'network/playwright',
         'network/nock',
       ],
     },

@@ -33,6 +33,10 @@ Depending on the situation different network handling will be appropriate for yo
 * `@graphql-mocks/network-cypress`
 * [Documentation](/docs/network/cypress)
 
+### Playwright
+* `@graphql-mocks/network-playwright`
+* [Documentation](/docs/network/playwright)
+
 ## Node Network Handlers
 
 ### Express
