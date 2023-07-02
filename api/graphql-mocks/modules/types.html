@@ -72,6 +72,7 @@
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="types.html#BasicScalarDefinition" class="tsd-kind-icon">Basic<wbr>Scalar<wbr>Definition</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="types.html#FieldResolver" class="tsd-kind-icon">Field<wbr>Resolver</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="types.html#ObjectField" class="tsd-kind-icon">Object<wbr>Field</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="types.html#ResolverArgs" class="tsd-kind-icon">Resolver<wbr>Args</a></li>
@@ -80,6 +81,7 @@
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="types.html#ResolverMap" class="tsd-kind-icon">Resolver<wbr>Map</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="types.html#ResolverMapMiddleware" class="tsd-kind-icon">Resolver<wbr>Map<wbr>Middleware</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="types.html#ResolverParent" class="tsd-kind-icon">Resolver<wbr>Parent</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-namespace"><a href="types.html#ScalarMap" class="tsd-kind-icon">Scalar<wbr>Map</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter"><a href="types.html#TypeResolver" class="tsd-kind-icon">Type<wbr>Resolver</a></li>
 							</ul>
 						</section>
@@ -88,13 +90,37 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace">
+					<a name="BasicScalarDefinition" class="tsd-anchor"></a>
+					<h3>Basic<wbr>Scalar<wbr>Definition</h3>
+					<div class="tsd-signature tsd-kind-icon">Basic<wbr>Scalar<wbr>Definition<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>parseLiteral<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;parseLiteral&quot;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">; </span>parseValue<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;parseValue&quot;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">; </span>serialize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;serialize&quot;</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L29">packages/graphql-mocks/src/types.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> parse<wbr>Literal<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;parseLiteral&quot;</span><span class="tsd-signature-symbol">]</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> parse<wbr>Value<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;parseValue&quot;</span><span class="tsd-signature-symbol">]</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> serialize<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">&quot;serialize&quot;</span><span class="tsd-signature-symbol">]</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="FieldResolver" class="tsd-anchor"></a>
 					<h3>Field<wbr>Resolver</h3>
 					<div class="tsd-signature tsd-kind-icon">Field<wbr>Resolver&lt;Source, Context, Args, Result&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GraphQLFieldResolver</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Source</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Context</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Args</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L15">packages/graphql-mocks/src/types.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L15">packages/graphql-mocks/src/types.ts:15</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -119,7 +145,7 @@
 					<div class="tsd-signature tsd-kind-icon">Object<wbr>Field<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GraphQLField</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L14">packages/graphql-mocks/src/types.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L14">packages/graphql-mocks/src/types.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -129,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Args&lt;Resolver&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Resolver</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">1</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L23">packages/graphql-mocks/src/types.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L23">packages/graphql-mocks/src/types.ts:23</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -145,7 +171,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ManagedContext</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L24">packages/graphql-mocks/src/types.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L24">packages/graphql-mocks/src/types.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -155,7 +181,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Info&lt;Resolver&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Resolver</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">3</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L25">packages/graphql-mocks/src/types.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L25">packages/graphql-mocks/src/types.ts:25</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -171,7 +197,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Map&lt;TFieldResolver, TTypeResolver&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L30">packages/graphql-mocks/src/types.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L40">packages/graphql-mocks/src/types.ts:40</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -198,7 +224,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Map<wbr>Middleware<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>map<span class="tsd-signature-symbol">: </span><a href="types.html#ResolverMap" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverMap</a>, packOptions<span class="tsd-signature-symbol">: </span><a href="pack.types.html#PackOptions" class="tsd-signature-type" data-tsd-kind="Type alias">PackOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="types.html#ResolverMap" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverMap</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="types.html#ResolverMap" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverMap</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L36">packages/graphql-mocks/src/types.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L46">packages/graphql-mocks/src/types.ts:46</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -232,7 +258,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Parent&lt;Resolver&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Parameters</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Resolver</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">0</span><span class="tsd-signature-symbol">]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L22">packages/graphql-mocks/src/types.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L22">packages/graphql-mocks/src/types.ts:22</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -242,13 +268,31 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace">
+					<a name="ScalarMap" class="tsd-anchor"></a>
+					<h3>Scalar<wbr>Map</h3>
+					<div class="tsd-signature tsd-kind-icon">Scalar<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L35">packages/graphql-mocks/src/types.ts:35</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>typename: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">GraphQLScalarType</span><span class="tsd-signature-symbol"> | </span><a href="types.html#BasicScalarDefinition" class="tsd-signature-type" data-tsd-kind="Type alias">BasicScalarDefinition</a></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 					<a name="TypeResolver" class="tsd-anchor"></a>
 					<h3>Type<wbr>Resolver</h3>
 					<div class="tsd-signature tsd-kind-icon">Type<wbr>Resolver&lt;Source, Context&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GraphQLTypeResolver</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Source</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Context</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/cbf93c7a/packages/graphql-mocks/src/types.ts#L21">packages/graphql-mocks/src/types.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/graphql-mocks/graphql-mocks/blob/d417b4f/packages/graphql-mocks/src/types.ts#L21">packages/graphql-mocks/src/types.ts:21</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -297,6 +341,9 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace">
+						<a href="types.html#BasicScalarDefinition" class="tsd-kind-icon">Basic<wbr>Scalar<wbr>Definition</a>
+					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="types.html#FieldResolver" class="tsd-kind-icon">Field<wbr>Resolver</a>
 					</li>
@@ -320,6 +367,9 @@
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="types.html#ResolverParent" class="tsd-kind-icon">Resolver<wbr>Parent</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace">
+						<a href="types.html#ScalarMap" class="tsd-kind-icon">Scalar<wbr>Map</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-namespace tsd-has-type-parameter">
 						<a href="types.html#TypeResolver" class="tsd-kind-icon">Type<wbr>Resolver</a>
