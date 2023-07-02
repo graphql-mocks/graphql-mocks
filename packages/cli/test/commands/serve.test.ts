@@ -109,7 +109,7 @@ describe('serve', function () {
       'serve',
       '--fake',
       '--schema',
-      'https://api.spacex.land/graphql',
+      'https://swapi-graphql.netlify.app/.netlify/functions/index',
       '--header',
       'Authorization=Bearer Token',
       '--header',
@@ -118,11 +118,24 @@ describe('serve', function () {
     .it('serves with fetching a custom schema with custom headers', async (ctx) => {
       expect(ctx.stdout).to.contain('Press Ctrl+C');
       expect(listenSpy.called).to.be.true;
-      const result: any = await axios.post(`http://localhost:4444/graphql`, { query: `{ ships { id } }` });
+      const result: any = await axios.post(`http://localhost:4444/graphql`, {
+        query: `
+        {
+          allFilms {
+            films {
+              id
+              title
+            }
+          }
+        }
+      `,
+      });
       const axiosCallArgs = axiosPostSpy.firstCall.args;
-      expect(axiosCallArgs[0]).to.equal('https://api.spacex.land/graphql');
+      expect(axiosCallArgs[0]).to.equal('https://swapi-graphql.netlify.app/.netlify/functions/index');
       expect(axiosCallArgs[1].Headers).to.deep.equal({ OtherHeader: 'Other Value', Authorization: 'Bearer Token' });
-      // using the public api space x api with fake, should generate some fake ships data
-      expect(Array.isArray(result.data.data.ships)).to.be.true;
+
+      // using the public api with the fake flag, should generate fake data
+      console.log(JSON.stringify(result.data, null, 2));
+      expect(Array.isArray(result.data.data.allFilms.films)).to.be.true;
     });
 });

@@ -12,10 +12,13 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: 16
-    - name: yarn & test
-      env:
-        CODE_EXAMPLE_ENV: test
+    - name: install dependencies
       run: |
         yarn
         yarn bootstrap
+        yarn playwright install
+    - name: run tests
+      env:
+        CODE_EXAMPLE_ENV: test
+      run: |
         yarn test

@@ -22,7 +22,7 @@ describe('schema:fetch', () => {
 
     test
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://swapi-graphql.netlify.app/.netlify/functions/index', '--save-schema', tempFilePath])
       .it('fetches a schema', (ctx) => {
         expect(ctx.stdout).to.contain(`✅ Saved GraphQL Schema to ${tempFilePath}`);
       });
@@ -34,7 +34,7 @@ describe('schema:fetch', () => {
         }
       })
       .stdout()
-      .command(['schema:fetch', '--source', 'https://api.spacex.land/graphql', '--save-schema', tempFilePath])
+      .command(['schema:fetch', '--source', 'https://swapi-graphql.netlify.app/.netlify/functions/index', '--save-schema', tempFilePath])
       .catch((e) => {
         expect(e.message).to.contain(`Bailing, file already exists at ${tempFilePath}`);
         expect(e.message).to.contain('Re-run with `force` flag to overwrite.');
@@ -51,7 +51,7 @@ describe('schema:fetch', () => {
       .command([
         'schema:fetch',
         '--source',
-        'https://api.spacex.land/graphql',
+        'https://swapi-graphql.netlify.app/.netlify/functions/index',
         '--save-schema',
         tempFilePath,
         '--force',
@@ -79,7 +79,7 @@ describe('schema:fetch', () => {
         ...packageConfig,
         schema: {
           ...packageConfig.schema,
-          url: 'https://api.spacex.land/graphql',
+          url: 'https://swapi-graphql.netlify.app/.netlify/functions/index',
         },
       };
 

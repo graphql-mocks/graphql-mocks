@@ -7,7 +7,7 @@ import { makeRequest } from '../test-helpers/make-request';
 const { createApp } = require('../test-helpers/express-app');
 
 describe('express-middleware', function () {
-  const port = 3000;
+  const port = 3030;
   let server: Server;
 
   afterEach(() => {
@@ -36,7 +36,7 @@ describe('express-middleware', function () {
 
     it('can handle basic queries', async function () {
       const result = await makeRequest(
-        'http://localhost:3000/graphql',
+        'http://localhost:3030/graphql',
         `
           query {
             helloWorld
@@ -53,7 +53,7 @@ describe('express-middleware', function () {
 
     it('can handle queries with variables', async function () {
       const result = await makeRequest(
-        'http://localhost:3000/graphql',
+        'http://localhost:3030/graphql',
         `
           query($ending: String!) {
             helloWorld(ending: $ending)
@@ -73,7 +73,7 @@ describe('express-middleware', function () {
 
     it('can handle queries with a specific operation name', async function () {
       const result = await makeRequest(
-        'http://localhost:3000/graphql',
+        'http://localhost:3030/graphql',
         `
           query DoThisQuery {
             helloWorld
@@ -96,7 +96,7 @@ describe('express-middleware', function () {
 
     it('can send errors', async function () {
       const result = await makeRequest(
-        'http://localhost:3000/graphql',
+        'http://localhost:3030/graphql',
         `
             query {
               ** MALFORMED QUERY **
@@ -130,7 +130,7 @@ describe('express-middleware', function () {
 
     await serverStarted;
     await makeRequest(
-      'http://localhost:3000/graphql',
+      'http://localhost:3030/graphql',
       `
         query {
           helloWorld
