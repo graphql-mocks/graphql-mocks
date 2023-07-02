@@ -355,3 +355,11 @@
 #### feat: add `@graphql-mocks/network-cypress` package ([#196](https://github.com/graphql-mocks/graphql-mocks/pull/196))
 
 * (feature) Introducing `@graphql-mocks/network-cypress`, a new network handler for cypress
+
+## @graphql-mocks/network-playwright
+
+### @graphql-mocks/network-playwright@0.1.1
+
+#### Implement network handler for Playwright ([#242](https://github.com/graphql-mocks/graphql-mocks/pull/242))
+
+* (feature) New package for Playwright network handler
