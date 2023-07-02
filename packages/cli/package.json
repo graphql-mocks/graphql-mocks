@@ -1,6 +1,6 @@
 {
   "name": "gqlmocks",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Chad Carbert @chadian",
   "bin": {
     "gqlmocks": "./bin/run"
@@ -13,7 +13,7 @@
     "@babel/plugin-transform-typescript": "^7.16.8",
     "@babel/register": "^7.17.0",
     "@graphql-mocks/falso": "^0.6.0",
-    "@graphql-mocks/network-express": "^0.3.0",
+    "@graphql-mocks/network-express": "^0.3.1",
     "@ngneat/falso": "^5.3.0",
     "@oclif/core": "^1",
     "@oclif/plugin-help": "^5",

@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-express",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with Express",
   "main": "dist/index.js",
@@ -48,6 +48,6 @@
   },
   "peerDependencies": {
     "express": "^4.17.1",
-    "graphql-mocks": "^0.10.0"
+    "graphql-mocks": ">=0.10.0"
   }
 }
