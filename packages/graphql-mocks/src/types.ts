@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { GraphQLFieldResolver, GraphQLField, GraphQLTypeResolver, GraphQLScalarType } from 'graphql';
+import { _Pipeline } from './graphql/pipeline-resolver';
 
 import { PackOptions } from './pack/types';
 
@@ -13,13 +14,20 @@ type ManagedContext = {
 };
 
 export type ObjectField = GraphQLField<any, any>;
+export type OptionalFieldResolverPipeline<Source, Context, Args, Result> = {
+  pipeline?: _Pipeline<FieldResolver<Source, Context, Args, Result>>;
+};
 export type FieldResolver<Source = any, Context = any, Args = any, Result = any> = GraphQLFieldResolver<
   Source,
   Context,
   Args,
   Result
->;
-export type TypeResolver<Source = any, Context = any> = GraphQLTypeResolver<Source, Context>;
+> &
+  OptionalFieldResolverPipeline<Source, Context, Args, Result>;
+
+export type TypeResolver<Source = any, Context = any> = GraphQLTypeResolver<Source, Context> & {
+  pipeline?: _Pipeline<TypeResolver<Source, Context>>;
+};
 export type ResolverParent<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[0];
 export type ResolverArgs<Resolver extends FieldResolver = FieldResolver> = Parameters<Resolver>[1];
 export type ResolverContext = ManagedContext;

@@ -1,33 +1,40 @@
 import { FieldResolver, TypeResolver } from '../types';
 
-type PipelineOptions<T> = { pipelines: { before?: T[]; after?: T[] } };
+type PipelineOptions<T> = { before?: T[]; after?: T[] };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ResolverResult = any;
 
-export function createPipeline<T extends TypeResolver | FieldResolver>(resolverpipeline: T[]): Pipeline<T> {
-  return new Pipeline(pipeline);
+export function createPipeline<T extends TypeResolver | FieldResolver>(
+  pipeline: T,
+  options: PipelineOptions<T>,
+): _Pipeline<T> {
+  return new _Pipeline<T>(pipeline, options) as _Pipeline<T>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function embedPipeResult(context: Record<string, unknown>, result: any) {
+function embedPipeResult(context: Record<string, unknown>, result: ResolverResult) {
   return { ...context, pipeline: { result } };
 }
 
-class Pipeline<T extends TypeResolver | FieldResolver> {
+export class _Pipeline<T extends TypeResolver | FieldResolver> {
   coreResolver: T;
   before: T[];
   after: T[];
 
-  constructor(resolver: T, pipelines: { before?: T[]; after?: T[] }) {
+  constructor(resolver: T, pipelines: PipelineOptions<T>) {
     this.before = pipelines?.before ?? [];
     this.after = pipelines?.after ?? [];
     this.coreResolver = resolver;
-    (this.resolver as any).pipeline = this;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.coreResolver.pipeline = this as _Pipeline<any>;
   }
 
-  addBefore(...resolvers: T[]) {
+  addBefore(...resolvers: T[]): void {
     this.before = [...resolvers, ...this.before];
   }
 
-  addAfter(...resolvers: T[]) {
+  addAfter(...resolvers: T[]): void {
     this.before = [...this.after, ...resolvers];
   }
 
@@ -38,7 +45,8 @@ class Pipeline<T extends TypeResolver | FieldResolver> {
 
     const pipeline = [...this.before, this.coreResolver, ...this.after];
     let resolver: FieldResolver | TypeResolver | undefined;
-    let result: any = undefined;
+    let result: ResolverResult = undefined;
+
     while ((resolver = pipeline.shift())) {
       const embeddedContext = embedPipeResult(context, result);
       result = await resolver(a, b, embeddedContext, d);
