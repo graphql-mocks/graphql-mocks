@@ -1,19 +1,20 @@
 import { GraphQLObjectType } from 'graphql';
-import { Document, DocumentPartial, OperationContext } from '../types';
+import { Document, DocumentPartial, OperationContext, SchemaTypes } from '../types';
 import { findDocument } from '../store/find-document';
 import { extractObjectTypes } from '../graphql/extract-object-types';
 import { isDocument } from '../document/is-document';
 import { createDocument } from '../document/create-document';
 import { extractListType } from '../graphql/extract-list-type';
 
-export function createOperation(
-  context: OperationContext,
-  typename: string,
+export function createOperation<ST extends SchemaTypes, C extends OperationContext<ST>, TN extends keyof C['store']>(
+  context: C,
+  typename: TN,
   documentPartial: DocumentPartial,
-): Document {
-  const { store, schema } = context;
-  const document = createDocument(typename, documentPartial);
-  const gqlType = schema.getType(typename) as Partial<GraphQLObjectType>;
+): Document<ST> {
+  const { schema } = context;
+  const store = context.store as C['store'];
+  const document = createDocument<Document<ST[keyof ST]>>(typename as string, documentPartial);
+  const gqlType = schema.getType(typename as string) as Partial<GraphQLObjectType>;
   const gqlTypeFields = (gqlType?.getFields && gqlType?.getFields()) ?? {};
 
   // setup array of types if it doesn't already exist
@@ -49,7 +50,9 @@ export function createOperation(
 
         if (candidate && possibleObjectTypes.length > 1) {
           throw new Error(
-            `The "${typename}" with field "${fieldName}" is represented by multiple types: ${possibleObjectTypes.join(
+            `The "${
+              typename as string
+            }" with field "${fieldName}" is represented by multiple types: ${possibleObjectTypes.join(
               ', ',
             )}. Therefore, cannot create document automatically for: \n\n ${JSON.stringify(
               documentFieldValue,

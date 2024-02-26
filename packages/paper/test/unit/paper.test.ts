@@ -21,11 +21,19 @@ const schemaString = `
 `;
 const graphqlSchema = buildSchema(schemaString);
 
+type Person = {
+  name: string;
+};
+
+type SchemaTypes = {
+  Person: Person;
+};
+
 describe('mutation operations', () => {
-  let paper: Paper;
+  let paper: Paper<SchemaTypes>;
 
   beforeEach(() => {
-    paper = new Paper(graphqlSchema);
+    paper = new Paper<SchemaTypes>(graphqlSchema);
   });
 
   it('can create a document', async () => {

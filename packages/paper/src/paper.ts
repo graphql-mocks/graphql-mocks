@@ -12,6 +12,7 @@ import {
   HooksMap,
   KeyOrDocument,
   OperationMap,
+  SchemaTypes,
   TransactionCallback,
 } from './types';
 import { createDocumentStore } from './store/create-document-store';
@@ -36,9 +37,9 @@ import {
 // > https://exploringjs.com/deep-js/ch_proxies.html
 setAutoFreeze(false);
 
-export class Paper<UserOperations extends OperationMap = OperationMap> {
-  protected history: DocumentStore[] = [];
-  protected current: DocumentStore;
+export class Paper<ST extends SchemaTypes = SchemaTypes, UserOperations extends OperationMap<ST> = OperationMap<ST>> {
+  protected history: DocumentStore<ST>[] = [];
+  protected current: DocumentStore<ST>;
   protected sourceGraphQLSchema: GraphQLSchema;
   protected mutateQueue: Queue = new Queue();
 
@@ -50,14 +51,14 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     field: [listFieldValidator, objectFieldValidator, scalarFieldValidator, uniqueIdFieldValidator],
   };
 
-  hooks: HooksMap<Paper['operations'] & UserOperations> = {
+  hooks: HooksMap<Paper['operations'] & UserOperations, ST> = {
     beforeTransaction: [],
     afterTransaction: [],
   };
 
   constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: { operations?: UserOperations }) {
     const schema = createSchema(graphqlSchema);
-    this.current = createDocumentStore(schema);
+    this.current = createDocumentStore(schema) as DocumentStore<ST>;
     this.sourceGraphQLSchema = schema;
 
     this.operations = {
@@ -66,8 +67,8 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     };
   }
 
-  get data(): DocumentStore {
-    return proxyWrap(this.sourceGraphQLSchema, this.current);
+  get data(): DocumentStore<ST> {
+    return proxyWrap(this.sourceGraphQLSchema, this.current) as DocumentStore<ST>;
   }
 
   find(documentOrKey: KeyOrDocument): Document | undefined {
@@ -94,7 +95,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     events.forEach((event) => eventsTarget.dispatchEvent(event));
   }
 
-  async mutate<T extends TransactionCallback<Paper['operations'] & UserOperations>>(fn: T): Promise<ReturnType<T>> {
+  async mutate<T extends TransactionCallback<Paper['operations'] & UserOperations, ST>>(fn: T): Promise<ReturnType<T>> {
     const { previous, finish } = this.mutateQueue.enqueue();
     await previous;
 
@@ -108,7 +109,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
     const next = await produce(current, async (draft) => {
       const { transactionResult, eventQueue } = await transaction<typeof operations>(
-        draft,
+        draft as DocumentStore<ST>,
         schema,
         operations,
         hooks,
