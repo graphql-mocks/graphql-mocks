@@ -39,7 +39,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 20.0.0"
   },
   "devDependencies": {
     "@types/sinon": "^10.0.2",
