@@ -1,6 +1,6 @@
 import { Command, Flags } from '@oclif/core';
 import loadBlueprint from '../../lib/load-blueprint';
-import { CliUx as cli } from '@oclif/core';
+import cli from 'cli-ux';
 import { sync as pkgDir } from 'pkg-dir';
 import { tmpdir } from 'os';
 import { randomBytes } from 'crypto';
@@ -74,7 +74,7 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.format) {
       const defaultz = existingConfig?.schema.format || 'SDL';
-      const format = await cli.ux.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' (default: ${defaultz})`, {
+      const format = await cli.prompt(`Format of GraphQL Schema? 'SDL' 'SDL_STRING' (default: ${defaultz})`, {
         required: false,
       });
       config.schema.format = format || defaultz;
@@ -82,7 +82,7 @@ export default class ConfigGenerate extends Command {
 
     if (!config.schema.path) {
       const defaultz = existingConfig?.schema?.path || 'graphql-mocks/schema.graphql';
-      const schemaPath = await cli.ux.prompt(`Path to GraphQL Schema file? (default: ${defaultz})`, {
+      const schemaPath = await cli.prompt(`Path to GraphQL Schema file? (default: ${defaultz})`, {
         required: false,
       });
       config.schema.path = schemaPath || defaultz;
@@ -90,7 +90,7 @@ export default class ConfigGenerate extends Command {
 
     if (!config.handler.path) {
       const defaultz = existingConfig?.handler?.path || 'graphql-mocks/handler.ts';
-      const handlerPath = await cli.ux.prompt(`Path to GraphQL Mocks Handler file? (default: ${defaultz})`, {
+      const handlerPath = await cli.prompt(`Path to GraphQL Mocks Handler file? (default: ${defaultz})`, {
         required: false,
       });
       config.handler.path = handlerPath || defaultz;

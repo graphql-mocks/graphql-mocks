@@ -8,7 +8,7 @@
     "strict": true,
     "target": "ESNext",
     "esModuleInterop": true,
-    "checkJs": false
+    "checkJs": false,
   },
   "include": [
     "src/**/*"

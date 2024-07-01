@@ -7,10 +7,10 @@
     "test": "lerna run --parallel test",
     "build": "lerna run build",
     "link-packages": "node scripts/link-packages",
-    "postinstall": "yarn link-packages",
-    "bootstrap": "lerna bootstrap && yarn build",
+    "postinstall": "pnpm link-packages",
+    "bootstrap": "lerna bootstrap && pnpm build",
     "create-release": "node scripts/create-release",
-    "publish-packages": "yarn bootstrap && yarn test && lerna publish from-package --no-private",
+    "publish-packages": "pnpm bootstrap && pnpm test && lerna publish from-package --no-private",
     "tag-releases": "node scripts/tag-releases"
   },
   "author": "Chad Carbert",
@@ -55,7 +55,13 @@
     "rollup": "^2.56.0",
     "semver": "^7.3.5",
     "ts-node": "^9.0.0",
-    "typescript": "^4.1.0"
+    "typescript": "^4.1.0",
+    "typedoc": "^0.21.4"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "packageManager": "pnpm@9.4.0+sha512.f549b8a52c9d2b8536762f99c0722205efc5af913e77835dbccc3b0b0b2ca9e7dc8022b78062c17291c48e88749c70ce88eb5a74f1fa8c4bf5e18bb46c8bd83a",
+  "resolutions": {
+    "@types/eslint": "8.56.10",
+    "@oclif/core": "1.26.2"
+  }
 }

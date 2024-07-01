@@ -8,7 +8,7 @@
     "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
     "build": "echo \"No build required for browser-acceptance-tests, only for testing\"",
     "test-build": "SKIP_PREFLIGHT_CHECK=true DISABLE_ESLINT_PLUGIN=true react-scripts build",
-    "test": "yarn test-build && TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\" --exclude \"./test/acceptance/dummy-react-app/node_modules/**/*.*\"",
+    "test": "pnpm test-build && TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\" --exclude \"./test/acceptance/dummy-react-app/node_modules/**/*.*\"",
     "eject": "react-scripts eject",
     "serve": "http-server build -p 3232"
   },

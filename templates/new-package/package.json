@@ -9,12 +9,12 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
-    "pretest": "tsc --noEmit && yarn lint",
+    "pretest": "tsc --noEmit && pnpm lint",
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map",
+    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "repository": {
