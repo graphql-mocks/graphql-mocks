@@ -60,7 +60,7 @@
     "short-unique-id": "^4.3.3"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^16.0.0"
   },
   "devDependencies": {
     "@types/ramda": "^0.28.12",
