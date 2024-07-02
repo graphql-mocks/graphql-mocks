@@ -21,6 +21,9 @@ npm install --save-dev graphql-paper graphql
 
 # yarn
 yarn add --dev graphql-paper graphql
+
+# pnpm
+pnpm add --save-dev graphql-paper graphql
 ```
 
 ## Setup

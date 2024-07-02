@@ -15,6 +15,9 @@ npm install --save-dev nock @graphql-mocks/network-nock
 
 # yarn
 yarn add --dev nock @graphql-mocks/network-nock
+
+# pnpm
+pnpm add --save-dev nock @graphql-mocks/network-nock
 ```
 
 ## Usage

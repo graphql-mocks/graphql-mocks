@@ -28,6 +28,9 @@ npm install --save-dev @ngneat/falso @graphql-mocks/falso graphql-mocks
 
 # yarn
 yarn add --dev @ngneat/falso @graphql-mocks/falso graphql-mocks
+
+# pnpm
+pnpm add --save-dev @ngneat/falso @graphql-mocks/falso graphql-mocks
 ```
 
 ## Usage
@@ -204,6 +207,9 @@ npm remove faker @graphql-mocks/faker
 
 # yarn
 yarn remove faker @graphql-mocks/faker
+
+# pnpm
+pnpm remove faker @graphql-mocks/faker
 ```
 
 2. Install Falso and `@graphql-mocks/falso`
@@ -214,6 +220,9 @@ npm install --save-dev @ngneat/falso @graphql-mocks/falso
 
 # yarn
 yarn add --dev @ngneat/falso @graphql-mocks/falso
+
+# pnpm
+pnpm add --save-dev @ngneat/falso @graphql-mocks/falso
 ```
 
 3. Update require/imports

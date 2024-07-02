@@ -15,6 +15,9 @@ npm install --save-dev express @graphql-mocks/network-express
 
 # yarn
 yarn add --dev express @graphql-mocks/network-express
+
+# pnpm
+pnpm add --save-dev express @graphql-mocks/network-express
 ```
 
 ## Usage

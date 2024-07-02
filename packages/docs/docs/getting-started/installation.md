@@ -11,4 +11,7 @@ npm install --save-dev graphql-mocks graphql
 
 # yarn
 yarn add --dev graphql-mocks graphql
+
+# pnpm
+pnpm add --save-dev graphql-mocks graphql
 ```

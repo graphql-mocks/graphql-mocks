@@ -17,6 +17,9 @@ npm install --save-dev msw @graphql-mocks/network-msw
 
 # yarn
 yarn add --dev msw @graphql-mocks/network-msw
+
+# pnpm
+pnpm add --save-dev msw @graphql-mocks/network-msw
 ```
 
 ## Usage
