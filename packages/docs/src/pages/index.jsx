@@ -1,4 +1,3 @@
-import React from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import classnames from 'classnames';
 import Layout from '@theme/Layout';
