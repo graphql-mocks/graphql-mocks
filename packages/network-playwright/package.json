@@ -17,6 +17,7 @@
     "lint": "eslint \"./src/**/*.ts\"",
     "pretest": "tsc --noEmit && pnpm lint",
     "test": "playwright test",
+    "playwright-install": "playwright install",
     "test:server": "serve public",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",

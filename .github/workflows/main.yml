@@ -8,17 +8,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
+    - uses: actions/checkout@v4
+    - name: pnpm-setup
+      uses: pnpm/action-setup@v2
+    - uses: actions/setup-node@v4
       with:
         node-version: 20
     - name: install dependencies
       run: |
-        yarn
-        yarn bootstrap
-        yarn playwright install
+        pnpm install
+        pnpm bootstrap
+        pnpm run --filter @graphql-mocks/network-playwright playwright-install
     - name: run tests
       env:
         CODE_EXAMPLE_ENV: test
       run: |
-        yarn test
+        pnpm test
