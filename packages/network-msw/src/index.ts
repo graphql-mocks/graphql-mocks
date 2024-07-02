@@ -1,8 +1,8 @@
 import { GraphQLHandler } from 'graphql-mocks';
-import { MswResponseResolver } from './types';
+import { HttpResponse, ResponseResolver } from 'msw';
 
-export function mswResolver(graphqlHandler: GraphQLHandler): MswResponseResolver {
-  const responseResolver: MswResponseResolver = async (req, res, ctx) => {
+export function mswResolver(graphqlHandler: GraphQLHandler): ResponseResolver {
+  const responseResolver: ResponseResolver = async ({ request: req }) => {
     let body = req.body;
 
     if (typeof body === 'string') {
@@ -22,8 +22,8 @@ export function mswResolver(graphqlHandler: GraphQLHandler): MswResponseResolver
       );
     }
 
-    const result = await graphqlHandler.query(query, variables, { msw: { req, res, ctx } }, { operationName });
-    return res(ctx.status(200), ctx.json(result));
+    const result = await graphqlHandler.query(query, variables, { msw: { req } }, { operationName });
+    return HttpResponse.json(result, { status: 200 });
   };
 
   return responseResolver;

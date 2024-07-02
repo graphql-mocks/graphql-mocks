@@ -44,11 +44,11 @@
   "devDependencies": {
     "execa": "^5.1.1",
     "graphql-mocks": "^0.10.0",
-    "msw": "^0.35.0",
+    "msw": "^2.0.0",
     "puppeteer": "^10.2.0"
   },
   "peerDependencies": {
     "graphql-mocks": ">=0.9.2",
-    "msw": "^0.35.0"
+    "msw": "^2.0.0"
   }
 }

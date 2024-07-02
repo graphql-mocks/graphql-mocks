@@ -10,7 +10,7 @@ export function createSchema(schema: GraphQLSchema | DocumentNode | string): Gra
     } catch (error) {
       throw new Error(
         'Unable to build a schema from the AST Schema passed into the `graphqlSchema` dependency. Failed with error:\n\n' +
-          error.message,
+          (error as Error).message,
       );
     }
   }
@@ -21,7 +21,7 @@ export function createSchema(schema: GraphQLSchema | DocumentNode | string): Gra
     } catch (error) {
       throw new Error(
         'Unable to build a schema from the string passed into the `graphqlSchema` dependency. Failed with error:\n\n' +
-          error.message,
+          (error as Error).message,
       );
     }
   }

@@ -33,4 +33,3 @@ comments or feedback.
 * [Chat on discord](https://discord.gg/eJxddt2CJS)
 * [Create a pull request](https://github.com/graphql-mocks/graphql-mocks/pulls)
 * [Open an issue](https://github.com/graphql-mocks/graphql-mocks/issues/new)
-* [Ping me on twitter](https://www.twitter.com/chadian)
