@@ -355,10 +355,10 @@ describe('happy path', () => {
           });
         });
       } catch (error) {
-        caughtError = error;
+        caughtError = error as Error;
       }
 
-      expect(caughtError.message).to.equal(
+      expect((caughtError as Error).message).to.equal(
         'The field "email" represents a graphql "String! (non-null)" type and on the document should be a non-null, but got null',
       );
     });

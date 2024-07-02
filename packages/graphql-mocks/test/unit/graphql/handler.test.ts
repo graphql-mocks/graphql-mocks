@@ -54,7 +54,7 @@ describe('graphql/hander', function () {
             dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
           });
         } catch (e) {
-          error = e;
+          error = e as Error;
         } finally {
           expect(
             error?.message,

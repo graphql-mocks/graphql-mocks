@@ -194,7 +194,7 @@ describe('resolver-map/layer', function () {
           packOptions,
         );
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.deep.equal(
@@ -225,7 +225,7 @@ describe('resolver-map/layer', function () {
           packOptions,
         );
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.deep.equal(

@@ -42,6 +42,7 @@
     "@types/debug": "^4.1.7",
     "@types/git-root-dir": "^1.0.0",
     "@types/mocha": "^5",
+    "@types/sinon": "^10.0.2",
     "chai": "^4",
     "globby": "^10",
     "mocha": "^5",

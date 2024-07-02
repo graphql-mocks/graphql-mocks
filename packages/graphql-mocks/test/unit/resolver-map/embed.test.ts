@@ -130,7 +130,7 @@ describe('resolver-map/embed', function () {
       try {
         await embeddedMiddlware(resolverMap, packOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       } finally {
         expect(error?.message).to.contain(
           'Tried to add a new resolver via `embed` at ["Person","name"] but a resolver already exists there.',
@@ -306,7 +306,7 @@ describe('resolver-map/embed', function () {
       try {
         await embeddedMiddleware(resolverMap, packOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.match(/"graphqlSchema" is an expected dependency, got type/);

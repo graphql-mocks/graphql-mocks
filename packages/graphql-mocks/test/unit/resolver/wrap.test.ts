@@ -89,7 +89,7 @@ describe('resolver/wrap', function () {
         resolverWrapperOptions,
       );
     } catch (e) {
-      error = e;
+      error = e as Error;
     } finally {
       expect(error?.message).to.equal(
         `Wrapper "UNNAMED" was not a function or did not have a wrap method, got string.`,
@@ -119,7 +119,7 @@ describe('resolver/wrap', function () {
       try {
         await applyWrappers(resolver as FieldResolver, [wrapper], resolverWrapperOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.equal(`Wrapper "test-wrapper" is for TYPE resolvers and can't wrap ["User"].`);
@@ -152,7 +152,7 @@ describe('resolver/wrap', function () {
       try {
         await applyWrappers(resolver as TypeResolver, [wrapper], resolverWrapperOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.equal(

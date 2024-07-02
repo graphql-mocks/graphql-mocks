@@ -3,7 +3,7 @@ import { HttpResponse, ResponseResolver } from 'msw';
 
 export function mswResolver(graphqlHandler: GraphQLHandler): ResponseResolver {
   const responseResolver: ResponseResolver = async ({ request: req }) => {
-    let body = req.body;
+    let body = await req.json();
 
     if (typeof body === 'string') {
       body = JSON.parse(body);
