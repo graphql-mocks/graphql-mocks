@@ -41,7 +41,7 @@ describe('spy-middleware', function () {
     const resolverSpy = state.spies.User.name;
     expect(resolverSpy.called).to.equal(false);
 
-    postResolverMap.User.name({}, {}, {}, ({} as unknown) as GraphQLResolveInfo);
+    postResolverMap.User.name({}, {}, {}, {} as unknown as GraphQLResolveInfo);
     expect(resolverSpy.called).to.equal(true);
     expect(resolverSpy.firstCall.returnValue).to.equal('User.name');
   });

@@ -1,11 +1,11 @@
 import { buildSchema, parse } from 'graphql';
 import * as sinon from 'sinon';
-import { expect } from 'chai';
 import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap, ResolverMapMiddleware } from '../../../src/types';
 import { spyWrapper } from '@graphql-mocks/sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { GraphQLScalarType } from 'graphql';
+import { expect } from 'chai';
 
 describe('graphql/hander', function () {
   const schemaString = `
@@ -54,11 +54,10 @@ describe('graphql/hander', function () {
             dependencies: { graphqlSchema: 'NOT A VALID GRAPHQL STRING' },
           });
         } catch (e) {
-          error = e;
+          error = e as Error;
         } finally {
-          expect(
-            error?.message,
-          ).to.contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
+          expect(error?.message).to
+            .contain(`Unable to build a schema from the string passed into the \`graphqlSchema\` dependency. Failed with error:
 
 Syntax Error: Unexpected Name "NOT"`);
         }

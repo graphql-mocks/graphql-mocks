@@ -13,6 +13,9 @@ npm install --save-dev nock @graphql-mocks/network-pretender
 
 # yarn
 yarn add --dev nock @graphql-mocks/network-pretender
+
+# pnpm
+yarn add --save-dev nock @graphql-mocks/network-pretender
 ```
 
 ## Usage

@@ -5,12 +5,10 @@ import { mirageMiddleware } from '../../src';
 import { server as mirageServer } from './test-helpers/mirage-sample';
 import defaultScenario from './test-helpers/mirage-sample/fixtures';
 import { graphqlSchema } from './test-helpers/test-schema';
-import { ResolverMap } from 'graphql-mocks/types';
 import { GraphQLHandler } from 'graphql-mocks';
 
 describe('integration/mirage-auto-resolver', function () {
   let graphQLHandler: GraphQLHandler;
-  let resolvers: ResolverMap;
 
   beforeEach(async function () {
     mirageServer.db.loadData(defaultScenario);
@@ -27,7 +25,6 @@ describe('integration/mirage-auto-resolver', function () {
 
   afterEach(function () {
     mirageServer.db.emptyData();
-    (resolvers as unknown) = undefined;
     (graphQLHandler as unknown) = undefined;
   });
 
@@ -50,8 +47,7 @@ describe('integration/mirage-auto-resolver', function () {
           name: 'Fred Flinstone',
           posts: [
             {
-              body:
-                "They're the modern stone age family. From the town of Bedrock. They're a page right out of history",
+              body: "They're the modern stone age family. From the town of Bedrock. They're a page right out of history",
             },
           ],
         },

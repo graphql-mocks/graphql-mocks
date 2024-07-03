@@ -4,37 +4,28 @@
   "private": true,
   "scripts": {
     "clean": "docusaurus clear",
-    "start": "yarn clean && yarn build:api && yarn copy-cli-readme && CODE_EXAMPLE_ENV=docs docusaurus start",
-    "build": "yarn clean && yarn copy-cli-readme && yarn build:api && yarn build:docs",
-    "build:api": "yarn build:api:graphql-mocks && yarn build:api:paper && yarn build:api:sinon && yarn build:api:mirage && yarn build:api:network-nock && yarn build:api:network-express && yarn build:api:falso && yarn build:api:network-pretender && yarn build:api:network-playwright",
-    "build:api:graphql-mocks": "yarn --cwd ../graphql-mocks typedoc --readme none --out ../docs/static/api/graphql-mocks src/index.ts",
-    "build:api:sinon": "yarn --cwd ../sinon typedoc --readme none --out ../docs/static/api/sinon src/index.ts",
-    "build:api:paper": "yarn --cwd ../paper typedoc --readme none --out ../docs/static/api/paper src/index.ts",
-    "build:api:mirage": "yarn --cwd ../mirage typedoc --readme none --out ../docs/static/api/mirage src/index.ts",
-    "build:api:network-nock": "yarn --cwd ../network-nock typedoc --readme none --out ../docs/static/api/network-nock src/index.ts",
-    "build:api:network-express": "yarn --cwd ../network-express typedoc --readme none --out ../docs/static/api/network-express src/index.ts",
-    "build:api:network-msw": "yarn --cwd ../network-msw typedoc --readme none --out ../docs/static/api/network-msw src/index.ts",
-    "build:api:network-pretender": "yarn --cwd ../network-pretender typedoc --readme none --out ../docs/static/api/network-pretender src/index.ts",
-    "build:api:network-cypress": "yarn --cwd ../network-cypress typedoc --readme none --out ../docs/static/api/network-cypress src/index.ts",
-    "build:api:network-playwright": "yarn --cwd ../network-playwright typedoc --readme none --out ../docs/static/api/network-playwright src/index.ts",
-    "build:api:falso": "yarn --cwd ../falso typedoc --readme none --out ../docs/static/api/falso src/index.ts",
+    "start": "pnpm clean && pnpm build:api-docs && pnpm copy-cli-readme && CODE_EXAMPLE_ENV=docs docusaurus start",
+    "build": "pnpm clean && pnpm copy-cli-readme && pnpm build:api-docs && pnpm build:docs",
+    "build:api-docs": "node scripts/generate-api-docs",
     "build:docs": "CODE_EXAMPLE_ENV=docs docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "yarn clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
+    "deploy": "pnpm clean && CODE_EXAMPLE_ENV=docs docusaurus deploy",
     "test": "CODE_EXAMPLE_ENV=test mocha \"./code-examples/**/*.test.js\"",
     "copy-cli-readme": "cp ../cli/README.md docs/cli/_readme.md"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.2.0",
-    "@docusaurus/preset-classic": "^2.2.0",
+    "@docusaurus/core": "^3.0.0",
+    "@docusaurus/preset-classic": "^3.0.0",
     "@graphql-mocks/mirage": "^0.8.0",
+    "@mdx-js/react": "^3.0.0",
     "classnames": "^2.2.6",
     "graphiql": "1.5.17",
     "graphql-mocks": "^0.10.0",
     "graphql-paper": "^0.3.0",
     "graphql-tools": "^6.0.11",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "prism-react-renderer": "^2.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "browserslist": {
     "production": [
@@ -49,9 +40,11 @@
     ]
   },
   "devDependencies": {
-    "@babel/node": "^7.10.4",
-    "@babel/register": "^7.10.4",
-    "babel-plugin-codegen": "^4.0.1",
+    "@babel/core": "^7.24.7",
+    "@babel/node": "^7.24.7",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/register": "^7.24.6",
+    "babel-plugin-codegen": "^4.1.5",
     "chai": "^4.2.0",
     "core-js": "^3.6.5",
     "globby": "^11.0.1",
@@ -59,8 +52,8 @@
     "prettier": "^2.0.5",
     "ramda": "^0.28.0",
     "react-syntax-highlighter": "^15.4.3",
-    "regenerator-runtime": "^0.13.5",
-    "typedoc": "^0.21.4"
+    "regenerator-runtime": "^0.13.11",
+    "typedoc": "^0.21.10"
   },
   "repository": {
     "type": "git",

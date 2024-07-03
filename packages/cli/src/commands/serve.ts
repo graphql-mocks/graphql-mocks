@@ -1,11 +1,12 @@
 import { Command, Flags } from '@oclif/core';
 import { expressMiddleware } from '@graphql-mocks/network-express';
-import express = require('express');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const express = require('express') as any;
 import { GraphQLHandler } from 'graphql-mocks';
 import { resolve, parse as pathParse } from 'path';
 import { falsoMiddleware } from '@graphql-mocks/falso';
 import axios from 'axios';
-import { CliUx as cli } from '@oclif/core';
+import cli from 'cli-ux';
 import chalk from 'chalk';
 import { ResolverMapMiddleware } from 'graphql-mocks/types';
 import { normalizeAbsolutePath } from '../lib/normalize-absolute-path';
@@ -123,7 +124,7 @@ export default class Serve extends Command {
 
     (handler as any).middlewares = [...(handler as any).middlewares, ...middlewares];
 
-    cli.ux.action.start(`Starting graphql api server on port ${port}`);
+    cli.action.start(`Starting graphql api server on port ${port}`);
     const app = Serve.express();
 
     app.use(cors());
@@ -151,7 +152,7 @@ export default class Serve extends Command {
       });
     });
 
-    cli.ux.action.stop();
+    cli.action.stop();
     return server;
   }
 
@@ -168,7 +169,7 @@ export default class Serve extends Command {
 
     const { config, errors } = loadConfig(flags.config);
 
-    const schemaHeaders = { ...config?.schema?.headers, ...collapseHeaders(flags.header) };
+    const schemaHeaders = { ...config?.schema?.headers, ...collapseHeaders(flags.header as any) };
 
     if (config && errors && errors.length) {
       this.warn(

@@ -20,24 +20,26 @@ export function stashFor(ref: {
   return ref && ref[stashKey];
 }
 
-export const stashStateWrapper = createWrapper('stash-state', WrapperFor.FIELD, async function stashStateWrapper(
-  originalResolver,
-): Promise<FieldResolver> {
-  return (parent, args, context, info): unknown => {
-    const result = originalResolver(parent, args, context, info);
+export const stashStateWrapper = createWrapper(
+  'stash-state',
+  WrapperFor.FIELD,
+  async function stashStateWrapper(originalResolver): Promise<FieldResolver> {
+    return (parent, args, context, info): unknown => {
+      const result = originalResolver(parent, args, context, info);
 
-    if (typeof result === 'object' && result !== null) {
-      const stash: ResolverStash = {
-        parent,
-        args,
-        context,
-        info,
-        result,
-      };
+      if (typeof result === 'object' && result !== null) {
+        const stash: ResolverStash = {
+          parent,
+          args,
+          context,
+          info,
+          result,
+        };
 
-      result[stashKey] = stash;
-    }
+        result[stashKey] = stash;
+      }
 
-    return result;
-  };
-});
+      return result;
+    };
+  },
+);

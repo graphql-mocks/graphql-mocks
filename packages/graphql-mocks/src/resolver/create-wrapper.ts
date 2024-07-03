@@ -103,5 +103,5 @@ export function createWrapper<K extends WrapperForOptions>(
   wrapperFor: K,
   wrapperFn: WrapperFnMapping[K],
 ): NamedWrapper<K> {
-  return (new InternalNamedWrapper(name, wrapperFor, wrapperFn) as unknown) as NamedWrapper<K>;
+  return new InternalNamedWrapper(name, wrapperFor, wrapperFn) as unknown as NamedWrapper<K>;
 }

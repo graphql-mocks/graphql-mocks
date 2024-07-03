@@ -35,14 +35,12 @@ describe('resolver/wrap', function () {
 
     resolver = spy();
     internalWrapperSpy = spy();
-    resolverWrapper = spy(
-      (resolver /*, _options*/): FieldResolver => {
-        return (parent, args, context, info): ReturnType<typeof resolver> => {
-          internalWrapperSpy();
-          return resolver(parent, args, context, info);
-        };
-      },
-    );
+    resolverWrapper = spy((resolver /*, _options*/): FieldResolver => {
+      return (parent, args, context, info): ReturnType<typeof resolver> => {
+        internalWrapperSpy();
+        return resolver(parent, args, context, info);
+      };
+    });
   });
 
   it('can wrap a resolver function', async function () {
@@ -85,11 +83,11 @@ describe('resolver/wrap', function () {
       await applyWrappers(
         resolver,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [(): any => ('resolver wrapper returning a string' as unknown) as FieldResolver],
+        [(): any => 'resolver wrapper returning a string' as unknown as FieldResolver],
         resolverWrapperOptions,
       );
     } catch (e) {
-      error = e;
+      error = e as Error;
     } finally {
       expect(error?.message).to.equal(
         `Wrapper "UNNAMED" was not a function or did not have a wrap method, got string.`,
@@ -119,7 +117,7 @@ describe('resolver/wrap', function () {
       try {
         await applyWrappers(resolver as FieldResolver, [wrapper], resolverWrapperOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.equal(`Wrapper "test-wrapper" is for TYPE resolvers and can't wrap ["User"].`);
@@ -152,7 +150,7 @@ describe('resolver/wrap', function () {
       try {
         await applyWrappers(resolver as TypeResolver, [wrapper], resolverWrapperOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.equal(

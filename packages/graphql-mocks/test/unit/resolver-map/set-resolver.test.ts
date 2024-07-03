@@ -28,19 +28,19 @@ describe('resolver-map/set-resolver', function () {
   context('argument checks', function () {
     it('throws when an invalid resolverMap type is passed in', function () {
       expect(() =>
-        setResolver(('STRING IS NOT AN OBJECT' as unknown) as ResolverMap, sampleFieldReference, sampleResolver),
+        setResolver('STRING IS NOT AN OBJECT' as unknown as ResolverMap, sampleFieldReference, sampleResolver),
       ).to.throw(/Expected resolverMap must be an object, got string/);
     });
 
     it('throws when an invalid resolver function is passed in', function () {
       expect(() =>
-        setResolver(resolverMap, sampleFieldReference, ('STRING IS NOT A RESOLVER' as unknown) as FieldResolver),
+        setResolver(resolverMap, sampleFieldReference, 'STRING IS NOT A RESOLVER' as unknown as FieldResolver),
       ).to.throw(/Expected resolver to be a function, got string/);
     });
 
     it('throws when an invalid Reference type is passed in', function () {
       expect(() =>
-        setResolver(resolverMap, ({ noop: 'Not a valid reference' } as unknown) as Reference, sampleResolver),
+        setResolver(resolverMap, { noop: 'Not a valid reference' } as unknown as Reference, sampleResolver),
       ).to.throw(/Expected reference to be a type reference or field reference, got object/);
     });
   });

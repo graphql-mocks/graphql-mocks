@@ -15,14 +15,14 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\"",
-    "pretest": "tsc --noEmit && yarn lint",
+    "pretest": "tsc --noEmit && pnpm lint",
     "test": "cypress run --component",
     "cypress": "cypress open",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
+    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "repository": {
@@ -32,7 +32,7 @@
   "keywords": [
     "graphql-mocks",
     "graphql",
-    "falso",
+    "cypress",
     "mocking"
   ],
   "publishConfig": {
@@ -40,13 +40,13 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "axios": "^0.27.2",
-    "cypress": "^10.0.3",
+    "axios": "^1.7.2",
+    "cypress": "^13.13.0",
     "graphql-mocks": "^0.10.0",
-    "vite": "^2.9.0"
+    "vite": "^5.3.2"
   },
   "peerDependencies": {
     "cypress": "^8.0.0 || ^ 9.0.0 || ^10.0.0",

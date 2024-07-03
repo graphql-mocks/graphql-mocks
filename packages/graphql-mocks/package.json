@@ -67,13 +67,13 @@
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",
-    "pretest": "tsc --noEmit && yarn lint",
+    "pretest": "tsc --noEmit && pnpm lint",
     "test": "TS_NODE_PROJECT=\"./test/tsconfig.json\" mocha -r ts-node/register \"./test/**/*.test.ts\"",
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "yarn clean && rollup -c rollup.config.js && yarn copy-pjson && yarn check-exports-map && yarn copy-readme",
+    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
     "watch": "rollup --watch -c rollup-watch.config.js"
   },
   "repository": {
@@ -90,19 +90,19 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 16.0.0"
+    "node": ">= 20.0.0"
   },
   "dependencies": {
     "ramda": "^0.28.0"
   },
   "peerDependencies": {
-    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^16.0.0"
   },
   "optionalDependencies": {
     "sinon": "^9.0.0"
   },
   "devDependencies": {
-    "@types/ramda": "^0.28.12",
+    "@types/ramda": "^0.30.0",
     "@types/sinon": "^10.0.2",
     "miragejs": "^0.1.40",
     "sinon": "^9.0.0"

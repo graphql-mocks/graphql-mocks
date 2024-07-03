@@ -20,16 +20,16 @@ describe('wrapper/log', function () {
     const initialResolver = (): string => 'hello world';
 
     const wrappedResolver = (await logWrapper.wrap(initialResolver, {
-      schema: ({} as unknown) as GraphQLSchema,
+      schema: {} as unknown as GraphQLSchema,
       resolverMap: {} as ResolverMap,
       type: userObjectType,
       field: userObjectNameField,
       packOptions: generatePackOptions(),
     })) as FieldResolver;
 
-    await wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, ({
+    await wrappedResolver({ parent: 'parent' }, { args: 'args' }, { context: 'context' }, {
       info: 'info',
-    } as unknown) as GraphQLResolveInfo);
+    } as unknown as GraphQLResolveInfo);
 
     const logCalls = logStub
       .getCalls()
@@ -58,7 +58,7 @@ result:
     const initialResolver = (): string => 'hello world';
 
     const wrappedResolver = (await logWrapper.wrap(initialResolver, {
-      schema: ({} as unknown) as GraphQLSchema,
+      schema: {} as unknown as GraphQLSchema,
       resolverMap: {} as ResolverMap,
       type: nameableInterfaceType,
       packOptions: generatePackOptions(),
@@ -67,10 +67,10 @@ result:
     await wrappedResolver(
       { value: 'value' },
       { context: 'context' },
-      ({ info: 'info' } as unknown) as GraphQLResolveInfo,
-      ({
+      { info: 'info' } as unknown as GraphQLResolveInfo,
+      {
         abstractType: 'abstractType',
-      } as unknown) as GraphQLInterfaceType,
+      } as unknown as GraphQLInterfaceType,
     );
 
     const logCalls = logStub

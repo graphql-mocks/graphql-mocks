@@ -65,14 +65,14 @@ const schema = buildSchema(`
 `);
 
 function buildInfo(fieldName: string): GraphQLResolveInfo {
-  return ({
+  return {
     parentType: {
       name: 'Query',
     },
     fieldName,
     returnType: schema.getQueryType()?.getFields()[fieldName].type,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any) as GraphQLResolveInfo;
+  } as any as GraphQLResolveInfo;
 }
 
 const TEST_DEFAULT_LIST_COUNT = 3;

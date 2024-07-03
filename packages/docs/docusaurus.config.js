@@ -17,7 +17,7 @@ module.exports = {
       disableSwitch: true,
     },
     prism: {
-      theme: require('prism-react-renderer/themes/github'),
+      theme: require('prism-react-renderer').themes.github,
     },
     navbar: {
       title: 'graphql-mocks',
@@ -85,8 +85,5 @@ module.exports = {
     ],
   ],
 
-  plugins: [
-    path.resolve(__dirname, 'plugins/docusaurus-load-examples.js'),
-    path.resolve(__dirname, 'plugins/docusaurus-plausible-analytics.js'),
-  ],
+  plugins: [path.resolve(__dirname, 'plugins/docusaurus-load-examples.js')],
 };

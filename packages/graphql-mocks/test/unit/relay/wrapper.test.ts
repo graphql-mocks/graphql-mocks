@@ -388,7 +388,7 @@ describe('relay/wrapper', function () {
           const wrapped = await createRelayWrappedResolver(info, () => allSpells, false, cursorForNode);
           await wrapped(parent, args, context, info);
         } catch (error) {
-          e = error;
+          e = error as Error;
         }
 
         expect(e.message).to.contain("ANARCHY doesn't appear to be a valid edge");
@@ -404,7 +404,7 @@ describe('relay/wrapper', function () {
           const wrapped = await createRelayWrappedResolver(info, () => allSpells, false, cursorForNode);
           await wrapped(parent, args, context, info);
         } catch (error) {
-          expect(error.message).to.contain('`first` argument must be greater than or equal to 0');
+          expect((error as Error).message).to.contain('`first` argument must be greater than or equal to 0');
           return;
         }
 
@@ -495,7 +495,7 @@ describe('relay/wrapper', function () {
           const wrapped = await createRelayWrappedResolver(info, () => allSpells, false, cursorForNode);
           await wrapped(parent, args, context, info);
         } catch (e) {
-          error = e;
+          error = e as Error;
         }
 
         expect(error.message).to.contain("ANARCHY doesn't appear to be a valid edge");
@@ -512,7 +512,7 @@ describe('relay/wrapper', function () {
           const wrapped = await createRelayWrappedResolver(info, () => allSpells, false, cursorForNode);
           await wrapped(parent, args, context, info);
         } catch (error) {
-          e = error;
+          e = error as Error;
         }
 
         expect(e.message).to.contain('`last` argument must be greater than or equal to 0');

@@ -130,7 +130,7 @@ describe('resolver-map/embed', function () {
       try {
         await embeddedMiddlware(resolverMap, packOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       } finally {
         expect(error?.message).to.contain(
           'Tried to add a new resolver via `embed` at ["Person","name"] but a resolver already exists there.',
@@ -172,12 +172,9 @@ describe('resolver-map/embed', function () {
 
     it('it can embed a new resolver with wrappers', async function () {
       const resolverWrapper: Wrapper = spy(
-        async (resolver) => (
-          parent: unknown,
-          args: unknown,
-          context: unknown,
-          info: unknown,
-        ): ReturnType<FieldResolver> => resolver(parent, args, context, info),
+        async (resolver) =>
+          (parent: unknown, args: unknown, context: unknown, info: unknown): ReturnType<FieldResolver> =>
+            resolver(parent, args, context, info),
       );
 
       const embeddedMiddleware = embed({
@@ -224,13 +221,17 @@ describe('resolver-map/embed', function () {
   context('wrapping an existing resolver', function () {
     it('it can embed wrappers around existing resolvers', async function () {
       const nameFieldResolver = spy();
-      const resolverWrapper: Wrapper = spy(async (resolver) => (
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        parent: any,
-        args: Record<string, unknown>,
-        context: Record<string, unknown>,
-        info: GraphQLResolveInfo,
-      ): FieldResolver => resolver(parent, args, context, info));
+      const resolverWrapper: Wrapper = spy(
+        async (resolver) =>
+          (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parent: any,
+            args: Record<string, unknown>,
+            context: Record<string, unknown>,
+            info: GraphQLResolveInfo,
+          ): FieldResolver =>
+            resolver(parent, args, context, info),
+      );
 
       const embeddedResolverMapMiddleware = embed({
         highlight: [['Person', 'name']],
@@ -306,7 +307,7 @@ describe('resolver-map/embed', function () {
       try {
         await embeddedMiddleware(resolverMap, packOptions);
       } catch (e) {
-        error = e;
+        error = e as Error;
       }
 
       expect(error?.message).to.match(/"graphqlSchema" is an expected dependency, got type/);
