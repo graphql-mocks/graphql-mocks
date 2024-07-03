@@ -40,8 +40,6 @@ describe('highlight/highlighter/from-resolver', function () {
   });
 
   it('returns an empty references array when an object is passed in', function () {
-    expect(fromResolverMap(('NOT A RESOLVER MAP, WHOOPS' as unknown) as ResolverMap).mark(noopSchema)).to.deep.equal(
-      [],
-    );
+    expect(fromResolverMap('NOT A RESOLVER MAP, WHOOPS' as unknown as ResolverMap).mark(noopSchema)).to.deep.equal([]);
   });
 });

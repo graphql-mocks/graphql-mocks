@@ -11,7 +11,7 @@ type DebuggerOptions = {
 export function debuggerWrapper(
   { before: debuggerBefore, after: debuggerAfter }: DebuggerOptions = { before: true, after: true },
 ): NamedWrapper<'ANY'> {
-  return createWrapper('debugger-wrapper', WrapperFor.ANY, function (originalResolver, _options) {
+  return createWrapper('debugger-wrapper', WrapperFor.ANY, function (originalResolver) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return async function (...args: [any, any, any, any]) {
       if (debuggerBefore) {

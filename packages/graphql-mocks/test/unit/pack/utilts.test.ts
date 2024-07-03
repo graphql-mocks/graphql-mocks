@@ -23,7 +23,7 @@ describe('pack/utils', function () {
         },
       });
 
-      wrappedResolver(null, { arg: '' }, { existing: 'other-existing-context' }, ({} as unknown) as GraphQLResolveInfo);
+      wrappedResolver(null, { arg: '' }, { existing: 'other-existing-context' }, {} as unknown as GraphQLResolveInfo);
 
       // pulled from third arg
       const context = resolver.firstCall.args[2];
@@ -58,8 +58,8 @@ describe('pack/utils', function () {
       wrappedResolver(
         { value: 'value' },
         { existing: 'other-existing-context' },
-        ({ info: 'info' } as unknown) as GraphQLResolveInfo,
-        ({} as unknown) as GraphQLAbstractType,
+        { info: 'info' } as unknown as GraphQLResolveInfo,
+        {} as unknown as GraphQLAbstractType,
       );
 
       // pulled from second arg

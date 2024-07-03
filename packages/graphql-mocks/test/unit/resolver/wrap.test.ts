@@ -35,14 +35,12 @@ describe('resolver/wrap', function () {
 
     resolver = spy();
     internalWrapperSpy = spy();
-    resolverWrapper = spy(
-      (resolver /*, _options*/): FieldResolver => {
-        return (parent, args, context, info): ReturnType<typeof resolver> => {
-          internalWrapperSpy();
-          return resolver(parent, args, context, info);
-        };
-      },
-    );
+    resolverWrapper = spy((resolver /*, _options*/): FieldResolver => {
+      return (parent, args, context, info): ReturnType<typeof resolver> => {
+        internalWrapperSpy();
+        return resolver(parent, args, context, info);
+      };
+    });
   });
 
   it('can wrap a resolver function', async function () {
@@ -85,7 +83,7 @@ describe('resolver/wrap', function () {
       await applyWrappers(
         resolver,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        [(): any => ('resolver wrapper returning a string' as unknown) as FieldResolver],
+        [(): any => 'resolver wrapper returning a string' as unknown as FieldResolver],
         resolverWrapperOptions,
       );
     } catch (e) {

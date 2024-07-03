@@ -35,13 +35,15 @@ export class FieldHighlighter implements Highlighter {
     if (typeTarget === HIGHLIGHT_ALL) {
       const allTypes = Object.values(schema.getTypeMap());
 
-      const expanded = (allTypes
-        .filter((type) => !type.name.startsWith('__'))
-        .map((type: GraphQLNamedType) => {
-          const hasFields = type && 'getFields' in type && !isInputType(type);
-          return hasFields ? this.expandTarget(schema, [type.name, fieldTarget]) : undefined;
-        })
-        .filter(Boolean) as FieldReference[][]).reduce(concat, []);
+      const expanded = (
+        allTypes
+          .filter((type) => !type.name.startsWith('__'))
+          .map((type: GraphQLNamedType) => {
+            const hasFields = type && 'getFields' in type && !isInputType(type);
+            return hasFields ? this.expandTarget(schema, [type.name, fieldTarget]) : undefined;
+          })
+          .filter(Boolean) as FieldReference[][]
+      ).reduce(concat, []);
 
       return expanded;
     }

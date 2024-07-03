@@ -1,32 +1,26 @@
 import * as falso from '@ngneat/falso';
-import {
-  ReplaceableResolverOption,
-  HighlightableOption,
-} from 'graphql-mocks/resolver-map/types';
+import { ReplaceableResolverOption, HighlightableOption } from 'graphql-mocks/resolver-map/types';
 
 export type Falso = typeof falso;
 
 // https://newbedev.com/typescript-deep-keyof-of-a-nested-object
-type Join<K, P> = K extends string | number ?
-    P extends string | number ?
-    // eslint-disable-next-line prettier/prettier
-    `${K}${"" extends P ? "" : "."}${P}`
-    : never : never;
-
+type Join<K, P> = K extends string | number
+  ? P extends string | number
+    ? // eslint-disable-next-line prettier/prettier
+      `${K}${'' extends P ? '' : '.'}${P}`
+    : never
+  : never;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Paths<T> = T extends object ?
-    { [K in keyof T]: K extends string ?
-        `${K}` | Join<K, Paths<T[K]>>
-        : never
-    }[keyof T] : never
-
+type Paths<T> = T extends object
+  ? { [K in keyof T]: K extends string ? `${K}` | Join<K, Paths<T[K]>> : never }[keyof T]
+  : never;
 
 export type FalsoGeneratorOptions = {
   nullPercentage?: number;
   nullListPercentage?: number;
   listCount?: number | { min: number; max: number };
-}
+};
 
 export type FalsoFieldOptions<K = Paths<Falso>> = FalsoGeneratorOptions & {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

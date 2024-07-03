@@ -39,7 +39,7 @@ describe('spy-wrapper', function () {
     const resolverSpy = state.spies.User.name;
     expect(resolverSpy.called).to.equal(false);
 
-    wrappedResolver({}, {}, {}, ({} as unknown) as GraphQLResolveInfo);
+    wrappedResolver({}, {}, {}, {} as unknown as GraphQLResolveInfo);
     expect(resolverSpy.called).to.equal(true);
     expect(resolverSpy.firstCall.returnValue).to.equal(resolverReturnValue);
   });

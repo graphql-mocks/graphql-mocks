@@ -36,7 +36,7 @@ export type GenericWrapperFunction = (
   options: BaseWrapperOptions,
 ) => FieldResolver | TypeResolver | Promise<FieldResolver | TypeResolver>;
 
-export type WrapperForOptions = typeof WrapperFor[keyof typeof WrapperFor];
+export type WrapperForOptions = (typeof WrapperFor)[keyof typeof WrapperFor];
 
 export type WrapperFnMapping = {
   [WrapperFor.FIELD]: FieldWrapperFunction;
