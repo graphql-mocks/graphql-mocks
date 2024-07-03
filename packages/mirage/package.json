@@ -44,11 +44,11 @@
     "ramda": "^0.28.0"
   },
   "devDependencies": {
-    "@types/ramda": "^0.28.12",
-    "@types/sinon": "^10.0.2",
+    "@types/ramda": "^0.30.0",
+    "@types/sinon": "^17.0.3",
     "graphql-mocks": "^0.10.0",
     "miragejs": "^0.1.40",
-    "sinon": "^11.1.2"
+    "sinon": "^18.0.0"
   },
   "peerDependencies": {
     "graphql": "^16.0.0",

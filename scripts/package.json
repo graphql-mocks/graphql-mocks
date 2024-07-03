@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lodash.get": "latest",
-    "fs-extra": "latest"
+    "fs-extra": "^11.2.0",
+    "lodash.get": "^4.4.2"
   }
 }

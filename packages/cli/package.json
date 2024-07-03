@@ -46,9 +46,9 @@
     "chai": "^4",
     "globby": "^10",
     "mocha": "^5",
-    "oclif": "^2",
+    "oclif": "^4",
     "sinon": "^12.0.1",
-    "typescript": "^4.5.5"
+    "typescript": "^5"
   },
   "engines": {
     "node": ">= 20.0.0"

@@ -48,7 +48,7 @@ export function guessFalsoFn(fieldName: string, returnType: GraphQLType): () => 
     }
 
     if (fieldName.includes('price')) {
-      return falso.randAmount;
+      return () => falso.randAmount();
     }
 
     if (fieldName.includes('date')) {

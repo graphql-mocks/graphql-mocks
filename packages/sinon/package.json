@@ -42,9 +42,9 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "@types/sinon": "^10.0.2",
+    "@types/sinon": "^17.0.3",
     "graphql-mocks": "^0.10.0",
-    "sinon": "^11.1.2"
+    "sinon": "^18.0.0"
   },
   "peerDependencies": {
     "graphql": "^16.0.0",

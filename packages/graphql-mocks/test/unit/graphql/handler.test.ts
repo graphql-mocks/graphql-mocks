@@ -1,11 +1,11 @@
 import { buildSchema, parse } from 'graphql';
 import * as sinon from 'sinon';
-import { expect } from 'chai';
 import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap, ResolverMapMiddleware } from '../../../src/types';
 import { spyWrapper } from '@graphql-mocks/sinon';
 import { embed } from '../../../src/resolver-map/embed';
 import { GraphQLScalarType } from 'graphql';
+import { expect } from 'chai';
 
 describe('graphql/hander', function () {
   const schemaString = `
