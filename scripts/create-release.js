@@ -388,12 +388,12 @@ class Package {
 }
 
 try {
-  // checkMainBranch();
-  // checkCleanBranch();
-  // createReleaseBranch();
-  // pnpmLernaClean();
-  // pnpmAndLink();
-  // pnpmBootstrap();
+  checkMainBranch();
+  checkCleanBranch();
+  createReleaseBranch();
+  pnpmLernaClean();
+  pnpmAndLink();
+  pnpmBootstrap();
 
   const packages = getLernaPackages().map((lernaPackage) => {
     const { name, location: path } = lernaPackage;
