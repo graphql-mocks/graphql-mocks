@@ -4,63 +4,63 @@
   "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
   "main": "dist/index.js",
-  "module": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/es/index.js",
+      "import": "./dist/es/index.mjs",
       "require": "./dist/index.js"
     },
     "./graphql": {
-      "import": "./dist/es/graphql/index.js",
+      "import": "./dist/es/graphql/index.mjs",
       "require": "./dist/graphql/index.js"
     },
     "./graphql/type-utils": {
-      "import": "./dist/es/graphql/type-utils/index.js",
+      "import": "./dist/es/graphql/type-utils/index.mjs",
       "require": "./dist/graphql/type-utils/index.js"
     },
     "./graphql/utils": {
-      "import": "./dist/es/graphql/utils/index.js",
+      "import": "./dist/es/graphql/utils/index.mjs",
       "require": "./dist/graphql/utils/index.js"
     },
     "./highlight": {
-      "import": "./dist/es/highlight/index.js",
+      "import": "./dist/es/highlight/index.mjs",
       "require": "./dist/highlight/index.js"
     },
     "./highlight/utils": {
-      "import": "./dist/es/highlight/utils/index.js",
+      "import": "./dist/es/highlight/utils/index.mjs",
       "require": "./dist/highlight/utils/index.js"
     },
     "./resolver-map": {
-      "import": "./dist/es/resolver-map/index.js",
+      "import": "./dist/es/resolver-map/index.mjs",
       "require": "./dist/resolver-map/index.js"
     },
     "./resolver-map/utils": {
-      "import": "./dist/es/resolver-map/utils/index.js",
+      "import": "./dist/es/resolver-map/utils/index.mjs",
       "require": "./dist/resolver-map/utils/index.js"
     },
     "./resolver": {
-      "import": "./dist/es/resolver/index.js",
+      "import": "./dist/es/resolver/index.mjs",
       "require": "./dist/resolver/index.js"
     },
     "./resolver/utils": {
-      "import": "./dist/es/resolver/utils/index.js",
+      "import": "./dist/es/resolver/utils/index.mjs",
       "require": "./dist/resolver/utils/index.js"
     },
     "./relay": {
-      "import": "./dist/es/relay/index.js",
+      "import": "./dist/es/relay/index.mjs",
       "require": "./dist/relay/index.js"
     },
     "./pack": {
-      "import": "./dist/es/pack/index.js",
+      "import": "./dist/es/pack/index.mjs",
       "require": "./dist/pack/index.js"
     },
     "./pack/utils": {
-      "import": "./dist/es/pack/utils/index.js",
+      "import": "./dist/es/pack/utils/index.mjs",
       "require": "./dist/pack/utils/index.js"
     },
     "./wrapper": {
-      "import": "./dist/es/wrapper/index.js",
+      "import": "./dist/es/wrapper/index.mjs",
       "require": "./dist/wrapper/index.js"
     }
   },

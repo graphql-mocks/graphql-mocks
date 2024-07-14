@@ -4,10 +4,10 @@
   "author": "Roland Németh",
   "description": "Mock using graphql-mocks with Playwright",
   "main": "dist/index.js",
-  "module": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/es/index.js",
+      "import": "./dist/es/index.mjs",
       "require": "./dist/index.js"
     }
   },

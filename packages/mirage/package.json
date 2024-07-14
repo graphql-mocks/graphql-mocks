@@ -4,10 +4,10 @@
   "author": "Chad Carbert",
   "description": "Mock graphql using graphql-mocks and miragejs",
   "main": "dist/index.js",
-  "module": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/es/index.js",
+      "import": "./dist/es/index.mjs",
       "require": "./dist/index.js"
     }
   },
