@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-pretender",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with pretender.js",
   "main": "dist/index.js",
