@@ -6,7 +6,8 @@ const path = require('path');
 const { strict: assert } = require('assert');
 const { existsSync } = require('fs');
 
-const INDEX_FILE = 'index.js';
+const CJS_INDEX_FILE = 'index.js';
+const MJS_INDEX_FILE = 'index.mjs';
 
 async function checkExportsMap() {
   console.log('🕵️   package.json exports map check start...');
@@ -27,13 +28,13 @@ async function checkExportsMap() {
   Object.entries(pjson.exports).forEach(([importPath, moduleTypeMap]) => {
     assert.ok(moduleTypeMap.import, `has "import" entry for "${importPath}"`);
     assert.ok(moduleTypeMap.require, `has "require" entry for "${importPath}"`);
-    let expectedRequireIndex = path.resolve(distDir, importPath, INDEX_FILE);
-    let expectedImportIndex = path.resolve(distDir, 'es', importPath, INDEX_FILE);
+    let expectedRequireIndex = path.resolve(distDir, importPath, CJS_INDEX_FILE);
+    let expectedImportIndex = path.resolve(distDir, 'es', importPath, MJS_INDEX_FILE);
     assert.ok(existsSync(expectedRequireIndex), `"require" file ${expectedRequireIndex} exsits at expected location`);
     assert.ok(existsSync(expectedImportIndex), `"import" file ${expectedImportIndex} exsits at expected location`);
 
-    let expectedModuleTypeMapRequire = './' + path.join(importPath, INDEX_FILE);
-    let expectedModuleTypeMapImport = './' + path.join('es', importPath, INDEX_FILE);
+    let expectedModuleTypeMapRequire = './' + path.join(importPath, CJS_INDEX_FILE);
+    let expectedModuleTypeMapImport = './' + path.join('es', importPath, MJS_INDEX_FILE);
 
     assert.equal(moduleTypeMap.require, expectedModuleTypeMapRequire);
     assert.equal(moduleTypeMap.import, expectedModuleTypeMapImport);
@@ -42,7 +43,7 @@ async function checkExportsMap() {
 
   const onDiskIndexFiles = await globby(distDir, {
     expandDirectories: {
-      files: [INDEX_FILE],
+      files: [MJS_INDEX_FILE, CJS_INDEX_FILE],
     },
   });
 

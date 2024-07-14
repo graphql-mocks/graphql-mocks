@@ -4,8 +4,14 @@
   "author": "Chad Carbert",
   "description": "**REPLACE ME**",
   "main": "dist/index.js",
-  "module": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
   "license": "MIT",
   "scripts": {
     "lint": "eslint \"./src/**/*.ts\" \"./test/**/*.ts\"",

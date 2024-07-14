@@ -5,11 +5,11 @@
   "description": "Fake GraphQL queries with graphql-mocks and Falso",
   "main": "dist/index.js",
   "license": "MIT",
-  "module": "dist/es/index.js",
+  "module": "dist/es/index.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/es/index.js",
+      "import": "./dist/es/index.mjs",
       "require": "./dist/index.js"
     }
   },
