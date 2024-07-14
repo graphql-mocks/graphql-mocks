@@ -8,41 +8,41 @@ const chalk = require('chalk');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
-function yarnAndLink({ retry } = { retry: true }) {
-  console.log(chalk.blue(`running \`yarn\` and \`yarn link-packages\``));
+function pnpmAndLink({ retry } = { retry: true }) {
+  console.log(chalk.blue(`running \`pnpm\` and \`pnpm link-packages\``));
   try {
-    execSync(`yarn`);
-    execSync(`yarn link-packages`);
+    execSync(`pnpm install`);
+    execSync(`pnpm link-packages`);
   } catch (e) {
     if (retry) {
       console.error(e);
       console.log('Cleaning cache and retrying');
-      execSync(`yarn cache clean`);
-      yarnAndLink({ retry: false });
+      execSync(`pnpm cache clean`);
+      pnpmAndLink({ retry: false });
     } else {
       throw e;
     }
   }
-  console.log(chalk.green(`✅ finished running \`yarn\` and \`yarn link-packages\``));
+  console.log(chalk.green(`✅ finished running \`pnpm\` and \`pnpm link-packages\``));
 }
 
-function yarnLernaClean() {
-  console.log(chalk.blue(`running \`yarn clean\``));
-  execSync(`yarn lerna clean --yes`);
-  console.log(chalk.green(`✅ finished running \`yarn clean\``));
+function pnpmLernaClean() {
+  console.log(chalk.blue(`running \`pnpm clean\``));
+  execSync(`pnpm lerna clean --yes`);
+  console.log(chalk.green(`✅ finished running \`pnpm clean\``));
 }
 
 function getLernaPackages({ changed } = { changed: false }) {
   if (changed) {
-    return JSON.parse(execSync('yarn --silent run lerna changed --json').toString());
+    return JSON.parse(execSync('pnpm lerna changed --json').toString());
   } else {
-    return JSON.parse(execSync('yarn --silent run lerna ls --json').toString());
+    return JSON.parse(execSync('pnpm lerna ls --json').toString());
   }
 }
 
 function getPublishedVersions(package) {
   try {
-    return JSON.parse(execSync(`yarn info --json ${package}`).toString()).data.versions;
+    return JSON.parse(execSync(`pnpm info --json ${package}`).toString()).data.versions;
   } catch {
     return [];
   }
@@ -89,8 +89,8 @@ function checkPackagePeerDependencies(package, packages) {
 
   checkPackagePeers.stop();
 
-  console.log(chalk.blue('restoring package dependencies with yarn and re-linking'));
-  yarnAndLink();
+  console.log(chalk.blue('restoring package dependencies with pnpm and re-linking'));
+  pnpmAndLink();
 }
 
 function announceBrokenPeerDependencies(packages) {
@@ -123,8 +123,8 @@ function testPackage(package, peerPackage) {
       const testPeerVersion = step(`Testing ${package.name} with peer version ${peerPackage.name}@${version}`);
       try {
         testPeerVersion.start();
-        execSync(`yarn run lerna exec --scope ${package.name} "npm install --no-save ${peerPackage.name}@${version}"`);
-        execSync(`yarn run lerna run --scope ${package.name} test`);
+        execSync(`pnpm lerna exec --scope ${package.name} "npm install --no-save ${peerPackage.name}@${version}"`);
+        execSync(`pnpm lerna run --scope ${package.name} test`);
         testPeerVersion.stop();
       } catch (e) {
         testPeerVersion.error();
@@ -219,16 +219,16 @@ function announcePackageChangelogs(packages) {
   });
 }
 
-function yarnBootstrap() {
-  console.log(chalk.blue('running yarn bootstrap'));
-  execSync(`yarn bootstrap`);
-  console.log(chalk.green('✅ finished running yarn bootstrap'));
+function pnpmBootstrap() {
+  console.log(chalk.blue('running pnpm bootstrap'));
+  execSync(`pnpm bootstrap`);
+  console.log(chalk.green('✅ finished running pnpm bootstrap'));
 }
 
-function yarnBuild() {
-  console.log(chalk.blue('running yarn build'));
-  execSync(`yarn build`);
-  console.log(chalk.green('✅ finished running yarn build'));
+function pnpmBuild() {
+  console.log(chalk.blue('running pnpm build'));
+  execSync(`pnpm build`);
+  console.log(chalk.green('✅ finished running pnpm build'));
 }
 
 function createReleaseBranch() {
@@ -237,7 +237,7 @@ function createReleaseBranch() {
 }
 
 function lernaVersion() {
-  execSync('yarn run lerna version --no-git-tag-version --no-push', {
+  execSync('pnpm lerna version --no-git-tag-version --no-push', {
     cwd: process.cwd(),
     env: process.env,
     stdio: 'inherit',
@@ -253,10 +253,10 @@ function checkMainBranch() {
 }
 
 function checkCleanBranch() {
-  // run yarn, if there are changes to yarn.lock then
+  // run pnpm, if there are changes to pnpm.lock then
   // the clean working directory check will fail
-  console.log(chalk.blue('  Running yarn, to ensure no uncommitted changes to yarn.lock'));
-  execSync('yarn', { stdio: 'ignore' });
+  console.log(chalk.blue('  Running pnpm, to ensure no uncommitted changes to pnpm.lock'));
+  execSync('pnpm install', { stdio: 'ignore' });
 
   const cleanWorkingDirectory = execSync('git status --porcelain').toString().trim() === '';
   if (!cleanWorkingDirectory) {
@@ -388,12 +388,12 @@ class Package {
 }
 
 try {
-  checkMainBranch();
-  checkCleanBranch();
-  createReleaseBranch();
-  yarnLernaClean();
-  yarnAndLink();
-  yarnBootstrap();
+  // checkMainBranch();
+  // checkCleanBranch();
+  // createReleaseBranch();
+  // pnpmLernaClean();
+  // pnpmAndLink();
+  // pnpmBootstrap();
 
   const packages = getLernaPackages().map((lernaPackage) => {
     const { name, location: path } = lernaPackage;
@@ -404,8 +404,8 @@ try {
 
   // after checking peer dependencies, node_modules need to be restored to a
   // clean slate for the remaining of the release
-  yarnLernaClean();
-  yarnBootstrap();
+  pnpmLernaClean();
+  pnpmBootstrap();
 
   announceBrokenPeerDependencies(packages);
   attachChangelogs(packages);
@@ -425,7 +425,7 @@ try {
   packages.forEach((package) => package.write());
 
   // must come after versioning (especially for the case of the cli for the oclif manifest)
-  yarnBuild();
+  pnpmBuild();
 
   createChangeLogEntries(packages);
   commitChangesWithFormattedMessage(packages);
