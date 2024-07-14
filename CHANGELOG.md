@@ -2,6 +2,17 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.11.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
+
 ### graphql-mocks@0.10.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -60,6 +71,17 @@
 
 ## graphql-paper
 
+### graphql-paper@0.4.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
+
 ### graphql-paper@0.3.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -92,6 +114,12 @@
 
 
 ## gqlmocks
+
+### gqlmocks@0.5.0
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
 
 ### gqlmocks@0.3.2
 
@@ -156,6 +184,17 @@
 
 ## @graphql-mocks/mirage
 
+### @graphql-mocks/mirage@0.9.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
+
 ### @graphql-mocks/mirage@0.8.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -190,6 +229,17 @@
 
 ## @graphql-mocks/falso
 
+### @graphql-mocks/falso@0.7.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
+
 ### @graphql-mocks/falso@0.6.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -213,6 +263,16 @@
 * (feature) Introducing `@graphql-mocks/falso`, replacing @graphql-mocks/faker, as the package to provide fake data across an entire schema. [Falso](https://github.com/ngneat/falso) benefits from being esmodule-first and being actively developed and supported.
 
 ## @graphql-mocks/network-express
+
+### @graphql-mocks/network-express@0.4.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
 
 ### @graphql-mocks/network-express@0.3.0
 
@@ -242,6 +302,17 @@
 
 ## @graphql-mocks/network-msw
 
+### @graphql-mocks/network-msw@0.4.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Bumped to `msw` minimum requirement of `2.0.0`
+
 ### @graphql-mocks/network-msw@0.3.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -261,6 +332,17 @@
 * (feature) Added package README
 
 ## @graphql-mocks/network-nock
+
+### @graphql-mocks/network-nock@0.6.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
 
 ### @graphql-mocks/network-nock@0.5.0
 
@@ -286,6 +368,16 @@
 
 ## @graphql-mocks/network-pretender
 
+### @graphql-mocks/network-pretender@0.4.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+
 ### @graphql-mocks/network-pretender@0.3.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -309,6 +401,17 @@
 * (feature) Introducing `@graphql-mocks/network-pretender`, a new browser network handler using pretender.js
 
 ## @graphql-mocks/sinon
+
+### @graphql-mocks/sinon@0.5.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+* (breaking) Requires peer dependency graphql >= 16
 
 ### @graphql-mocks/sinon@0.4.0
 
@@ -334,6 +437,16 @@
 
 ## @graphql-mocks/network-cypress
 
+### @graphql-mocks/network-cypress@0.4.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
+
 ### @graphql-mocks/network-cypress@0.3.0
 
 #### Add package.json export maps ([#234](https://github.com/graphql-mocks/graphql-mocks/pull/234))
@@ -357,6 +470,16 @@
 * (feature) Introducing `@graphql-mocks/network-cypress`, a new network handler for cypress
 
 ## @graphql-mocks/network-playwright
+
+### @graphql-mocks/network-playwright@0.2.0
+
+#### Fix esm imports for node ([#255](https://github.com/graphql-mocks/graphql-mocks/pull/255))
+
+* (fix) Fix es module imports for node
+
+#### 🧹 Housekeeping: switch to pnpm, bump node, root dependencies and supported graphql version ([#250](https://github.com/graphql-mocks/graphql-mocks/pull/250))
+
+* (breaking) Requires node >= 20
 
 ### @graphql-mocks/network-playwright@0.1.1
 
