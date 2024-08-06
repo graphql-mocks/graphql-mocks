@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-nock",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with Nock",
   "main": "dist/index.js",
@@ -45,7 +45,7 @@
   "devDependencies": {
     "@types/nock": "^11.1.0",
     "@types/node-fetch": "^2.6.11",
-    "graphql-mocks": "^0.11.0",
+    "graphql-mocks": "^0.11.1",
     "nock": "^13.5.4",
     "node-fetch": "^2.6.1"
   },
