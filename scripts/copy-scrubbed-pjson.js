@@ -42,6 +42,10 @@ function cleanPackageJson(pjson) {
     if (map.import) {
       map.import = removeDist(map.import);
     }
+
+    if (map.types) {
+      map.types = removeDist(map.types);
+    }
   });
 
   return copy;

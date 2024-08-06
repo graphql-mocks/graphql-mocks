@@ -8,19 +8,23 @@
   "exports": {
     ".": {
       "import": "./dist/es/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./document": {
       "import": "./dist/es/document/index.mjs",
-      "require": "./dist/document/index.js"
+      "require": "./dist/document/index.js",
+      "types": "./dist/document/index.d.ts"
     },
     "./operations": {
       "import": "./dist/es/operations/index.mjs",
-      "require": "./dist/operations/index.js"
+      "require": "./dist/operations/index.js",
+      "types": "./dist/operations/index.d.ts"
     },
     "./validations/validators": {
       "import": "./dist/es/validations/validators/index.mjs",
-      "require": "./dist/validations/validators/index.js"
+      "require": "./dist/validations/validators/index.js",
+      "types": "./dist/validations/validators/index.d.ts"
     }
   },
   "types": "dist/index.d.ts",

@@ -9,59 +9,73 @@
   "exports": {
     ".": {
       "import": "./dist/es/index.mjs",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./graphql": {
       "import": "./dist/es/graphql/index.mjs",
-      "require": "./dist/graphql/index.js"
+      "require": "./dist/graphql/index.js",
+      "types": "./dist/graphql/index.d.ts"
     },
     "./graphql/type-utils": {
       "import": "./dist/es/graphql/type-utils/index.mjs",
-      "require": "./dist/graphql/type-utils/index.js"
+      "require": "./dist/graphql/type-utils/index.js",
+      "types": "./dist/graphql/type-utils/index.d.ts"
     },
     "./graphql/utils": {
       "import": "./dist/es/graphql/utils/index.mjs",
-      "require": "./dist/graphql/utils/index.js"
+      "require": "./dist/graphql/utils/index.js",
+      "types": "./dist/graphql/utils/index.d.ts"
     },
     "./highlight": {
       "import": "./dist/es/highlight/index.mjs",
-      "require": "./dist/highlight/index.js"
+      "require": "./dist/highlight/index.js",
+      "types": "./dist/highlight/index.d.ts"
     },
     "./highlight/utils": {
       "import": "./dist/es/highlight/utils/index.mjs",
-      "require": "./dist/highlight/utils/index.js"
+      "require": "./dist/highlight/utils/index.js",
+      "types": "./dist/highlight/utils/index.d.ts"
     },
     "./resolver-map": {
       "import": "./dist/es/resolver-map/index.mjs",
-      "require": "./dist/resolver-map/index.js"
+      "require": "./dist/resolver-map/index.js",
+      "types": "./dist/resolver-map/index.d.ts"
     },
     "./resolver-map/utils": {
       "import": "./dist/es/resolver-map/utils/index.mjs",
-      "require": "./dist/resolver-map/utils/index.js"
+      "require": "./dist/resolver-map/utils/index.js",
+      "types": "./dist/resolver-map/utils/index.d.ts"
     },
     "./resolver": {
       "import": "./dist/es/resolver/index.mjs",
-      "require": "./dist/resolver/index.js"
+      "require": "./dist/resolver/index.js",
+      "types": "./dist/resolver/index.d.ts"
     },
     "./resolver/utils": {
       "import": "./dist/es/resolver/utils/index.mjs",
-      "require": "./dist/resolver/utils/index.js"
+      "require": "./dist/resolver/utils/index.js",
+      "types": "./dist/resolver/utils/index.d.ts"
     },
     "./relay": {
       "import": "./dist/es/relay/index.mjs",
-      "require": "./dist/relay/index.js"
+      "require": "./dist/relay/index.js",
+      "types": "./dist/relay/index.d.ts"
     },
     "./pack": {
       "import": "./dist/es/pack/index.mjs",
-      "require": "./dist/pack/index.js"
+      "require": "./dist/pack/index.js",
+      "types": "./dist/pack/index.d.ts"
     },
     "./pack/utils": {
       "import": "./dist/es/pack/utils/index.mjs",
-      "require": "./dist/pack/utils/index.js"
+      "require": "./dist/pack/utils/index.js",
+      "types": "./dist/pack/utils/index.d.ts"
     },
     "./wrapper": {
       "import": "./dist/es/wrapper/index.mjs",
-      "require": "./dist/wrapper/index.js"
+      "require": "./dist/wrapper/index.js",
+      "types": "./dist/wrapper/index.d.ts"
     }
   },
   "license": "MIT",
