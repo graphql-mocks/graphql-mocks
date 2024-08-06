@@ -1,0 +1,85 @@
+{
+  "targetDefaults": {
+    "start": {
+      "dependsOn": []
+    },
+    "build": {
+      "cache": true,
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "test-build": {
+      "dependsOn": []
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": [
+        "^test"
+      ]
+    },
+    "eject": {
+      "dependsOn": []
+    },
+    "serve": {
+      "dependsOn": []
+    },
+    "postpack": {
+      "dependsOn": []
+    },
+    "prepack": {
+      "dependsOn": []
+    },
+    "copy-blueprints": {
+      "dependsOn": []
+    },
+    "copy-readme": {
+      "dependsOn": []
+    },
+    "clean": {
+      "dependsOn": []
+    },
+    "build:api-docs": {
+      "dependsOn": []
+    },
+    "build:docs": {
+      "dependsOn": []
+    },
+    "swizzle": {
+      "dependsOn": []
+    },
+    "deploy": {
+      "dependsOn": []
+    },
+    "copy-cli-readme": {
+      "dependsOn": []
+    },
+    "lint": {
+      "dependsOn": []
+    },
+    "copy-pjson": {
+      "dependsOn": []
+    },
+    "check-exports-map": {
+      "dependsOn": []
+    },
+    "watch": {
+      "dependsOn": []
+    },
+    "pretest": {
+      "dependsOn": []
+    },
+    "cypress": {
+      "dependsOn": []
+    },
+    "playwright-install": {
+      "dependsOn": []
+    },
+    "test:server": {
+      "dependsOn": []
+    }
+  }
+}

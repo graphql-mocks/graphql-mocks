@@ -43,9 +43,11 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "pretender": "^3.4.7"
+    "pretender": "^3.4.7",
+    "graphql-mocks": "^0.11.1"
   },
   "peerDependencies": {
-    "pretender": "^3.4.7"
+    "pretender": "^3.4.7",
+    "graphql-mocks": "^0.11.1"
   }
 }

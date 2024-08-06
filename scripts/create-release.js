@@ -12,7 +12,6 @@ function pnpmAndLink({ retry } = { retry: true }) {
   console.log(chalk.blue(`running \`pnpm\` and \`pnpm link-packages\``));
   try {
     execSync(`pnpm install`);
-    execSync(`pnpm link-packages`);
   } catch (e) {
     if (retry) {
       console.error(e);
