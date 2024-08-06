@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import { produce, setAutoFreeze } from 'immer';
+import { createDraft, finishDraft, setAutoFreeze, setUseStrictShallowCopy } from 'immer';
 import { createStoreEvents } from './events/dispatch';
 import * as defaultOperations from './operations/index';
 import { transaction } from './transaction/transaction';
@@ -35,6 +35,11 @@ import {
 // > must be represented faithfully
 // > https://exploringjs.com/deep-js/ch_proxies.html
 setAutoFreeze(false);
+
+// Paper `Document` objects uses getters and non-enumerables, in order
+// to preserve this in immer >= 10 `setUseStrictShallowCopy(true)` is
+// required
+setUseStrictShallowCopy(true);
 
 export class Paper<UserOperations extends OperationMap = OperationMap> {
   protected history: DocumentStore[] = [];
@@ -102,30 +107,28 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     const current = this.current;
     const hooks = this.hooks;
     const operations = this.operations;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let result: any;
-    let customEvents: Event[] = [];
 
-    const next = await produce(current, async (draft) => {
-      const { transactionResult, eventQueue } = await transaction<typeof operations>(
-        draft,
-        schema,
-        operations,
-        hooks,
-        fn as T,
-      );
+    const draft = createDraft(current);
+    const { transactionResult, eventQueue: customEvents } = await transaction<typeof operations>(
+      draft,
+      schema,
+      operations,
+      hooks,
+      fn as T,
+    );
+    const resultKeys = captureTransactionResultKeys(transactionResult);
 
-      result = captureTransactionResultKeys(transactionResult);
-      customEvents = eventQueue;
-    });
-
+    const next = finishDraft(draft);
     this.validate(next);
+
     const storeEvents = createStoreEvents(current, next);
     this.dispatchEvents([...storeEvents, ...customEvents]);
+
     this.current = next;
     this.history.push(next);
 
+    const mutateResult = convertResultKeysToDocument(schema, next, resultKeys) as ReturnType<T>;
     finish();
-    return convertResultKeysToDocument(schema, next, result) as ReturnType<T>;
+    return mutateResult;
   }
 }
