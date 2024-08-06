@@ -36,7 +36,7 @@
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@oclif/test": "^2",
+    "@oclif/test": "2.0.0",
     "@types/chai": "^4",
     "@types/config": "^0.0.40",
     "@types/debug": "^4.1.7",
@@ -46,7 +46,7 @@
     "chai": "^4",
     "globby": "^10",
     "mocha": "^5",
-    "oclif": "^4",
+    "oclif": "4.0.0",
     "sinon": "^12.0.1",
     "typescript": "^5"
   },

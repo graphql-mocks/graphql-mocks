@@ -5,7 +5,7 @@
 * [`gqlmocks config validate`](#gqlmocks-config-validate)
 * [`gqlmocks handler generate`](#gqlmocks-handler-generate)
 * [`gqlmocks handler info`](#gqlmocks-handler-info)
-* [`gqlmocks help [COMMAND]`](#gqlmocks-help-command)
+* [`gqlmocks help [COMMANDS]`](#gqlmocks-help-commands)
 * [`gqlmocks schema fetch`](#gqlmocks-schema-fetch)
 * [`gqlmocks schema info`](#gqlmocks-schema-info)
 * [`gqlmocks schema validate`](#gqlmocks-schema-validate)
@@ -144,26 +144,25 @@ EXAMPLES
 
 _See code: [src/commands/handler/info.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/handler/info.ts)_
 
-## `gqlmocks help [COMMAND]`
+## `gqlmocks help [COMMANDS]`
 
-display help for gqlmocks
+Display help for gqlmocks.
 
 ```
 USAGE
-  $ gqlmocks help [COMMAND] [--json] [--all]
+  $ gqlmocks help [COMMANDS...] [-n]
 
 ARGUMENTS
-  COMMAND  command to show help for
+  COMMANDS...  Command to show help for.
 
 FLAGS
-  --all   see all commands in CLI
-  --json  Format output as json.
+  -n, --nested-commands  Include all nested commands in the output.
 
 DESCRIPTION
-  display help for gqlmocks
+  Display help for gqlmocks.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.0.0/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_
 
 ## `gqlmocks schema fetch`
 
@@ -288,8 +287,19 @@ _See code: [src/commands/serve.ts](https://github.com/graphql-mocks/graphql-mock
 
 ```
 USAGE
-  $ gqlmocks version
+  $ gqlmocks version [--json] [--verbose]
+
+FLAGS
+  --verbose  Show additional information about the CLI.
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+FLAG DESCRIPTIONS
+  --verbose  Show additional information about the CLI.
+
+    Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.0.4/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.3.10/src/commands/version.ts)_
 <!-- commandsstop -->

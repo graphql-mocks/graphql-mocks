@@ -87,8 +87,8 @@
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
-    "watch": "rollup --watch -c rollup-watch.config.js"
+    "build": "pnpm clean && rollup --bundleConfigAsCjs -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
+    "watch": "rollup --bundleConfigAsCjs --watch -c rollup-watch.config.js"
   },
   "repository": {
     "type": "git",
@@ -107,19 +107,19 @@
     "node": ">= 20.0.0"
   },
   "dependencies": {
-    "ramda": "^0.28.0"
+    "ramda": "^0.30.1"
   },
   "peerDependencies": {
     "graphql": "^16.0.0"
   },
   "optionalDependencies": {
-    "sinon": "^9.0.0"
+    "sinon": "^18.0.0"
   },
   "devDependencies": {
-    "@types/ramda": "^0.30.0",
-    "@types/sinon": "^10.0.2",
-    "miragejs": "^0.1.40",
-    "sinon": "^9.0.0",
-    "@graphql-mocks/sinon": "^0.5.1"
+    "@graphql-mocks/sinon": "workspace:^",
+    "@types/ramda": "^0.30.1",
+    "@types/sinon": "^17.0.3",
+    "miragejs": "0.2.0-alpha.3",
+    "sinon": "^9.0.0"
   }
 }

@@ -21,8 +21,8 @@
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
     "copy-readme": "cp README.md dist/README.md",
-    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
-    "watch": "rollup --watch -c rollup-watch.config.js"
+    "build": "pnpm clean && rollup --bundleConfigAsCjs -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map && pnpm copy-readme",
+    "watch": "rollup --bundleConfigAsCjs --watch -c rollup-watch.config.js"
   },
   "repository": {
     "type": "git",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@ngneat/falso": "^7.2.0",
     "@types/sinon": "^17.0.3",
-    "graphql-mocks": "^0.11.1",
+    "graphql-mocks": "workspace:^",
     "sinon": "^18.0.0"
   },
   "peerDependencies": {

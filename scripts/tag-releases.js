@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 const { execSync } = require('child_process');
 
 function tagCommit(commit, tag) {

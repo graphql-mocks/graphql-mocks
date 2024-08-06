@@ -12,6 +12,7 @@
   * (breaking) list breaking changes first
   * (feature) added a new feature
   * (fix) fixed bug
+  * (chore) non-breaking dependency updates or small tweaks that are not fixes or features
 -->
 
 ### `package-name`

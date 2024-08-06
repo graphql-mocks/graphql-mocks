@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 
 const { execSync } = require('child_process');
 const { exit } = require('process');

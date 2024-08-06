@@ -1,6 +1,5 @@
 import { ResolverMapMiddleware, ResolverMap } from '../types';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type NonNullDependency = object | string | boolean | symbol | number;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -20,8 +20,8 @@
     "clean": "rimraf ./dist",
     "copy-pjson": "node scripts/copy-scrubbed-pjson",
     "check-exports-map": "node scripts/check-exports-map",
-    "build": "pnpm clean && rollup -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map",
-    "watch": "rollup --watch -c rollup-watch.config.js"
+    "build": "pnpm clean && rollup --bundleConfigAsCjs -c rollup.config.js && pnpm copy-pjson && pnpm check-exports-map",
+    "watch": "rollup --bundleConfigAsCjs --watch -c rollup-watch.config.js"
   },
   "repository": {
     "type": "git",

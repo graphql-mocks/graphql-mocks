@@ -51,8 +51,8 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
         dir,
         sourcemap: true,
         entryFileNames: '[name].js',
+        preserveModules: true,
       },
-      preserveModules: true,
       plugins: buildPlugins('cjs', { declaration: true, declarationDir: dir }),
     });
   }
@@ -68,8 +68,8 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
         dir,
         sourcemap: true,
         entryFileNames: '[name].mjs',
+        preserveModules: true,
       },
-      preserveModules: true,
       plugins: buildPlugins('es', { declaration: true, declarationDir: dir }),
     });
   }

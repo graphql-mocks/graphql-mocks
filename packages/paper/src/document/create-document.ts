@@ -40,7 +40,7 @@ export function createDocument<T extends Document = Document>(
     enumerable: false,
 
     get() {
-      return typename;
+      return document[DOCUMENT_GRAPHQL_TYPENAME];
     },
 
     set() {
