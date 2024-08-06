@@ -8,6 +8,7 @@ const { existsSync } = require('fs');
 
 const CJS_INDEX_FILE = 'index.js';
 const MJS_INDEX_FILE = 'index.mjs';
+const TYPES_INDEX_FILE = 'index.d.ts';
 
 async function checkExportsMap() {
   console.log('🕵️   package.json exports map check start...');
@@ -28,24 +29,42 @@ async function checkExportsMap() {
   Object.entries(pjson.exports).forEach(([importPath, moduleTypeMap]) => {
     assert.ok(moduleTypeMap.import, `has "import" entry for "${importPath}"`);
     assert.ok(moduleTypeMap.require, `has "require" entry for "${importPath}"`);
+
     let expectedRequireIndex = path.resolve(distDir, importPath, CJS_INDEX_FILE);
     let expectedImportIndex = path.resolve(distDir, 'es', importPath, MJS_INDEX_FILE);
+    let expectedTypesIndex = path.resolve(distDir, importPath, TYPES_INDEX_FILE);
     assert.ok(existsSync(expectedRequireIndex), `"require" file ${expectedRequireIndex} exsits at expected location`);
     assert.ok(existsSync(expectedImportIndex), `"import" file ${expectedImportIndex} exsits at expected location`);
+    assert.ok(existsSync(expectedTypesIndex), `"types" file ${expectedTypesIndex} exsits at expected location`);
 
     let expectedModuleTypeMapRequire = './' + path.join(importPath, CJS_INDEX_FILE);
     let expectedModuleTypeMapImport = './' + path.join('es', importPath, MJS_INDEX_FILE);
+    let expectedModuleTypeMapTypes = './' + path.join(importPath, TYPES_INDEX_FILE);
 
     assert.equal(moduleTypeMap.require, expectedModuleTypeMapRequire);
     assert.equal(moduleTypeMap.import, expectedModuleTypeMapImport);
-    exportMapIndexFiles.push(expectedRequireIndex, expectedImportIndex);
+    assert.equal(moduleTypeMap.types, expectedModuleTypeMapTypes);
+    exportMapIndexFiles.push(expectedRequireIndex, expectedImportIndex, expectedTypesIndex);
   });
 
-  const onDiskIndexFiles = await globby(distDir, {
+  const onDiskIndexJavascriptFiles = await globby(distDir, {
     expandDirectories: {
       files: [MJS_INDEX_FILE, CJS_INDEX_FILE],
     },
   });
+
+  const onDiskIndexTypesFiles = (
+    await globby(distDir, {
+      ignore: ['es'],
+      expandDirectories: {
+        files: [TYPES_INDEX_FILE],
+      },
+    })
+  )
+    // purposefully exclude checking additional es-module .d.ts files
+    .filter((filepath) => !filepath.startsWith(path.join(distDir, 'es')));
+
+  const onDiskIndexFiles = [...onDiskIndexJavascriptFiles, ...onDiskIndexTypesFiles];
 
   const missingExportMapIndexFiles = exportMapIndexFiles.filter((file) => !onDiskIndexFiles.includes(file));
   const missingOnDiskIndexFiles = onDiskIndexFiles.filter((file) => !exportMapIndexFiles.includes(file));
@@ -54,12 +73,12 @@ async function checkExportsMap() {
   assert.equal(
     missingExportMapIndexFiles.length,
     0,
-    `No missing in export map index files:\n${pretty(missingExportMapIndexFiles)}`,
+    `None missing in export map index files:\n${pretty(missingExportMapIndexFiles)}`,
   );
   assert.equal(
     missingOnDiskIndexFiles.length,
     0,
-    `No missing in on disk index files:\n${pretty(missingOnDiskIndexFiles)}`,
+    `None missing on disk index files:\n${pretty(missingOnDiskIndexFiles)}`,
   );
 
   console.log('🎉  package.json exports map done!');
