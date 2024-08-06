@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@types/sinon": "^17.0.3",
-    "graphql-mocks": "^0.11.1",
+    "graphql-mocks": "workspace:^",
     "sinon": "^18.0.0"
   },
   "peerDependencies": {

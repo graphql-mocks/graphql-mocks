@@ -45,8 +45,8 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.45.0",
-    "graphql-mocks": "^0.11.1",
+    "@playwright/test": "^1.46.0",
+    "graphql-mocks": "workspace:^",
     "serve": "^14.2.3"
   },
   "peerDependencies": {
