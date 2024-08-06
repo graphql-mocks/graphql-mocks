@@ -44,10 +44,8 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node-fetch": "^2.6.11",
     "express": "^4.19.2",
-    "graphql-mocks": "^0.11.1",
-    "node-fetch": "^2.6.1"
+    "graphql-mocks": "^0.11.1"
   },
   "peerDependencies": {
     "express": "^4.17.1",
