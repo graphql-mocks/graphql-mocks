@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/falso",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "author": "Chad Carbert",
   "description": "Fake GraphQL queries with graphql-mocks and Falso",
   "main": "dist/index.js",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "@ngneat/falso": "^7.2.0",
     "@types/sinon": "^17.0.3",
-    "graphql-mocks": "^0.11.0",
+    "graphql-mocks": "^0.11.1",
     "sinon": "^18.0.0"
   },
   "peerDependencies": {
