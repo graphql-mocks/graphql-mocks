@@ -27,11 +27,3 @@ Using [Falso](https://github.com/ngneat/falso) with the Resolver Map Middleware 
 * Fallbacks to Falso data based on field-name heuristics
 * Configurable Falso functions per GraphQL field
 * Provide dynamic ranges for list types
-
-## Mirage JS
-* Package: `@graphql-mocks/mirage`
-* [Documentation](/docs/guides/mirage-js)
-
-*Note:* If starting new it's much easier to use GraphQL Paper which works natively with GraphQL, including connections and relationships. GraphQL Paper solves the same use cases as Mirage but in a GraphQL-first way using the GraphQL Schema with more extensibility and features like events, custom validations and hooks. If starting to migrate from an existing a Mirage setup then using the Mirage JS middleware is likely a good start.
-
-[Mirage JS](https://miragejs.com/) is a tool for aimed at mocking out REST APIs and includes an in-memory store. `@graphql-mocks/mirage` provides a middleware that leverages uses Mirage to provide stateful GraphQL queries. See the [documentation](/docs/guides/mirage-js) for details and plenty of examples.

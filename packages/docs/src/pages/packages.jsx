@@ -73,9 +73,6 @@ function Packages() {
               <tr>
                 <Package directoryName="sinon" packageName="@graphql-mocks/sinon" />
               </tr>
-              <tr>
-                <Package directoryName="mirage" packageName="@graphql-mocks/mirage" />
-              </tr>
             </tbody>
           </table>
         </main>

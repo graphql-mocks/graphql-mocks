@@ -10,7 +10,6 @@ const pathsSet = [
   ['graphql-mocks', '../docs/static/api/graphql-mocks src/index.ts'],
   ['sinon', '../docs/static/api/sinon src/index.ts'],
   ['paper', '../docs/static/api/paper src/index.ts'],
-  ['mirage', '../docs/static/api/mirage src/index.ts'],
   ['network-nock', '../docs/static/api/network-nock src/index.ts'],
   ['network-express', '../docs/static/api/network-express src/index.ts'],
   ['network-msw', '../docs/static/api/network-msw src/index.ts'],
