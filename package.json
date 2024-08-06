@@ -3,12 +3,12 @@
   "description": "Mono repo for core graphql-mocks packages",
   "private": true,
   "scripts": {
-    "lint": "lerna run --parallel lint",
-    "test": "lerna run --parallel test",
+    "lint": "lerna run lint",
+    "test": "lerna run test",
     "build": "lerna run build",
     "link-packages": "node scripts/link-packages",
     "postinstall": "pnpm link-packages",
-    "bootstrap": "lerna bootstrap && pnpm build",
+    "bootstrap": "pnpm install && pnpm build",
     "create-release": "node scripts/create-release",
     "publish-packages": "pnpm bootstrap && pnpm test && lerna publish from-package --no-private",
     "tag-releases": "node scripts/tag-releases"
