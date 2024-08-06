@@ -25,7 +25,8 @@ export const mirageTypeResolver: GraphQLTypeResolver<any, any> = function mirage
   try {
     matchingFieldsCandidate = useFindInCommon ? findTypeWithFieldsMostInCommon(obj, possibleConcreteTypes) : undefined;
   } catch {
-    'Tried to find a match automatically based on matching properties' +
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    'Swallowing error... tried to find a match automatically based on matching properties' +
       'from the object against fields in the possible types...';
   }
 

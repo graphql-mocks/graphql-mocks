@@ -3,8 +3,8 @@ import { ResolverMap } from 'graphql-mocks/types';
 import { Server } from 'http';
 import { makeRequest } from '../test-helpers/make-request';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { createApp } = require('../test-helpers/express-app');
+// @ts-expect-error no types expected from this test-helpers file
+import { createApp } from '../test-helpers/express-app';
 
 describe('express-middleware', function () {
   const port = 3030;

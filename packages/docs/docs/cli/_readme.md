@@ -6,8 +6,10 @@
 * [`gqlmocks handler generate`](#gqlmocks-handler-generate)
 * [`gqlmocks handler info`](#gqlmocks-handler-info)
 * [`gqlmocks help [COMMANDS]`](#gqlmocks-help-commands)
+* [`gqlmocks schema fetch`](#gqlmocks-schema-fetch)
 * [`gqlmocks schema info`](#gqlmocks-schema-info)
 * [`gqlmocks schema validate`](#gqlmocks-schema-validate)
+* [`gqlmocks serve`](#gqlmocks-serve)
 * [`gqlmocks version`](#gqlmocks-version)
 
 ## `gqlmocks config generate`
@@ -162,6 +164,43 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_
 
+## `gqlmocks schema fetch`
+
+fetch and save a graphql schema locally
+
+```
+USAGE
+  $ gqlmocks schema fetch [--header <value>... ] [-c <value>] [--save-schema <value>] [--force] [--format
+    SDL|SDL_STRING] [--source <value>]
+
+FLAGS
+  -c, --config=<value>       path to config file
+      --force                overwrite a schema file if one already exists
+      --format=<option>      [default: SDL] format to save the schema as
+                             <options: SDL|SDL_STRING>
+      --header=<value>...    specify header(s) used in the request for remote schema specified by --schema flag
+      --save-schema=<value>  path of file to save schema to
+      --source=<value>       url of graphql api server or url of remote .graphql file
+
+DESCRIPTION
+  fetch and save a graphql schema locally
+
+EXAMPLES
+  $ gqlmocks schema fetch
+
+  $ gqlmocks schema fetch --force
+
+  $ gqlmocks schema fetch --source "http://remote.com/schema.graphql"
+
+  $ gqlmocks schema fetch --source "http://remote-gql-api.com"
+
+  $ gqlmocks schema fetch --source "http://remote-gql-api.com" --header "Authorization=Bearer abc123" --header "Header=Text"
+
+  $ gqlmocks schema fetch --format "SDL_STRING"
+```
+
+_See code: [src/commands/schema/fetch.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/schema/fetch.ts)_
+
 ## `gqlmocks schema info`
 
 display info about a graphql schema
@@ -209,6 +248,40 @@ EXAMPLES
 ```
 
 _See code: [src/commands/schema/validate.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/schema/validate.ts)_
+
+## `gqlmocks serve`
+
+run a local graphql server
+
+```
+USAGE
+  $ gqlmocks serve [-c <value>] [-h <value>] [--header <value>... -s <value>] [-f] [-p <value>]
+
+FLAGS
+  -c, --config=<value>     path to config file
+  -f, --fake               use @graphql-mocks/falso to fill in missing resolvers with fake data
+  -h, --handler=<value>    path to file with graphql handler
+  -p, --port=<value>       [default: 4444] Port to serve on
+  -s, --schema=<value>     local path to graphql schema (relative or absolute), remote url (graphql schema file or
+                           graphql api endpoint)
+      --header=<value>...  specify header(s) used in the request for remote schema specified by --schema flag
+
+DESCRIPTION
+  run a local graphql server
+
+EXAMPLES
+  $ gqlmocks serve --schema ../schema.graphql
+
+  $ gqlmocks serve --handler ../handler.ts
+
+  $ gqlmocks serve --schema http://s3-bucket/schema.graphql --fake
+
+  $ gqlmocks serve --schema http://graphql-api/ --fake
+
+  $ gqlmocks serve --schema http://graphql-api/ --header "Authorization=Bearer token" --fake
+```
+
+_See code: [src/commands/serve.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/serve.ts)_
 
 ## `gqlmocks version`
 

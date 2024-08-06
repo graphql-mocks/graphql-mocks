@@ -11,7 +11,6 @@ type Join<K, P> = K extends string | number
     : never
   : never;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Paths<T> = T extends object
   ? { [K in keyof T]: K extends string ? `${K}` | Join<K, Paths<T[K]>> : never }[keyof T]
   : never;
