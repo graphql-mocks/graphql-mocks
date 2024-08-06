@@ -119,6 +119,7 @@
     "@types/ramda": "^0.30.0",
     "@types/sinon": "^10.0.2",
     "miragejs": "^0.1.40",
-    "sinon": "^9.0.0"
+    "sinon": "^9.0.0",
+    "@graphql-mocks/sinon": "^0.5.1"
   }
 }

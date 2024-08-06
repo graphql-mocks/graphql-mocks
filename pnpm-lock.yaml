@@ -402,6 +402,9 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
     devDependencies:
+      '@graphql-mocks/sinon':
+        specifier: ^0.5.1
+        version: link:../sinon/dist
       '@types/ramda':
         specifier: ^0.30.0
         version: 0.30.0
