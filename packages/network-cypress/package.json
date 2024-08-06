@@ -44,7 +44,7 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "axios": "^1.7.3",
+    "axios": "^0.28.0",
     "cypress": "^13.13.2",
     "graphql-mocks": "workspace:^",
     "vite": "^5.3.5"
