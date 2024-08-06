@@ -78,7 +78,6 @@ module.exports = {
         'guides/automatic-filtering',
         'guides/relay-pagination',
         'guides/fake-data',
-        'guides/mirage-js',
       ],
     },
   ],

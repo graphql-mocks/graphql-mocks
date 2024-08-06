@@ -1,1 +1,0 @@
-../../../scripts/check-exports-map.js
