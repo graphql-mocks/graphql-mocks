@@ -6,8 +6,6 @@
     "lint": "lerna run lint",
     "test": "lerna run test",
     "build": "lerna run build",
-    "link-packages": "node scripts/link-packages",
-    "postinstall": "pnpm link-packages",
     "bootstrap": "pnpm install && pnpm build",
     "create-release": "node scripts/create-release",
     "publish-packages": "pnpm bootstrap && pnpm test && lerna publish from-package --no-private",
