@@ -1,6 +1,6 @@
 {
   "name": "browser-acceptance-tests",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -13,11 +13,11 @@
     "serve": "http-server build -p 3232"
   },
   "dependencies": {
-    "@graphql-mocks/network-msw": "^0.4.0",
-    "@graphql-mocks/network-pretender": "^0.4.0",
+    "@graphql-mocks/network-msw": "^0.4.1",
+    "@graphql-mocks/network-pretender": "^0.4.1",
     "connect": "^3.7.0",
     "execa": "^9.3.0",
-    "graphql-mocks": "^0.11.0",
+    "graphql-mocks": "^0.11.1",
     "http-server": "^14.1.1",
     "msw": "^2.3.1",
     "pretender": "^3.4.7",
