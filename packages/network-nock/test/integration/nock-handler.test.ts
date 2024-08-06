@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { GraphQLHandler } from 'graphql-mocks';
 import { nockHandler } from '../../src/index';
 import nock from 'nock';
-import fetch from 'node-fetch';
 
 const schemaString = `
 schema {
