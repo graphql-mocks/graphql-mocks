@@ -545,14 +545,14 @@ importers:
         specifier: ^16.0.0
         version: 16.9.0
       immer:
-        specifier: ^9.0.6
-        version: 9.0.21
+        specifier: ^10.1.1
+        version: 10.1.1
       just-diff:
         specifier: ^6.0.2
         version: 6.0.2
       ramda:
-        specifier: ^0.28.0
-        version: 0.28.0
+        specifier: ^0.30.1
+        version: 0.30.1
       short-unique-id:
         specifier: ^5.2.0
         version: 5.2.0
@@ -7322,6 +7322,9 @@ packages:
     resolution: {integrity: sha512-541xKlUw6jr/6gGuk92F+mYM5zaFAc5ahphvkqvNe2bQ6gVBkd6bfrmVJ2t4KDAfikAYZyIqTnktX3i6/aQDrQ==}
     engines: {node: '>=16.x'}
     hasBin: true
+
+  immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
 
   immer@9.0.21:
     resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
@@ -16493,7 +16496,7 @@ snapshots:
       ansis: 3.3.2
       clean-stack: 3.0.1
       cli-spinners: 2.9.2
-      debug: 4.3.5(supports-color@8.1.1)
+      debug: 4.3.6(supports-color@8.1.1)
       ejs: 3.1.10
       get-package-type: 0.1.0
       globby: 11.1.0
@@ -22107,6 +22110,8 @@ snapshots:
   image-size@1.1.1:
     dependencies:
       queue: 6.0.2
+
+  immer@10.1.1: {}
 
   immer@9.0.21: {}
 
