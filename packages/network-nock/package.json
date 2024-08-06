@@ -44,8 +44,10 @@
   },
   "devDependencies": {
     "@types/nock": "^11.1.0",
+    "@types/node-fetch": "^2.6.11",
     "graphql-mocks": "workspace:^",
-    "nock": "^13.5.4"
+    "nock": "^13.5.4",
+    "node-fetch": "^2"
   },
   "peerDependencies": {
     "graphql": "^16.0.0",

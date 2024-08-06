@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { GraphQLHandler } from 'graphql-mocks';
 import { nockHandler } from '../../src/index';
 import nock from 'nock';
+import fetch from 'node-fetch';
 
 const schemaString = `
 schema {
@@ -15,7 +16,6 @@ type Query {
 `;
 
 async function makeRequest(query: string, variables?: Record<string, unknown>, operationName?: string) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const body: any = { query };
 
   if (variables) {
