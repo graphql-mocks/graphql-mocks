@@ -47,7 +47,7 @@
     "globby": "^10",
     "mocha": "^5",
     "oclif": "^4",
-    "sinon": "^12.0.1",
+    "sinon": "^18.0.0",
     "typescript": "^5"
   },
   "engines": {
