@@ -9,7 +9,7 @@ function createMockResolverArgs(
   typeName: string,
   fieldName: string,
 ): [ResolverParent, ResolverArgs, ResolverContext, ResolverInfo] {
-  const schema = createSchema(schemaString);
+  const schema = createSchema(schemaString, { makeCopy: true });
   return [null, {}, {}, { fieldName, parentType: schema.getType(typeName) } as GraphQLResolveInfo];
 }
 

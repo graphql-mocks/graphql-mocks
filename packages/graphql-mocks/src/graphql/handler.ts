@@ -21,7 +21,10 @@ export class GraphQLHandler {
   protected scalarMap: ScalarMap;
 
   constructor(options: CreateGraphQLHandlerOptions) {
-    const graphqlSchema = createSchema(options.dependencies?.graphqlSchema);
+    const { modifySchemaDepenency } = options;
+    const graphqlSchema = createSchema(options.dependencies?.graphqlSchema, {
+      makeCopy: !modifySchemaDepenency,
+    });
 
     const dependencies = {
       ...options.dependencies,
