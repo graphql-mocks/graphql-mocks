@@ -3,10 +3,10 @@ import { copySchema } from '../utils/copy-schema';
 
 export function createSchema(
   schema: GraphQLSchema | DocumentNode | string,
-  options: { makeCopy: boolean },
+  options?: { makeCopy?: boolean },
 ): GraphQLSchema {
   if (isSchema(schema)) {
-    if (!options.makeCopy) {
+    if (!options?.makeCopy) {
       return schema;
     }
 
