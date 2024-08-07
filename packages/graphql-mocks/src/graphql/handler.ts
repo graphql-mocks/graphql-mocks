@@ -93,7 +93,7 @@ export class GraphQLHandler {
     }) as ExecutionResult<DataResult>;
   }
 
-  protected async pack(): Promise<void> {
+  async pack(): Promise<void> {
     const { initialResolverMap, middlewares, packOptions, graphqlSchema, scalarMap } = this;
 
     if (!this.packed) {
