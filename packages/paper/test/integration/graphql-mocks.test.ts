@@ -100,7 +100,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
               }
             }
 
-            return paper.mutate(({ create }) => {
+            return await paper.mutate(({ create }) => {
               return create('App', {
                 id: `app-id-${generateId()}`,
                 name,
@@ -137,6 +137,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
       }
     `);
 
+    expect(result.data?.apps?.[0]).to.exist;
     expect(result.data?.apps?.[0]?.id).to.include('app-id');
     expect(result.data?.apps?.[0]?.name).to.equal('octothorp');
     expect(result.data?.apps?.[0]?.owner?.__typename).to.equal('Team');
@@ -177,6 +178,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
       },
     );
 
+    expect(result?.data?.addApp).to.exist;
     expect(result?.data?.addApp.id).to.include('app-id-');
     expect(result?.data?.addApp.name).to.equal('vorfreude');
     expect(result?.data?.addApp.owner.__typename).to.equal('Team');
