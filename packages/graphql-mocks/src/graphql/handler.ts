@@ -1,11 +1,12 @@
 import { graphql, GraphQLSchema, ExecutionResult, GraphQLArgs } from 'graphql';
 import { pack } from '../pack';
-import { createSchema, attachResolversToSchema, attachScalarsToSchema } from './utils';
+import { createSchema, attachScalarsToSchema } from './utils';
 import { CreateGraphQLHandlerOptions } from './types';
 import { ResolverMapMiddleware, ResolverMap, ScalarMap } from '../types';
 import { PackOptions } from '../pack/types';
 import { buildContext } from './utils/build-context';
 import { normalizePackOptions } from '../pack/utils/normalize-pack-options';
+import { fieldResolverRouter, typeResolverRouter } from './resolver-router';
 
 export class GraphQLHandler {
   state: PackOptions['state'];
@@ -16,6 +17,7 @@ export class GraphQLHandler {
   protected graphqlSchema: GraphQLSchema;
   protected initialContext: GraphQLArgs['contextValue'];
   protected initialResolverMap: ResolverMap;
+  protected resolverMap?: ResolverMap;
   protected scalarMap: ScalarMap;
 
   constructor(options: CreateGraphQLHandlerOptions) {
@@ -72,12 +74,19 @@ export class GraphQLHandler {
       packOptions,
     });
 
+    const { resolverMap } = this;
+    if (!resolverMap) {
+      throw new Error('`pack` must be ran to create a final resolerMap');
+    }
+
     return graphql({
       ...graphqlArgs,
       source: query,
       schema,
       variableValues,
       contextValue,
+      fieldResolver: fieldResolverRouter(resolverMap),
+      typeResolver: typeResolverRouter(resolverMap),
     }) as ExecutionResult<DataResult>;
   }
 
@@ -87,10 +96,10 @@ export class GraphQLHandler {
     if (!this.packed) {
       const { resolverMap, state } = await pack(initialResolverMap, middlewares, packOptions);
       this.state = state;
-      attachResolversToSchema(graphqlSchema, resolverMap);
       attachScalarsToSchema(graphqlSchema, scalarMap);
-    }
+      this.resolverMap = resolverMap;
 
-    this.packed = true;
+      this.packed = true;
+    }
   }
 }
