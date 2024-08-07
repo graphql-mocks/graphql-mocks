@@ -16,7 +16,7 @@ export function fieldResolverRouter(resolverMap: ResolverMap): FieldResolver {
 
 export function typeResolverRouter(resolverMap: ResolverMap): TypeResolver {
   return function (value, context, info, abstractType) {
-    const resolver = resolverMap[abstractType.name].__resolveType;
+    const resolver = resolverMap[abstractType.name]?.__resolveType;
 
     if (resolver) {
       return resolver(value, context, info, abstractType);
