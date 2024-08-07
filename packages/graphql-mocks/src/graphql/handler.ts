@@ -79,7 +79,7 @@ export class GraphQLHandler {
 
     const { resolverMap } = this;
     if (!resolverMap) {
-      throw new Error('`pack` must be ran to create a final resolerMap');
+      throw new Error('`pack` must be ran to create a final resolverMap');
     }
 
     return graphql({
