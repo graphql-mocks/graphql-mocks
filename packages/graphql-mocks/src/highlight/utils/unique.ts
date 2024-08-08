@@ -1,12 +1,19 @@
 import { Reference } from '../types';
-import { isEqual } from './is-equal';
 
 export function unique(fieldReferences: Reference[]): Reference[] {
-  const uniques: Reference[] = [];
+  const stringified = fieldReferences.map((reference): string => {
+    return Array.isArray(reference) ? `!!!${reference[0]}:::${reference[1]}` : reference;
+  });
 
-  fieldReferences.forEach((reference: Reference) => {
-    const match = uniques.find((uniqueReference) => isEqual(reference, uniqueReference));
-    if (!match) uniques.push(reference);
+  const uniques: Reference[] = [];
+  // automatically dedupe strings using a `Set`
+  new Set(stringified).forEach((string) => {
+    const reference =
+      string[0] + string[1] + string[2] === '!!!'
+        ? (string.replace('!!!', '').split(':::') as [string, string])
+        : string;
+
+    uniques.push(reference);
   });
 
   return uniques;

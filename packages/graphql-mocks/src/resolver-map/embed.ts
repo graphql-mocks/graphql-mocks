@@ -28,8 +28,12 @@ export function embed({
       throw new Error(`"graphqlSchema" is an expected dependency, got type ${typeof schema}`);
     }
 
-    const highlight = coerceHighlight(schema, coercibleHighlight).filter(combine(resolvesTo(), union(), interfaces()));
-
+    console.log(performance.now(), 'going to get a highlight object');
+    let highlight = coerceHighlight(schema, coercibleHighlight);
+    console.log(performance.now(), 'got instance, now doing filter');
+    highlight = highlight.filter(combine(resolvesTo(), union(), interfaces()));
+    console.log(performance.now(), 'finished filtering...');
+    console.log(performance.now(), '# of references to iterate through', highlight.references.length);
     for (const reference of highlight.references) {
       const existingResolver = getResolver(resolverMap, reference);
       // these MUST be kept in the local iteration

@@ -31,13 +31,17 @@ export class Highlight {
   }
 
   include(...highlightersOrReferences: (Highlighter | Reference)[]): Highlight {
+    console.log(performance.now(), 'include...');
     const operation = include;
     const highlighters = highlightersOrReferences
       .map(convertHighlighterOrReferenceToHighlighter)
       .filter(Boolean) as Highlighter[];
+    console.log(performance.now(), 'converted highlighters');
 
     const newReferences = this.applyHighlighters(operation, highlighters);
+    console.log(performance.now(), 'applied highlighters');
     this.validate(newReferences);
+    console.log(performance.now(), 'finished validating highlighters');
     return this.clone(newReferences);
   }
 
@@ -70,33 +74,47 @@ export class Highlight {
   protected applyHighlighters(operation: ReferencesOperation, highlighters: Highlighter[]): Reference[] {
     const schema = this.schema;
 
+    console.log(performance.now(), 'cloning this.references');
     // all changes are implemented with a fresh copy of data
     const references = clone(this.references);
+    console.log(performance.now(), 'done cloning this.references');
 
-    let updated = highlighters
-      .reduce((references: Reference[], highlighter: Highlighter) => {
-        const highlightedReferences = highlighter.mark(schema);
-        return operation(references, highlightedReferences);
-      }, references)
-      .filter(function filterInternalGraphQLTypes(reference) {
-        let type;
+    // TODO: This takes a bit...
+    console.log('highlighters count', highlighters.length);
+    let updated = highlighters.reduce((references: Reference[], highlighter: Highlighter) => {
+      console.log(performance.now(), `calling #mark`);
+      const highlightedReferences = highlighter.mark(schema);
+      console.log(performance.now(), `finished calling #mark`);
+      const result = operation(references, highlightedReferences);
+      console.log(performance.now(), `finished calling #operation`, operation.name);
+      return result;
+    }, references);
 
-        if (isFieldReference(reference)) {
-          type = reference[0];
-        }
+    console.log(performance.now(), `finished calling #mark and operation()`);
 
-        if (isTypeReference(reference)) {
-          type = reference;
-        }
+    updated = updated.filter(function filterInternalGraphQLTypes(reference) {
+      let type;
 
-        if (type) {
-          return !type.startsWith('__') && !INTERNAL_SCALARS.includes(type);
-        }
+      if (isFieldReference(reference)) {
+        type = reference[0];
+      }
 
-        return true;
-      });
+      if (isTypeReference(reference)) {
+        type = reference;
+      }
 
+      if (type) {
+        return !type.startsWith('__') && !INTERNAL_SCALARS.includes(type);
+      }
+
+      return true;
+    });
+
+    console.log(performance.now(), `finished updated.filter...`);
+
+    // this takes a bit
     updated = unique(updated);
+    console.log(performance.now(), `finished unique'ing`);
     return updated;
   }
 

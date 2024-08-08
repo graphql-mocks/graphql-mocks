@@ -9,6 +9,7 @@ export function coerceHighlight(schema: GraphQLSchema, coercible: CoercibleHighl
 
   if (typeof coercible === 'function') {
     const h = new Highlight(schema);
+    console.log('h instance!');
     return coercible(h);
   }
 
