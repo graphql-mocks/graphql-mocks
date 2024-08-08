@@ -17,3 +17,17 @@ export function referenceIntersection(groupA: Reference[], groupB: Reference[]) 
 
   return intersection;
 }
+
+export function referenceDifference(groupA: Reference[], groupB: Reference[]) {
+  const maskedGroupA = new Set(groupA.map(maskReference));
+  const maskedGroupB = new Set(groupB.map(maskReference));
+
+  const difference: Reference[] = [];
+  for (const maskedGroupAReference of maskedGroupA) {
+    if (!maskedGroupB.has(maskedGroupAReference)) {
+      difference.push(unmaskReference(maskedGroupAReference));
+    }
+  }
+
+  return difference;
+}

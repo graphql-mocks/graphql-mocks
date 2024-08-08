@@ -1,7 +1,6 @@
-import { differenceWith } from 'ramda';
 import { Reference } from '../types';
-import { isEqual } from '../utils/is-equal';
+import { referenceDifference } from '../utils/reference-set-methods';
 
 export function exclude(source: Reference[], update: Reference[]): Reference[] {
-  return differenceWith(isEqual)(source, update);
+  return referenceDifference(source, update);
 }
