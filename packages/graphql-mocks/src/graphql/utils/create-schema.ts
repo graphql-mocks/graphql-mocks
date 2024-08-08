@@ -1,16 +1,13 @@
 import { GraphQLSchema, DocumentNode, isSchema, buildASTSchema, buildSchema } from 'graphql';
-import { copySchema } from '../utils/copy-schema';
+// import { copySchema } from '../utils/copy-schema';
 
 export function createSchema(
   schema: GraphQLSchema | DocumentNode | string,
   options?: { makeCopy?: boolean },
 ): GraphQLSchema {
+  console.log(options);
   if (isSchema(schema)) {
-    if (!options?.makeCopy) {
-      return schema;
-    }
-
-    return copySchema(schema);
+    return schema;
   }
 
   if (typeof schema === 'object' && schema.kind === 'Document') {

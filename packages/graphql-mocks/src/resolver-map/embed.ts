@@ -4,7 +4,6 @@ import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Object
 import { setResolver } from './set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
-import { embedPackOptionsWrapper } from '../pack/utils';
 import { getResolver } from './get-resolver';
 import { isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
@@ -30,6 +29,7 @@ export function embed({
     }
 
     const highlight = coerceHighlight(schema, coercibleHighlight).filter(combine(resolvesTo(), union(), interfaces()));
+
     for (const reference of highlight.references) {
       const existingResolver = getResolver(resolverMap, reference);
       // these MUST be kept in the local iteration
@@ -77,7 +77,7 @@ export function embed({
         );
       }
 
-      const wrappedResolver = await applyWrappers(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
+      const wrappedResolver = await applyWrappers(resolverToEmbed, [...wrappers], {
         type,
         field,
         schema,
