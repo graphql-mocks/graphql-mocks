@@ -2,7 +2,7 @@ import { GraphQLSchema, isInterfaceType } from 'graphql';
 import { HighlighterFactory, Highlighter, FieldReference } from '../types';
 import { HIGHLIGHT_ALL } from './constants';
 import { field } from './field';
-import { referenceIntersection } from '../utils/reference-set-methods';
+import { referenceIntersection } from '../utils/reference-set-helpers';
 
 export class InterfaceFieldHighlighter implements Highlighter {
   targets: FieldReference[];
