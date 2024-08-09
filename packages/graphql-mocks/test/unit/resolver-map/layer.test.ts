@@ -1,11 +1,10 @@
 import { expect } from 'chai';
 import { buildSchema, GraphQLSchema, GraphQLResolveInfo } from 'graphql';
 import { layer } from '../../../src/resolver-map/layer';
-import { generatePackOptions } from '../../mocks';
+import { generatePackOptions, wrapperThatResetsContext } from '../../mocks';
 import { spy, SinonSpy } from 'sinon';
 import { ResolverInfo, FieldResolver } from '../../../src/types';
 import { PackOptions } from '../../../src/pack/types';
-import { createWrapper, WrapperFor } from '../../../src/resolver';
 
 describe('resolver-map/layer', function () {
   let graphqlSchema: GraphQLSchema;
@@ -140,18 +139,8 @@ describe('resolver-map/layer', function () {
     expect(resolverMap.Nameable.__resolveType).exist;
   });
 
-  context(`pack option`, function () {
+  context(`managed context: pack option`, function () {
     const initialContext = Object.freeze({ initialContext: true });
-    const wrapperThatResetsContext = createWrapper(
-      'wrapper-that-resets-context',
-      WrapperFor.FIELD,
-      function (resolver) {
-        return (a, b, _context, d) => {
-          // ignore the context coming in and call resolver with an empty context object
-          return resolver(a, b, {}, d);
-        };
-      },
-    );
     let queryPersonResolver: FieldResolver & SinonSpy;
     let layerPartial: { Query: { person: typeof queryPersonResolver } };
 

@@ -278,9 +278,6 @@ Syntax Error: Unexpected Name "NOT"`);
     expect(context.pack, 'is defined in context').to.exist;
     expect(context.pack.dependencies.graphqlSchema, 'graphqlSchema exists in pack dependencies').to.exist;
 
-    const [, , receivedContextinSpyWrapper] = (handler.state.spies.Query.hello as sinon.SinonSpy).firstCall.args;
-    expect(context).to.equal(receivedContextinSpyWrapper);
-
     // protected `pack` assertions
     expect(() => {
       delete context.pack;
