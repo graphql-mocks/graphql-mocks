@@ -267,7 +267,6 @@ Syntax Error: Unexpected Name "NOT"`);
       resolverMap,
       initialContext: { fromInitialContext: true },
       dependencies: { graphqlSchema: schemaString },
-      middlewares: [embed({ wrappers: [spyWrapper] })],
     });
 
     await handler.query(`{ hello }`, {}, { fromQueryContext: true });
