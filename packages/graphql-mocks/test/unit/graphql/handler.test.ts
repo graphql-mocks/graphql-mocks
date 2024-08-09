@@ -267,6 +267,7 @@ Syntax Error: Unexpected Name "NOT"`);
       resolverMap,
       initialContext: { fromInitialContext: true },
       dependencies: { graphqlSchema: schemaString },
+      middlewares: [embed({ wrappers: [spyWrapper] })],
     });
 
     await handler.query(`{ hello }`, {}, { fromQueryContext: true });
@@ -276,5 +277,16 @@ Syntax Error: Unexpected Name "NOT"`);
     expect(context.fromQueryContext, 'query context is spread into context').to.exist;
     expect(context.pack, 'is defined in context').to.exist;
     expect(context.pack.dependencies.graphqlSchema, 'graphqlSchema exists in pack dependencies').to.exist;
+
+    const [, , receivedContextinSpyWrapper] = (handler.state.spies.Query.hello as sinon.SinonSpy).firstCall.args;
+    expect(context).to.equal(receivedContextinSpyWrapper);
+
+    // protected `pack` assertions
+    expect(() => {
+      delete context.pack;
+    }, '`pack` is protected, attempting to delete the pack property throws').to.throw;
+    expect(() => {
+      context.pack = 'assignment of pack to something else';
+    }, '`pack` is protected, attempting to delete the pack property throws').to.throw;
   });
 });
