@@ -1,8 +1,8 @@
 import { GraphQLSchema, isInterfaceType } from 'graphql';
 import { HighlighterFactory, Highlighter, FieldReference } from '../types';
-import { isEqual } from '../utils';
 import { HIGHLIGHT_ALL } from './constants';
 import { field } from './field';
+import { referenceIntersection } from '../utils/reference-set-helpers';
 
 export class InterfaceFieldHighlighter implements Highlighter {
   targets: FieldReference[];
@@ -33,10 +33,7 @@ export class InterfaceFieldHighlighter implements Highlighter {
       return [...interfaceFields];
     });
 
-    return interfaceTypeNamesAndFields.filter((interfaceFieldReference) => {
-      const found = fieldReferences.find((allFieldReference) => isEqual(allFieldReference, interfaceFieldReference));
-      return Boolean(found);
-    });
+    return referenceIntersection(interfaceTypeNamesAndFields, fieldReferences) as FieldReference[];
   }
 }
 

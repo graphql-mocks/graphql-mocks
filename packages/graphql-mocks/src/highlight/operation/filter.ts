@@ -1,8 +1,6 @@
 import { Reference } from '../types';
-import { isEqual } from '../utils/is-equal';
+import { referenceIntersection } from '../utils/reference-set-helpers';
 
 export function filter(source: Reference[], update: Reference[]): Reference[] {
-  return source.filter((reference) => {
-    return Boolean(update.find((updateRef) => isEqual(updateRef, reference)));
-  });
+  return referenceIntersection(source, update);
 }

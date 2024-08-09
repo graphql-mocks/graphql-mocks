@@ -1,13 +1,13 @@
 import { Reference } from '../types';
-import { isEqual } from './is-equal';
+import { maskReference, unmaskReference } from './reference-mask';
 
-export function unique(fieldReferences: Reference[]): Reference[] {
+export function unique(references: Reference[]): Reference[] {
+  const maskedReferences = new Set(references.map(maskReference));
   const uniques: Reference[] = [];
 
-  fieldReferences.forEach((reference: Reference) => {
-    const match = uniques.find((uniqueReference) => isEqual(reference, uniqueReference));
-    if (!match) uniques.push(reference);
-  });
+  for (const maskedReference of maskedReferences) {
+    uniques.push(unmaskReference(maskedReference));
+  }
 
   return uniques;
 }
