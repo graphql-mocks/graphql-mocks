@@ -1,6 +1,4 @@
 import { clone } from 'ramda';
-import { embed } from '../resolver-map/embed';
-import { embedPackOptionsWrapper } from './utils';
 import { PackOptions, Packer, PackState } from './types';
 import { defaultPackOptions, normalizePackOptions } from './utils/normalize-pack-options';
 
@@ -9,7 +7,7 @@ export const pack: Packer = async function pack(
   middlewares = [],
   packOptions = defaultPackOptions,
 ) {
-  middlewares = [...middlewares, embed({ wrappers: [embedPackOptionsWrapper] })];
+  middlewares = [...middlewares];
 
   // make an initial copy
   let wrappedMap = clone(initialResolversMap);

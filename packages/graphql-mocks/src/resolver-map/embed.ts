@@ -4,11 +4,11 @@ import { FieldResolver, ResolverMapMiddleware, ResolverMap, TypeResolver, Object
 import { setResolver } from './set-resolver';
 import { ReplaceableResolverOption, HighlightableOption, WrappableOption } from './types';
 import { highlightAllCallback } from './utils/highlight-all-callback';
-import { embedPackOptionsWrapper } from '../pack/utils';
 import { getResolver } from './get-resolver';
 import { isTypeReference, isFieldReference, getInstanceForReference } from '../highlight/utils';
 import { coerceHighlight } from '../highlight/utils/coerce-highlight';
 import { interfaces, combine, resolvesTo, union } from '../highlight';
+import { embedPackOptionsWrapper } from '../pack/utils';
 
 export type EmbedOptions = {
   resolver?: FieldResolver | TypeResolver;
@@ -23,6 +23,7 @@ export function embed({
   replace: replaceOption = false,
 }: EmbedOptions): ResolverMapMiddleware {
   return async (resolverMap, packOptions): Promise<ResolverMap> => {
+    wrappers = [...wrappers];
     const schema = packOptions.dependencies.graphqlSchema as GraphQLSchema;
 
     if (!isSchema(schema)) {
@@ -77,15 +78,21 @@ export function embed({
         );
       }
 
-      const wrappedResolver = await applyWrappers(resolverToEmbed, [...wrappers, embedPackOptionsWrapper], {
-        type,
-        field,
-        schema,
-        resolverMap,
-        packOptions,
-      });
+      if (wrappers?.length) {
+        // if there is at least one wrapper, the embedPackOptionsWrapper should also
+        // be included in order to better manage the context and ensure that the `pack`
+        // property is included
+        wrappers = [embedPackOptionsWrapper, ...wrappers];
+        resolverToEmbed = await applyWrappers(resolverToEmbed, [...wrappers], {
+          type,
+          field,
+          schema,
+          resolverMap,
+          packOptions,
+        });
+      }
 
-      setResolver(resolverMap, reference, wrappedResolver, {
+      setResolver(resolverMap, reference, resolverToEmbed, {
         graphqlSchema: schema,
         replace: shouldReplace,
       });

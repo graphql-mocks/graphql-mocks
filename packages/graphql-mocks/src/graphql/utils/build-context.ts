@@ -11,9 +11,16 @@ export function buildContext({
   queryContext?: GraphQLArgs['contextValue'];
   packOptions: PackOptions;
 }): ResolverContext {
-  return {
+  const context = {
     ...(initialContext as Record<string, unknown>),
     ...(queryContext as Record<string, unknown>),
-    pack: packOptions,
   };
+
+  Object.defineProperty(context, 'pack', {
+    value: Object.freeze({ ...packOptions }),
+    configurable: false,
+    writable: false,
+  });
+
+  return context;
 }

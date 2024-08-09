@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { spy, SinonSpy } from 'sinon';
 import { embed } from '../../../src/resolver-map/embed';
-import { generatePackOptions } from '../../mocks';
+import { generatePackOptions, wrapperThatResetsContext } from '../../mocks';
 import { GraphQLResolveInfo, buildSchema, GraphQLSchema, GraphQLInterfaceType } from 'graphql';
-import { FieldResolver, ResolverMap, TypeResolver } from '../../../src/types';
+import { FieldResolver, ResolverInfo, ResolverMap, TypeResolver } from '../../../src/types';
 import { field } from '../../../src/highlight/highlighter/field';
 import { hi } from '../../../src/highlight';
 import { PackOptions } from '../../../src/pack/types';
@@ -291,6 +291,56 @@ describe('resolver-map/embed', function () {
       embededResolverMap.Nameable?.__resolveType({}, {}, {} as GraphQLResolveInfo, {} as GraphQLInterfaceType);
       expect(existingTypeResolverSpy.called, 'the original type resolver is called').to.equal(true);
       expect(resolverWrapperSpy.called, 'the wrapper around the original type resolver is called').to.equal(true);
+    });
+  });
+
+  context('managed context: pact option', function () {
+    const initialContext = { initialContext: true };
+
+    it('is included when there is at least one wrapper', async function () {
+      const embeddedMiddleware = await embed({
+        highlight: [['Query', 'person']],
+        resolver: resolverToEmbed,
+        // `wrapperThatResetsContext` forcefully drops context
+        wrappers: [wrapperThatResetsContext],
+      });
+      const resolverMap = await embeddedMiddleware({}, packOptions);
+      resolverMap.Query.person({}, {}, initialContext, {} as ResolverInfo);
+
+      const calledContext = resolverToEmbed.firstCall.args[2];
+      expect(initialContext).to.have.property('initialContext');
+      expect(calledContext, 'initialContext property is dropped by `wrapperThatResetsContext`').not.to.have.property(
+        'initialContext',
+      );
+      expect(
+        calledContext,
+        `pack property is included in context even though wrapperThatResetsContext resets context to an empty object`,
+      ).to.deep.equal({
+        pack: {
+          dependencies: {
+            graphqlSchema: schema,
+          },
+          state: {},
+        },
+      });
+    });
+
+    it('is not included when no wrappers are included', async function () {
+      const embeddedMiddleware = await embed({
+        highlight: [['Query', 'person']],
+        resolver: resolverToEmbed,
+        wrappers: [], // no wrappers
+      });
+      const resolverMap = await embeddedMiddleware({}, packOptions);
+      resolverMap.Query.person({}, {}, initialContext, {} as ResolverInfo);
+
+      const calledContext = resolverToEmbed.firstCall.args[2];
+      expect(initialContext).to.have.property('initialContext');
+
+      // context is not dropped, so the initial context should be passed through
+      expect(calledContext, 'initial context is passed through').to.deep.equal({
+        initialContext: true,
+      });
     });
   });
 

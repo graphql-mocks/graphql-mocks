@@ -276,5 +276,13 @@ Syntax Error: Unexpected Name "NOT"`);
     expect(context.fromQueryContext, 'query context is spread into context').to.exist;
     expect(context.pack, 'is defined in context').to.exist;
     expect(context.pack.dependencies.graphqlSchema, 'graphqlSchema exists in pack dependencies').to.exist;
+
+    // protected `pack` assertions
+    expect(() => {
+      delete context.pack;
+    }, '`pack` is protected, attempting to delete the pack property throws').to.throw;
+    expect(() => {
+      context.pack = 'assignment of pack to something else';
+    }, '`pack` is protected, attempting to delete the pack property throws').to.throw;
   });
 });
