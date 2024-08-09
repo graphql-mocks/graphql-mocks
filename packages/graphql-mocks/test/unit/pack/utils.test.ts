@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { applyWrappers } from '../../../src/resolver/apply-wrappers';
-import { embedPackOptionsWrapper } from '../../../src/pack/utils';
 import { GraphQLObjectType, GraphQLAbstractType, GraphQLInterfaceType, GraphQLResolveInfo } from 'graphql';
 import { FieldResolver, TypeResolver } from '../../../src/types';
+import { embedPackOptionsWrapper } from '../../../src/pack/utils/embed-pack-options-wrapper';
 
 describe('pack/utils', function () {
   describe('#embedPackOptionsWrapper', function () {
