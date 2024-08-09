@@ -9,6 +9,7 @@ import { getResolver } from './get-resolver';
 import { setResolver } from './set-resolver';
 import { applyWrappers } from '../resolver';
 import { Packed } from '../pack/types';
+import { embedPackOptionsWrapper } from '../pack/utils';
 
 type LayerOptions = ReplaceableResolverOption & WrappableOption;
 
@@ -37,7 +38,11 @@ export function layer(partials: ResolverMap[], options?: LayerOptions): Resolver
       let resolver = getResolver(layeredResolverMap, reference);
 
       if (resolver && options?.wrappers?.length) {
-        resolver = await applyWrappers(resolver, options.wrappers, {
+        // if there is at least one wrapper, the embedPackOptionsWrapper should also
+        // be included in order to better manage the context and ensure that the `pack`
+        // property is included
+        const wrappers = [embedPackOptionsWrapper, ...(options?.wrappers ?? [])];
+        resolver = await applyWrappers(resolver, wrappers, {
           schema: graphqlSchema,
           resolverMap,
           packOptions,

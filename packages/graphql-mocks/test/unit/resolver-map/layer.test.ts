@@ -5,6 +5,7 @@ import { generatePackOptions } from '../../mocks';
 import { spy, SinonSpy } from 'sinon';
 import { ResolverInfo, FieldResolver } from '../../../src/types';
 import { PackOptions } from '../../../src/pack/types';
+import { createWrapper, WrapperFor } from '../../../src/resolver';
 
 describe('resolver-map/layer', function () {
   let graphqlSchema: GraphQLSchema;
@@ -139,29 +140,66 @@ describe('resolver-map/layer', function () {
     expect(resolverMap.Nameable.__resolveType).exist;
   });
 
-  it('includes the packOptions in context by default', async function () {
-    const queryPersonResolver: FieldResolver & SinonSpy = spy();
+  context(`pack option`, function () {
+    const initialContext = Object.freeze({ initialContext: true });
+    const wrapperThatResetsContext = createWrapper(
+      'wrapper-that-resets-context',
+      WrapperFor.FIELD,
+      function (resolver) {
+        return (a, b, _context, d) => {
+          // ignore the context coming in and call resolver with an empty context object
+          return resolver(a, b, {}, d);
+        };
+      },
+    );
+    let queryPersonResolver: FieldResolver & SinonSpy;
+    let layerPartial: { Query: { person: typeof queryPersonResolver } };
 
-    const layeredMiddleware = layer([
-      {
+    beforeEach(function () {
+      queryPersonResolver = spy();
+      layerPartial = Object.freeze({
         Query: {
           person: queryPersonResolver,
         },
-      },
-    ]);
+      });
+    });
 
-    const resolverMap = await layeredMiddleware({}, packOptions);
-    const initialContext = { initialContext: true };
-    resolverMap.Query.person({}, {}, initialContext, {} as ResolverInfo);
-    const calledContext = queryPersonResolver.firstCall.args[2];
-    expect(calledContext).to.deep.equal({
-      initialContext: true,
-      pack: {
-        dependencies: {
-          graphqlSchema: graphqlSchema,
+    it('is included when there is at least one wrapper', async function () {
+      const layeredMiddleware = layer([layerPartial], {
+        wrappers: [wrapperThatResetsContext], // at least one wrapper
+      });
+      const resolverMap = await layeredMiddleware({}, packOptions);
+      resolverMap.Query.person({}, {}, initialContext, {} as ResolverInfo);
+
+      const calledContext = queryPersonResolver.firstCall.args[2];
+      expect(initialContext).to.have.property('initialContext');
+      expect(calledContext, 'initialContext property is dropped by `wrapperThatResetsContext`').not.to.have.property(
+        'initialContext',
+      );
+      expect(
+        calledContext,
+        `pack property is included in context even though wrapperThatResetsContext resets context to an empty object`,
+      ).to.deep.equal({
+        pack: {
+          dependencies: {
+            graphqlSchema: graphqlSchema,
+          },
+          state: {},
         },
-        state: {},
-      },
+      });
+    });
+
+    it('is not included when no wrappers are included', async function () {
+      const layeredMiddleware = layer([layerPartial], {
+        wrappers: [], // empty wrappers
+      });
+      const resolverMap = await layeredMiddleware({}, packOptions);
+      resolverMap.Query.person({}, {}, initialContext, {} as ResolverInfo);
+
+      const calledContext = queryPersonResolver.firstCall.args[2];
+      expect(calledContext).to.deep.equal({
+        initialContext: true,
+      });
     });
   });
 
