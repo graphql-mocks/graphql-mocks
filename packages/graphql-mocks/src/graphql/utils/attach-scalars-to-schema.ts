@@ -1,31 +1,35 @@
-import { GraphQLScalarType, GraphQLSchema, isScalarType } from 'graphql';
+import { GraphQLSchema, isScalarType } from 'graphql';
 import { ScalarMap } from '../../types';
 import { isScalarDefinition } from '../type-utils/is-scalar-definition';
 
 export function attachScalarsToSchema(schema: GraphQLSchema, scalarMap: ScalarMap): void {
-  const scalarTypesArray = Object.values(schema.getTypeMap()).filter(isScalarType);
-  const scalarTypeMap: Record<string, GraphQLScalarType> = scalarTypesArray.reduce((map, scalar) => {
-    return {
-      ...map,
-      [scalar.name]: scalar,
-    };
-  }, {});
+  for (const scalarTypeName in scalarMap) {
+    const scalarType = schema.getType(scalarTypeName);
 
-  const resolverMapScalars = Object.keys(scalarMap).filter((type) => Object.keys(scalarTypeMap).includes(type));
-
-  for (const scalarName of resolverMapScalars) {
-    const possibleScalar = scalarMap[scalarName];
-
-    if (!isScalarDefinition(possibleScalar)) {
-      continue;
+    if (!scalarType) {
+      throw new Error(
+        `Could not find any type named "${scalarTypeName}". Double-check the scalar map where "${scalarTypeName}" is referenced against scalars defined in the graphql schema.`,
+      );
     }
 
-    const scalarDefinition = possibleScalar;
-    const schemaScalar = scalarTypeMap[scalarName];
+    if (!isScalarType(scalarType)) {
+      throw new Error(
+        `Could not find a scalar type of "${scalarTypeName}". Double-check the scalar map where "${scalarTypeName}" is referenced against scalars defined in the graphql schema.`,
+      );
+    }
 
+    const scalarDefinition = scalarMap[scalarTypeName];
+    if (!isScalarDefinition(scalarDefinition)) {
+      throw new Error(`Passed a scalar map with ${scalarTypeName} but it is not a proper scalar definition`);
+    }
+
+    // copy over keys from scalar defintion on to scalary instance
     for (const key in scalarDefinition) {
+      if (key === 'name') {
+        continue;
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (schemaScalar as any)[key] = (scalarDefinition as any)[key];
+      (scalarType as any)[key] = (scalarDefinition as any)[key];
     }
   }
 }
