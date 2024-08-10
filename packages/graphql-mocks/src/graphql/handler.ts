@@ -1,11 +1,12 @@
 import { graphql, GraphQLSchema, ExecutionResult, GraphQLArgs } from 'graphql';
 import { pack } from '../pack';
-import { createSchema, attachResolversToSchema, attachScalarsToSchema } from './utils';
+import { createSchema, attachScalarsToSchema } from './utils';
 import { CreateGraphQLHandlerOptions } from './types';
 import { ResolverMapMiddleware, ResolverMap, ScalarMap } from '../types';
 import { PackOptions } from '../pack/types';
 import { buildContext } from './utils/build-context';
 import { normalizePackOptions } from '../pack/utils/normalize-pack-options';
+import { createFieldResolverRouter, createTypeResolverRouter } from './resolver-router';
 
 export class GraphQLHandler {
   state: PackOptions['state'];
@@ -17,6 +18,9 @@ export class GraphQLHandler {
   protected initialContext: GraphQLArgs['contextValue'];
   protected initialResolverMap: ResolverMap;
   protected scalarMap: ScalarMap;
+
+  protected fieldResolverRouter?: ReturnType<typeof createFieldResolverRouter>;
+  protected typeResolverRouter?: ReturnType<typeof createTypeResolverRouter>;
 
   constructor(options: CreateGraphQLHandlerOptions) {
     const graphqlSchema = createSchema(options.dependencies?.graphqlSchema);
@@ -57,14 +61,17 @@ export class GraphQLHandler {
     queryContext?: GraphQLArgs['contextValue'],
     graphqlArgs?: Partial<GraphQLArgs>,
   ): Promise<ExecutionResult<DataResult>> {
-    const initialContext = this.initialContext;
-    const packOptions = this.packOptions;
-    const schema = this.graphqlSchema;
+    const { initialContext, packOptions, graphqlSchema: schema } = this;
 
     variableValues = variableValues ?? {};
     queryContext = queryContext ?? {};
 
     await this.pack();
+    const { fieldResolverRouter, typeResolverRouter } = this;
+
+    if (!fieldResolverRouter || !typeResolverRouter) {
+      throw new Error('Run `pack` to ensure that field resolver and type resolvers are set');
+    }
 
     const contextValue = buildContext({
       initialContext,
@@ -78,16 +85,19 @@ export class GraphQLHandler {
       schema,
       variableValues,
       contextValue,
+      fieldResolver: fieldResolverRouter,
+      typeResolver: typeResolverRouter,
     }) as ExecutionResult<DataResult>;
   }
 
-  protected async pack(): Promise<void> {
+  async pack(): Promise<void> {
     const { initialResolverMap, middlewares, packOptions, graphqlSchema, scalarMap } = this;
 
     if (!this.packed) {
       const { resolverMap, state } = await pack(initialResolverMap, middlewares, packOptions);
       this.state = state;
-      attachResolversToSchema(graphqlSchema, resolverMap);
+      this.fieldResolverRouter = createFieldResolverRouter(resolverMap);
+      this.typeResolverRouter = createTypeResolverRouter(resolverMap);
       attachScalarsToSchema(graphqlSchema, scalarMap);
     }
 
