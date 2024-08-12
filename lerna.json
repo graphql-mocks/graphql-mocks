@@ -1,5 +1,10 @@
 {
   "packages": ["packages/*"],
   "npmClient": "pnpm",
-  "version": "independent"
+  "version": "independent",
+  "command": {
+    "publish": {
+      "directory": "{workspaceRoot}/{projectRoot}/dist"
+    }
+  }
 }
