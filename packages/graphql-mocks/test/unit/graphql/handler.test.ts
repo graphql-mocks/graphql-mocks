@@ -115,12 +115,26 @@ Syntax Error: Unexpected Name "NOT"`);
         dependencies: { graphqlSchema: schemaString },
       });
 
-      expect(handler.state?.spies?.Query?.hello).to.not.exist;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).packed).to.be.false;
       await handler.query(`{ hello }`);
-      expect(handler.state?.spies?.Query?.hello).to.exist;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).packed).to.be.true;
     });
 
-    it('packs middlewares when #pack is called', async function () {});
+    it('packs middlewares when #pack is called', async function () {
+      const handler = new GraphQLHandler({
+        resolverMap,
+        middlewares: [middleware],
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).packed).to.be.false;
+      await handler.pack();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((handler as any).packed).to.be.true;
+    });
 
     it('accepts middlewares via options', function () {
       const handlerWithoutMiddlewares = new GraphQLHandler({
