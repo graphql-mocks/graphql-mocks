@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/falso",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": "Chad Carbert",
   "description": "Fake GraphQL queries with graphql-mocks and Falso",
   "main": "dist/index.js",

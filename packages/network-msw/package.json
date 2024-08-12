@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-msw",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with msw (mock service worker)",
   "main": "dist/index.js",
