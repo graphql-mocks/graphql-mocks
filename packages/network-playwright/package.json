@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-playwright",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Roland Németh",
   "description": "Mock using graphql-mocks with Playwright",
   "main": "dist/index.js",

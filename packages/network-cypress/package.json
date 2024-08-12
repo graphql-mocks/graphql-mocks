@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-cypress",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Mohammad Ataei",
   "description": "Mock using graphql-mocks with cypress",
   "main": "dist/index.js",

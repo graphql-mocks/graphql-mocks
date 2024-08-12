@@ -2,6 +2,31 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.11.2
+
+#### Replace resolver attaching to schema with resolver routers ([#278](https://github.com/graphql-mocks/graphql-mocks/pull/278))
+
+* (feature) Use routing resolvers instead of attaching resolvers directly to schema types
+* (feature) `GraphQLHandler#pack` is now public. Previously this was done internally to "pack together" all the resolver map middlewares, and because it was async it was deferred to the first query. With it being a public method on `GraphQLHandler it can be called earlier so that the first query isn't slowed down
+
+#### Simplify implementation of `attachScalarsToSchema` ([#276](https://github.com/graphql-mocks/graphql-mocks/pull/276))
+
+* (feature) Simplify implementation of `attachScalarsToSchema`
+
+#### Improve managed context of `pack` property ([#275](https://github.com/graphql-mocks/graphql-mocks/pull/275))
+
+* (feature) Improve performance of `pack` on first query for `GraphQLHandler` by removing `embedPackOptionsWrapper` and using it only within `embed` and `layer` middlewares when necessary
+* (feature) Added safeguards on `pack` property on resolver context
+* (feature) Move `embedPackOptionsWrapper` managed context safety to `embed` and `layer` middlewares
+
+#### Improve performance of highlighters ([#274](https://github.com/graphql-mocks/graphql-mocks/pull/274))
+
+* (feature) Improved highlighter performance for large schemas
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### graphql-mocks@0.11.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -77,6 +102,12 @@
 
 ## graphql-paper
 
+### graphql-paper@0.4.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### graphql-paper@0.4.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -126,6 +157,12 @@
 
 
 ## gqlmocks
+
+### gqlmocks@0.5.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
 
 ### gqlmocks@0.5.0
 
@@ -198,6 +235,10 @@
 
 ### @graphql-mocks/mirage@0.9.1
 
+#### Remove miragejs support ([#271](https://github.com/graphql-mocks/graphql-mocks/pull/271))
+
+* (breaking) Removal of `@graphql-mocks/mirage` package and support with miragejs
+
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
 
 * (fix) Fixed typescript `types` references in package.json
@@ -247,6 +288,12 @@
 
 ## @graphql-mocks/falso
 
+### @graphql-mocks/falso@0.7.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### @graphql-mocks/falso@0.7.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -287,6 +334,12 @@
 * (feature) Introducing `@graphql-mocks/falso`, replacing @graphql-mocks/faker, as the package to provide fake data across an entire schema. [Falso](https://github.com/ngneat/falso) benefits from being esmodule-first and being actively developed and supported.
 
 ## @graphql-mocks/network-express
+
+### @graphql-mocks/network-express@0.4.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
 
 ### @graphql-mocks/network-express@0.4.1
 
@@ -332,6 +385,12 @@
 
 ## @graphql-mocks/network-msw
 
+### @graphql-mocks/network-msw@0.4.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### @graphql-mocks/network-msw@0.4.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -368,6 +427,12 @@
 * (feature) Added package README
 
 ## @graphql-mocks/network-nock
+
+### @graphql-mocks/network-nock@0.6.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
 
 ### @graphql-mocks/network-nock@0.6.1
 
@@ -410,6 +475,12 @@
 
 ## @graphql-mocks/network-pretender
 
+### @graphql-mocks/network-pretender@0.4.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### @graphql-mocks/network-pretender@0.4.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -449,6 +520,12 @@
 * (feature) Introducing `@graphql-mocks/network-pretender`, a new browser network handler using pretender.js
 
 ## @graphql-mocks/sinon
+
+### @graphql-mocks/sinon@0.5.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
 
 ### @graphql-mocks/sinon@0.5.1
 
@@ -491,6 +568,12 @@
 
 ## @graphql-mocks/network-cypress
 
+### @graphql-mocks/network-cypress@0.4.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
+
 ### @graphql-mocks/network-cypress@0.4.1
 
 #### Fix package json types references ([#260](https://github.com/graphql-mocks/graphql-mocks/pull/260))
@@ -530,6 +613,12 @@
 * (feature) Introducing `@graphql-mocks/network-cypress`, a new network handler for cypress
 
 ## @graphql-mocks/network-playwright
+
+### @graphql-mocks/network-playwright@0.2.2
+
+#### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
+
+* (chore) Non-breaking dev dependency and dependency upgrades
 
 ### @graphql-mocks/network-playwright@0.2.1
 
