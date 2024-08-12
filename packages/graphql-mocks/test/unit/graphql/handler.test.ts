@@ -282,7 +282,6 @@ Syntax Error: Unexpected Name "NOT"`);
 
         type World {
           earth: String!
-          mars: String!
         }
      `;
 
@@ -353,6 +352,27 @@ Syntax Error: Unexpected Name "NOT"`);
       `);
 
       expect(result.data!.hello).to.equal('hello there!');
+    });
+
+    it('routes to a nested type when it exists on the resolver map', async function () {
+      const worldEarthValue = 'world.earth resolver called!';
+      spies.worldEarth.returns(worldEarthValue);
+      const result = await handler.query<{ world: { earth: string } }>(
+        `
+        {
+          world {
+            earth
+          }
+        }
+      `,
+        {},
+        {},
+        // quick way to kick off Query.world resolver without having a Query.world
+        // resolver in the resolver map
+        { rootValue: { world: {} } },
+      );
+
+      expect(result.data!.world.earth).to.equal(worldEarthValue);
     });
 
     it('returns `null` if the routed resolver returns `undefined`', async function () {
