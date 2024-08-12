@@ -1,4 +1,4 @@
-import { buildSchema, parse } from 'graphql';
+import { buildSchema, isAbstractType, parse } from 'graphql';
 import * as sinon from 'sinon';
 import { GraphQLHandler } from '../../../src/graphql';
 import { ResolverMap, ResolverMapMiddleware } from '../../../src/types';
@@ -108,7 +108,7 @@ Syntax Error: Unexpected Name "NOT"`);
       middleware = embed({ wrappers: [spyWrapper] });
     });
 
-    it('defers packing middlewares until after first query', async function () {
+    it('by default defers packing middlewares until after first query', async function () {
       const handler = new GraphQLHandler({
         resolverMap,
         middlewares: [middleware],
@@ -119,6 +119,8 @@ Syntax Error: Unexpected Name "NOT"`);
       await handler.query(`{ hello }`);
       expect(handler.state?.spies?.Query?.hello).to.exist;
     });
+
+    it('packs middlewares when #pack is called', async function () {});
 
     it('accepts middlewares via options', function () {
       const handlerWithoutMiddlewares = new GraphQLHandler({
@@ -243,8 +245,321 @@ Syntax Error: Unexpected Name "NOT"`);
     });
   });
 
-  it('returns maintains the structure of the state object argument', async function () {
+  context('field resolver routers', function () {
+    let spies: {
+      queryHello: sinon.SinonStub;
+      worldEarth: sinon.SinonStub;
+      fieldRouter: sinon.SinonSpy;
+    };
+
+    beforeEach(async function () {
+      const schemaString = `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          nullableWithoutResolver: String
+          hello: String
+
+          # nested query case
+          world: World!
+        }
+
+        type World {
+          earth: String!
+          mars: String!
+        }
+     `;
+
+      spies = {
+        queryHello: sinon.stub(),
+        worldEarth: sinon.stub(),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
+
+      resolverMap = {
+        Query: {
+          hello: spies.queryHello,
+        },
+
+        World: {
+          earth: spies.worldEarth,
+        },
+      } satisfies ResolverMap;
+
+      handler = new GraphQLHandler({
+        resolverMap,
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      await handler.pack();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      spies.fieldRouter = sinon.spy(handler as any, 'fieldResolverRouter');
+    });
+
+    describe('default resolver is used when a resolver does not exist in the resolver map', function () {
+      it('returns the value from the parent arg', async function () {
+        const result = await handler.query(
+          `
+          {
+            # this is a non-nullable field so the default resolver should return null
+            # for the case there's no resolver
+            nullableWithoutResolver
+          }
+        `,
+          {},
+          {},
+          { rootValue: { nullableWithoutResolver: 'This is a nullable field' } },
+        );
+
+        expect(result).to.deep.equal({ data: { nullableWithoutResolver: 'This is a nullable field' } });
+      });
+
+      it('returns null when a parent arg does not exist', async function () {
+        const result = await handler.query(`
+          {
+            # this is a non-nullable field so the default resolver should return null
+            # for the case there's no resolver
+            nullableWithoutResolver
+          }
+        `);
+
+        expect(result).to.deep.equal({ data: { nullableWithoutResolver: null } });
+      });
+    });
+
+    it('routes to a handler on Query when it exists on the resolver map', async function () {
+      spies.queryHello.callsFake(() => `hello there!`);
+      const result = await handler.query<{ hello: string }>(`
+        {
+          hello
+        }
+      `);
+
+      expect(result.data!.hello).to.equal('hello there!');
+    });
+
+    it('returns `null` if the routed resolver returns `undefined`', async function () {
+      spies.queryHello.callsFake(() => undefined);
+      const result = await handler.query<{ hello: string }>(`
+        {
+          hello
+        }
+      `);
+
+      expect(result.data!.hello).to.equal(null);
+    });
+
+    it('passes along all field resolver arguments to the routed resolver', async function () {
+      const mockInitialContext = { someContext: true };
+      const mockRootQueryValue = 'root value';
+      await handler.query<{ hello: string }>(
+        `
+        {
+          hello
+        }
+      `,
+        {},
+        mockInitialContext,
+        { rootValue: mockRootQueryValue },
+      );
+
+      const fieldRouterCalledWithArgs = spies.fieldRouter.firstCall.args;
+      expect(fieldRouterCalledWithArgs.at(0)).to.equal(mockRootQueryValue);
+      expect(fieldRouterCalledWithArgs.at(1)).to.deep.equal({});
+      expect(fieldRouterCalledWithArgs.at(2).someContext).to.equal(mockInitialContext.someContext);
+      expect(fieldRouterCalledWithArgs.at(2)).to.have.property('pack');
+      expect(fieldRouterCalledWithArgs.at(3)?.fieldName).to.equal('hello');
+
+      const resolverCallWithArgs = spies.queryHello.firstCall.args;
+      expect(resolverCallWithArgs.at(0)).to.equal(mockRootQueryValue);
+      expect(resolverCallWithArgs.at(1)).to.deep.equal({});
+      expect(resolverCallWithArgs.at(2).someContext).to.equal(mockInitialContext.someContext);
+      expect(resolverCallWithArgs.at(2)).to.have.property('pack');
+      expect(resolverCallWithArgs.at(3)?.fieldName).to.equal('hello');
+    });
+
+    it('calls a function returned from a routed resolver', async function () {
+      const mockInitialContext = { someContext: true };
+      const mockRootQueryValue = 'root value';
+      const innerResolverFunction = sinon.spy(() => 'inner resolver function return');
+      spies.queryHello.callsFake(() => innerResolverFunction);
+      const result = await handler.query<{ hello: string }>(
+        `
+          {
+            hello
+          }
+        `,
+        {},
+        mockInitialContext,
+        { rootValue: mockRootQueryValue },
+      );
+
+      expect(result.data!.hello).to.equal('inner resolver function return');
+
+      const innerResolverCallArgs = innerResolverFunction.firstCall.args;
+      expect(innerResolverCallArgs.at(0)).to.equal(mockRootQueryValue);
+      expect(innerResolverCallArgs.at(1)).to.deep.equal({});
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      expect((innerResolverCallArgs.at(2) as any).someContext).to.deep.equal(mockInitialContext.someContext);
+      expect(innerResolverCallArgs.at(2)).to.have.property('pack');
+      expect(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (innerResolverCallArgs.at(3) as any).fieldName,
+        'the graphql info is passed to the inner resolver function',
+      ).to.deep.equal('hello');
+    });
+  });
+
+  context('type resolver router', function () {
+    let spies: {
+      typeRouter: sinon.SinonSpy;
+      helloWorldTypeResolver: sinon.SinonStub;
+      queryHelloWorldResolver: sinon.SinonStub;
+      helloNameResolver: sinon.SinonStub;
+    };
+
+    beforeEach(async function () {
+      const schemaString = `
+        schema {
+          query: Query
+        }
+
+        type Query {
+          helloWorld: HelloWorld!
+          goodbyeWorld: GoodbyeWorld!
+        }
+
+        type Hello {
+          name: String!
+        }
+        
+        type Goodbye {
+          name: String!
+        }
+
+        type World {
+          name: String!
+        }
+
+        union HelloWorld = Hello | World
+        union GoodbyeWorld = Goodbye | World
+      `;
+
+      // setup resolverMap stubs
+      spies = {
+        helloWorldTypeResolver: sinon.stub(),
+        queryHelloWorldResolver: sinon.stub(),
+        helloNameResolver: sinon.stub(),
+
+        // replaced with new spy instance after `handler.pack()`
+        typeRouter: sinon.spy(),
+      };
+
+      resolverMap = {
+        Query: {
+          helloWorld: spies.queryHelloWorldResolver,
+        },
+        HelloWorld: {
+          __resolveType: spies.helloWorldTypeResolver,
+        },
+        Hello: {
+          name: spies.helloNameResolver,
+        },
+      };
+
+      handler = new GraphQLHandler({
+        resolverMap,
+        dependencies: { graphqlSchema: schemaString },
+      });
+
+      await handler.pack();
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      spies.typeRouter = sinon.spy(handler as any, 'typeResolverRouter');
+    });
+
+    it('falls back to the default resolver when a type resolver does not exist in the resolver map', function () {
+      const goodbyeWorldNameValue = 'goodbye!';
+      it('falls back to checking __typename', async function () {
+        const result = await handler.query(
+          `
+          {
+            goodbyeWorld {
+              ... on Goodbye {
+                name
+                __typename
+              }
+            }
+          }
+        `,
+          {},
+          {},
+          {
+            rootValue: {
+              // the default router needs some hint on which way to resolve the abstract type,
+              // one way it does that is by checking the `__typename` property
+              goodbyeWorld: {
+                __typename: 'World',
+              },
+            },
+          },
+        );
+
+        expect(result.data?.goodbyeWorld.name).to.equal(goodbyeWorldNameValue);
+        expect(result.data?.goodbyeWorld.__typename).to.equal('World');
+      });
+    });
+
+    it('uses a type resolver from the resolver map defined by __resolveType', async function () {
+      const queryHelloWorldResolverValue = {};
+      spies.queryHelloWorldResolver.returns(queryHelloWorldResolverValue);
+      spies.helloNameResolver.returns(`hello!`);
+      spies.helloWorldTypeResolver.returns('Hello');
+
+      const result = await handler.query(
+        `
+          {
+            helloWorld {
+              ... on Hello {
+                name
+                __typename
+              }
+            }
+          }
+        `,
+        {},
+        { initialContext: 'hello' },
+      );
+
+      expect(result.data.helloWorld.name).to.equal('hello!');
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const assertTypeResolverArgs = (args: any) => {
+        expect(args.at(0)).to.deep.equal(queryHelloWorldResolverValue);
+        expect(args.at(1)?.initialContext).to.deep.equal('hello');
+        expect(args.at(1)).to.have.property('pack');
+        expect(
+          args.at(2).parentType.name,
+          'info object is the 3rd argument, and `parentType` exists on the passed argument',
+        ).to.equal('Query');
+        expect(isAbstractType(args.at(3))).to.be.true;
+        expect(args.at(3).name).to.equal('HelloWorld');
+      };
+
+      const typeResolverCalledWithArgs = spies.helloWorldTypeResolver.firstCall.args;
+      assertTypeResolverArgs(typeResolverCalledWithArgs);
+
+      const helloWorldTypeResolverCalledWithArgs = spies.helloWorldTypeResolver.firstCall.args;
+      assertTypeResolverArgs(helloWorldTypeResolverCalledWithArgs);
+    });
+  });
+
+  it('returns the structure of the initial state object argument', async function () {
     const initialState = { key: 'value' };
+
     const handler = new GraphQLHandler({
       resolverMap,
       state: initialState,
