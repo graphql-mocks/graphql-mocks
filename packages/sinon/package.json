@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/sinon",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "Chad Carbert",
   "description": "Mock using graphql-mocks with sinon spy",
   "main": "dist/index.js",
