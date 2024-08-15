@@ -19,6 +19,10 @@ export function referenceIntersection(groupA: Reference[], groupB: Reference[]) 
 }
 
 export function referenceDifference(groupA: Reference[], groupB: Reference[]) {
+  if (groupA.length === 0 || groupB.length === 0) {
+    return groupA;
+  }
+
   const maskedGroupA = new Set(groupA.map(maskReference));
   const maskedGroupB = new Set(groupB.map(maskReference));
 

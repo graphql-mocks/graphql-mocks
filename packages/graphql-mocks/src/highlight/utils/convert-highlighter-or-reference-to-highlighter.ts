@@ -7,12 +7,12 @@ import { reference as referenceHighlighter } from '../highlighter/reference';
 export function convertHighlighterOrReferenceToHighlighter(
   highlighterOrReference: Highlighter | Reference,
 ): Highlighter | undefined {
-  if (isTypeReference(highlighterOrReference) || isFieldReference(highlighterOrReference)) {
-    return referenceHighlighter(highlighterOrReference);
-  }
-
   if (isHighlighter(highlighterOrReference)) {
     return highlighterOrReference;
+  }
+
+  if (isTypeReference(highlighterOrReference) || isFieldReference(highlighterOrReference)) {
+    return referenceHighlighter(highlighterOrReference);
   }
 
   return undefined;
