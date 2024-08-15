@@ -1,10 +1,6 @@
-import { GraphQLSchema, GraphQLNamedType, isInputType } from 'graphql';
+import { GraphQLSchema, isInterfaceType, isObjectType } from 'graphql';
 import { FieldReference, HighlighterFactory, Highlighter } from '../types';
 import { HIGHLIGHT_ALL, HIGHLIGHT_ROOT_QUERY, HIGHLIGHT_ROOT_MUTATION } from './constants';
-
-function concat<T>(a: T[], b: T[]): T[] {
-  return ([] as T[]).concat(a, b);
-}
 
 export class FieldHighlighter implements Highlighter {
   targets: [string, string][];
@@ -22,30 +18,35 @@ export class FieldHighlighter implements Highlighter {
   }
 
   static expandTargets(schema: GraphQLSchema, targets: [string, string][]): FieldReference[] {
-    const fieldReferences = targets
-      .map((target) => {
-        return FieldHighlighter.expandTarget(schema, target);
-      })
-      .reduce(concat, []);
+    const fieldReferences: FieldReference[] = [];
+
+    for (const target of targets) {
+      const fr = FieldHighlighter.expandTarget(schema, target);
+      fieldReferences.push(...fr);
+    }
 
     return fieldReferences;
   }
 
   static expandTarget(schema: GraphQLSchema, [typeTarget, fieldTarget]: [string, string]): FieldReference[] {
     if (typeTarget === HIGHLIGHT_ALL) {
-      const allTypes = Object.values(schema.getTypeMap());
+      const references: FieldReference[] = [];
 
-      const expanded = (
-        allTypes
-          .filter((type) => !type.name.startsWith('__'))
-          .map((type: GraphQLNamedType) => {
-            const hasFields = type && 'getFields' in type && !isInputType(type);
-            return hasFields ? this.expandTarget(schema, [type.name, fieldTarget]) : undefined;
-          })
-          .filter(Boolean) as FieldReference[][]
-      ).reduce(concat, []);
+      const types = schema.getTypeMap();
+      for (const typeName in types) {
+        if (typeName.startsWith('__')) {
+          continue;
+        }
 
-      return expanded;
+        const type = types[typeName];
+        if (!isInterfaceType(type) && !isObjectType(type)) {
+          continue;
+        }
+
+        references.push([typeName, fieldTarget]);
+      }
+
+      return this.expandTargets(schema, references);
     }
 
     let type = schema.getType(typeTarget);
@@ -80,13 +81,13 @@ export class FieldHighlighter implements Highlighter {
 
     const fields = type.getFields();
     const fieldNames = fieldTarget === HIGHLIGHT_ALL ? Object.keys(fields) : [fieldTarget];
+    const fieldReferences: FieldReference[] = [];
 
-    const fieldReferences = fieldNames
-      .filter((fieldName) => Object.keys(fields).includes(fieldName))
-      .map((fieldName) => {
-        return type?.name && fieldName ? [type.name, fieldName] : undefined;
-      })
-      .filter(Boolean) as FieldReference[];
+    for (const fieldName of fieldNames) {
+      if (fields[fieldName]) {
+        fieldReferences.push([type.name, fieldName]);
+      }
+    }
 
     return fieldReferences;
   }

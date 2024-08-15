@@ -1,5 +1,4 @@
 import { GraphQLSchema } from 'graphql';
-import { clone } from 'ramda';
 import { include } from './operation/include';
 import { exclude } from './operation/exclude';
 import { filter } from './operation/filter';
@@ -71,7 +70,7 @@ export class Highlight {
     const schema = this.schema;
 
     // all changes are implemented with a fresh copy of data
-    const references = clone(this.references);
+    const references = [...this.references];
 
     let updated = highlighters
       .reduce((references: Reference[], highlighter: Highlighter) => {
