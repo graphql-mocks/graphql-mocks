@@ -2,6 +2,12 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.11.3
+
+#### Highlight performance improvements ([#281](https://github.com/graphql-mocks/graphql-mocks/pull/281))
+
+* (feature) Further performance improvements of highlighting and highlighters
+
 ### graphql-mocks@0.11.2
 
 #### Replace resolver attaching to schema with resolver routers ([#278](https://github.com/graphql-mocks/graphql-mocks/pull/278))

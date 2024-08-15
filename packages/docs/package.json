@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/docs",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "private": true,
   "scripts": {
     "clean": "docusaurus clear",
@@ -19,8 +19,8 @@
     "@mdx-js/react": "^3.0.0",
     "classnames": "^2.2.6",
     "graphiql": "1.5.17",
-    "graphql-mocks": "^0.11.2",
-    "graphql-paper": "^0.4.2",
+    "graphql-mocks": "^0.11.3",
+    "graphql-paper": "^0.4.3",
     "graphql-tools": "^6.0.11",
     "prism-react-renderer": "^2.1.0",
     "react": "^18.2.0",

@@ -1,6 +1,6 @@
 {
   "name": "graphql-paper",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Chad Carbert",
   "description": "A flexible in-memory store based on a GraphQL Schema",
   "main": "dist/index.js",
