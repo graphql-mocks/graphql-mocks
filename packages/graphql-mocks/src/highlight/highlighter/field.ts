@@ -22,7 +22,9 @@ export class FieldHighlighter implements Highlighter {
 
     for (const target of targets) {
       const fr = FieldHighlighter.expandTarget(schema, target);
-      fieldReferences.push(...fr);
+      for (const fieldReference of fr) {
+        fieldReferences.push(fieldReference);
+      }
     }
 
     return fieldReferences;
