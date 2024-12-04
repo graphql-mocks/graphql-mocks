@@ -1,7 +1,21 @@
-import { buildSchema, GraphQLSchema, GraphQLObjectType, GraphQLFieldMap, GraphQLScalarType } from 'graphql';
+import {
+  buildSchema,
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLFieldMap,
+  defaultFieldResolver,
+  GraphQLScalarType,
+} from 'graphql';
 import { attachFieldResolversToSchema, attachScalarsToSchema } from '../../../src/graphql/utils';
 import { expect } from 'chai';
 import { spy } from 'sinon';
+import { callResolver } from '../../helpers/call-resolver';
+import { FieldResolver, TypeResolver } from '../../../src/types';
+
+function getAttachedPipeline(resolver?: FieldResolver | TypeResolver) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return resolver && (resolver as any).pipeline;
+}
 
 describe('graphql/utils', function () {
   context('#attachFieldResolversToSchema', function () {
@@ -31,9 +45,9 @@ describe('graphql/utils', function () {
     });
 
     it('attaches resolvers from a resolverMap to a schema', function () {
-      const queryObjectResolver = (): string => 'noop';
-      const queryScalarResolver = (): string => 'noop';
-      const someTypeFieldResolver = (): string => 'noop';
+      const queryObjectResolver = spy();
+      const queryScalarResolver = spy();
+      const someTypeFieldResolver = spy();
 
       expect(queryFields.object.resolve).to.equal(undefined);
       expect(queryFields.scalar.resolve).to.equal(undefined);
@@ -50,13 +64,23 @@ describe('graphql/utils', function () {
         },
       });
 
-      expect(queryFields.object.resolve).to.equal(queryObjectResolver);
-      expect(queryFields.scalar.resolve).to.equal(queryScalarResolver);
-      expect(someTypeFields.someTypeField.resolve).to.equal(someTypeFieldResolver);
+      // check that attached resolvers are pipeline resolvers
+      expect(getAttachedPipeline(queryFields.object.resolve)).to.exist;
+      expect(getAttachedPipeline(queryFields.scalar.resolve)).to.exist;
+      expect(getAttachedPipeline(someTypeFields.someTypeField.resolve)).to.exist;
+
+      // calling resolvers should call the attached resolvers
+      callResolver(queryFields.object.resolve);
+      callResolver(queryFields.scalar.resolve);
+      callResolver(someTypeFields.someTypeField.resolve);
+
+      expect(queryObjectResolver.calledOnce).to.be.true;
+      expect(queryScalarResolver.calledOnce).to.be.true;
+      expect(someTypeFieldResolver.calledOnce).to.be.true;
     });
 
-    it('ignores resolvers not found in the resolverMap', function () {
-      const queryObjectResolver = (): string => 'noop';
+    it('resolvers not found in the resolverMap are filled with pipeline resolvers', function () {
+      const queryObjectResolver = spy();
 
       expect(queryFields.object.resolve).to.equal(undefined);
       expect(queryFields.scalar.resolve).to.equal(undefined);
@@ -68,15 +92,25 @@ describe('graphql/utils', function () {
         },
       });
 
-      expect(queryFields.object.resolve).to.equal(queryObjectResolver);
-      expect(queryFields.scalar.resolve, 'resolvers not in resolver map remain undefined').to.equal(undefined);
-      expect(someTypeFields.someTypeField.resolve, 'resolvers not in resolver map remain undefined').to.equal(
-        undefined,
-      );
+      // in the resolver map
+      const queryFieldsObjectResolver = queryFields.object.resolve;
+      expect(queryFieldsObjectResolver).to.exist;
+      callResolver(queryFields.object.resolve);
+      expect(queryObjectResolver.calledOnce).to.be.true;
+      const scalarPipeline = getAttachedPipeline(queryFieldsObjectResolver);
+      expect(scalarPipeline.resolvers).to.have.lengthOf(1);
+      expect(scalarPipeline.resolvers[0]).to.equal(queryObjectResolver);
+
+      // not in the resolver map
+      const someTypeFieldsResolver = someTypeFields.someTypeField.resolve;
+      expect(someTypeFieldsResolver, 'resolvers not in resolver map have pipeline resolvers').to.exist;
+      const someTypePipeline = getAttachedPipeline(someTypeFieldsResolver);
+      expect(someTypePipeline.resolvers).to.have.lengthOf(1);
+      expect(someTypePipeline.resolvers[0]).to.equal(defaultFieldResolver);
     });
 
     it('ignores resolvers not in the schema', function () {
-      const queryObjectResolver = (): string => 'noop';
+      const queryObjectResolver = spy();
 
       expect(queryFields.object.resolve).to.equal(undefined);
 
@@ -91,7 +125,9 @@ describe('graphql/utils', function () {
         },
       });
 
-      expect(queryFields.object.resolve).to.equal(queryObjectResolver);
+      callResolver(queryFields.object.resolve);
+      expect(queryObjectResolver.calledOnce).to.be.true;
+
       expect(queryFields.fieldsDoesNotExist).to.not.exist;
     });
 
