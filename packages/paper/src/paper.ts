@@ -99,17 +99,14 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     events.forEach((event) => eventsTarget.dispatchEvent(event));
   }
 
-  async mutate<T extends TransactionCallback<Paper['operations'] & UserOperations>>(fn: T): Promise<ReturnType<T>> {
-    const { previous, finish } = this.mutateQueue.enqueue();
-    await previous;
-
+  mutate<T extends TransactionCallback<Paper['operations'] & UserOperations>>(fn: T): ReturnType<T> {
     const schema = this.sourceGraphQLSchema;
     const current = this.current;
     const hooks = this.hooks;
     const operations = this.operations;
 
     const draft = createDraft(current);
-    const { transactionResult, eventQueue: customEvents } = await transaction<typeof operations>(
+    const { transactionResult, eventQueue: customEvents } = transaction<typeof operations>(
       draft,
       schema,
       operations,
@@ -128,7 +125,6 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     this.history.push(next);
 
     const mutateResult = convertResultKeysToDocument(schema, next, resultKeys) as ReturnType<T>;
-    finish();
     return mutateResult;
   }
 }

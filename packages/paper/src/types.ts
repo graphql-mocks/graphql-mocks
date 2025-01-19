@@ -124,7 +124,7 @@ export type PaperDocumentEvent = PaperEvent & {
 
 export interface Hook<T extends OperationMap> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (operations: BoundOperationMap<T>): any | Promise<any>;
+  (operations: BoundOperationMap<T>): any;
 }
 
 export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[]; afterTransaction: Hook<OM>[] };
