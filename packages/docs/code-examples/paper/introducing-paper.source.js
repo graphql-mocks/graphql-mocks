@@ -22,47 +22,43 @@ const graphqlSchema = `
 
 const paper = new Paper(graphqlSchema);
 
-async function run() {
-  const westSideStory = await paper.mutate(({ create }) => {
-    // Create a Film with several actors
-    const film = create('Film', {
-      title: 'West Side Story',
-      year: 1961,
-      actors: [
-        { name: 'Rita Moreno' },
-        { name: 'Natalie Wood' },
-        { name: 'George Chakiris' },
-        { name: 'Richard Beymer' },
-      ],
-    });
-
-    // return film to be available outside the `mutate`
-    return film;
+const westSideStory = paper.mutate(({ create }) => {
+  // Create a Film with several actors
+  const film = create('Film', {
+    title: 'West Side Story',
+    year: 1961,
+    actors: [
+      { name: 'Rita Moreno' },
+      { name: 'Natalie Wood' },
+      { name: 'George Chakiris' },
+      { name: 'Richard Beymer' },
+    ],
   });
 
-  // pull results off the returned result
-  const { title, actors } = westSideStory;
+  // return film to be available outside the `mutate`
+  return film;
+});
 
-  // FIRST console.log
-  console.log(title);
+// pull properties off the returned `Film` document
+const { title, actors } = westSideStory;
 
-  // SECOND console.log
-  console.log(actors);
-
-  // can lookup results on the `Paper` instance, too
-  const richard = paper.data.Actor.find(({ name }) => name === 'Richard Beymer');
-
-  // THIRD console.log
-  console.log(richard);
-
-  codegen(`
-  const {output} = require('../helpers');
-  module.exports = output("module.exports.actual = { title, actors, richard }", "");
-  `);
-}
-
-// kick off async function
+// FIRST console.log
 codegen(`
 const {output} = require('../helpers');
-module.exports = output("module.exports.run = run ", "run();");
+module.exports = output("", "console.log(title);");
+`);
+
+// SECOND console.log
+codegen(`
+const {output} = require('../helpers');
+module.exports = output("", "console.log(actors);");
+`);
+
+// lookup results via the `data` property on the `Paper` instance
+const richard = paper.data.Actor.find(({ name }) => name === 'Richard Beymer');
+
+// THIRD console.log
+codegen(`
+const {output} = require('../helpers');
+module.exports = output("module.exports.result = { title, actors, richard }", "console.log(richard);");
 `);

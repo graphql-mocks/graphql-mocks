@@ -1,12 +1,9 @@
 import { expect } from 'chai';
 import expected from './introducing-paper.result';
+import { result as actual } from './introducing-paper.source';
 
-it('paper/introducing-paper-get', async () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const example = require('./introducing-paper.source');
-  await example.run();
-
-  const { title, actors, richard } = example.actual;
+it('paper/introducing-paper-get', () => {
+  const { title, actors, richard } = actual;
   expect(title).to.deep.equal(expected.title);
   expect(actors).to.deep.equal(expected.actors);
   expect(richard).to.deep.equal(expected.richard);
