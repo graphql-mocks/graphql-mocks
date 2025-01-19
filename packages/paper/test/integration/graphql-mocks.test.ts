@@ -57,7 +57,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
       store.App.filter((app) => !app.id).forEach((app) => (app.id = `app-id-${generateId()}`));
     });
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const team = create('Team', {
         id: `team-id-${generateId()}`,
         name: 'Team Purple',

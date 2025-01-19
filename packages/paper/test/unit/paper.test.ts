@@ -29,7 +29,7 @@ describe('mutation operations', () => {
   });
 
   it('can create a document', async () => {
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       create('Person', {
         name: 'Ronald',
       });
@@ -47,7 +47,7 @@ describe('mutation operations', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let foundRonaldDoc: any;
 
-    await paper.mutate(({ create, find }) => {
+    paper.mutate(({ create, find }) => {
       ronaldDoc = create('Person', {
         name: 'Ronald',
       });
@@ -60,7 +60,7 @@ describe('mutation operations', () => {
   });
 
   it('can connect one document to another', async () => {
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
@@ -82,7 +82,7 @@ describe('mutation operations', () => {
   it('can queue a custom event within a mutation', async () => {
     const events: Event[] = [];
     paper.events.addEventListener('hello', (e) => events.push(e));
-    await paper.mutate(({ queueEvent }) => queueEvent(new Event('hello')));
+    paper.mutate(({ queueEvent }) => queueEvent(new Event('hello')));
     expect(events).to.have.lengthOf(1);
     expect(events[0].type).to.equal('hello');
   });
@@ -91,7 +91,7 @@ describe('mutation operations', () => {
     const events: Event[] = [];
     paper.events.addEventListener('hello', (e) => events.push(e));
     paper.hooks.beforeTransaction.push(({ queueEvent }) => queueEvent(new Event('hello')));
-    await paper.mutate(() => undefined);
+    paper.mutate(() => undefined);
     expect(events).to.have.lengthOf(1);
     expect(events[0].type).to.equal('hello');
   });
@@ -103,7 +103,7 @@ describe('data', () => {
   beforeEach(async () => {
     paper = new Paper(graphqlSchema);
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
@@ -134,7 +134,7 @@ describe('clear', () => {
   it('should purge all documents', async () => {
     const paper = new Paper(graphqlSchema);
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
