@@ -47,7 +47,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
   let paper: Paper;
   let handler: GraphQLHandler;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const generateId = () => Math.floor(Math.random() * 10000);
 
     paper = new Paper(graphqlSchema);
