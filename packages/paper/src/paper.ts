@@ -3,7 +3,6 @@ import { createDraft, finishDraft, setAutoFreeze, setUseStrictShallowCopy } from
 import { createStoreEvents } from './events/dispatch';
 import * as defaultOperations from './operations/index';
 import { transaction } from './transaction/transaction';
-import { Queue } from './transaction/queue';
 import {
   Document,
   DocumentStore,
@@ -45,7 +44,6 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
   protected history: DocumentStore[] = [];
   protected current: DocumentStore;
   protected sourceGraphQLSchema: GraphQLSchema;
-  protected mutateQueue: Queue = new Queue();
 
   operations: typeof defaultOperations & UserOperations;
   events = new EventTarget();
