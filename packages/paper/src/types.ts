@@ -62,9 +62,7 @@ export type AllowedTransactionCallbackReturnTypes =
   | Record<string, Document | null | undefined>;
 
 export interface TransactionCallback<T extends OperationMap> {
-  (
-    operations: BoundOperationMap<T>,
-  ): AllowedTransactionCallbackReturnTypes | Promise<AllowedTransactionCallbackReturnTypes>;
+  (operations: BoundOperationMap<T>): AllowedTransactionCallbackReturnTypes;
 }
 
 // validators
