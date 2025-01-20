@@ -350,7 +350,7 @@ describe('happy path', () => {
       it('hooks', async () => {
         let counter = 0;
 
-        paper.hooks.beforeTransaction.push(async ({ create }) => {
+        paper.hooks.beforeTransaction.push(({ create }) => {
           counter++;
           create('Team', {
             id: counter.toString(),
@@ -359,11 +359,11 @@ describe('happy path', () => {
           });
         });
 
-        paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(1);
         });
 
-        paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(2);
         });
 
@@ -379,7 +379,7 @@ describe('happy path', () => {
       it('hooks', async () => {
         let counter = 0;
 
-        paper.hooks.afterTransaction.push(async ({ create }) => {
+        paper.hooks.afterTransaction.push(({ create }) => {
           counter++;
           create('Team', {
             id: counter.toString(),
@@ -388,11 +388,11 @@ describe('happy path', () => {
           });
         });
 
-        paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(0);
         });
 
-        paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(1);
         });
 
