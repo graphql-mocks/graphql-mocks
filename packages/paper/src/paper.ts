@@ -11,6 +11,7 @@ import {
   HooksMap,
   KeyOrDocument,
   OperationMap,
+  SerializedPaper,
   TransactionCallback,
 } from './types';
 import { createDocumentStore } from './store/create-document-store';
@@ -27,6 +28,9 @@ import {
   scalarFieldValidator,
   uniqueIdFieldValidator,
 } from './validations/validators';
+import { serialize as serializeStore } from './store/serialize';
+import { getDocumentKey } from './document/get-document-key';
+import { nullDocument } from './document';
 
 // Auto Freezing needs to be disabled because it interfers with using
 // of using js a `Proxy` on the resulting data, see:
@@ -81,6 +85,12 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     this.current = createDocumentStore(this.sourceGraphQLSchema);
     this.history = [];
   }
+
+  serialize(): SerializedPaper {
+    return { store: serializeStore(this.current), __meta__: { NULL_DOCUMENT_KEY: getDocumentKey(nullDocument) } };
+  }
+
+  deserialize(): void {}
 
   private validate(_store?: DocumentStore): void {
     const store = _store ?? this.current;
