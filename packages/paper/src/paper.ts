@@ -31,6 +31,8 @@ import {
 import { serialize as serializeStore } from './store/serialize';
 import { getDocumentKey } from './document/get-document-key';
 import { nullDocument } from './document';
+import { mergeStores } from './store/merge-stores';
+import { deserialize as deserializeStore } from './store/deserialize';
 
 // Auto Freezing needs to be disabled because it interfers with using
 // of using js a `Proxy` on the resulting data, see:
@@ -62,15 +64,24 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     afterTransaction: [],
   };
 
-  constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: { operations?: UserOperations }) {
+  constructor(
+    graphqlSchema: Parameters<typeof createSchema>[0],
+    options?: { operations?: UserOperations; store?: DocumentStore },
+  ) {
     const schema = createSchema(graphqlSchema);
     this.current = createDocumentStore(schema);
     this.sourceGraphQLSchema = schema;
+
+    if (options?.store) {
+      this.current = mergeStores(schema, this.current, options.store);
+    }
 
     this.operations = {
       ...(options?.operations as UserOperations),
       ...defaultOperations,
     };
+
+    this.validate();
   }
 
   get data(): DocumentStore {
@@ -90,7 +101,10 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     return { store: serializeStore(this.current), __meta__: { NULL_DOCUMENT_KEY: getDocumentKey(nullDocument) } };
   }
 
-  deserialize(): void {}
+  deserialize(payload: SerializedPaper): Paper<UserOperations> {
+    const store = deserializeStore(payload.store, payload.__meta__);
+    return new Paper(this.sourceGraphQLSchema, { operations: this.operations, store });
+  }
 
   private validate(_store?: DocumentStore): void {
     const store = _store ?? this.current;
