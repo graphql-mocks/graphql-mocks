@@ -7,7 +7,7 @@ import { RemoveEvent } from '../../src/events/remove';
 import { ModifyEvent } from '../../src/events/modify-document';
 import { createDocument } from '../../src/document/create-document';
 import { nonNullFieldValidator } from '../../src/validations/validators';
-import { nullDocument } from '../../src/document';
+import { getConnections, nullDocument } from '../../src/document';
 
 const schemaString = `
   schema {
@@ -470,9 +470,9 @@ describe('happy path', () => {
             paper.data.Account[0],
             {
               id: '2',
-              email: 'windows98@aol.com',
+              email: 'bart@thesimpsons.com',
               user: {
-                firstName: 'Homer',
+                firstName: 'Bart',
                 lastName: 'Simpson',
                 dateOfBirth: '1998',
               },
@@ -522,38 +522,107 @@ describe('happy path', () => {
         getDocumentKey(nullDocument),
       ]);
     });
-  });
 
-  it('omits a relationship in serialization when null', () => {
-    paper.mutate(({ create }) => {
-      create('User', {
-        firstName: 'Bart',
-        lastName: 'Simpson',
-        dateOfBirth: '2000',
-        account: null,
+    it('omits a relationship in serialization when null', () => {
+      paper.mutate(({ create }) => {
+        create('User', {
+          firstName: 'Bart',
+          lastName: 'Simpson',
+          dateOfBirth: '2000',
+          account: null,
+        });
       });
+
+      const serialized = paper.serialize();
+      expect(serialized.store.User[1]).property('firstName', 'Bart');
+      expect(serialized.store.User[1]).property('lastName', 'Simpson');
+      expect(serialized.store.User[1].__meta__.DOCUMENT_CONNECTIONS).to.deep.equal({});
     });
 
-    const serialized = paper.serialize();
-    expect(serialized.store.User[1]).property('firstName', 'Bart');
-    expect(serialized.store.User[1]).property('lastName', 'Simpson');
-    expect(serialized.store.User[1].__meta__.DOCUMENT_CONNECTIONS).to.deep.equal({});
+    it('omits a relationship in serialization when null', () => {
+      paper.mutate(({ create }) => {
+        create('User', {
+          firstName: 'Bart',
+          lastName: 'Simpson',
+          dateOfBirth: '2000',
+          // account: null,   << account is ommitted from definition
+        });
+      });
+
+      const serialized = paper.serialize();
+      expect(serialized.store.User[1]).property('firstName', 'Bart');
+      expect(serialized.store.User[1]).property('lastName', 'Simpson');
+      expect(serialized.store.User[1].__meta__.DOCUMENT_CONNECTIONS).to.deep.equal({});
+    });
   });
 
-  it('omits a relationship in serialization when null', () => {
-    paper.mutate(({ create }) => {
-      create('User', {
-        firstName: 'Bart',
-        lastName: 'Simpson',
-        dateOfBirth: '2000',
-        // account: null,   << account is ommitted from definition
-      });
+  describe('deserialize', () => {
+    it('deserializes an empty store', () => {
+      paper = new Paper(graphqlSchema);
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(newPaperInstance.data).to.deep.equal({ Account: [], App: [], Team: [], User: [] });
     });
 
-    const serialized = paper.serialize();
-    expect(serialized.store.User[1]).property('firstName', 'Bart');
-    expect(serialized.store.User[1]).property('lastName', 'Simpson');
-    expect(serialized.store.User[1].__meta__.DOCUMENT_CONNECTIONS).to.deep.equal({});
+    it('deserializes a paper instance with data', () => {
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(paper.data).to.deep.equal(newPaperInstance.data);
+      expect(paper.data.Account[0]).to.deep.equal(newPaperInstance.data.Account[0]);
+      expect(newPaperInstance.data.Account[0].email).to.equal('homer@thesimpsons.com');
+    });
+
+    it('maintains document keys', () => {
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(getDocumentKey(paper.data.Account[0])).to.equal(getDocumentKey(newPaperInstance.data.Account[0]));
+    });
+
+    it('maintains typenames', () => {
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(paper.data.Account[0].__typename).to.equal(newPaperInstance.data.Account[0].__typename);
+    });
+
+    it('maintains connections', () => {
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
+    });
+
+    it('deserializes singularly connected documents', () => {
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(getConnections(paper.data.Account[0]).user).to.have.lengthOf(1);
+      expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
+    });
+
+    it('deserializes a list of documents', () => {
+      paper.mutate(({ create }) => {
+        create('Team', {
+          id: 'team-1',
+          name: 'Best Team',
+          admin: paper.data.Account[0],
+          accounts: [
+            paper.data.Account[0],
+            {
+              id: '2',
+              email: 'bart@thesimpsons.com',
+              user: {
+                firstName: 'Bart',
+                lastName: 'Simpson',
+                dateOfBirth: '1998',
+              },
+            },
+          ],
+        });
+      });
+
+      const serialized = paper.serialize();
+      const newPaperInstance = paper.deserialize(serialized);
+      expect(getConnections(paper.data.Team[0]).accounts).to.have.lengthOf(2);
+      expect(getConnections(paper.data.Team[0])).to.deep.equal(getConnections(newPaperInstance.data.Team[0]));
+    });
   });
 
   describe('edge cases', () => {
