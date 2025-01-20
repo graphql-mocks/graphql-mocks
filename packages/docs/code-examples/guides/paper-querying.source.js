@@ -22,40 +22,39 @@ const graphqlSchema = `
   }
 `;
 
-async function run() {
-  const paper = new Paper(graphqlSchema);
+const paper = new Paper(graphqlSchema);
 
-  // seed with some data about the film "The Notebook"
-  await paper.mutate(({ create }) => {
-    const rachel = create('Actor', {
-      name: 'Rachel McAdams',
-    });
-
-    const ryan = create('Actor', {
-      name: 'Ryan Gosling',
-    });
-
-    create('Film', {
-      title: 'The Notebook',
-      year: '2004',
-      actors: [rachel, ryan],
-    });
+// seed with some data about the film "The Notebook"
+paper.mutate(({ create }) => {
+  const rachel = create('Actor', {
+    name: 'Rachel McAdams',
   });
 
-  const resolverMap = {
-    Query: {
-      films(root, args, context, info) {
-        const { paper } = extractDependencies(context, ['paper']);
+  const ryan = create('Actor', {
+    name: 'Ryan Gosling',
+  });
 
-        // return all Documents of type `Film`
-        return paper.data.Film;
-      },
+  create('Film', {
+    title: 'The Notebook',
+    year: '2004',
+    actors: [rachel, ryan],
+  });
+});
+
+const resolverMap = {
+  Query: {
+    films(root, args, context, info) {
+      const { paper } = extractDependencies(context, ['paper']);
+
+      // return all Documents of type `Film`
+      return paper.data.Film;
     },
-  };
+  },
+};
 
-  const handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema, paper } });
+const handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema, paper } });
 
-  const result = await handler.query(`
+const result = handler.query(`
     query {
       films {
         title
@@ -67,14 +66,7 @@ async function run() {
     }
   `);
 
-  codegen(`
-    const {output} = require('../helpers');
-    module.exports = output("return result;", "console.log(result);");
-  `);
-}
-
-// kick everything off!
 codegen(`
   const {output} = require('../helpers');
-  module.exports = output("module.exports.run = run;", "run();");
+  module.exports = output("module.exports.result = result;", "console.log(await result);");
 `);

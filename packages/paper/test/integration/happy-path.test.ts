@@ -56,10 +56,10 @@ describe('happy path', () => {
   let account: Document;
   let events: any[];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     paper = new Paper(graphqlSchema);
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const account = create('Account', {
         id: '1',
         email: 'windows95@aol.com',
@@ -112,8 +112,8 @@ describe('happy path', () => {
   });
 
   describe('mutation transaction payloads', () => {
-    it('returns a document', async () => {
-      const payload = await paper.mutate(({ find }) => {
+    it('returns a document', () => {
+      const payload = paper.mutate(({ find }) => {
         return find(account);
       });
 
@@ -123,8 +123,8 @@ describe('happy path', () => {
       });
     });
 
-    it('returns an array of document', async () => {
-      const [first, second] = await paper.mutate(({ find }) => {
+    it('returns an array of document', () => {
+      const [first, second] = paper.mutate(({ find }) => {
         return [find(account), find(account)];
       });
 
@@ -139,8 +139,8 @@ describe('happy path', () => {
       });
     });
 
-    it('returns an object of documents', async () => {
-      const { first, second } = await paper.mutate(({ find }) => {
+    it('returns an object of documents', () => {
+      const { first, second } = paper.mutate(({ find }) => {
         return { first: find(account), second: find(account) };
       });
 
@@ -157,17 +157,17 @@ describe('happy path', () => {
   });
 
   describe('mutations', () => {
-    it('provides __typename on documents within #mutate', async () => {
-      await paper.mutate(({ find }) => {
+    it('provides __typename on documents within #mutate', () => {
+      paper.mutate(({ find }) => {
         const $account = find(account);
         expect($account?.__typename).to.equal('Account');
       });
     });
 
-    it('creates a new document', async () => {
+    it('creates a new document', () => {
       paper.events.addEventListener('create', (e) => events.push(e));
 
-      await paper.mutate(({ create }) => {
+      paper.mutate(({ create }) => {
         create('Account', {
           id: '2',
           email: 'macos9@aol.com',
@@ -184,8 +184,8 @@ describe('happy path', () => {
       expect(events[0]?.document?.email).to.equal('macos9@aol.com');
     });
 
-    it('can hop multiple document connections within mutation transactions', async () => {
-      await paper.mutate(({ create, find }) => {
+    it('can hop multiple document connections within mutation transactions', () => {
+      paper.mutate(({ create, find }) => {
         const $account = find(account);
 
         const team = create('Team', {
@@ -201,7 +201,7 @@ describe('happy path', () => {
         });
       });
 
-      await paper.mutate(({ getStore }) => {
+      paper.mutate(({ getStore }) => {
         const apps = getStore().App;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const app = apps.find((app: Document) => app.id === '1')!;
@@ -209,8 +209,8 @@ describe('happy path', () => {
       });
     });
 
-    it('creates a new document with a connected document, implictly on property at creation', async () => {
-      await paper.mutate(({ create }) => {
+    it('creates a new document with a connected document, implictly on property at creation', () => {
+      paper.mutate(({ create }) => {
         create('App', {
           id: '1',
           name: 'my-fancy-app',
@@ -223,8 +223,8 @@ describe('happy path', () => {
       expect(app?.owner?.email).to.equal('windows95@aol.com');
     });
 
-    it('creates a new document with a connected document, explicitly by property reference', async () => {
-      await paper.mutate(({ create }) => {
+    it('creates a new document with a connected document, explicitly by property reference', () => {
+      paper.mutate(({ create }) => {
         const app = create('App', {
           id: '1',
           name: 'my-fancy-app',
@@ -238,8 +238,8 @@ describe('happy path', () => {
       expect(app?.owner?.email).to.equal('windows95@aol.com');
     });
 
-    it('connects to null documents', async () => {
-      await paper.mutate(({ create }) => {
+    it('connects to null documents', () => {
+      paper.mutate(({ create }) => {
         const team = create('Team', {
           id: '1',
           name: 'my-fancy-app',
@@ -256,11 +256,11 @@ describe('happy path', () => {
       expect(team?.nullList).to.deep.equal([null, null, { id: '1', email: 'windows95@aol.com' }]);
     });
 
-    it('edits an existing document', async () => {
+    it('edits an existing document', () => {
       const originalAccount = account;
       paper.events.addEventListener('modify', (e) => events.push(e));
 
-      await paper.mutate(({ find }) => {
+      paper.mutate(({ find }) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const acc = find(account as Document)!;
         acc.id = '5';
@@ -281,8 +281,8 @@ describe('happy path', () => {
       expect((event as ModifyEvent).changes.id.previousValue).to.equal('1');
     });
 
-    it('clones an existing document', async () => {
-      await paper.mutate(({ find, clone }) => {
+    it('clones an existing document', () => {
+      paper.mutate(({ find, clone }) => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const acc = find(account)!;
         const cloned = clone(acc);
@@ -295,29 +295,10 @@ describe('happy path', () => {
       expect(accounts[1].email).to.equal(account.email);
     });
 
-    it('supports promises within a mutate transaction', async () => {
-      let called = false;
-
-      const timeout = () =>
-        new Promise((resolve) => {
-          setTimeout(() => {
-            called = true;
-            resolve(called);
-          }, 100);
-        });
-
-      await paper.mutate(async () => {
-        const resolved = await timeout();
-        expect(resolved).to.equal(true);
-      });
-
-      expect(called).to.equal(true);
-    });
-
-    it('removes existing documents', async () => {
+    it('removes existing documents', () => {
       paper.events.addEventListener('remove', (e) => events.push(e));
 
-      await paper.mutate(({ remove }) => {
+      paper.mutate(({ remove }) => {
         remove(account);
       });
 
@@ -327,8 +308,8 @@ describe('happy path', () => {
       expect((events[0] as RemoveEvent).document?.email).to.deep.equal('windows95@aol.com');
     });
 
-    it('allows direct access to the store', async () => {
-      await paper.mutate(({ getStore }) => {
+    it('allows direct access to the store', () => {
+      paper.mutate(({ getStore }) => {
         const store = getStore();
         const accounts = store.Account;
         expect(accounts).to.have.lengthOf(1);
@@ -341,14 +322,14 @@ describe('happy path', () => {
   });
 
   describe('validations', () => {
-    it('provides validation feedback on transactions', async () => {
+    it('provides validation feedback on transactions', () => {
       let caughtError;
 
       // add validator not included by default
       paper.validators.field.push(nonNullFieldValidator as any);
 
       try {
-        await paper.mutate(({ create }) => {
+        paper.mutate(({ create }) => {
           create('Account', {
             id: '2',
             email: null,
@@ -366,10 +347,10 @@ describe('happy path', () => {
 
   describe('hooks', () => {
     context('beforeTransaction', () => {
-      it('hooks', async () => {
+      it('hooks', () => {
         let counter = 0;
 
-        paper.hooks.beforeTransaction.push(async ({ create }) => {
+        paper.hooks.beforeTransaction.push(({ create }) => {
           counter++;
           create('Team', {
             id: counter.toString(),
@@ -378,11 +359,11 @@ describe('happy path', () => {
           });
         });
 
-        await paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(1);
         });
 
-        await paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(2);
         });
 
@@ -395,10 +376,10 @@ describe('happy path', () => {
     });
 
     context('afterTransaction', () => {
-      it('hooks', async () => {
+      it('hooks', () => {
         let counter = 0;
 
-        paper.hooks.afterTransaction.push(async ({ create }) => {
+        paper.hooks.afterTransaction.push(({ create }) => {
           counter++;
           create('Team', {
             id: counter.toString(),
@@ -407,11 +388,11 @@ describe('happy path', () => {
           });
         });
 
-        await paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(0);
         });
 
-        await paper.mutate(async ({ getStore }) => {
+        paper.mutate(({ getStore }) => {
           expect(getStore().Team).to.have.lengthOf(1);
         });
 

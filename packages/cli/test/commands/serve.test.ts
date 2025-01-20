@@ -109,7 +109,7 @@ describe('serve', function () {
       'serve',
       '--fake',
       '--schema',
-      'https://swapi-graphql.netlify.app/.netlify/functions/index',
+      'https://swapi-graphql.netlify.app/graphql',
       '--header',
       'Authorization=Bearer Token',
       '--header',
@@ -131,7 +131,7 @@ describe('serve', function () {
       `,
       });
       const axiosCallArgs = axiosPostSpy.firstCall.args;
-      expect(axiosCallArgs[0]).to.equal('https://swapi-graphql.netlify.app/.netlify/functions/index');
+      expect(axiosCallArgs[0]).to.equal('https://swapi-graphql.netlify.app/graphql');
       expect(axiosCallArgs[1].Headers).to.deep.equal({ OtherHeader: 'Other Value', Authorization: 'Bearer Token' });
 
       // using the public api with the fake flag, should generate fake data

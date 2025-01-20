@@ -19,7 +19,7 @@ const acceptanceTests = (testKey: string, port: string) => {
     it(`[${testKey}] works in the browser with dummy-react-app`, async function () {
       this.timeout(1000 * 30);
 
-      browser = await puppeteer.launch();
+      browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
       page = await browser.newPage();
       await page.setJavaScriptEnabled(true);
 

@@ -3,7 +3,6 @@ import { createDraft, finishDraft, setAutoFreeze, setUseStrictShallowCopy } from
 import { createStoreEvents } from './events/dispatch';
 import * as defaultOperations from './operations/index';
 import { transaction } from './transaction/transaction';
-import { Queue } from './transaction/queue';
 import {
   Document,
   DocumentStore,
@@ -45,7 +44,6 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
   protected history: DocumentStore[] = [];
   protected current: DocumentStore;
   protected sourceGraphQLSchema: GraphQLSchema;
-  protected mutateQueue: Queue = new Queue();
 
   operations: typeof defaultOperations & UserOperations;
   events = new EventTarget();
@@ -99,17 +97,14 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     events.forEach((event) => eventsTarget.dispatchEvent(event));
   }
 
-  async mutate<T extends TransactionCallback<Paper['operations'] & UserOperations>>(fn: T): Promise<ReturnType<T>> {
-    const { previous, finish } = this.mutateQueue.enqueue();
-    await previous;
-
+  mutate<T extends TransactionCallback<Paper['operations'] & UserOperations>>(fn: T): ReturnType<T> {
     const schema = this.sourceGraphQLSchema;
     const current = this.current;
     const hooks = this.hooks;
     const operations = this.operations;
 
     const draft = createDraft(current);
-    const { transactionResult, eventQueue: customEvents } = await transaction<typeof operations>(
+    const { transactionResult, eventQueue: customEvents } = transaction<typeof operations>(
       draft,
       schema,
       operations,
@@ -128,7 +123,6 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     this.history.push(next);
 
     const mutateResult = convertResultKeysToDocument(schema, next, resultKeys) as ReturnType<T>;
-    finish();
     return mutateResult;
   }
 }

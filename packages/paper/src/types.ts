@@ -62,9 +62,7 @@ export type AllowedTransactionCallbackReturnTypes =
   | Record<string, Document | null | undefined>;
 
 export interface TransactionCallback<T extends OperationMap> {
-  (
-    operations: BoundOperationMap<T>,
-  ): AllowedTransactionCallbackReturnTypes | Promise<AllowedTransactionCallbackReturnTypes>;
+  (operations: BoundOperationMap<T>): AllowedTransactionCallbackReturnTypes;
 }
 
 // validators
@@ -124,7 +122,7 @@ export type PaperDocumentEvent = PaperEvent & {
 
 export interface Hook<T extends OperationMap> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (operations: BoundOperationMap<T>): any | Promise<any>;
+  (operations: BoundOperationMap<T>): any;
 }
 
 export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[]; afterTransaction: Hook<OM>[] };

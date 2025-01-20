@@ -36,52 +36,51 @@ const graphqlSchema = `
   }
 `;
 
-async function run() {
-  const paper = new Paper(graphqlSchema);
+const paper = new Paper(graphqlSchema);
 
-  const { tomHanks, wilson } = await paper.mutate(({ create }) => {
-    const tomHanks = create('Actor', {
-      id: uuid(),
-      name: 'Tom Hanks',
-    });
-
-    const wilson = create('Actor', {
-      id: uuid(),
-      name: 'Wilson the Volleyball',
-    });
-
-    return { tomHanks, wilson };
+const { tomHanks, wilson } = paper.mutate(({ create }) => {
+  const tomHanks = create('Actor', {
+    id: uuid(),
+    name: 'Tom Hanks',
   });
 
-  const resolverMap = {
-    Mutation: {
-      addFilm(root, args, context, info) {
-        const { paper } = extractDependencies(context, ['paper']);
+  const wilson = create('Actor', {
+    id: uuid(),
+    name: 'Wilson the Volleyball',
+  });
 
-        // find Actor documents based on args.input.actorIds
-        const filmActors = (args.input.actorIds ?? [])
-          .map((actorId) => paper.data.Actor.find((actor) => actor.id === actorId))
-          .filter(Boolean);
+  return { tomHanks, wilson };
+});
 
-        // return created Film document, matching `addFilm` return type: Film!
-        const newFilm = paper.mutate(({ create }) => {
-          return create('Film', {
-            id: uuid(),
-            title: args.input.title,
-            year: args.input.year,
-            actors: filmActors,
-          });
+const resolverMap = {
+  Mutation: {
+    addFilm(root, args, context, info) {
+      const { paper } = extractDependencies(context, ['paper']);
+
+      // find Actor documents based on args.input.actorIds
+      const filmActors = (args.input.actorIds ?? [])
+        .map((actorId) => paper.data.Actor.find((actor) => actor.id === actorId))
+        .filter(Boolean);
+
+      // return created Film document, matching `addFilm` return type: Film!
+      const newFilm = paper.mutate(({ create }) => {
+        return create('Film', {
+          id: uuid(),
+          title: args.input.title,
+          year: args.input.year,
+          actors: filmActors,
         });
+      });
 
-        return newFilm;
-      },
+      return newFilm;
     },
-  };
+  },
+};
 
-  const handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema, paper } });
+const handler = new GraphQLHandler({ resolverMap, dependencies: { graphqlSchema, paper } });
 
-  const result = await handler.query(
-    `
+const result = handler.query(
+  `
     mutation($addFilmInput: AddFilmInput) {
       addFilm(input: $addFilmInput) {
         title
@@ -92,23 +91,16 @@ async function run() {
       }
     }
   `,
-    {
-      addFilmInput: {
-        title: 'Cast Away',
-        year: '2000',
-        actorIds: [tomHanks.id, wilson.id],
-      },
+  {
+    addFilmInput: {
+      title: 'Cast Away',
+      year: '2000',
+      actorIds: [tomHanks.id, wilson.id],
     },
-  );
+  },
+);
 
-  codegen(`
-    const {output} = require('../helpers');
-    module.exports = output("return result;", "console.log(result);");
-  `);
-}
-
-// kick everything off!
 codegen(`
   const {output} = require('../helpers');
-  module.exports = output("module.exports.run = run;", "run();");
+  module.exports = output("module.exports.result = result;", "console.log(await result);");
 `);

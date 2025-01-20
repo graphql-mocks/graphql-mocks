@@ -47,7 +47,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
   let paper: Paper;
   let handler: GraphQLHandler;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const generateId = () => Math.floor(Math.random() * 10000);
 
     paper = new Paper(graphqlSchema);
@@ -57,7 +57,7 @@ describe('graphql-mocks and GraphQL Paper integration', () => {
       store.App.filter((app) => !app.id).forEach((app) => (app.id = `app-id-${generateId()}`));
     });
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const team = create('Team', {
         id: `team-id-${generateId()}`,
         name: 'Team Purple',

@@ -28,8 +28,8 @@ describe('mutation operations', () => {
     paper = new Paper(graphqlSchema);
   });
 
-  it('can create a document', async () => {
-    await paper.mutate(({ create }) => {
+  it('can create a document', () => {
+    paper.mutate(({ create }) => {
       create('Person', {
         name: 'Ronald',
       });
@@ -41,13 +41,13 @@ describe('mutation operations', () => {
     expect(getDocumentKey(ronald!)).not.to.be.null;
   });
 
-  it('can find a document given a key within a mutation operation', async () => {
+  it('can find a document given a key within a mutation operation', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let ronaldDoc: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let foundRonaldDoc: any;
 
-    await paper.mutate(({ create, find }) => {
+    paper.mutate(({ create, find }) => {
       ronaldDoc = create('Person', {
         name: 'Ronald',
       });
@@ -59,8 +59,8 @@ describe('mutation operations', () => {
     expect(ronaldDoc).to.deep.equal(foundRonaldDoc);
   });
 
-  it('can connect one document to another', async () => {
-    await paper.mutate(({ create }) => {
+  it('can connect one document to another', () => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
@@ -79,19 +79,19 @@ describe('mutation operations', () => {
     expect(getConnections(ronald!).bestFriend.includes(getDocumentKey(june!)!)).to.equal(true);
   });
 
-  it('can queue a custom event within a mutation', async () => {
+  it('can queue a custom event within a mutation', () => {
     const events: Event[] = [];
     paper.events.addEventListener('hello', (e) => events.push(e));
-    await paper.mutate(({ queueEvent }) => queueEvent(new Event('hello')));
+    paper.mutate(({ queueEvent }) => queueEvent(new Event('hello')));
     expect(events).to.have.lengthOf(1);
     expect(events[0].type).to.equal('hello');
   });
 
-  it('can queue a custom event within a hook', async () => {
+  it('can queue a custom event within a hook', () => {
     const events: Event[] = [];
     paper.events.addEventListener('hello', (e) => events.push(e));
     paper.hooks.beforeTransaction.push(({ queueEvent }) => queueEvent(new Event('hello')));
-    await paper.mutate(() => undefined);
+    paper.mutate(() => undefined);
     expect(events).to.have.lengthOf(1);
     expect(events[0].type).to.equal('hello');
   });
@@ -100,10 +100,10 @@ describe('mutation operations', () => {
 describe('data', () => {
   let paper: Paper;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     paper = new Paper(graphqlSchema);
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
@@ -131,10 +131,10 @@ describe('data', () => {
 });
 
 describe('clear', () => {
-  it('should purge all documents', async () => {
+  it('should purge all documents', () => {
     const paper = new Paper(graphqlSchema);
 
-    await paper.mutate(({ create }) => {
+    paper.mutate(({ create }) => {
       const ronald = create('Person', {
         name: 'Ronald',
       });
