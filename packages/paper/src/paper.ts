@@ -11,7 +11,7 @@ import {
   HooksMap,
   KeyOrDocument,
   OperationMap,
-  SerializedPaper,
+  SerializedPaperPayload,
   TransactionCallback,
 } from './types';
 import { createDocumentStore } from './store/create-document-store';
@@ -31,7 +31,6 @@ import {
 import { serialize as serializeStore } from './store/serialize';
 import { getDocumentKey } from './document/get-document-key';
 import { nullDocument } from './document';
-import { mergeStores } from './store/merge-stores';
 import { deserialize as deserializeStore } from './store/deserialize';
 
 // Auto Freezing needs to be disabled because it interfers with using
@@ -66,15 +65,13 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
   constructor(
     graphqlSchema: Parameters<typeof createSchema>[0],
-    options?: { operations?: UserOperations; store?: DocumentStore },
+    options?: { operations?: UserOperations; serialiedPayload?: SerializedPaperPayload },
   ) {
     const schema = createSchema(graphqlSchema);
-    this.current = createDocumentStore(schema);
+    this.current = options?.serialiedPayload
+      ? deserializeStore(options.serialiedPayload.store, options.serialiedPayload.__meta__)
+      : createDocumentStore(schema);
     this.sourceGraphQLSchema = schema;
-
-    if (options?.store) {
-      this.current = mergeStores(schema, this.current, options.store);
-    }
 
     this.operations = {
       ...(options?.operations as UserOperations),
@@ -97,13 +94,8 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     this.history = [];
   }
 
-  serialize(): SerializedPaper {
+  serialize(): SerializedPaperPayload {
     return { store: serializeStore(this.current), __meta__: { NULL_DOCUMENT_KEY: getDocumentKey(nullDocument) } };
-  }
-
-  deserialize(payload: SerializedPaper): Paper<UserOperations> {
-    const store = deserializeStore(payload.store, payload.__meta__);
-    return new Paper(this.sourceGraphQLSchema, { operations: this.operations, store });
   }
 
   private validate(_store?: DocumentStore): void {
