@@ -17,7 +17,7 @@ export function deserializeDocument(
     serializedDocument.__meta__.DOCUMENT_KEY,
   );
 
-  // copy over connecetions from serialized document
+  // copy over connections from serialized document
   const documentConnections = getConnections(document);
   for (const connectionProperty in serializedDocument.__meta__.DOCUMENT_CONNECTIONS) {
     documentConnections[connectionProperty] = serializedDocument.__meta__.DOCUMENT_CONNECTIONS[connectionProperty].map(
