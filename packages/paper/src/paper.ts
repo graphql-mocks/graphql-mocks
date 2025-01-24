@@ -65,11 +65,11 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
 
   constructor(
     graphqlSchema: Parameters<typeof createSchema>[0],
-    options?: { operations?: UserOperations; serialiedPayload?: SerializedPaperPayload },
+    options?: { operations?: UserOperations; serializedPayload?: SerializedPaperPayload },
   ) {
     const schema = createSchema(graphqlSchema);
-    this.current = options?.serialiedPayload
-      ? deserializeStore(options.serialiedPayload.store, options.serialiedPayload.__meta__)
+    this.current = options?.serializedPayload
+      ? deserializeStore(options.serializedPayload.store, options.serializedPayload.__meta__)
       : createDocumentStore(schema);
     this.sourceGraphQLSchema = schema;
 
