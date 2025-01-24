@@ -19,11 +19,13 @@ export function deserializeDocument(
 
   // copy over connections from serialized document
   const documentConnections = getConnections(document);
+  const nullDocumentKeyForCurrentPaper = getDocumentKey(nullDocument);
   for (const connectionProperty in serializedDocument.__meta__.DOCUMENT_CONNECTIONS) {
     documentConnections[connectionProperty] = serializedDocument.__meta__.DOCUMENT_CONNECTIONS[connectionProperty].map(
       // the null key in the serialized document might be different than the null key used in the current instance,
       // this mapping translates any null serialized null document to use the null document key used by this instance
-      (documentKey) => (documentKey === serializedMeta.NULL_DOCUMENT_KEY ? getDocumentKey(nullDocument) : documentKey),
+      (documentKey) =>
+        documentKey === serializedMeta.NULL_DOCUMENT_KEY ? nullDocumentKeyForCurrentPaper : documentKey,
     );
   }
 
