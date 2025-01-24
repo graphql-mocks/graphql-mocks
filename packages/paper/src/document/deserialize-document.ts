@@ -1,4 +1,4 @@
-import { Document, SerializedDocument, SerializedPaper } from '../types';
+import { Document, SerializedDocument, SerializedPaperPayload } from '../types';
 import { createDocument } from './create-document';
 import { getConnections } from './get-connections';
 import { getDocumentKey } from './get-document-key';
@@ -6,7 +6,7 @@ import { nullDocument } from './null-document';
 
 export function deserializeDocument(
   serializedDocument: SerializedDocument,
-  serializedMeta: SerializedPaper['__meta__'],
+  serializedMeta: SerializedPaperPayload['__meta__'],
 ): Document {
   const documentData: Partial<SerializedDocument> = structuredClone(serializedDocument);
   delete documentData.__meta__;

@@ -560,13 +560,13 @@ describe('happy path', () => {
     it('deserializes an empty store', () => {
       paper = new Paper(graphqlSchema);
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(newPaperInstance.data).to.deep.equal({ Account: [], App: [], Team: [], User: [] });
     });
 
     it('deserializes a paper instance with data', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(paper.data).to.deep.equal(newPaperInstance.data);
       expect(paper.data.Account[0]).to.deep.equal(newPaperInstance.data.Account[0]);
       expect(newPaperInstance.data.Account[0].email).to.equal('homer@thesimpsons.com');
@@ -574,25 +574,25 @@ describe('happy path', () => {
 
     it('maintains document keys', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(getDocumentKey(paper.data.Account[0])).to.equal(getDocumentKey(newPaperInstance.data.Account[0]));
     });
 
     it('maintains typenames', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(paper.data.Account[0].__typename).to.equal(newPaperInstance.data.Account[0].__typename);
     });
 
     it('maintains connections', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
     });
 
     it('deserializes singularly connected documents', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(getConnections(paper.data.Account[0]).user).to.have.lengthOf(1);
       expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
     });
@@ -619,7 +619,7 @@ describe('happy path', () => {
       });
 
       const serialized = paper.serialize();
-      const newPaperInstance = paper.deserialize(serialized);
+      const newPaperInstance = new Paper(graphqlSchema, { serialiedPayload: serialized });
       expect(getConnections(paper.data.Team[0]).accounts).to.have.lengthOf(2);
       expect(getConnections(paper.data.Team[0])).to.deep.equal(getConnections(newPaperInstance.data.Team[0]));
     });

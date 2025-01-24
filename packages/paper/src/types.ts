@@ -139,7 +139,7 @@ export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[];
 
 // serialization
 
-export type SerializedPaper = {
+export type SerializedPaperPayload = {
   store: SerializedDocumentStore;
 
   __meta__: {
