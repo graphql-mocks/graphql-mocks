@@ -562,13 +562,13 @@ describe('happy path', () => {
     it('serializes/deserializes an empty store', () => {
       paper = new Paper(graphqlSchema);
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(newPaperInstance.data).to.deep.equal({ Account: [], App: [], Team: [], User: [] });
     });
 
     it('serializes/deserializes a paper instance with data', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(paper.data).to.deep.equal(newPaperInstance.data);
       expect(paper.data.Account[0]).to.deep.equal(newPaperInstance.data.Account[0]);
       expect(newPaperInstance.data.Account[0].email).to.equal('homer@thesimpsons.com');
@@ -576,25 +576,25 @@ describe('happy path', () => {
 
     it('maintains document keys', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(getDocumentKey(newPaperInstance.data.Account[0])).to.equal(getDocumentKey(paper.data.Account[0]));
     });
 
     it('maintains typenames', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(newPaperInstance.data.Account[0].__typename).to.equal(paper.data.Account[0].__typename);
     });
 
     it('maintains connections', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(getConnections(newPaperInstance.data.Account[0])).to.deep.equal(getConnections(paper.data.Account[0]));
     });
 
     it('deserializes singularly connected documents', () => {
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(getConnections(paper.data.Account[0]).user).to.have.lengthOf(1);
       expect(getConnections(newPaperInstance.data.Account[0])).to.deep.equal(getConnections(paper.data.Account[0]));
     });
@@ -621,7 +621,7 @@ describe('happy path', () => {
       });
 
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(getConnections(newPaperInstance.data.Team[0]).accounts).to.have.lengthOf(2);
       expect(getConnections(newPaperInstance.data.Team[0])).to.deep.equal(getConnections(paper.data.Team[0]));
     });
@@ -637,7 +637,7 @@ describe('happy path', () => {
       });
 
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(newPaperInstance.data.Team[0].nullList).to.equal(null);
     });
 
@@ -652,18 +652,16 @@ describe('happy path', () => {
       });
 
       const serialized = paper.serialize();
-      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      const newPaperInstance = Paper.deserialize(graphqlSchema, serialized);
       expect(newPaperInstance.data.Team[0].nullList).to.deep.equal(paper.data.Team[0].nullList);
       expect(newPaperInstance.data.Team[0].nullList).to.deep.equal([null, null, paper.data.Account[0]]);
     });
 
-    // These are not special validations for the deserialization, they are the same validations
-    // that get ran against the store to ensure consistency
     context('validations', () => {
       it('throws if the serialized store does not have a valid typename within the store', () => {
         const serialized = paper.serialize();
         serialized.store['Blah'] = [];
-        expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
+        expect(() => Paper.deserialize(graphqlSchema, serialized)).to.throw(
           'The type "Blah" does not exist in the the graphql schema.',
         );
       });
@@ -673,9 +671,27 @@ describe('happy path', () => {
         const account = serialized.store.Account[0];
         account.notAValidFieldOnAccountType = 'asdf';
 
-        expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
+        expect(() => Paper.deserialize(graphqlSchema, serialized)).to.throw(
           'The field "notAValidFieldOnAccountType" does not exist on the type Account.',
         );
+      });
+
+      it('throws if the serialized structure is invalid', () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        expect(() => Paper.deserialize(graphqlSchema, {} as any)).to.throw(
+          'SerializedPaper is not valid. See `cause` property for validation error',
+        );
+
+        expect(() =>
+          Paper.deserialize(graphqlSchema, {
+            __meta__: { NULL_DOCUMENT_KEY: '' },
+            store: {},
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            extraUnexpectedKeyShouldThrow: '',
+          }),
+        ).to.throw('SerializedPaper is not valid. See `cause` property for validation error');
       });
     });
   });
