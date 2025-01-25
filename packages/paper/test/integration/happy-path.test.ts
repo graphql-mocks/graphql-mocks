@@ -575,26 +575,26 @@ describe('happy path', () => {
     it('maintains document keys', () => {
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
-      expect(getDocumentKey(paper.data.Account[0])).to.equal(getDocumentKey(newPaperInstance.data.Account[0]));
+      expect(getDocumentKey(newPaperInstance.data.Account[0])).to.equal(getDocumentKey(paper.data.Account[0]));
     });
 
     it('maintains typenames', () => {
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
-      expect(paper.data.Account[0].__typename).to.equal(newPaperInstance.data.Account[0].__typename);
+      expect(newPaperInstance.data.Account[0].__typename).to.equal(paper.data.Account[0].__typename);
     });
 
     it('maintains connections', () => {
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
-      expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
+      expect(getConnections(newPaperInstance.data.Account[0])).to.deep.equal(getConnections(paper.data.Account[0]));
     });
 
     it('deserializes singularly connected documents', () => {
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
       expect(getConnections(paper.data.Account[0]).user).to.have.lengthOf(1);
-      expect(getConnections(paper.data.Account[0])).to.deep.equal(getConnections(newPaperInstance.data.Account[0]));
+      expect(getConnections(newPaperInstance.data.Account[0])).to.deep.equal(getConnections(paper.data.Account[0]));
     });
 
     it('deserializes a list of documents', () => {
@@ -620,8 +620,39 @@ describe('happy path', () => {
 
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
-      expect(getConnections(paper.data.Team[0]).accounts).to.have.lengthOf(2);
-      expect(getConnections(paper.data.Team[0])).to.deep.equal(getConnections(newPaperInstance.data.Team[0]));
+      expect(getConnections(newPaperInstance.data.Team[0]).accounts).to.have.lengthOf(2);
+      expect(getConnections(newPaperInstance.data.Team[0])).to.deep.equal(getConnections(paper.data.Team[0]));
+    });
+
+    it('deserializes a document with a null connection', () => {
+      paper.mutate(({ create }) => {
+        create('Team', {
+          id: 'team-1',
+          name: 'Best Team',
+          admin: paper.data.Account[0],
+          nullList: null, // << null connection
+        });
+      });
+
+      const serialized = paper.serialize();
+      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      expect(newPaperInstance.data.Team[0].nullList).to.equal(null);
+    });
+
+    it('deserializes a document with a list of null connections', () => {
+      paper.mutate(({ create }) => {
+        create('Team', {
+          id: 'team-1',
+          name: 'Best Team',
+          admin: paper.data.Account[0],
+          nullList: [null, null, paper.data.Account[0]], // list with null connections
+        });
+      });
+
+      const serialized = paper.serialize();
+      const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
+      expect(newPaperInstance.data.Team[0].nullList).to.deep.equal(paper.data.Team[0].nullList);
+      expect(newPaperInstance.data.Team[0].nullList).to.deep.equal([null, null, paper.data.Account[0]]);
     });
   });
 
