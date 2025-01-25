@@ -45,6 +45,15 @@ setAutoFreeze(false);
 // required
 setUseStrictShallowCopy(true);
 
+export type GraphQLConstructorOptions<UserOperations extends OperationMap> = {
+  operations?: UserOperations;
+
+  /**
+   * Use a `serializedPayload` to be deserialized into the `Paper` instance being created
+   */
+  serializedPayload?: SerializedPaperPayload;
+};
+
 export class Paper<UserOperations extends OperationMap = OperationMap> {
   protected history: DocumentStore[] = [];
   protected current: DocumentStore;
@@ -63,10 +72,7 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     afterTransaction: [],
   };
 
-  constructor(
-    graphqlSchema: Parameters<typeof createSchema>[0],
-    options?: { operations?: UserOperations; serializedPayload?: SerializedPaperPayload },
-  ) {
+  constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: GraphQLConstructorOptions<UserOperations>) {
     const schema = createSchema(graphqlSchema);
     this.current = options?.serializedPayload
       ? deserializeStore(options.serializedPayload.store, options.serializedPayload.__meta__)
