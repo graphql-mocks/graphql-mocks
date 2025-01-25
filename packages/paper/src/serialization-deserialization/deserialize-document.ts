@@ -1,8 +1,6 @@
+import { createDocument, getConnections, nullDocument } from '../document';
+import { getDocumentKey } from '../document/get-document-key';
 import { Document, SerializedDocument, SerializedPaperPayload } from '../types';
-import { createDocument } from './create-document';
-import { getConnections } from './get-connections';
-import { getDocumentKey } from './get-document-key';
-import { nullDocument } from './null-document';
 
 export function deserializeDocument(
   serializedDocument: SerializedDocument,

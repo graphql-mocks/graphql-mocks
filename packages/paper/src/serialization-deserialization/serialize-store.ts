@@ -1,5 +1,5 @@
 import { Document, DocumentStore, SerializedDocumentStore } from '../types';
-import { serializeDocument } from '../document/serialize-document';
+import { serializeDocument } from './serialize-document';
 
 export function serialize(store: DocumentStore): SerializedDocumentStore {
   const serializedStore: SerializedDocumentStore = {};
