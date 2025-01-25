@@ -55,6 +55,7 @@ const graphqlSchema = buildSchema(schemaString);
 describe('happy path', () => {
   let paper: Paper;
   let account: Document;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let events: any[];
 
   beforeEach(() => {
@@ -327,6 +328,7 @@ describe('happy path', () => {
       let caughtError;
 
       // add validator not included by default
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       paper.validators.field.push(nonNullFieldValidator as any);
 
       try {
@@ -655,12 +657,26 @@ describe('happy path', () => {
       expect(newPaperInstance.data.Team[0].nullList).to.deep.equal([null, null, paper.data.Account[0]]);
     });
 
-    it('throws if the deserialized store does not pass validations', () => {
-      const serialized = paper.serialize();
-      serialized.store['Blah'] = [];
-      expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
-        'The type "Blah" does not exist in the the graphql schema.',
-      );
+    // These are not special validations for the deserialization, they are the same validations
+    // that get ran against the store to ensure consistency
+    context('validations', () => {
+      it('throws if the serialized store does not have a valid typename within the store', () => {
+        const serialized = paper.serialize();
+        serialized.store['Blah'] = [];
+        expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
+          'The type "Blah" does not exist in the the graphql schema.',
+        );
+      });
+
+      it('throws if a serialized document has invalid fields', () => {
+        const serialized = paper.serialize();
+        const account = serialized.store.Account[0];
+        account.notAValidFieldOnAccountType = 'asdf';
+
+        expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
+          'The field "notAValidFieldOnAccountType" does not exist on the type Account.',
+        );
+      });
     });
   });
 
