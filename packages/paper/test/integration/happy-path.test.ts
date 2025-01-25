@@ -654,6 +654,14 @@ describe('happy path', () => {
       expect(newPaperInstance.data.Team[0].nullList).to.deep.equal(paper.data.Team[0].nullList);
       expect(newPaperInstance.data.Team[0].nullList).to.deep.equal([null, null, paper.data.Account[0]]);
     });
+
+    it('throws if the deserialized store does not pass validations', () => {
+      const serialized = paper.serialize();
+      serialized.store['Blah'] = [];
+      expect(() => new Paper(graphqlSchema, { serializedPayload: serialized })).to.throw(
+        'The type "Blah" does not exist in the the graphql schema.',
+      );
+    });
   });
 
   describe('edge cases', () => {
