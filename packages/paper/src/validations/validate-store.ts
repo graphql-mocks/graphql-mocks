@@ -1,15 +1,22 @@
 import { GraphQLSchema } from 'graphql';
-import { Document, DocumentStore, DocumentTypeValidator, FieldValidator } from '../types';
+import { DocumentStore, DocumentTypeValidator, FieldValidator } from '../types';
 import { validate } from './validate';
+import { TypeDoesNotExist } from './errors/type-does-not-exist';
 
 export function validateStore(
-  store: DocumentStore,
   graphqlSchema: GraphQLSchema,
+  store: DocumentStore,
   validators: { document: DocumentTypeValidator[]; field: FieldValidator[] },
 ): void {
-  Object.values(store).forEach((documents) => {
-    documents.forEach((document: Document) => {
+  for (const typename in store) {
+    if (!graphqlSchema.getType(typename)) {
+      throw new TypeDoesNotExist({ typename });
+    }
+  }
+
+  for (const documents of Object.values(store)) {
+    for (const document of documents) {
       validate(graphqlSchema, document, store, validators);
-    });
-  });
+    }
+  }
 }
