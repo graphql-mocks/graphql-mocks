@@ -556,15 +556,15 @@ describe('happy path', () => {
     });
   });
 
-  describe('deserialize', () => {
-    it('deserializes an empty store', () => {
+  describe('serialize/deserialize', () => {
+    it('serializes/deserializes an empty store', () => {
       paper = new Paper(graphqlSchema);
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
       expect(newPaperInstance.data).to.deep.equal({ Account: [], App: [], Team: [], User: [] });
     });
 
-    it('deserializes a paper instance with data', () => {
+    it('serializes/deserializes a paper instance with data', () => {
       const serialized = paper.serialize();
       const newPaperInstance = new Paper(graphqlSchema, { serializedPayload: serialized });
       expect(paper.data).to.deep.equal(newPaperInstance.data);
@@ -597,7 +597,7 @@ describe('happy path', () => {
       expect(getConnections(newPaperInstance.data.Account[0])).to.deep.equal(getConnections(paper.data.Account[0]));
     });
 
-    it('deserializes a list of documents', () => {
+    it('serializes/deserializes a list of documents', () => {
       paper.mutate(({ create }) => {
         create('Team', {
           id: 'team-1',
@@ -624,7 +624,7 @@ describe('happy path', () => {
       expect(getConnections(newPaperInstance.data.Team[0])).to.deep.equal(getConnections(paper.data.Team[0]));
     });
 
-    it('deserializes a document with a null connection', () => {
+    it('serializes/deserializes a document with a null connection', () => {
       paper.mutate(({ create }) => {
         create('Team', {
           id: 'team-1',
@@ -639,7 +639,7 @@ describe('happy path', () => {
       expect(newPaperInstance.data.Team[0].nullList).to.equal(null);
     });
 
-    it('deserializes a document with a list of null connections', () => {
+    it('serializes/deserializes a document with a list of null connections', () => {
       paper.mutate(({ create }) => {
         create('Team', {
           id: 'team-1',
