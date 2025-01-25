@@ -36,7 +36,7 @@ describe('deserialize-document', () => {
     expect(getConnections(document)).to.deep.equal(serializedDocument.__meta__.DOCUMENT_CONNECTIONS);
   });
 
-  it('deserializes a serialized documment with null connections', () => {
+  it('deserializes null connections', () => {
     const serializedDocument: SerializedDocument = {
       helloWorld: 'hello!',
 
