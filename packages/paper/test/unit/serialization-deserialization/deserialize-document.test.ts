@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { SerializedDocument, SerializedPaperPayload } from '../../../src/types';
+import { SerializedDocument, SerializedPaper } from '../../../src/types';
 import { getDocumentKey } from '../../../src/document/get-document-key';
 import { getConnections, nullDocument } from '../../../src/document';
 import { deserializeDocument } from '../../../src/serialization-deserialization/deserialize-document';
@@ -22,7 +22,7 @@ describe('deserialize-document', () => {
       },
     };
 
-    const serializedPaperMeta: SerializedPaperPayload['__meta__'] = {
+    const serializedPaperMeta: SerializedPaper['__meta__'] = {
       NULL_DOCUMENT_KEY: 'XYZ123',
     };
 
@@ -50,7 +50,7 @@ describe('deserialize-document', () => {
       },
     };
 
-    const serializedPaperMeta: SerializedPaperPayload['__meta__'] = {
+    const serializedPaperMeta: SerializedPaper['__meta__'] = {
       NULL_DOCUMENT_KEY: mockNullDocumentKey,
     };
 

@@ -1,9 +1,9 @@
-import { DocumentStore, SerializedDocument, SerializedDocumentStore, SerializedPaperPayload } from '../types';
+import { DocumentStore, SerializedDocument, SerializedDocumentStore, SerializedPaper } from '../types';
 import { deserializeDocument } from './deserialize-document';
 
 export function deserialize(
   serializedStore: SerializedDocumentStore,
-  serializedMeta: SerializedPaperPayload['__meta__'],
+  serializedMeta: SerializedPaper['__meta__'],
 ): DocumentStore {
   const deserializedStore: DocumentStore = {};
 
