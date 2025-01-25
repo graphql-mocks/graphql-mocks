@@ -1,6 +1,6 @@
+import { getConnections } from '../document';
+import { getDocumentKey } from '../document/get-document-key';
 import { Document, SerializedDocument } from '../types';
-import { getConnections } from './get-connections';
-import { getDocumentKey } from './get-document-key';
 
 export function serializeDocument(document: Document): SerializedDocument {
   const data: Document = structuredClone(document);

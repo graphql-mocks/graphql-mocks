@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createDocument, getConnections, nullDocument } from '../../../src/document';
 import { getDocumentKey } from '../../../src/document/get-document-key';
-import { serializeDocument } from '../../../src/document/serialize-document';
+import { serializeDocument } from '../../../src/serialization-deserialization/serialize-document';
 
 const nullDocumentKey = getDocumentKey(nullDocument);
 

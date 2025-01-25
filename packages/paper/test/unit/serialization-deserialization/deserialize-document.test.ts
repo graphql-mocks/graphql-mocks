@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { deserializeDocument } from '../../../src/document/deserialize-document';
+
 import { SerializedDocument, SerializedPaperPayload } from '../../../src/types';
 import { getDocumentKey } from '../../../src/document/get-document-key';
 import { getConnections, nullDocument } from '../../../src/document';
+import { deserializeDocument } from '../../../src/serialization-deserialization/deserialize-document';
 
 const mockNullDocumentKey = 'DEF456';
 

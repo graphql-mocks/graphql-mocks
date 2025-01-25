@@ -1,5 +1,5 @@
-import { deserializeDocument } from '../document/deserialize-document';
 import { DocumentStore, SerializedDocument, SerializedDocumentStore, SerializedPaperPayload } from '../types';
+import { deserializeDocument } from './deserialize-document';
 
 export function deserialize(
   serializedStore: SerializedDocumentStore,

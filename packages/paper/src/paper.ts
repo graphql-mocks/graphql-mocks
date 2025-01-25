@@ -27,10 +27,10 @@ import {
   scalarFieldValidator,
   uniqueIdFieldValidator,
 } from './validations/validators';
-import { serialize as serializeStore } from './store/serialize';
+import { serialize as serializeStore } from './serialization-deserialization/serialize-store';
 import { getDocumentKey } from './document/get-document-key';
 import { nullDocument } from './document';
-import { deserialize as deserializeStore } from './store/deserialize';
+import { deserialize as deserializeStore } from './serialization-deserialization/deserialize-store';
 import { validateStore } from './validations/validate-store';
 
 // Auto Freezing needs to be disabled because it interfers with using
