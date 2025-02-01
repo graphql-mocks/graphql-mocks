@@ -16,6 +16,17 @@ export type Document = {
   __typename: string;
 };
 
+export type SerializedDocument = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [k: string]: any;
+
+  __meta__: {
+    DOCUMENT_KEY: DocumentKey;
+    DOCUMENT_CONNECTIONS: ConnectionsMap;
+    DOCUMENT_GRAPHQL_TYPENAME: GraphQLTypeName;
+  };
+};
+
 export type DocumentPartial = Partial<Document>;
 
 // connections
@@ -26,6 +37,7 @@ type Connections = Array<DocumentKey>;
 // store
 
 export type DocumentStore<Typename extends string = string> = Record<Typename, Document[]>;
+export type SerializedDocumentStore<Typename extends string = string> = Record<Typename, SerializedDocument[]>;
 
 // operations
 
@@ -88,8 +100,6 @@ export interface FieldValidator {
     fieldName: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fieldValue: any;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fieldConnections: Connections | undefined;
     store: DocumentStore;
   }): void;
@@ -126,3 +136,13 @@ export interface Hook<T extends OperationMap> {
 }
 
 export type HooksMap<OM extends OperationMap> = { beforeTransaction: Hook<OM>[]; afterTransaction: Hook<OM>[] };
+
+// serialization
+
+export type SerializedPaper = {
+  store: SerializedDocumentStore;
+
+  __meta__: {
+    NULL_DOCUMENT_KEY: DocumentKey;
+  };
+};

@@ -11,12 +11,12 @@ import {
   HooksMap,
   KeyOrDocument,
   OperationMap,
+  SerializedPaper,
   TransactionCallback,
 } from './types';
 import { createDocumentStore } from './store/create-document-store';
 import { findDocument } from './store/find-document';
 import { proxyWrap } from './store/proxy-wrap';
-import { validate } from './validations/validate';
 import { documentPropertyExistsAsFieldOnTypeValidator } from './validations/validators/document-property-exists-as-field-on-type';
 import { captureTransactionResultKeys } from './transaction/capture-transaction-result-keys';
 import { convertResultKeysToDocument } from './transaction/convert-result-keys-to-document';
@@ -27,6 +27,12 @@ import {
   scalarFieldValidator,
   uniqueIdFieldValidator,
 } from './validations/validators';
+import { serialize as serializeStore } from './serialization-deserialization/serialize-store';
+import { getDocumentKey } from './document/get-document-key';
+import { nullDocument } from './document';
+import { deserialize as deserializeStore } from './serialization-deserialization/deserialize-store';
+import { validateStore } from './validations/validate-store';
+import { assertValidSerializedPaper } from './serialization-deserialization/is-serialized-paper';
 
 // Auto Freezing needs to be disabled because it interfers with using
 // of using js a `Proxy` on the resulting data, see:
@@ -40,7 +46,24 @@ setAutoFreeze(false);
 // required
 setUseStrictShallowCopy(true);
 
+export type PaperConstructorOptions<UserOperations extends OperationMap> = {
+  operations?: UserOperations;
+};
+
 export class Paper<UserOperations extends OperationMap = OperationMap> {
+  static deserialize<DeserializeUserOperations extends OperationMap = OperationMap>(
+    graphqlSchema: GraphQLSchema,
+    serializedPaper: SerializedPaper,
+    options?: PaperConstructorOptions<DeserializeUserOperations>,
+  ): Paper<DeserializeUserOperations> {
+    assertValidSerializedPaper(serializedPaper);
+    const paper = new Paper<DeserializeUserOperations>(graphqlSchema, options);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (paper as any).current = deserializeStore(serializedPaper.store, serializedPaper.__meta__);
+    paper.validate();
+    return paper;
+  }
+
   protected history: DocumentStore[] = [];
   protected current: DocumentStore;
   protected sourceGraphQLSchema: GraphQLSchema;
@@ -58,8 +81,9 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     afterTransaction: [],
   };
 
-  constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: { operations?: UserOperations }) {
+  constructor(graphqlSchema: Parameters<typeof createSchema>[0], options?: PaperConstructorOptions<UserOperations>) {
     const schema = createSchema(graphqlSchema);
+
     this.current = createDocumentStore(schema);
     this.sourceGraphQLSchema = schema;
 
@@ -67,6 +91,9 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
       ...(options?.operations as UserOperations),
       ...defaultOperations,
     };
+
+    // validate that anything that was deserialized is actually valid
+    this.validate();
   }
 
   get data(): DocumentStore {
@@ -82,14 +109,13 @@ export class Paper<UserOperations extends OperationMap = OperationMap> {
     this.history = [];
   }
 
+  serialize(): SerializedPaper {
+    return { store: serializeStore(this.current), __meta__: { NULL_DOCUMENT_KEY: getDocumentKey(nullDocument) } };
+  }
+
   private validate(_store?: DocumentStore): void {
     const store = _store ?? this.current;
-
-    Object.values(store).forEach((documents) => {
-      documents.forEach((document: Document) => {
-        validate(this.sourceGraphQLSchema, document, store, this.validators);
-      });
-    });
+    validateStore(this.sourceGraphQLSchema, store, this.validators);
   }
 
   private dispatchEvents(events: Event[]) {
