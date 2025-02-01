@@ -12,10 +12,14 @@ export function validateStore(
     if (!graphqlSchema.getType(typename)) {
       throw new TypeDoesNotExist({ typename });
     }
-  }
 
-  for (const documents of Object.values(store)) {
-    for (const document of documents) {
+    for (const document of store[typename]) {
+      if (document.__typename !== typename) {
+        throw new Error(
+          `Document typename "${document.__typename}" does not match the typename of the key "${typename}" in the store where it is stored`,
+        );
+      }
+
       validate(graphqlSchema, document, store, validators);
     }
   }

@@ -20,6 +20,10 @@ export function buildTestSchema(personFields?: string): GraphQLSchema {
       ${personFields}
     }
 
+    type Pet {
+      string: String
+    }
+
     enum Food {
       PIZZA
       POTATOES
