@@ -28,7 +28,7 @@ export function isSerializedPaper(
 
 export function assertValidSerializedPaper(
   possiblySerializedPaper: unknown,
-): possiblySerializedPaper is SerializedPaper {
+): asserts possiblySerializedPaper is SerializedPaper {
   try {
     zodSerializedPaperSchema.parse(possiblySerializedPaper);
   } catch (originalError) {
@@ -36,5 +36,4 @@ export function assertValidSerializedPaper(
     error.cause = originalError;
     throw error;
   }
-  return true;
 }
