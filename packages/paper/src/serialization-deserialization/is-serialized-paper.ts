@@ -19,9 +19,7 @@ const zodSerializedPaperSchema: z.ZodType<SerializedPaper> = z
   })
   .strict();
 
-export function isSerializedPaper(
-  possiblySerializedPaper: SerializedPaper,
-): possiblySerializedPaper is SerializedPaper {
+export function isSerializedPaper(possiblySerializedPaper: unknown): possiblySerializedPaper is SerializedPaper {
   const parsed = zodSerializedPaperSchema.safeParse(possiblySerializedPaper);
   return parsed.success;
 }
