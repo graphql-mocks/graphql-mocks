@@ -2,11 +2,13 @@ import { z } from 'zod';
 import { SerializedDocument, SerializedPaper } from '../types';
 
 const zodSerializedDocumentSchema: z.ZodType<SerializedDocument> = z.object({
-  __meta__: z.object({
-    DOCUMENT_KEY: z.string(),
-    DOCUMENT_CONNECTIONS: z.record(z.string(), z.array(z.string())),
-    DOCUMENT_GRAPHQL_TYPENAME: z.string(),
-  }),
+  __meta__: z
+    .object({
+      DOCUMENT_KEY: z.string(),
+      DOCUMENT_CONNECTIONS: z.record(z.string(), z.array(z.string())),
+      DOCUMENT_GRAPHQL_TYPENAME: z.string(),
+    })
+    .strict(),
 });
 
 const zodSerializedPaperSchema: z.ZodType<SerializedPaper> = z
