@@ -19,6 +19,7 @@ In testing and development it is handy to have a store that reflects the current
 * Written in TypeScript
 * Support and integration with `graphql-mocks`
 * Support for relationships and connections between types
+* Support for serialization and deserialization
 * Immutable
 * Accessible via native js APIs
 * Hooks ([docs](/docs/paper/hooks))

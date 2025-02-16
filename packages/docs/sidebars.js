@@ -62,6 +62,7 @@ module.exports = {
         'paper/events',
         'paper/hooks',
         'paper/validations',
+        'paper/serialization',
         'paper/technical-notes',
         {
           'GraphQL Paper Guides': ['paper/guides/factories', 'paper/guides/with-graphql', 'paper/guides/managing-ids'],

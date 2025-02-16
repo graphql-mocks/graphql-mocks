@@ -35,8 +35,10 @@ export function collapseDocument(schema: GraphQLSchema, document: Document): voi
       continue;
     }
 
+    // handle list of connected documents
     const connectedDocuments = Array.isArray(documentFieldValue) ? documentFieldValue : [documentFieldValue];
     const connectionKeys = connectedDocuments.map((maybeDocument) => {
+      // include positional null documents in list if necessary
       maybeDocument = maybeDocument === null ? nullDocument : maybeDocument;
 
       if (!isDocument(maybeDocument)) {

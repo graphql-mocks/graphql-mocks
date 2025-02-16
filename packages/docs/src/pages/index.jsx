@@ -18,9 +18,6 @@ const defaultQuery = `{
   }
 }`;
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function, valid-typeof
-let Handler = typeof window === 'undefined' ? () => {} : import('../../code-examples/home/handler.source');
-
 function Home() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
@@ -151,6 +148,8 @@ function Home() {
                 query={defaultQuery}
                 docExplorerOpen={false}
                 fetcher={async (data) => {
+                  let Handler =
+                    typeof window === 'undefined' ? () => {} : import('../../code-examples/home/handler.source');
                   let graphqlHandler = (await Handler).createHandler();
                   return graphqlHandler.query(data.query).then((result) => {
                     return result;
