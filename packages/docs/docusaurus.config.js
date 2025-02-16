@@ -86,4 +86,5 @@ module.exports = {
   ],
 
   plugins: [path.resolve(__dirname, 'plugins/docusaurus-load-examples.js')],
+  clientModules: ['./src/no-prefetch.js'],
 };
