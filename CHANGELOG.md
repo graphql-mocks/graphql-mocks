@@ -2,6 +2,12 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.11.4
+
+#### Avoid array.push with spread of large array of arguments ([#283](https://github.com/graphql-mocks/graphql-mocks/pull/283))
+
+* (fix) Fix "RangeError: Maximum call stack size exceeded" by avoiding spreading large list of highlight references
+
 ### graphql-mocks@0.11.3
 
 #### Highlight performance improvements ([#281](https://github.com/graphql-mocks/graphql-mocks/pull/281))
@@ -107,6 +113,17 @@
 * (feature) Add `applyMiddlewares` method to `GraphQLHandler`
 
 ## graphql-paper
+
+### graphql-paper@0.5.0
+
+#### Add serialization and deserialization to `Paper` ([#288](https://github.com/graphql-mocks/graphql-mocks/pull/288))
+
+* (feature) Added the ability to serialize and deserialize `Paper` instances
+
+#### Convert `Paper#mutate` from async to sync ([#285](https://github.com/graphql-mocks/graphql-mocks/pull/285))
+
+* (breaking) Migrate `Paper#mutuate` from being async and returning a promise to being synchronous (see PR for details)
+* (breaking) Migrate `beforeTransaction` and `afterTransaction` hooks to being synchronous (see PR for details)
 
 ### graphql-paper@0.4.2
 
