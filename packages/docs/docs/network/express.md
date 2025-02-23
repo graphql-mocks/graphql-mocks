@@ -35,7 +35,7 @@ const express = require('express');
 
 const graphqlHandler = new GraphQLHandler({
   dependencies: { graphqlSchema }
-};
+});
 
 const app = express();
 app.post('/graphql', expressMiddleware(graphqlHandler));
