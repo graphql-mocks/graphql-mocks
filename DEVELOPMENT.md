@@ -25,9 +25,9 @@ Clone the repo, then:
 
 Each package's cross-dependencies (that is a dependency on a package that is within the monorepo) are setup to be linked to the final built form of the cross-dependency. This is done by default with `pnpm bootstrap` but can be re-established with `pnpm link-packages` ran from the root of the monorepo. This is especially useful to get any updates to typescript typings as well as testing against a more "final version" of the package.
 
-For example, the `@graphql-mocks/sinon` package has a cross-dependency on the core `graphql-mocks` package, and after running `pnpm link-packages` a symlink wold be created at `packages/sinon/node_modules/graphql-mocks` pointing to `packages/graphql-mocks/dist`.
+For example, the `@graphql-mocks/sinon` package has a cross-dependency on the core `graphql-mocks` package, and after running `pnpm link-packages` a symlink would be created at `packages/sinon/node_modules/graphql-mocks` pointing to `packages/graphql-mocks/dist`.
 
-### Modifying Upsteam GraphQL Mock Packages
+### Modifying Upstream GraphQL Mock Packages
 
 When making changes to multiple packages it's important to keep any upstream dependencies `dist` folders freshly compiled, or built, with those changes. To do this run `pnpm watch` from the upstream cross-dependency which will monitor for any file changes and update `dist` with the latest changes.
 
