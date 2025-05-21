@@ -1,6 +1,6 @@
 {
   "name": "gqlmocks",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "author": "Chad Carbert @chadian",
   "bin": {
     "gqlmocks": "./bin/run"
@@ -26,7 +26,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "git-root-dir": "^1.0.2",
-    "graphiql-middleware": "^0.0.4",
+    "graphiql-middleware": "^0.0.5",
     "graphql": "^16.2.0",
     "graphql-import-node": "^0.0.4",
     "graphql-mocks": "^0.11.4",
