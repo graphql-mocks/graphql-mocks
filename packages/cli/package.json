@@ -1,6 +1,6 @@
 {
   "name": "gqlmocks",
-  "version": "0.5.5",
+  "version": "0.5.4",
   "author": "Chad Carbert @chadian",
   "bin": {
     "gqlmocks": "./bin/run"
