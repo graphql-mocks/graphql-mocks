@@ -181,6 +181,12 @@
 
 ## gqlmocks
 
+### gqlmocks@0.5.5
+
+#### Fix graphiql when using `gqlmocks  serve` by updating graphiql-middleware ([#295](https://github.com/graphql-mocks/graphql-mocks/pull/295))
+
+* (fix) Fix graphiql in `gqlmocks serve` failing to load due to React 19+ UMD bundle removal
+
 ### gqlmocks@0.5.2
 
 #### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
