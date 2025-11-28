@@ -11,13 +11,12 @@
     "publish-packages": "pnpm bootstrap && pnpm test && lerna publish from-package --no-private",
     "tag-releases": "node scripts/tag-releases"
   },
-  "author": "Chad Carbert",
   "repository": "github:graphql-mocks/graphql-mocks",
   "workspaces": [
     "packages/*"
   ],
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 24.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.8",

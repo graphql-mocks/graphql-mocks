@@ -1,7 +1,6 @@
 {
   "name": "@graphql-mocks/network-cypress",
   "version": "0.4.4",
-  "author": "Mohammad Ataei",
   "description": "Mock using graphql-mocks with cypress",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
@@ -41,7 +40,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 24.0.0"
   },
   "devDependencies": {
     "axios": "^1.13.2",
