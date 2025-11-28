@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/falso",
-  "version": "0.7.4",
+  "version": "0.8.0",
   "description": "Fake GraphQL queries with graphql-mocks and Falso",
   "main": "dist/index.js",
   "license": "MIT",

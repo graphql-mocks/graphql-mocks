@@ -2,6 +2,13 @@
 
 ## graphql-mocks
 
+### graphql-mocks@0.12.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### graphql-mocks@0.11.4
 
 #### Avoid array.push with spread of large array of arguments ([#283](https://github.com/graphql-mocks/graphql-mocks/pull/283))
@@ -114,6 +121,13 @@
 
 ## graphql-paper
 
+### graphql-paper@0.6.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### graphql-paper@0.5.0
 
 #### Add serialization and deserialization to `Paper` ([#288](https://github.com/graphql-mocks/graphql-mocks/pull/288))
@@ -180,6 +194,13 @@
 
 
 ## gqlmocks
+
+### gqlmocks@0.6.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
 
 ### gqlmocks@0.5.5
 
@@ -317,6 +338,13 @@
 
 ## @graphql-mocks/falso
 
+### @graphql-mocks/falso@0.8.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### @graphql-mocks/falso@0.7.2
 
 #### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
@@ -363,6 +391,13 @@
 * (feature) Introducing `@graphql-mocks/falso`, replacing @graphql-mocks/faker, as the package to provide fake data across an entire schema. [Falso](https://github.com/ngneat/falso) benefits from being esmodule-first and being actively developed and supported.
 
 ## @graphql-mocks/network-express
+
+### @graphql-mocks/network-express@0.5.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
 
 ### @graphql-mocks/network-express@0.4.2
 
@@ -414,6 +449,13 @@
 
 ## @graphql-mocks/network-msw
 
+### @graphql-mocks/network-msw@0.5.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### @graphql-mocks/network-msw@0.4.2
 
 #### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
@@ -456,6 +498,13 @@
 * (feature) Added package README
 
 ## @graphql-mocks/network-nock
+
+### @graphql-mocks/network-nock@0.7.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
 
 ### @graphql-mocks/network-nock@0.6.2
 
@@ -504,6 +553,13 @@
 
 ## @graphql-mocks/network-pretender
 
+### @graphql-mocks/network-pretender@0.5.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### @graphql-mocks/network-pretender@0.4.2
 
 #### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
@@ -549,6 +605,13 @@
 * (feature) Introducing `@graphql-mocks/network-pretender`, a new browser network handler using pretender.js
 
 ## @graphql-mocks/sinon
+
+### @graphql-mocks/sinon@0.6.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
 
 ### @graphql-mocks/sinon@0.5.2
 
@@ -597,6 +660,13 @@
 
 ## @graphql-mocks/network-cypress
 
+### @graphql-mocks/network-cypress@0.5.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
+
 ### @graphql-mocks/network-cypress@0.4.2
 
 #### Bump dependencies ([#268](https://github.com/graphql-mocks/graphql-mocks/pull/268))
@@ -642,6 +712,13 @@
 * (feature) Introducing `@graphql-mocks/network-cypress`, a new network handler for cypress
 
 ## @graphql-mocks/network-playwright
+
+### @graphql-mocks/network-playwright@0.3.0
+
+#### Bump dependencies ([#303](https://github.com/graphql-mocks/graphql-mocks/pull/303))
+
+* (breaking) Bump "engines" to >= Node 24
+* (chore) Non-breaking dev dependency and dependency upgrades, and forwards compatible peer dependency changes
 
 ### @graphql-mocks/network-playwright@0.2.2
 

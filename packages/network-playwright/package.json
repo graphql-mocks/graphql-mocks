@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-playwright",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Mock using graphql-mocks with Playwright",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
