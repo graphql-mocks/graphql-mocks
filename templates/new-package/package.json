@@ -1,7 +1,6 @@
 {
   "name": "@graphql-mocks/**REPLACE ME**",
   "version": "0.0.0",
-  "author": "Chad Carbert",
   "description": "**REPLACE ME**",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
@@ -37,10 +36,8 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 24.0.0"
   },
-  "devDependencies": {
-  },
-  "peerDependencies": {
-  }
+  "devDependencies": {},
+  "peerDependencies": {}
 }

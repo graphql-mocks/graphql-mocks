@@ -1,7 +1,6 @@
 {
   "name": "graphql-mocks",
   "version": "0.11.4",
-  "author": "Chad Carbert",
   "description": "Tools for setting up graphql test resolvers",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
@@ -104,21 +103,21 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 24.0.0"
   },
   "dependencies": {
-    "ramda": "^0.30.1"
+    "ramda": "^0.32.0"
   },
   "peerDependencies": {
-    "graphql": "^16.0.0"
+    "graphql": ">=16.0.0 <17"
   },
   "optionalDependencies": {
     "sinon": "^18.0.0"
   },
   "devDependencies": {
     "@graphql-mocks/sinon": "workspace:^",
-    "@types/ramda": "^0.30.1",
-    "@types/sinon": "^17.0.3",
+    "@types/ramda": "^0.31.1",
+    "@types/sinon": "^21.0.0",
     "sinon": "^9.0.0"
   }
 }

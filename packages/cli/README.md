@@ -5,7 +5,7 @@
 * [`gqlmocks config validate`](#gqlmocks-config-validate)
 * [`gqlmocks handler generate`](#gqlmocks-handler-generate)
 * [`gqlmocks handler info`](#gqlmocks-handler-info)
-* [`gqlmocks help [COMMANDS]`](#gqlmocks-help-commands)
+* [`gqlmocks help [COMMAND]`](#gqlmocks-help-command)
 * [`gqlmocks schema fetch`](#gqlmocks-schema-fetch)
 * [`gqlmocks schema info`](#gqlmocks-schema-info)
 * [`gqlmocks schema validate`](#gqlmocks-schema-validate)
@@ -144,16 +144,16 @@ EXAMPLES
 
 _See code: [src/commands/handler/info.ts](https://github.com/graphql-mocks/graphql-mocks/blob/main/packages/cli/src/commands/handler/info.ts)_
 
-## `gqlmocks help [COMMANDS]`
+## `gqlmocks help [COMMAND]`
 
 Display help for gqlmocks.
 
 ```
 USAGE
-  $ gqlmocks help [COMMANDS...] [-n]
+  $ gqlmocks help [COMMAND...] [-n]
 
 ARGUMENTS
-  COMMANDS...  Command to show help for.
+  [COMMAND...]  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -162,7 +162,7 @@ DESCRIPTION
   Display help for gqlmocks.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.36/src/commands/help.ts)_
 
 ## `gqlmocks schema fetch`
 
@@ -301,5 +301,5 @@ FLAG DESCRIPTIONS
     Additionally shows the architecture, node version, operating system, and versions of plugins that the CLI is using.
 ```
 
-_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v1.3.10/src/commands/version.ts)_
+_See code: [@oclif/plugin-version](https://github.com/oclif/plugin-version/blob/v2.2.36/src/commands/version.ts)_
 <!-- commandsstop -->

@@ -29,7 +29,7 @@ export function buildConfig(pkg, formats, { external: forcedExternal, bundleGlob
             {
               modules: format === 'es' ? 'auto' : format,
               targets: {
-                node: 12,
+                node: 24,
                 esmodules: format === 'es',
               },
             },

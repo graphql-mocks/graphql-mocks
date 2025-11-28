@@ -1,6 +1,8 @@
 import { expect, test } from '@oclif/test';
 import { resolve } from 'path';
 
+const __dirname = import.meta.dirname;
+
 describe('config:info', () => {
   test
     .stdout()

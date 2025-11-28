@@ -1,7 +1,6 @@
 {
   "name": "graphql-paper",
   "version": "0.5.0",
-  "author": "Chad Carbert",
   "description": "A flexible in-memory store based on a GraphQL Schema",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
@@ -55,7 +54,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">= 20.0.0"
+    "node": ">= 24.0.0"
   },
   "dependencies": {
     "immer": "^10.1.1",
@@ -65,7 +64,7 @@
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "graphql": "^16.0.0"
+    "graphql": ">=16.0.0 <17"
   },
   "devDependencies": {
     "@types/ramda": "^0.30.1",
