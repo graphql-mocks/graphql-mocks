@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const babel = require('@babel/core');
 const prettier = require('prettier');
-const globby = require('globby');
+const { globby } = require('globby');
 
 const JS_EXAMPLES_DIR = path.resolve(__dirname, '../code-examples');
 
