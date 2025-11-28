@@ -8,6 +8,8 @@ const chalk = require('chalk');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
+const deprecatedPackages = ['@graphql-mocks/mirage'];
+
 function pnpmAndLink({ retry } = { retry: true }) {
   console.log(chalk.blue(`running \`pnpm\` and \`pnpm link-packages\``));
   try {
@@ -184,6 +186,8 @@ function attachChangelogs(packages) {
   });
 
   changelogs.forEach(({ package: packageName, entry, pr }) => {
+    if (deprecatedPackages.includes(packageName)) return;
+
     const package = packages.find(({ name }) => name === packageName);
 
     if (!package) {
