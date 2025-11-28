@@ -49,6 +49,6 @@
   },
   "peerDependencies": {
     "graphql-mocks": "*",
-    "msw": "^2.0.0"
+    "msw": ">=2.0.0 <3"
   }
 }

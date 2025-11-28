@@ -49,7 +49,7 @@
     "vite": "^7.2.4"
   },
   "peerDependencies": {
-    "cypress": ">=8",
+    "cypress": ">=8 <16",
     "graphql-mocks": "*"
   }
 }

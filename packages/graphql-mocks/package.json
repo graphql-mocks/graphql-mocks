@@ -109,7 +109,7 @@
     "ramda": "^0.32.0"
   },
   "peerDependencies": {
-    "graphql": ">=16.0.0"
+    "graphql": ">=16.0.0 <17"
   },
   "optionalDependencies": {
     "sinon": "^18.0.0"
