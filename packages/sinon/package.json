@@ -43,13 +43,13 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "@types/sinon": "^17.0.3",
+    "@types/sinon": "^21.0.0",
     "graphql-mocks": "workspace:^",
-    "sinon": "^18.0.0"
+    "sinon": "^21.0.0"
   },
   "peerDependencies": {
-    "graphql": "^16.0.0",
+    "graphql": ">=16.0.0",
     "graphql-mocks": "*",
-    "sinon": "^9.0.0"
+    "sinon": ">=18.0.0"
   }
 }
