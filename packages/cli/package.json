@@ -91,7 +91,8 @@
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && oclif readme && pnpm build",
-    "test": "NODE_ENV=development mocha \"test/**/*.test.ts\"",
+    "clean:test": "rm -f gqlmocks.config.ts || rm -f oclif.manifest.json",
+    "test": "pnpm clean:test && NODE_ENV=development mocha \"test/**/*.test.ts\"",
     "build": "tsc && pnpm copy-blueprints && oclif readme && pnpm copy-readme && oclif manifest",
     "test-build": "mocha \"test/**/*.test.ts\"",
     "copy-blueprints": "mkdir -p lib/blueprints && cp -r src/blueprints lib",
