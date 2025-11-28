@@ -65,7 +65,7 @@
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "graphql": "^16.0.0"
+    "graphql": ">=16.0.0"
   },
   "devDependencies": {
     "@types/ramda": "^0.30.1",
