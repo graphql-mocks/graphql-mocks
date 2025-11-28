@@ -1,6 +1,6 @@
 {
   "name": "@graphql-mocks/network-msw",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "Mock using graphql-mocks with msw (mock service worker)",
   "main": "dist/index.js",
   "module": "dist/es/index.mjs",
