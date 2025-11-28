@@ -407,8 +407,8 @@ importers:
         specifier: ^16.0.0
         version: 16.9.0
       ramda:
-        specifier: ^0.30.1
-        version: 0.30.1
+        specifier: ^0.32.0
+        version: 0.32.0
     optionalDependencies:
       sinon:
         specifier: ^18.0.0
@@ -418,11 +418,11 @@ importers:
         specifier: workspace:^
         version: link:../sinon/dist
       '@types/ramda':
-        specifier: ^0.30.1
-        version: 0.30.1
+        specifier: ^0.31.1
+        version: 0.31.1
       '@types/sinon':
-        specifier: ^17.0.3
-        version: 17.0.3
+        specifier: ^21.0.0
+        version: 21.0.0
     publishDirectory: dist
 
   packages/network-cypress:
@@ -4724,6 +4724,9 @@ packages:
 
   '@types/ramda@0.30.1':
     resolution: {integrity: sha512-aoyF/ADPL6N+/NXXfhPWF+Qj6w1Cql59m9wX0Gi15uyF+bpzXeLd63HPdiTDE2bmLXfNcVufsDPKmbfOrOzTBA==}
+
+  '@types/ramda@0.31.1':
+    resolution: {integrity: sha512-Vt6sFXnuRpzaEj+yeutA0q3bcAsK7wdPuASIzR9LXqL4gJPyFw8im9qchlbp4ltuf3kDEIRmPJTD/Fkg60dn7g==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -12302,6 +12305,9 @@ packages:
   ramda@0.30.1:
     resolution: {integrity: sha512-tEF5I22zJnuclswcZMc8bDIrwRHRzf+NqVEmqg50ShAZMP7MWeR/RGDthfM/p+BlqvF2fXAzpn8i+SJcYD3alw==}
 
+  ramda@0.32.0:
+    resolution: {integrity: sha512-GQWAHhxhxWBWA8oIBr1XahFVjQ9Fic6MK9ikijfd4TZHfE2+urfk+irVlR5VOn48uwMgM+loRRBJd6Yjsbc0zQ==}
+
   randombytes@2.1.0:
     resolution: {integrity: sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==}
 
@@ -13981,6 +13987,9 @@ packages:
 
   types-ramda@0.30.1:
     resolution: {integrity: sha512-1HTsf5/QVRmLzcGfldPFvkVsAdi1db1BBKzi7iW3KBUlOICg/nKnFS+jGqDJS3YD8VsWbAh7JiHeBvbsw8RPxA==}
+
+  types-ramda@0.31.0:
+    resolution: {integrity: sha512-vaoC35CRC3xvL8Z6HkshDbi6KWM1ezK0LHN0YyxXWUn9HKzBNg/T3xSGlJZjCYspnOD3jE7bcizsp0bUXZDxnQ==}
 
   typescript@5.5.4:
     resolution: {integrity: sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==}
@@ -21079,6 +21088,10 @@ snapshots:
   '@types/ramda@0.30.1':
     dependencies:
       types-ramda: 0.30.1
+
+  '@types/ramda@0.31.1':
+    dependencies:
+      types-ramda: 0.31.0
 
   '@types/range-parser@1.2.7': {}
 
@@ -30945,6 +30958,8 @@ snapshots:
 
   ramda@0.30.1: {}
 
+  ramda@0.32.0: {}
+
   randombytes@2.1.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -33164,6 +33179,10 @@ snapshots:
       yaml: 2.5.0
 
   types-ramda@0.30.1:
+    dependencies:
+      ts-toolbelt: 9.6.0
+
+  types-ramda@0.31.0:
     dependencies:
       ts-toolbelt: 9.6.0
 
