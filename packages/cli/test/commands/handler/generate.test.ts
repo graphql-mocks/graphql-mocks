@@ -1,5 +1,5 @@
 import { test } from '@oclif/test';
-import { expect } from 'chai';
+const { expect } = require('chai');
 import { testPackagePath, useTestPackage } from '../../test-helpers/package';
 import { backup } from '../../test-helpers/file';
 import { resolve } from 'path';

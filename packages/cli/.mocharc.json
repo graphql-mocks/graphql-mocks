@@ -1,0 +1,8 @@
+{
+  "require": ["ts-node/register", "graphql-import-node/register"],
+  "recursive": true,
+  "timeout": 5000,
+  "reporter": "spec",
+  "spec": "test/**/*.spec.js",
+  "watch-files": "**/*.ts"
+}
