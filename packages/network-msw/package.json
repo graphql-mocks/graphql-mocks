@@ -42,6 +42,7 @@
     "node": ">= 24.0.0"
   },
   "devDependencies": {
+    "@types/node": "^22.1.0",
     "execa": "^9.6.0",
     "graphql-mocks": "workspace:^",
     "msw": "^2.12.3",
