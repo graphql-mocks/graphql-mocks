@@ -44,13 +44,13 @@
     "node": ">= 20.0.0"
   },
   "devDependencies": {
-    "axios": "^0.28.0",
-    "cypress": "^13.13.2",
+    "axios": "^1.13.2",
+    "cypress": "^15.7.0",
     "graphql-mocks": "workspace:^",
-    "vite": "^5.3.5"
+    "vite": "^7.2.4"
   },
   "peerDependencies": {
-    "cypress": "^8.0.0 || ^ 9.0.0 || ^10.0.0",
+    "cypress": ">=8",
     "graphql-mocks": "*"
   }
 }
