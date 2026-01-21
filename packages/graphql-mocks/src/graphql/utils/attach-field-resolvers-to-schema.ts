@@ -1,22 +1,32 @@
-import { GraphQLSchema, isObjectType } from 'graphql';
+import { defaultFieldResolver, GraphQLSchema, isObjectType } from 'graphql';
 import { ResolverMap } from '../../types';
+import { createPipeline } from '../pipeline-resolver';
+import { isInternalType } from '../type-utils';
 
 export function attachFieldResolversToSchema(schema: GraphQLSchema, resolverMap: ResolverMap): void {
-  for (const typeName in resolverMap) {
+  const types = schema.getTypeMap();
+  const typeNames = Object.keys(types);
+  for (const typeName of typeNames) {
     const type = schema.getType(typeName);
 
-    if (!isObjectType(type)) {
+    if (!isObjectType(type) || isInternalType(type)) {
       continue;
     }
 
-    for (const fieldName in resolverMap[typeName]) {
-      const resolver = resolverMap[typeName][fieldName];
-      const fieldMap = type.getFields();
-      const fieldNames = Object.keys(fieldMap);
+    const fieldMap = type.getFields();
+    const fieldNames = Object.keys(fieldMap);
+    for (const fieldName of fieldNames) {
+      const resolver = resolverMap[typeName]?.[fieldName] ?? defaultFieldResolver;
 
-      if (typeof resolver === 'function' && fieldNames.includes(fieldName)) {
-        fieldMap[fieldName].resolve = resolver;
+      if (typeof resolver !== 'function') {
+        return;
       }
+
+      const pipeline = createPipeline<typeof resolver>([resolver]);
+      const field = fieldMap[fieldName];
+
+      // attach the pipeline resolver to the field resolver
+      field.resolve = pipeline.resolver;
     }
   }
 }
