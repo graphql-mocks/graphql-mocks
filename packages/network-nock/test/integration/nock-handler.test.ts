@@ -172,7 +172,13 @@ describe('nock-handler', function () {
     );
 
     expect(request?.method).to.equal('POST');
-    expect(request.options.href).to.equal('http://graphql-api.com/graphql');
+    expect(request.url).to.equal('http://graphql-api.com/graphql');
+  });
+
+  it('returns a handler that nock does not treat as a callback-style reply function', function () {
+    // nock 15 passes any reply function with exactly two declared parameters through
+    // `util.promisify`, which hangs forever on a handler that never calls the callback
+    expect(nockHandler(graphqlHandler).length).to.not.equal(2);
   });
 
   context('options', function () {
@@ -191,7 +197,7 @@ describe('nock-handler', function () {
       await makeRequest(query);
 
       expect(request.method).to.equal('POST');
-      expect(request.options.href).to.equal('http://graphql-api.com/graphql');
+      expect(request.url).to.equal('http://graphql-api.com/graphql');
       expect(JSON.parse(requestBody)?.query).to.equal(query);
     });
 

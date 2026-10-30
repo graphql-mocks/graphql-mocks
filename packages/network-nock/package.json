@@ -42,14 +42,14 @@
     "node": ">= 24.0.0"
   },
   "devDependencies": {
-    "@types/nock": "^11.1.0",
     "@types/node-fetch": "^2.6.13",
     "graphql-mocks": "workspace:^",
-    "nock": "^14.0.10",
+    "nock": "^15.0.5",
     "node-fetch": "^3.3.2"
   },
   "peerDependencies": {
     "graphql": ">=16.0.0 <17",
-    "graphql-mocks": "*"
+    "graphql-mocks": "*",
+    "nock": ">=14.0.0 <16"
   }
 }
