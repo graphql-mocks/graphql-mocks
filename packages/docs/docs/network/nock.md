@@ -20,6 +20,8 @@ yarn add --dev nock @graphql-mocks/network-nock
 pnpm add --save-dev nock @graphql-mocks/network-nock
 ```
 
+Nock versions 14 and 15 are supported.
+
 ## Usage
 
 In any Nock POST `.reply()`, use the `nockHandler` with a `GraphQLHandler` instance.
@@ -49,7 +51,7 @@ nockHandler(graphqlHandler, {
 ```
 
 These callbacks are useful for doing checks or additional assertions during testing
-* `checkRequest` callback is passed the incoming `request` and the `requestBody`
+* `checkRequest` callback is passed the incoming `request` and the `requestBody`. The `request` is the object Nock provides, see [Request object](#request-object)
 * `checkGraphQLResult` callback is passed the result from the GraphQLHandler
 
 With the above nock handler setup, a `node-fetch` call will be intercepted by and responded to from nock and graphql-mocks.
@@ -94,6 +96,13 @@ function resolver(parent, args, context, info) {
   nock.request;
 }
 ```
+
+### Request object
+
+The `request` passed to `checkRequest` and available as `context.nock.request` depends on the version of Nock:
+
+* Nock 15: a [Fetch API `Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request), for example `request.url` and `request.headers.get('authorization')`
+* Nock 14: a Node [`ClientRequest`](https://nodejs.org/api/http.html#class-httpclientrequest), for example `request.path` and `request.options.href`
 
 ## API Documentation
 
